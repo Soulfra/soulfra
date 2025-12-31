@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Soulfra</title>
+    <meta name="description" content="Your keys. Your identity. Period.">
+
+    <!-- Brand Colors -->
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --accent: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f9f9f9;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--secondary);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .content-block {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .content-block h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .content-block p {
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            background: #f0f8ff;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .principles {
+            list-style: none;
+            padding: 0;
+        }
+
+        .principles li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .principles li:last-child {
+            border-bottom: none;
+        }
+
+        .principles li strong {
+            color: var(--primary);
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Soulfra</h1>
+        <p>Your keys. Your identity. Period.</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/feed.xml">RSS Feed</a>
+        <a href="/about.html">About</a>
+    </nav>
+
+    <main>
+        <div class="content-block">
+            <h2>About Soulfra</h2>
+            <p>Soulfra is a self-sovereign publishing platform built on the principle that <strong>you own your identity, your data, and your voice</strong>.</p>
+
+            <p>In a world of centralized platforms that control, censor, and monetize your content, Soulfra offers an alternative: a decentralized, open-source system where your writing lives in a database you control, and your published content is broadcast to the world like Bitcoin transactions.</p>
+
+            <div class="highlight">
+                <strong>Your keys. Your identity. Period.</strong><br>
+                No platform can lock you out. No algorithm can silence you. No company can take your content hostage.
+            </div>
+        </div>
+
+        <div class="content-block">
+            <h2>Core Principles</h2>
+            <ul class="principles">
+                <li><strong>Self-Sovereign Identity:</strong> You control your cryptographic keys, therefore you control your identity.</li>
+                <li><strong>Database as Source of Truth:</strong> Your writing lives in your database (SQLite), HTML is just a broadcast copy.</li>
+                <li><strong>Decentralized Publishing:</strong> Publish to GitHub Pages, IPFS, RSS, Email, Substack, Medium - all from one interface.</li>
+                <li><strong>Open Source & MIT Licensed:</strong> The core is free forever. No vendor lock-in, no proprietary formats.</li>
+                <li><strong>Write Once, Publish Everywhere:</strong> One interface to rule them all. Write in Soulfra Studio, broadcast everywhere.</li>
+            </ul>
+        </div>
+
+        <div class="content-block">
+            <h2>The Technology</h2>
+            <p>Soulfra is built with:</p>
+            <ul style="padding-left: 2rem;">
+                <li><strong>Python + Flask</strong> - Local-first admin panel</li>
+                <li><strong>SQLite</strong> - Your personal database (your wallet)</li>
+                <li><strong>Git + GitHub Pages</strong> - Static site hosting & version control</li>
+                <li><strong>Ollama AI</strong> - Local AI for content generation & research</li>
+                <li><strong>IPFS</strong> - Decentralized content distribution</li>
+                <li><strong>Syncthing</strong> - Multi-device sync (laptop + phones)</li>
+            </ul>
+        </div>
+
+        <div class="content-block">
+            <h2>Philosophy: Like Bitcoin, But for Publishing</h2>
+            <p>Bitcoin showed us that we don't need banks to control our money. Soulfra shows us that we don't need platforms to control our voice.</p>
+
+            <p><strong>Bitcoin:</strong> Your wallet holds your private keys. Transactions are broadcast to the network.</p>
+            <p><strong>Soulfra:</strong> Your database holds your content. HTML files are broadcast to the web.</p>
+
+            <div class="highlight">
+                The infrastructure is decentralized. The keys are yours. The content is yours. The future is self-sovereign.
+            </div>
+        </div>
+
+        <div class="content-block">
+            <h2>Get Started</h2>
+            <p>Soulfra is self-hosted and open source. The code is available on GitHub, and you can run it on your own machine.</p>
+            <p>No sign-ups, no cloud dependencies, no subscription fees. Just you, your machine, and your voice.</p>
+            <p style="margin-top: 1.5rem;"><strong>GitHub:</strong> <a href="https://github.com/Soulfra/soulfra" style="color: var(--primary);">github.com/Soulfra/soulfra</a></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Soulfra - All rights reserved</p>
+        <p>Powered by Soulfra</p>
+    </footer>
+</body>
+</html>
