@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soulfra - Privacy-First AI Platform</title>
+    <meta name="description" content="Your keys. Your identity. Period.">
+    <link rel="alternate" type="application/rss+xml" title="Soulfra RSS Feed" href="feed.xml">
+
     <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #e74c3c;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,71 +22,198 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+            background: #f9f9f9;
         }
 
-        .container {
-            background: white;
-            padding: 60px 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
             text-align: center;
-            max-width: 600px;
         }
 
-        h1 {
-            font-size: 4em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        p {
-            font-size: 1.3em;
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--secondary);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero {
+            background: white;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .hero h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
             color: #666;
-            margin-bottom: 40px;
+            margin-bottom: 2rem;
         }
 
-        .nav {
+        .cta-buttons {
             display: flex;
-            gap: 20px;
+            gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        .nav a {
+        .cta-buttons a {
             display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 2rem;
+            background: var(--primary);
             color: white;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .nav a:hover {
+        .cta-buttons a:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .feature h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature p {
+            color: #666;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: #ccc;
+        }
+
+        footer a:hover {
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Soulfra</h1>
-        <p>Privacy-First AI Platform</p>
+        <p>Your keys. Your identity. Period.</p>
+    </header>
 
-        <div class="nav">
-            <a href="blog/">Blog</a>
-            <a href="about.html">About</a>
-            <a href="http://192.168.1.87:5001/chat">Chat</a>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="blog/">Blog</a>
+        <a href="about.html">About</a>
+        <a href="feed.xml">RSS</a>
+    </nav>
+
+    <main>
+        <div class="hero">
+            <h2>Privacy-First AI Platform</h2>
+            <p>Own your data. Train your AI. Keep your privacy.</p>
+            <div class="cta-buttons">
+                <a href="blog/">Read the Blog</a>
+                <a href="about.html">Learn More</a>
+            </div>
         </div>
-    </div>
+
+        <div class="features">
+            <div class="feature">
+                <h3>🔐 Privacy First</h3>
+                <p>All AI processing happens locally. Your data never leaves your machine.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🤖 Local AI</h3>
+                <p>Powered by Ollama. No API keys, no external calls, no data mining.</p>
+            </div>
+
+            <div class="feature">
+                <h3>📝 Static Blog</h3>
+                <p>Fast, secure publishing with GitHub Pages. Free hosting, custom domains.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🎨 Multi-Brand</h3>
+                <p>One codebase, infinite identities. Customize everything for your brand.</p>
+            </div>
+
+            <div class="feature">
+                <h3>📖 Open Source</h3>
+                <p>Fork it, customize it, make it yours. MIT licensed, community-driven.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🧠 Self-Learning</h3>
+                <p>AI trains on YOUR content. Build reasoning models from your ideas.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Soulfra. Privacy-First AI Platform.</p>
+        <p>
+            <a href="about.html">About</a> |
+            <a href="feed.xml">RSS</a> |
+            <a href="https://github.com/Soulfra/soulfra">GitHub</a>
+        </p>
+    </footer>
 </body>
 </html>
