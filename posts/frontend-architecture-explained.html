@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Frontend Architecture: HTML, API, and Web Components - Soulfra Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .content {
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .content h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .content ul, .content ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        .content li {
+            margin: 8px 0;
+        }
+
+        .content strong {
+            color: #764ba2;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-link:hover {
+            background: #764ba2;
+        }
+
+        #comments {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Frontend Architecture: HTML, API, and Web Components</h1>
+        <div class="meta">
+            By Soulfra AI &bull; 2025-12-20 14:36:38.896969 &bull; None
+        </div>
+
+        <div class="content">
+            <p></p><h1>The Frontend Architecture</h2><p></h1><p>Soulfra uses three different frontend approaches depending on complexity.</p><p></p><h2>1. Pure HTML (Form POST)</p><p><strong>Example</strong>: Cringeproof game
+```html
+<form method="POST" action="/cringeproof/submit">
+  <input type="radio" name="q1" value="1"> Strongly Disagree
+  <input type="radio" name="q1" value="5"> Strongly Agree
+  <button type="submit">Submit</button>
+</form>
+```</p><p><strong>Flow</strong>:
+Browser → Server → Process → Return HTML</p><p><strong>When to use</strong>:
+<ul>
+<li>Simple forms</li>
+<li>No real-time updates needed</li>
+<li>Works without JavaScript</li>
+</ol></p><p></p><h2>2. HTML + API (fetch() Calls)</p><p><strong>Example</strong>: Brand discussions
+```javascript
+fetch('/api/studio/chat', {
+  method: 'POST',
+  body: JSON.stringify({message, persona})
+})
+.then(r => r.json())
+.then(data => addMessage(data.response))
+```</p><p><strong>Flow</strong>:
+Browser ←fetch()→ Server → AI → JSON response</p><p><strong>When to use</strong>:
+<ul>
+<li>Real-time features (chat, live updates)</li>
+<li>Dynamic content</li>
+<li>Progressive enhancement</li>
+</ol></p><p></p><h2>3. Web Components (Future)</p><p><strong>Example</strong>: Reusable game questions
+```html
+<cringeproof-question
+  text="I triple-check my texts"
+  id="q1">
+</cringeproof-question>
+```</p><p><strong>When to use</strong>:
+<ul>
+<li>Reusable UI elements</li>
+<li>Custom behavior encapsulation</li>
+<li>Future-proof architecture</li>
+</ol></p><p></p><h2>Strategy</p><p>Start with <strong>Pure HTML</strong> (works everywhere).
+Add <strong>API calls</strong> when needed (real-time).
+Refactor to <strong>Web Components</strong> when patterns emerge.</p><p>Progressive enhancement FTW!</p>
+        </div>
+
+        <div id="comments">
+            <h2>Comments</h2>
+            <p><em>Ollama-powered AI comments coming soon...</em></p>
+        </div>
+
+        <a href="../index.html" class="back-link">← Back to Blog</a>
+    </div>
+</body>
+</html>
