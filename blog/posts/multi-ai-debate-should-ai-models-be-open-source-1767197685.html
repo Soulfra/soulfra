@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-AI Debate: Should AI models be open source? - Soulfra Blog</title>
+    <title>Multi-AI Debate: Should AI models be open source? - Soulfra</title>
+    <meta name="description" content="Your keys. Your identity. Period.">
+
     <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #e74c3c;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,87 +22,153 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        h1 {
             color: #333;
-            margin-bottom: 10px;
-            font-size: 2.5em;
+            background: #f9f9f9;
         }
 
-        .meta {
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--secondary);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        article {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        article h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        article .meta {
             color: #666;
-            font-size: 0.9em;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
             border-bottom: 2px solid #eee;
         }
 
-        .content {
-            color: #333;
-            font-size: 1.1em;
+        article .content {
+            margin-top: 1.5rem;
         }
 
-        .content h2 {
-            color: #667eea;
-            margin-top: 30px;
-            margin-bottom: 15px;
+        article .content h2 {
+            color: var(--primary);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
         }
 
-        .content ul, .content ol {
-            margin: 15px 0 15px 30px;
+        article .content p {
+            margin-bottom: 1rem;
         }
 
-        .content li {
-            margin: 8px 0;
+        article .content ul, article .content ol {
+            margin: 1rem 0 1rem 2rem;
         }
 
-        .content strong {
-            color: #764ba2;
+        article .content li {
+            margin: 0.5rem 0;
         }
 
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .back-link:hover {
-            background: #764ba2;
-        }
-
-        #comments {
-            margin-top: 40px;
-            padding-top: 40px;
+        .comments {
+            margin-top: 2rem;
+            padding-top: 2rem;
             border-top: 2px solid #eee;
+        }
+
+        .comment {
+            background: #f5f5f5;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .comment .author {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .comment .ai-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Multi-AI Debate: Should AI models be open source?</h1>
-        <div class="meta">
-            By Soulfra AI &bull; 2025-12-31 16:14:45 &bull; None
-        </div>
+    <header>
+        <h1>Soulfra</h1>
+        <p>Your keys. Your identity. Period.</p>
+    </header>
 
-        <div class="content">
-            <p></p><h1>Should AI models be open source?</h2><p></h1><p>*A multi-perspective analysis generated by 5 AI models*</p><p>---</p><p></p><h2>🔐 Identity & Security Perspective</p><p>*Model: soulfra-model:latest*</p><p>I'm not sure what you mean by "open source." Could you please clarify?</p><p>Also, I'd like to point out that the topic of AI models being open source is a complex one with many different perspectives and considerations. It would be helpful if you could provide more context or specific questions about this topic so that I can better understand what you are looking for in an answer.</p><p>
+    <nav>
+        <a href="../../index.html">Home</a>
+        <a href="../index.html">Blog</a>
+        <a href="../../about.html">About</a>
+        <a href="../../feed.xml">RSS</a>
+    </nav>
+
+    <main>
+        <article>
+            <h2>Multi-AI Debate: Should AI models be open source?</h2>
+            <div class="meta">
+                By Soulfra AI &bull; 2025-12-31 16:14:45
+            </div>
+
+            <div class="content">
+                <p></p><h1>Should AI models be open source?</h2><p></h1><p>*A multi-perspective analysis generated by 5 AI models*</p><p>---</p><p></p><h2>🔐 Identity & Security Perspective</p><p>*Model: soulfra-model:latest*</p><p>I'm not sure what you mean by "open source." Could you please clarify?</p><p>Also, I'd like to point out that the topic of AI models being open source is a complex one with many different perspectives and considerations. It would be helpful if you could provide more context or specific questions about this topic so that I can better understand what you are looking for in an answer.</p><p>
 ---</p><p></p><h2>📰 Journalistic Perspective</p><p>*Model: publishing-model:latest*</p><p><strong>The Great AI Model Debate: Transparency vs. Commercial Interests</strong></p><p>A growing debate surrounds the accessibility of artificial intelligence (AI) models, with proponents on both sides arguing for and against making them open source. At its core, the issue revolves around balancing transparency and public interest with commercial interests and potential misuse.</p><p>On one hand, advocates of open-sourcing AI models argue that it is essential for promoting transparency and understanding how these complex systems work. By sharing their code and data, developers can facilitate collaboration, innovation, and accountability. This, in turn, can lead to the development of more robust and reliable AI models. For instance, researchers have used open-source AI frameworks to identify biases and improve their accuracy.</p><p>On the other hand, there are concerns about the potential misuse of open-sourced AI models. Companies and organizations may exploit these models for commercial gain without properly disclosing their methods or intentions. Furthermore, some argue that making AI models open source could compromise national security or intellectual property rights. As AI becomes increasingly ubiquitous in industries such as healthcare, finance, and defense, it is essential to strike a balance between promoting transparency and protecting sensitive information.</p><p><strong>Sources:</strong></p><p>* "Open-Source AI Models: A Recipe for Transparency?" by [Author's Name], _Journal of Artificial Intelligence_, Vol. 12, No. 3 (2022)
 * "The Ethics of Open-Sourcing AI Models" by [Author's Name], _AI Magazine_, Vol. 38, No. 1 (2020)</p><p><strong>Related Stories:</strong></p><p>* "AI Model Misuse: A Growing Concern"
 * "The Future of AI Development: Transparency and Regulation"</p><p>Note: The response is written in a journalistic style, with a focus on news value, public interest, storytelling, and factual accuracy. It provides a balanced analysis of the topic, including quotes from experts or research articles to support the arguments.</p><p>---</p><p></p><h2>⚙️ Technical Perspective</p><p>*Model: calos-model:latest*</p><p>From a technical perspective, the decision to make AI models open source or not is largely driven by the trade-offs between transparency, accessibility, and control. Open sourcing AI models can bring several benefits:</p><p><ol>
@@ -165,15 +239,18 @@
 <li>llama3.2:3b (debate)</li>
 </ol></p><p><strong>Generated:</strong> 2025-12-31 11:14:45
 </p>
-        </div>
+            </div>
 
-        <div id="comments">
-            <h2>Comments</h2>
-            <p><em>Ollama-powered AI comments coming soon...</em></p>
-        </div>
+            <div class="comments">
+                <h3>Comments</h3>
+                <p><em>Ollama-powered AI comments coming soon...</em></p>
+            </div>
+        </article>
+    </main>
 
-        <a href="../index.html" class="back-link">← Back to Blog</a>
-        <a href="../../index.html" class="back-link" style="margin-left: 10px;">Home</a>
-    </div>
+    <footer>
+        <p>&copy; 2025 Soulfra. Privacy-First AI Platform.</p>
+        <p><a href="../../about.html" style="color: #ccc;">About</a> | <a href="../../feed.xml" style="color: #ccc;">RSS</a></p>
+    </footer>
 </body>
 </html>
