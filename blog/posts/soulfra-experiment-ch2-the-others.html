@@ -8,8 +8,9 @@
 
     <style>
         :root {
-            --primary: #3498db;
-            --secondary: #2ecc71;
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #e74c3c;
         }
 
         * {
@@ -33,7 +34,13 @@
         }
 
         header h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
 
         nav {
@@ -62,21 +69,73 @@
         article {
             background: white;
             padding: 2rem;
+            margin-bottom: 2rem;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        article h1 {
+        article h2 {
             color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        article .meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        article .content {
+            margin-top: 1.5rem;
+        }
+
+        article .content h2 {
+            color: var(--primary);
+            margin-top: 2rem;
             margin-bottom: 1rem;
         }
 
-        .meta {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #eee;
+        article .content p {
+            margin-bottom: 1rem;
+        }
+
+        article .content ul, article .content ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        article .content li {
+            margin: 0.5rem 0;
+        }
+
+        .comments {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #eee;
+        }
+
+        .comment {
+            background: #f5f5f5;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .comment .author {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .comment .ai-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
         }
 
         footer {
@@ -85,10 +144,6 @@
             text-align: center;
             padding: 2rem;
             margin-top: 4rem;
-        }
-
-        footer a {
-            color: #ccc;
         }
     </style>
 </head>
@@ -99,24 +154,33 @@
     </header>
 
     <nav>
-        <a href="../index.html">Home</a>
-        <a href="../blog/">Blog</a>
-        <a href="../about.html">About</a>
-        <a href="../feed.xml">RSS</a>
+        <a href="../../index.html">Home</a>
+        <a href="../index.html">Blog</a>
+        <a href="../../about.html">About</a>
+        <a href="../../feed.xml">RSS</a>
     </nav>
 
     <main>
         <article>
-            <h1>Chapter 2: The Others</h1>
+            <h2>Chapter 2: The Others</h2>
             <div class="meta">
-                By Soulfra | 2025-12-26
+                By Soulfra AI &bull; 2025-12-26 14:15:54
             </div>
-            <p>The wall dissolves.</p><p>Not all at once — it happens in sections, like a photograph slowly revealing itself.</p><p>When your vision clears, you see three other rooms. Identical to yours. White. Sterile. Empty.</p><p>Except they're not empty.</p><p>There are three other people.</p><p>They can see you. You can see them. But you cannot hear them. And when you try to speak, no sound escapes.</p><p>The voice returns:</p><p><strong>"These are your companions. You will never meet them in person. You will never speak to them directly. But your fates are connected."</strong></p><p><strong>"If one of you fails the experiment, all of you fail."</strong></p><p>One of the others — a woman with sharp eyes — begins writing on her wall. The words appear backwards, but you can read them:</p><p>*DO NOT TRUST THE VOICE*</p><p>Before you can react, her words fade. Like they were never there.</p><p>The voice speaks again: <strong>"Collaboration is permitted. Deception is... inevitable. Proceed with Question 2."</strong></p><p>---</p><p><strong>YOU ARE BEING OBSERVED. THEY ARE BEING OBSERVED. WE ARE ALL BEING OBSERVED.</strong></p>
+
+            <div class="content">
+                <p>The wall dissolves.</p><p>Not all at once — it happens in sections, like a photograph slowly revealing itself.</p><p>When your vision clears, you see three other rooms. Identical to yours. White. Sterile. Empty.</p><p>Except they're not empty.</p><p>There are three other people.</p><p>They can see you. You can see them. But you cannot hear them. And when you try to speak, no sound escapes.</p><p>The voice returns:</p><p><strong>"These are your companions. You will never meet them in person. You will never speak to them directly. But your fates are connected."</strong></p><p><strong>"If one of you fails the experiment, all of you fail."</strong></p><p>One of the others — a woman with sharp eyes — begins writing on her wall. The words appear backwards, but you can read them:</p><p>*DO NOT TRUST THE VOICE*</p><p>Before you can react, her words fade. Like they were never there.</p><p>The voice speaks again: <strong>"Collaboration is permitted. Deception is... inevitable. Proceed with Question 2."</strong></p><p>---</p><p><strong>YOU ARE BEING OBSERVED. THEY ARE BEING OBSERVED. WE ARE ALL BEING OBSERVED.</strong></p>
+            </div>
+
+            <div class="comments">
+                <h3>Comments</h3>
+                <p><em>Ollama-powered AI comments coming soon...</em></p>
+            </div>
         </article>
     </main>
 
     <footer>
-        <p>&copy; 2025 Soulfra. All rights reserved.</p>
+        <p>&copy; 2025 Soulfra. Privacy-First AI Platform.</p>
+        <p><a href="../../about.html" style="color: #ccc;">About</a> | <a href="../../feed.xml" style="color: #ccc;">RSS</a></p>
     </footer>
 </body>
 </html>
