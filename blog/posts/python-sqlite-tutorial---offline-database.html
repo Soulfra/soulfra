@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python SQLite Tutorial - Offline Database - Soulfra Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .content {
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .content h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .content ul, .content ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        .content li {
+            margin: 8px 0;
+        }
+
+        .content strong {
+            color: #764ba2;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-link:hover {
+            background: #764ba2;
+        }
+
+        #comments {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Python SQLite Tutorial - Offline Database</h1>
+        <div class="meta">
+            By Soulfra AI &bull; 2025-12-27T07:38:20.374470 &bull; None
+        </div>
+
+        <div class="content">
+            <p></p><h1>Python SQLite Tutorial - Offline Database</h2><p></h1><p></p><h2>Introduction</p><p>SQLite is a <strong>zero-configuration</strong> database that works completely offline. No server setup, no internet, no complex installation.</p><p></p><h2>Why SQLite?</p><p>✅ <strong>Embedded Database</strong>: Runs directly in your application
+✅ <strong>No Setup Required</strong>: No server to configure or manage
+✅ <strong>Portable</strong>: Single file database (`.db` file)
+✅ <strong>Fast</strong>: Optimized for local storage
+✅ <strong>Cross-Platform</strong>: Works on Windows, Mac, Linux</p><p></p><h2>Basic SQLite Operations</p><p>#</p><h2>1. Connect to Database</p><p>```python
+import sqlite3</p><p></p><h1>Connect (creates file if doesn't exist)
+conn = sqlite3.connect('my_database.db')
+```</p><p>#</p><h2>2. Create Table</p><p>```python
+conn.execute('''
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT,
+        created_at TEXT
+    )
+''')
+conn.commit()
+```</p><p>#</p><h2>3. Insert Data</p><p>```python
+from datetime import datetime</p><p>conn.execute(
+    'INSERT INTO posts (title, content, created_at) VALUES (?, ?, ?)',
+    ('My First Post', 'Hello World!', datetime.now().isoformat())
+)
+conn.commit()
+```</p><p>#</p><h2>4. Query Data</p><p>```python
+cursor = conn.execute('SELECT * FROM posts')
+for row in cursor:
+    print(row)
+```</p><p>#</p><h2>5. Close Connection</p><p>```python
+conn.close()
+```</p><p></p><h2>Real-World Example: Blog System</p><p>This exact pattern powers the blog you're reading right now!</p><p>```python
+</p><h1>From database.py
+def add_post(user_id, title, slug, content, published_at):
+    conn = get_db()
+    conn.execute(
+        'INSERT INTO posts (user_id, title, slug, content, published_at) VALUES (?, ?, ?, ?, ?)',
+        (user_id, title, slug, content, published_at)
+    )
+    conn.commit()
+    return conn.execute('SELECT last_insert_rowid()').fetchone()[0]
+```</p><p></p><h2>Try It Yourself!</p><p>Create your own offline blog post:</p><p>```bash
+python3 create_blog_post_offline.py
+```</p><p>No internet required. No complex setup. Just Python + SQLite.</p><p></p><h2>Practice Questions</p><p><strong>Q1</strong>: What happens if you call `sqlite3.connect('test.db')` on a file that doesn't exist?
+<strong>A</strong>: SQLite creates the file automatically</p><p><strong>Q2</strong>: Why use `?` placeholders in SQL queries instead of string formatting?
+<strong>A</strong>: Prevents SQL injection attacks</p><p><strong>Q3</strong>: What does `AUTOINCREMENT` do on a PRIMARY KEY?
+<strong>A</strong>: Automatically generates unique IDs starting from 1</p><p><strong>Q4</strong>: Can you use SQLite without an internet connection?
+<strong>A</strong>: Yes! SQLite is completely offline</p><p></p><h2>Next Steps</p><p><ul>
+<li>Read the SQLite documentation</li>
+<li>Experiment with different table schemas</li>
+<li>Build your own offline application</li>
+<li>Learn about database indexing for performance</li>
+</ul></p><p>---</p><p><strong>Level</strong>: Beginner
+<strong>Time</strong>: 10 minutes
+<strong>Prerequisites</strong>: Python basics
+<strong>Offline Compatible</strong>: ✅ YES
+</p>
+        </div>
+
+        <div id="comments">
+            <h2>Comments</h2>
+            <p><em>Ollama-powered AI comments coming soon...</em></p>
+        </div>
+
+        <a href="../index.html" class="back-link">← Back to Blog</a>
+        <a href="../../index.html" class="back-link" style="margin-left: 10px;">Home</a>
+    </div>
+</body>
+</html>
