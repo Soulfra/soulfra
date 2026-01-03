@@ -189,9 +189,40 @@ if consciousness_level > THRESHOLD:
 
                 <div class="comment-form" style="margin-top: 2rem;">
                     <h4>Leave a Comment</h4>
-                    <textarea id="comment-text" placeholder="Share your thoughts..." style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; min-height: 100px; margin-bottom: 1rem;"></textarea>
-                    <button id="submit-comment" style="background: var(--primary); color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; cursor: pointer; font-weight: bold;">Post Comment</button>
-                    <span id="comment-status" style="margin-left: 1rem; color: #666;"></span>
+
+                    <!-- GitHub Connection Required -->
+                    <div id="github-gate" style="display: none; padding: 1rem; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; margin-bottom: 1rem;">
+                        <h5 style="margin-top: 0;">🔗 Connect GitHub to Comment</h5>
+                        <p>To maintain quality and prevent spam, we use GitHub as identity verification.</p>
+                        <button id="connect-github" style="background: #24292e; color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                            Connect GitHub Account
+                        </button>
+                    </div>
+
+                    <!-- Star Requirement -->
+                    <div id="star-gate" style="display: none; padding: 1rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; margin-bottom: 1rem;">
+                        <h5 style="margin-top: 0;">⭐ Star Our Repo to Continue</h5>
+                        <p>Please star our GitHub repository before commenting. This helps us grow!</p>
+                        <p><strong id="star-count">0</strong> developers have starred us so far.</p>
+                        <a id="star-link" href="" target="_blank" style="display: inline-block; background: #ffc107; color: #000; padding: 0.8rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold;">
+                            ⭐ Star on GitHub
+                        </a>
+                        <button id="check-star" style="background: #6c757d; color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 1rem;">
+                            I've Starred - Check Now
+                        </button>
+                    </div>
+
+                    <!-- Comment Form (shows after requirements met) -->
+                    <div id="comment-form-content" style="display: none;">
+                        <textarea id="comment-text" placeholder="Share your thoughts..." style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; min-height: 100px; margin-bottom: 1rem;"></textarea>
+                        <button id="submit-comment" style="background: var(--primary); color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; cursor: pointer; font-weight: bold;">Post Comment</button>
+                        <span id="comment-status" style="margin-left: 1rem; color: #666;"></span>
+                    </div>
+
+                    <!-- GitHub Username Display -->
+                    <div id="github-user-info" style="display: none; margin-top: 1rem; padding: 0.5rem; background: #d4edda; border-radius: 4px; font-size: 0.9rem;">
+                        ✓ Commenting as <strong id="github-username-display"></strong>
+                    </div>
                 </div>
             </div>
         </article>
@@ -203,9 +234,85 @@ if consciousness_level > THRESHOLD:
     </footer>
 
     <script>
-        // Interactive comment widget
+        // Interactive comment widget with GitHub gating
         const POST_ID = 23;
         const API_BASE = 'http://192.168.1.87:5001';
+        const CURRENT_DOMAIN = window.location.hostname;
+
+        // State
+        let githubUsername = localStorage.getItem('github_username');
+        let hasStarredRepo = false;
+
+        // Initialize
+        (function init() {
+            checkGitHubAuth();
+            loadComments();
+        })();
+
+        // Check GitHub authentication status
+        function checkGitHubAuth() {
+            if (!githubUsername) {
+                // Show GitHub connection gate
+                document.getElementById('github-gate').style.display = 'block';
+                document.getElementById('star-gate').style.display = 'none';
+                document.getElementById('comment-form-content').style.display = 'none';
+            } else {
+                // Check star status
+                checkStarStatus();
+            }
+        }
+
+        // Check if user has starred repo
+        async function checkStarStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/api/check-star?username=${githubUsername}&domain=${CURRENT_DOMAIN}`);
+                const result = await response.json();
+
+                if (result.has_starred) {
+                    // Show comment form
+                    document.getElementById('github-gate').style.display = 'none';
+                    document.getElementById('star-gate').style.display = 'none';
+                    document.getElementById('comment-form-content').style.display = 'block';
+                    document.getElementById('github-user-info').style.display = 'block';
+                    document.getElementById('github-username-display').textContent = `@${githubUsername}`;
+                    hasStarredRepo = true;
+                } else {
+                    // Show star requirement
+                    document.getElementById('github-gate').style.display = 'none';
+                    document.getElementById('star-gate').style.display = 'block';
+                    document.getElementById('comment-form-content').style.display = 'none';
+                    document.getElementById('star-count').textContent = result.star_count || 0;
+                    document.getElementById('star-link').href = result.repo_url || '#';
+                    hasStarredRepo = false;
+                }
+            } catch (error) {
+                console.error('Error checking star status:', error);
+                // Fallback: show comment form anyway
+                document.getElementById('comment-form-content').style.display = 'block';
+            }
+        }
+
+        // Connect GitHub (simplified - real version uses OAuth)
+        function connectGitHub() {
+            const username = prompt('Enter your GitHub username (OAuth coming soon):');
+            if (username) {
+                localStorage.setItem('github_username', username);
+                githubUsername = username;
+                checkGitHubAuth();
+            }
+        }
+
+        // Recheck star after user claims they starred
+        async function recheckStar() {
+            const btn = document.getElementById('check-star');
+            btn.textContent = 'Checking...';
+            btn.disabled = true;
+
+            await checkStarStatus();
+
+            btn.textContent = 'I've Starred - Check Now';
+            btn.disabled = false;
+        }
 
         // Load existing comments
         async function loadComments() {
@@ -231,10 +338,10 @@ if consciousness_level > THRESHOLD:
             }
 
             list.innerHTML = comments.map(comment => `
-                <div class="comment">
-                    <div class="author">
+                <div class="comment" style="border-left: 3px solid var(--primary); padding-left: 1rem; margin-bottom: 1rem;">
+                    <div class="author" style="font-weight: bold; margin-bottom: 0.5rem;">
                         ${comment.user_name || 'Anonymous'}
-                        ${comment.is_ai ? '<span class="ai-badge">AI</span>' : ''}
+                        ${comment.is_ai ? '<span style="background: #3498db; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.7rem; margin-left: 0.5rem;">AI</span>' : ''}
                     </div>
                     <div class="content">${comment.content}</div>
                     <div class="meta" style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">
@@ -252,6 +359,11 @@ if consciousness_level > THRESHOLD:
                 return;
             }
 
+            if (!githubUsername || !hasStarredRepo) {
+                alert('Please complete GitHub authentication first');
+                return;
+            }
+
             const statusEl = document.getElementById('comment-status');
             statusEl.textContent = 'Posting...';
 
@@ -263,13 +375,15 @@ if consciousness_level > THRESHOLD:
                     },
                     body: JSON.stringify({
                         post_id: POST_ID,
-                        content: text
+                        content: text,
+                        github_username: githubUsername
                     })
                 });
 
                 if (!response.ok) throw new Error('Failed to post comment');
 
                 statusEl.textContent = '✓ Posted!';
+                statusEl.style.color = '#27ae60';
                 document.getElementById('comment-text').value = '';
 
                 // Reload comments
@@ -286,15 +400,14 @@ if consciousness_level > THRESHOLD:
         }
 
         // Event listeners
+        document.getElementById('connect-github').addEventListener('click', connectGitHub);
+        document.getElementById('check-star').addEventListener('click', recheckStar);
         document.getElementById('submit-comment').addEventListener('click', postComment);
         document.getElementById('comment-text').addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Enter') {
                 postComment();
             }
         });
-
-        // Load comments on page load
-        loadComments();
     </script>
 </body>
 </html>
