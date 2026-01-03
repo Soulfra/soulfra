@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decentralized Ollama - Email Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #0f3460;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #eaeaea;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+
+        .header .tagline {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .header .status {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .main-card h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        /* Input Section */
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-section label {
+            display: block;
+            color: #eaeaea;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-section input,
+        .input-section textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: #eaeaea;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+        }
+
+        .input-section input::placeholder,
+        .input-section textarea::placeholder {
+            color: rgba(234, 234, 234, 0.5);
+        }
+
+        .input-section textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Button */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Response Area */
+        .response-area {
+            margin-top: 30px;
+        }
+
+        .response-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+            color: #eaeaea;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .response-box.empty {
+            color: rgba(234, 234, 234, 0.5);
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        /* Status Messages */
+        .status-msg {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .status-msg.info {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
+        }
+
+        .status-msg.success {
+            background: rgba(0, 255, 100, 0.1);
+            border: 1px solid rgba(0, 255, 100, 0.3);
+            color: #00ff64;
+        }
+
+        .status-msg.error {
+            background: rgba(255, 0, 100, 0.1);
+            border: 1px solid rgba(255, 0, 100, 0.3);
+            color: #ff0064;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #00d4ff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .info-box strong {
+            color: #00d4ff;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Decentralized Ollama</h1>
+            <div class="tagline">AI Network via Email Chain</div>
+            <div class="status">
+                ⚡ Peer-to-peer | 📧 Email-based | 🔒 Your infrastructure
+            </div>
+        </div>
+
+        <div class="main-card">
+            <h2>Send AI Request</h2>
+
+            <div id="statusArea"></div>
+
+            <div class="input-section">
+                <label>Your Email (for response):</label>
+                <input
+                    type="email"
+                    id="userEmail"
+                    placeholder="your-email@example.com"
+                    value="">
+            </div>
+
+            <div class="input-section">
+                <label>API Key:</label>
+                <input
+                    type="password"
+                    id="apiKey"
+                    placeholder="sk_github_yourname_abc123"
+                    value="">
+            </div>
+
+            <div class="input-section">
+                <label>Your Question for AI:</label>
+                <textarea
+                    id="prompt"
+                    placeholder="What would you like to ask the AI?"></textarea>
+            </div>
+
+            <button class="btn" onclick="sendRequest()" id="sendBtn">
+                📧 Send Request to Email Network
+            </button>
+
+            <div class="info-box">
+                <strong>How it works:</strong><br>
+                • Your request is sent via email to the node network<br>
+                • Any available node processes it with Ollama<br>
+                • You receive the AI response via email (~30-60 seconds)<br>
+                • 100% decentralized - no cloud servers!
+            </div>
+        </div>
+
+        <div class="main-card response-area">
+            <h2>📬 Check Your Email</h2>
+            <div class="response-box empty" id="responseBox">
+                Your AI response will arrive via email!<br><br>
+                Check your inbox in 30-60 seconds after sending.
+            </div>
+
+            <div class="info-box">
+                <strong>Note:</strong> This is truly decentralized - responses come via email, not through this page.
+                Check the email address you provided above for the AI's response!
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                Powered by Email + Your Hardware<br>
+                <a href="https://github.com" target="_blank">Get API Key</a> |
+                <a href="#" onclick="showHelp(); return false;">How to Run Your Own Node</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // EmailJS integration (free service for sending emails from static pages)
+        // Sign up at: https://www.emailjs.com/
+
+        const EMAIL_SERVICE_ID = 'YOUR_EMAILJS_SERVICE_ID'; // Replace with your EmailJS service ID
+        const EMAIL_TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID'; // Replace with your template ID
+        const EMAIL_USER_ID = 'YOUR_EMAILJS_USER_ID'; // Replace with your user ID
+
+        // Target email (your node network inbox)
+        const NODE_EMAIL = 'ollama@yourdomain.com'; // Replace with your actual email
+
+        // Load saved values
+        window.addEventListener('load', () => {
+            const savedEmail = localStorage.getItem('user_email');
+            const savedApiKey = localStorage.getItem('api_key');
+
+            if (savedEmail) document.getElementById('userEmail').value = savedEmail;
+            if (savedApiKey) document.getElementById('apiKey').value = savedApiKey;
+        });
+
+        function showStatus(message, type = 'info') {
+            const statusArea = document.getElementById('statusArea');
+            const statusMsg = document.createElement('div');
+            statusMsg.className = `status-msg ${type}`;
+            statusMsg.textContent = message;
+            statusArea.innerHTML = '';
+            statusArea.appendChild(statusMsg);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                statusMsg.style.opacity = '0';
+                setTimeout(() => statusMsg.remove(), 300);
+            }, 5000);
+        }
+
+        function sendRequest() {
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const prompt = document.getElementById('prompt').value.trim();
+
+            // Validation
+            if (!userEmail) {
+                showStatus('Please enter your email address', 'error');
+                return;
+            }
+
+            if (!apiKey) {
+                showStatus('Please enter your API key', 'error');
+                return;
+            }
+
+            if (!prompt) {
+                showStatus('Please enter a question for the AI', 'error');
+                return;
+            }
+
+            // Save values
+            localStorage.setItem('user_email', userEmail);
+            localStorage.setItem('api_key', apiKey);
+
+            // Disable button
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = '📧 Sending to network...';
+
+            // Create email body
+            const emailBody = `${prompt}
+
+---
+Reply-To: ${userEmail}`;
+
+            // Send via EmailJS (or use mailto: for simplicity)
+            sendViaMailto(userEmail, apiKey, prompt);
+        }
+
+        function sendViaMailto(userEmail, apiKey, prompt) {
+            // Simple mailto: link approach (works everywhere, no setup needed!)
+            const subject = `[OLLAMA_REQUEST] ${apiKey}`;
+            const body = `${prompt}
+
+---
+This request was sent from: ${userEmail}
+Please send the AI response to the email above.`;
+
+            const mailtoLink = `mailto:${NODE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            // Open mailto link
+            window.location.href = mailtoLink;
+
+            // Re-enable button
+            setTimeout(() => {
+                const sendBtn = document.getElementById('sendBtn');
+                sendBtn.disabled = false;
+                sendBtn.textContent = '📧 Send Request to Email Network';
+
+                showStatus('✅ Email client opened! Send the email to submit your request.', 'success');
+
+                // Update response box
+                const responseBox = document.getElementById('responseBox');
+                responseBox.className = 'response-box';
+                responseBox.innerHTML = `
+<strong>✅ Request prepared!</strong>
+
+Your email client should have opened with a pre-filled message.
+Send that email to submit your AI request.
+
+The response will arrive at: <strong>${userEmail}</strong>
+
+Expected arrival time: 30-60 seconds
+
+⏳ Check your inbox...
+                `.trim();
+            }, 500);
+        }
+
+        function showHelp() {
+            alert(`
+🌐 Run Your Own Ollama Node
+
+Turn ANY device into an AI node:
+
+1. Download: ollama_email_node.py
+2. Install: pip install requests
+3. Run:
+   python3 ollama_email_node.py \\
+     --email ollama@yourdomain.com \\
+     --password your-app-password
+
+That's it! The node will:
+• Check inbox every 30 seconds
+• Process requests with local Ollama
+• Send responses back via email
+
+Works on:
+✅ Your Mac
+✅ Raspberry Pi
+✅ Old iPhone (via Termux)
+✅ Old router (with Python)
+✅ Any Linux device
+
+Multiple nodes = redundancy!
+If one is offline, another handles it.
+
+Like a spam botnet but for good! 🎉
+            `.trim());
+        }
+    </script>
+</body>
+</html>

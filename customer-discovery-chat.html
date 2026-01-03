@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Discovery AI - Decentralized Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #0f3460;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #eaeaea;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+
+        .header .tagline {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .header .status {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .main-card h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .main-card h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: #00d4ff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .tab:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            color: #fff;
+            border-color: #00d4ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Input Section */
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-section label {
+            display: block;
+            color: #eaeaea;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-section input,
+        .input-section textarea,
+        .input-section select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: #eaeaea;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+        }
+
+        .input-section input::placeholder,
+        .input-section textarea::placeholder {
+            color: rgba(234, 234, 234, 0.5);
+        }
+
+        .input-section textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Template Grid */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .template-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .template-card:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+            transform: translateY(-2px);
+        }
+
+        .template-card.selected {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+        }
+
+        .template-card h4 {
+            color: #00d4ff;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .template-card p {
+            color: #aaa;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        /* A/B Comparison */
+        .ab-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .ab-option {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ab-option.red {
+            border-color: rgba(255, 100, 100, 0.5);
+        }
+
+        .ab-option.blue {
+            border-color: rgba(100, 100, 255, 0.5);
+        }
+
+        .ab-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .ab-option.selected.red {
+            background: rgba(255, 100, 100, 0.2);
+            border-color: #ff6464;
+        }
+
+        .ab-option.selected.blue {
+            background: rgba(100, 100, 255, 0.2);
+            border-color: #6464ff;
+        }
+
+        .ab-option h4 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .ab-option.red h4 {
+            color: #ff6464;
+        }
+
+        .ab-option.blue h4 {
+            color: #6464ff;
+        }
+
+        .ab-option textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            color: #eaeaea;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        /* Button */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        /* Saved Profiles */
+        .profile-list {
+            margin-top: 20px;
+        }
+
+        .profile-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-item h4 {
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+
+        .profile-item p {
+            color: #aaa;
+            font-size: 0.85em;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .profile-actions button {
+            padding: 8px 15px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 5px;
+            color: #00d4ff;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .profile-actions button:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .profile-actions button.delete {
+            border-color: rgba(255, 100, 100, 0.5);
+            color: #ff6464;
+        }
+
+        .profile-actions button.delete:hover {
+            background: rgba(255, 100, 100, 0.2);
+        }
+
+        /* Status Messages */
+        .status-msg {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .status-msg.info {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
+        }
+
+        .status-msg.success {
+            background: rgba(0, 255, 100, 0.1);
+            border: 1px solid rgba(0, 255, 100, 0.3);
+            color: #00ff64;
+        }
+
+        .status-msg.error {
+            background: rgba(255, 0, 100, 0.1);
+            border: 1px solid rgba(255, 0, 100, 0.3);
+            color: #ff0064;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #00d4ff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .info-box strong {
+            color: #00d4ff;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .ab-container {
+                grid-template-columns: 1fr;
+            }
+
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Customer Discovery AI</h1>
+            <div class="tagline">Dial in Your Ideal Customer - Powered by Decentralized Network</div>
+            <div class="status">
+                ⚡ Peer-to-peer | 📧 Email-based | 🔒 Your infrastructure | 🎨 Marketing-focused
+            </div>
+        </div>
+
+        <!-- Setup Card -->
+        <div class="main-card">
+            <h2>⚙️ Setup</h2>
+
+            <div id="statusArea"></div>
+
+            <div class="input-section">
+                <label>Your Email (for AI responses):</label>
+                <input
+                    type="email"
+                    id="userEmail"
+                    placeholder="your-email@example.com"
+                    value="">
+            </div>
+
+            <div class="input-section">
+                <label>API Key:</label>
+                <input
+                    type="password"
+                    id="apiKey"
+                    placeholder="sk_github_yourname_abc123"
+                    value="">
+            </div>
+
+            <button class="btn btn-secondary" onclick="saveSettings()">
+                💾 Save Settings
+            </button>
+
+            <div class="info-box">
+                <strong>Need an API key?</strong><br>
+                Get one from the <a href="https://github.com" target="_blank" style="color: #00d4ff;">GitHub Faucet</a>
+                or deploy your own node to participate in this decentralized network!
+            </div>
+        </div>
+
+        <!-- Mode Tabs -->
+        <div class="main-card">
+            <h2>🚀 Choose Your Discovery Mode</h2>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('persona')">
+                    👤 Persona Builder
+                </div>
+                <div class="tab" onclick="switchTab('ab')">
+                    🔴🔵 A/B Testing
+                </div>
+                <div class="tab" onclick="switchTab('adjacent')">
+                    🔗 Adjacent Marketing
+                </div>
+                <div class="tab" onclick="switchTab('custom')">
+                    ✏️ Custom Question
+                </div>
+                <div class="tab" onclick="switchTab('saved')">
+                    💾 Saved Profiles
+                </div>
+            </div>
+
+            <!-- Persona Builder Tab -->
+            <div id="persona-tab" class="tab-content active">
+                <h3>Build Your Ideal Customer Persona</h3>
+
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectTemplate('who')">
+                        <h4>👤 Who Are They?</h4>
+                        <p>Define demographics, psychographics, and key characteristics of your ideal customer.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectTemplate('pain')">
+                        <h4>💢 What Pain Points?</h4>
+                        <p>Identify the problems, frustrations, and challenges they face daily.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectTemplate('where')">
+                        <h4>📍 Where Are They?</h4>
+                        <p>Discover where they hang out online, what platforms they use, and communities they join.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectTemplate('decision')">
+                        <h4>🤔 How Do They Decide?</h4>
+                        <p>Understand their decision-making process, objections, and buying triggers.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectTemplate('value')">
+                        <h4>💎 What Do They Value?</h4>
+                        <p>Learn what matters most to them, their priorities, and what they're willing to pay for.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectTemplate('competition')">
+                        <h4>⚔️ Who Else Wants Them?</h4>
+                        <p>Analyze your competition and what alternatives your ideal customer considers.</p>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <label>Additional Context (optional):</label>
+                    <textarea
+                        id="personaContext"
+                        placeholder="Tell us about your product/service to get more specific insights..."></textarea>
+                </div>
+
+                <button class="btn" onclick="sendPersonaRequest()" id="personaBtn">
+                    📧 Send to AI Network
+                </button>
+            </div>
+
+            <!-- A/B Testing Tab -->
+            <div id="ab-tab" class="tab-content">
+                <h3>Red vs Blue - A/B Test Your Marketing</h3>
+
+                <div class="input-section">
+                    <label>What do you want to test?</label>
+                    <select id="abTestType">
+                        <option value="headline">Headline / Value Proposition</option>
+                        <option value="cta">Call-to-Action</option>
+                        <option value="email">Email Subject Line</option>
+                        <option value="landing">Landing Page Copy</option>
+                        <option value="ad">Ad Copy</option>
+                        <option value="social">Social Media Post</option>
+                    </select>
+                </div>
+
+                <div class="input-section">
+                    <label>Target Audience:</label>
+                    <input
+                        type="text"
+                        id="abAudience"
+                        placeholder="e.g., busy moms, tech startups, fitness enthusiasts">
+                </div>
+
+                <div class="input-section">
+                    <label>Your Product/Service:</label>
+                    <textarea
+                        id="abProduct"
+                        placeholder="Brief description of what you're selling and its main benefit..."></textarea>
+                </div>
+
+                <button class="btn" onclick="generateABOptions()" id="abBtn">
+                    🎨 Generate Red vs Blue Options
+                </button>
+
+                <div id="abResults" style="display: none; margin-top: 20px;">
+                    <h3>Pick Your Winner:</h3>
+                    <div class="ab-container">
+                        <div class="ab-option red" onclick="selectAB('red')">
+                            <h4>🔴 Option Red</h4>
+                            <textarea id="redOption" readonly></textarea>
+                        </div>
+                        <div class="ab-option blue" onclick="selectAB('blue')">
+                            <h4>🔵 Option Blue</h4>
+                            <textarea id="blueOption" readonly></textarea>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="iterateAB()" id="iterateBtn">
+                        🔄 Iterate on Winner
+                    </button>
+
+                    <button class="btn" onclick="saveABWinner()" id="saveABBtn">
+                        💾 Save Winner to Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- Adjacent Marketing Tab -->
+            <div id="adjacent-tab" class="tab-content">
+                <h3>Find Adjacent Marketing Opportunities</h3>
+
+                <div class="input-section">
+                    <label>Your Product/Service:</label>
+                    <textarea
+                        id="adjacentProduct"
+                        placeholder="Describe what you offer..."></textarea>
+                </div>
+
+                <div class="input-section">
+                    <label>Your Target Market:</label>
+                    <input
+                        type="text"
+                        id="adjacentMarket"
+                        placeholder="e.g., local coffee shops, remote workers, pet owners">
+                </div>
+
+                <div class="template-grid">
+                    <div class="template-card" onclick="selectAdjacentType('complement')">
+                        <h4>🤝 Complementary Products</h4>
+                        <p>Find products/services that naturally pair with yours for cross-promotion.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectAdjacentType('partnership')">
+                        <h4>🔗 Partnership Opportunities</h4>
+                        <p>Discover businesses you could partner with for mutual benefit.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectAdjacentType('expansion')">
+                        <h4>📈 Market Expansion</h4>
+                        <p>Identify adjacent markets you could expand into with minimal effort.</p>
+                    </div>
+
+                    <div class="template-card" onclick="selectAdjacentType('bundle')">
+                        <h4>📦 Bundle Ideas</h4>
+                        <p>Get suggestions for product bundles that increase perceived value.</p>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="sendAdjacentRequest()" id="adjacentBtn">
+                    📧 Find Opportunities
+                </button>
+            </div>
+
+            <!-- Custom Question Tab -->
+            <div id="custom-tab" class="tab-content">
+                <h3>Ask Your Own Marketing Question</h3>
+
+                <div class="input-section">
+                    <label>Your Question:</label>
+                    <textarea
+                        id="customPrompt"
+                        placeholder="Ask anything about your target market, positioning, messaging, channels, etc..."></textarea>
+                </div>
+
+                <button class="btn" onclick="sendCustomRequest()" id="customBtn">
+                    📧 Send to AI Network
+                </button>
+
+                <div class="info-box">
+                    <strong>Pro tip:</strong> The more context you provide about your business, target market, and specific challenge,
+                    the more useful the AI's response will be!
+                </div>
+            </div>
+
+            <!-- Saved Profiles Tab -->
+            <div id="saved-tab" class="tab-content">
+                <h3>Your Saved Customer Profiles</h3>
+
+                <div id="profileList" class="profile-list">
+                    <div class="info-box">
+                        No saved profiles yet. Create one using the Persona Builder or save an A/B test winner!
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="exportAllProfiles()" id="exportBtn" style="margin-top: 20px; display: none;">
+                    📤 Export All Profiles
+                </button>
+            </div>
+        </div>
+
+        <!-- Response Info -->
+        <div class="main-card">
+            <h2>📬 How to Get Your Results</h2>
+
+            <div class="info-box">
+                <strong>This is a decentralized network:</strong><br><br>
+
+                1️⃣ When you click send, your email client will open with a pre-filled message<br>
+                2️⃣ Send that email to submit your request to the AI node network<br>
+                3️⃣ Any available node (Mac, Pi, old iPhone, etc.) will process it<br>
+                4️⃣ You'll receive the AI response via email in 30-60 seconds<br>
+                5️⃣ Save useful insights to build your customer profile library<br><br>
+
+                <strong>💡 Why email?</strong> 100% decentralized, works on any hardware, no cloud costs!
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                Powered by Email + Your Hardware<br>
+                <a href="#" onclick="showNodeHelp(); return false;">Run Your Own Node</a> |
+                <a href="https://github.com" target="_blank">Get API Key</a> |
+                <a href="email-ollama-chat.html">Simple Chat Mode</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const NODE_EMAIL = 'ollama@yourdomain.com'; // Replace with your actual node email
+
+        // Persona templates
+        const PERSONA_TEMPLATES = {
+            who: `I need help defining my ideal customer persona. Please help me understand:
+
+- Demographics (age, gender, location, income, education)
+- Psychographics (values, interests, lifestyle)
+- Professional characteristics (job title, industry, company size)
+- Online behavior (platforms they use, content they consume)
+
+My product/service: {context}
+
+Give me a detailed customer persona profile.`,
+
+            pain: `Help me identify the key pain points and challenges my ideal customer faces:
+
+- Daily frustrations and problems
+- Long-term challenges
+- Emotional pain points
+- Financial pain points
+- Inefficiencies they tolerate
+
+My product/service: {context}
+
+List and explain the top pain points, prioritized by severity.`,
+
+            where: `Where can I find my ideal customers online and offline?
+
+- Social media platforms they frequent
+- Online communities and forums
+- Professional networks
+- Physical locations
+- Events and conferences
+- Content they consume (blogs, podcasts, etc.)
+
+My product/service: {context}
+
+Give me specific channels and tactics to reach them.`,
+
+            decision: `Help me understand my ideal customer's decision-making process:
+
+- How do they research solutions?
+- What are their main objections?
+- What triggers a purchase decision?
+- Who else influences their decision?
+- How long is their buying cycle?
+- What makes them choose one option over another?
+
+My product/service: {context}
+
+Map out their buyer's journey and decision criteria.`,
+
+            value: `What does my ideal customer truly value?
+
+- Their top priorities
+- What they're willing to pay premium for
+- What they won't compromise on
+- Their success metrics
+- Their aspirations and goals
+
+My product/service: {context}
+
+Help me understand what drives their purchasing decisions.`,
+
+            competition: `Analyze my competitive landscape from my ideal customer's perspective:
+
+- Who are my direct competitors?
+- What indirect alternatives do they consider?
+- Why might they choose competitors over me?
+- What gaps exist in the market?
+- What unique positioning could work?
+
+My product/service: {context}
+
+Give me competitive insights and differentiation opportunities.`
+        };
+
+        // Adjacent marketing templates
+        const ADJACENT_TEMPLATES = {
+            complement: `Find complementary products and cross-promotion opportunities for:
+
+Product: {product}
+Target Market: {market}
+
+Identify:
+- Products/services that naturally pair with mine
+- Potential cross-promotion partners
+- Bundle opportunities
+- Referral program ideas
+
+Give me 5-7 specific, actionable opportunities.`,
+
+            partnership: `Identify strategic partnership opportunities for:
+
+Product: {product}
+Target Market: {market}
+
+Find:
+- Businesses with overlapping audiences
+- Win-win collaboration ideas
+- Co-marketing opportunities
+- Joint venture possibilities
+
+Give me 5-7 specific partnership concepts with rationale.`,
+
+            expansion: `Suggest adjacent market expansion opportunities for:
+
+Product: {product}
+Current Market: {market}
+
+Identify:
+- Related customer segments I could easily serve
+- Adjacent problems I could solve
+- New use cases for my solution
+- Low-hanging fruit for expansion
+
+Give me 5-7 expansion opportunities ranked by ease of entry.`,
+
+            bundle: `Create compelling bundle ideas for:
+
+Product: {product}
+Target Market: {market}
+
+Suggest:
+- Product/service bundles that increase value
+- Pricing tier ideas
+- Upsell opportunities
+- Package deals that solve complete problems
+
+Give me 5-7 bundle concepts with pricing suggestions.`
+        };
+
+        // State
+        let currentTemplate = null;
+        let currentAdjacentType = null;
+        let abWinner = null;
+        let savedProfiles = [];
+
+        // Initialize
+        window.addEventListener('load', () => {
+            loadSettings();
+            loadProfiles();
+        });
+
+        // Settings Management
+        function loadSettings() {
+            const savedEmail = localStorage.getItem('user_email');
+            const savedApiKey = localStorage.getItem('api_key');
+
+            if (savedEmail) document.getElementById('userEmail').value = savedEmail;
+            if (savedApiKey) document.getElementById('apiKey').value = savedApiKey;
+        }
+
+        function saveSettings() {
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+
+            if (!userEmail) {
+                showStatus('Please enter your email address', 'error');
+                return;
+            }
+
+            if (!apiKey) {
+                showStatus('Please enter your API key', 'error');
+                return;
+            }
+
+            localStorage.setItem('user_email', userEmail);
+            localStorage.setItem('api_key', apiKey);
+
+            showStatus('✅ Settings saved!', 'success');
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // Persona Builder
+        function selectTemplate(templateKey) {
+            // Update visual selection
+            document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.template-card').classList.add('selected');
+
+            currentTemplate = templateKey;
+        }
+
+        function sendPersonaRequest() {
+            if (!currentTemplate) {
+                showStatus('Please select a persona question template first', 'error');
+                return;
+            }
+
+            const context = document.getElementById('personaContext').value.trim() || 'Not specified';
+            const prompt = PERSONA_TEMPLATES[currentTemplate].replace('{context}', context);
+
+            sendToNetwork(prompt, 'personaBtn');
+        }
+
+        // A/B Testing
+        function generateABOptions() {
+            const testType = document.getElementById('abTestType').value;
+            const audience = document.getElementById('abAudience').value.trim();
+            const product = document.getElementById('abProduct').value.trim();
+
+            if (!audience || !product) {
+                showStatus('Please fill in target audience and product details', 'error');
+                return;
+            }
+
+            const prompt = `Generate TWO different ${testType} options for A/B testing:
+
+Target Audience: ${audience}
+Product/Service: ${product}
+
+Requirements:
+- Create TWO distinct versions (call them "Red" and "Blue")
+- Make them noticeably different in approach/tone/angle
+- Both should be compelling but test different psychological triggers
+- Keep each to 1-3 sentences max
+
+Format your response EXACTLY like this:
+RED: [your red version here]
+BLUE: [your blue version here]
+
+Make them ready to test immediately.`;
+
+            sendToNetwork(prompt, 'abBtn', displayABResults);
+        }
+
+        function displayABResults(emailReceived = false) {
+            if (emailReceived) {
+                showStatus('✅ Check your email for A/B test results! When you receive them, paste them above.', 'success');
+            }
+            document.getElementById('abResults').style.display = 'block';
+        }
+
+        function selectAB(color) {
+            document.querySelectorAll('.ab-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector(`.ab-option.${color}`).classList.add('selected');
+            abWinner = color;
+        }
+
+        function iterateAB() {
+            if (!abWinner) {
+                showStatus('Please select a winner first (click on Red or Blue)', 'error');
+                return;
+            }
+
+            const winnerText = document.getElementById(`${abWinner}Option`).value;
+            const testType = document.getElementById('abTestType').value;
+
+            const prompt = `Take this winning ${testType} and create an improved version:
+
+"${winnerText}"
+
+Create ONE refined version that:
+- Keeps what worked
+- Improves weak points
+- Tests a slight variation
+- Maintains the core appeal
+
+Give me just the new version, ready to use.`;
+
+            sendToNetwork(prompt, 'iterateBtn');
+        }
+
+        function saveABWinner() {
+            if (!abWinner) {
+                showStatus('Please select a winner first', 'error');
+                return;
+            }
+
+            const testType = document.getElementById('abTestType').value;
+            const winnerText = document.getElementById(`${abWinner}Option`).value;
+
+            const profile = {
+                id: Date.now(),
+                type: 'ab-test',
+                name: `${testType} - ${abWinner.toUpperCase()} Winner`,
+                content: winnerText,
+                date: new Date().toLocaleString()
+            };
+
+            savedProfiles.push(profile);
+            localStorage.setItem('customer_profiles', JSON.stringify(savedProfiles));
+
+            showStatus('✅ Winner saved to profiles!', 'success');
+            loadProfiles();
+        }
+
+        // Adjacent Marketing
+        function selectAdjacentType(type) {
+            document.querySelectorAll('#adjacent-tab .template-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.template-card').classList.add('selected');
+            currentAdjacentType = type;
+        }
+
+        function sendAdjacentRequest() {
+            if (!currentAdjacentType) {
+                showStatus('Please select an adjacent marketing type first', 'error');
+                return;
+            }
+
+            const product = document.getElementById('adjacentProduct').value.trim();
+            const market = document.getElementById('adjacentMarket').value.trim();
+
+            if (!product || !market) {
+                showStatus('Please fill in product and target market details', 'error');
+                return;
+            }
+
+            const prompt = ADJACENT_TEMPLATES[currentAdjacentType]
+                .replace('{product}', product)
+                .replace('{market}', market);
+
+            sendToNetwork(prompt, 'adjacentBtn');
+        }
+
+        // Custom Question
+        function sendCustomRequest() {
+            const prompt = document.getElementById('customPrompt').value.trim();
+
+            if (!prompt) {
+                showStatus('Please enter your question', 'error');
+                return;
+            }
+
+            sendToNetwork(prompt, 'customBtn');
+        }
+
+        // Profile Management
+        function loadProfiles() {
+            const stored = localStorage.getItem('customer_profiles');
+            savedProfiles = stored ? JSON.parse(stored) : [];
+
+            const profileList = document.getElementById('profileList');
+            const exportBtn = document.getElementById('exportBtn');
+
+            if (savedProfiles.length === 0) {
+                profileList.innerHTML = `
+                    <div class="info-box">
+                        No saved profiles yet. Create one using the Persona Builder or save an A/B test winner!
+                    </div>
+                `;
+                exportBtn.style.display = 'none';
+            } else {
+                profileList.innerHTML = savedProfiles.map(profile => `
+                    <div class="profile-item">
+                        <div>
+                            <h4>${profile.name}</h4>
+                            <p>${profile.date}</p>
+                        </div>
+                        <div class="profile-actions">
+                            <button onclick="viewProfile(${profile.id})">👁️ View</button>
+                            <button onclick="exportProfile(${profile.id})">📤 Export</button>
+                            <button class="delete" onclick="deleteProfile(${profile.id})">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+                exportBtn.style.display = 'block';
+            }
+        }
+
+        function viewProfile(id) {
+            const profile = savedProfiles.find(p => p.id === id);
+            if (profile) {
+                alert(`${profile.name}\n\n${profile.content}`);
+            }
+        }
+
+        function exportProfile(id) {
+            const profile = savedProfiles.find(p => p.id === id);
+            if (profile) {
+                const data = JSON.stringify(profile, null, 2);
+                downloadFile(`profile-${id}.json`, data);
+            }
+        }
+
+        function deleteProfile(id) {
+            if (confirm('Are you sure you want to delete this profile?')) {
+                savedProfiles = savedProfiles.filter(p => p.id !== id);
+                localStorage.setItem('customer_profiles', JSON.stringify(savedProfiles));
+                loadProfiles();
+                showStatus('Profile deleted', 'info');
+            }
+        }
+
+        function exportAllProfiles() {
+            const data = JSON.stringify(savedProfiles, null, 2);
+            downloadFile('all-customer-profiles.json', data);
+        }
+
+        function downloadFile(filename, content) {
+            const blob = new Blob([content], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Network Communication
+        function sendToNetwork(prompt, buttonId, callback = null) {
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+
+            if (!userEmail || !apiKey) {
+                showStatus('Please fill in your email and API key in the Setup section', 'error');
+                return;
+            }
+
+            // Disable button
+            const btn = document.getElementById(buttonId);
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '📧 Sending to network...';
+
+            // Create mailto link
+            const subject = `[OLLAMA_REQUEST] ${apiKey}`;
+            const body = `${prompt}
+
+---
+This request was sent from: ${userEmail}
+Please send the AI response to the email above.`;
+
+            const mailtoLink = `mailto:${NODE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            // Open mailto
+            window.location.href = mailtoLink;
+
+            // Re-enable button
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = originalText;
+                showStatus('✅ Email client opened! Send the email to submit your request.', 'success');
+
+                if (callback) {
+                    callback(true);
+                }
+            }, 500);
+        }
+
+        // UI Helpers
+        function showStatus(message, type = 'info') {
+            const statusArea = document.getElementById('statusArea');
+            const statusMsg = document.createElement('div');
+            statusMsg.className = `status-msg ${type}`;
+            statusMsg.textContent = message;
+            statusArea.innerHTML = '';
+            statusArea.appendChild(statusMsg);
+
+            setTimeout(() => {
+                statusMsg.style.opacity = '0';
+                setTimeout(() => statusMsg.remove(), 300);
+            }, 5000);
+        }
+
+        function showNodeHelp() {
+            alert(`🌐 Run Your Own Ollama Node
+
+Turn ANY device into an AI node:
+
+1. Download: ollama_email_node.py
+2. Install: pip install requests
+3. Run:
+   python3 ollama_email_node.py \\
+     --email ${NODE_EMAIL} \\
+     --password your-app-password
+
+Works on:
+✅ Your Mac
+✅ Raspberry Pi
+✅ Old iPhone (via Termux)
+✅ Old router (with Python)
+✅ Any Linux device
+
+Multiple nodes = redundancy!
+Like a decentralized AI network using email!`);
+        }
+    </script>
+</body>
+</html>
