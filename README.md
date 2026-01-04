@@ -4,6 +4,9 @@
 
 > Voice memos, QR scans, emoji navigation, gesture controls. Just login, scan, and go.
 
+🔴 **LIVE UPDATE TEST** - Last edited: 2026-01-04 12:52 EST from MacBook Terminal
+_Next edit will be from iPhone to prove mobile workflow works_
+
 ---
 
 ## 🎤 What I'm Building
