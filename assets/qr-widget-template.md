@@ -4,8 +4,8 @@
 Scan this QR code to connect your iPhone and contribute voice memos:
 
 <div align="center">
-    <a href="https://cringeproof.com/pair">
-        <img src="assets/qr-pair.svg" alt="Scan to pair iPhone" width="200">
+    <a href="http://192.168.1.87:5001/record">
+        <img src="assets/qr-local.svg" alt="Scan to pair iPhone" width="200">
     </a>
 </div>
 

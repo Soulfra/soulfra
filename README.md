@@ -222,20 +222,49 @@ No vendor lock-in. No proprietary services. Just static HTML/CSS/JS + your own b
 
 ## 📱 Pair Your iPhone
 
-Scan this QR code to connect your iPhone and contribute voice memos:
+Two ways to record voice memos from your iPhone:
+
+### Option 1: Local WiFi (Simpler - No OAuth!)
+
+**If your iPhone + MacBook are on the same WiFi:**
+
+<div align="center">
+    <a href="http://192.168.1.87:5001/record">
+        <img src="assets/qr-local.svg" alt="Scan to record (local WiFi)" width="200">
+    </a>
+    <br>
+    <sub>📡 <strong>Same WiFi Required</strong> | No OAuth, No Login</sub>
+</div>
+
+**How it works:**
+1. Scan QR code on iPhone (same WiFi as MacBook)
+2. Opens recording page directly
+3. Record voice memo
+4. Automatically creates gist & updates this README!
+
+**Setup:** See [LOCAL-WIFI-SETUP.md](LOCAL-WIFI-SETUP.md) - Just need a GitHub Personal Access Token (2 min setup)
+
+---
+
+### Option 2: OAuth (From Anywhere)
+
+**If you want to record from anywhere (not same WiFi):**
 
 <div align="center">
     <a href="https://cringeproof.com/pair">
-        <img src="assets/qr-pair.svg" alt="Scan to pair iPhone" width="200">
+        <img src="assets/qr-pair.svg" alt="Scan to pair (OAuth)" width="200">
     </a>
+    <br>
+    <sub>🌐 <strong>Works Anywhere</strong> | Requires GitHub OAuth Setup</sub>
 </div>
 
-**What happens when you scan:**
-1. Opens pairing page on your iPhone
-2. Click "Connect GitHub"
-3. Authorize permissions
-4. Start recording voice memos
-5. Your recordings appear here automatically!
+**How it works:**
+1. Scan QR code → Opens pairing page
+2. Connect GitHub account (OAuth)
+3. Paired! Can record from anywhere
+4. Voice memos auto-update this README
+
+**Setup:** See [QR-PAIRING-SETUP.md](QR-PAIRING-SETUP.md) - Requires GitHub OAuth app (30 min setup)
 
 ---
 
