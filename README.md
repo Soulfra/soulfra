@@ -224,25 +224,32 @@ No vendor lock-in. No proprietary services. Just static HTML/CSS/JS + your own b
 
 Two ways to record voice memos from your iPhone:
 
-### Option 1: Local WiFi (Simpler - No OAuth!)
+### Option 1: Local WiFi (Working NOW!)
 
-**If your iPhone + MacBook are on the same WiFi:**
+**iPhone + MacBook on same WiFi - Already working!**
 
 <div align="center">
-    <a href="http://192.168.1.87:5001/record">
-        <img src="assets/qr-local.svg" alt="Scan to record (local WiFi)" width="200">
+    <a href="https://192.168.1.87:5001/voice">
+        <img src="assets/qr-voice-working.svg" alt="Scan to record (same WiFi)" width="200">
     </a>
     <br>
-    <sub>📡 <strong>Same WiFi Required</strong> | No OAuth, No Login</sub>
+    <sub>📡 <strong>Same WiFi</strong> | QR Auth Built-in | Whisper Transcription</sub>
 </div>
 
-**How it works:**
+**How it works RIGHT NOW:**
 1. Scan QR code on iPhone (same WiFi as MacBook)
-2. Opens recording page directly
+2. QR authentication (already built in!)
 3. Record voice memo
-4. Automatically creates gist & updates this README!
+4. Auto-transcribes with Whisper
+5. Saves to database + extracts ideas
 
-**Setup:** See [LOCAL-WIFI-SETUP.md](LOCAL-WIFI-SETUP.md) - Just need a GitHub Personal Access Token (2 min setup)
+**Already running at:** `https://192.168.1.87:5001/voice`
+- ✅ Voice recording
+- ✅ Auto-transcription (Whisper)
+- ✅ Idea extraction (Ollama)
+- ✅ No GitHub token needed to record!
+
+*To add GitHub README updates, see [LOCAL-WIFI-SETUP.md](LOCAL-WIFI-SETUP.md)*
 
 ---
 
