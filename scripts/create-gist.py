@@ -105,6 +105,131 @@ def embed_gist_in_readme(gist_id, readme_path='../README.md'):
 
     print(f"✅ Added gist embed to {readme_path}")
 
+def add_to_story_wall(gist_data, privacy_level='public', readme_path='../README.md'):
+    """
+    Add voice memo to story wall in README
+
+    Privacy levels:
+    - 'public': Full gist embedded (visible content)
+    - 'private': Hash-only proof (content obfuscated)
+
+    Args:
+        gist_data (dict): Gist response from GitHub API
+        privacy_level (str): 'public' or 'private'
+        readme_path (str): Path to README.md
+    """
+    import hashlib
+    from pathlib import Path
+
+    gist_id = gist_data['id']
+    gist_url = gist_data['html_url']
+    created_at = gist_data['created_at']
+    description = gist_data['description']
+
+    # Read current README
+    readme = Path(readme_path)
+    content = readme.read_text() if readme.exists() else ""
+
+    # Find or create story wall section
+    story_wall_marker = "## 📱 Story Wall"
+
+    if story_wall_marker not in content:
+        # Create new story wall section
+        story_wall_section = f"""
+{story_wall_marker}
+
+**Voice memos recorded from iPhone via QR pairing**
+
+### Public Stories
+
+<!-- Public story entries below -->
+
+### Private Stories
+
+<!-- Private story entries (hash-only proofs) below -->
+
+---
+"""
+        # Insert before the "Get In Touch" section or at end
+        if "## 📬 Get In Touch" in content:
+            content = content.replace("## 📬 Get In Touch", story_wall_section + "## 📬 Get In Touch")
+        else:
+            content += "\n" + story_wall_section
+
+    # Generate story entry based on privacy level
+    if privacy_level == 'public':
+        # Public: Full gist embedded
+        story_entry = f"""
+<details>
+<summary>🎤 {description} - <small>{created_at[:10]}</small></summary>
+
+<script src="https://gist.github.com/{GITHUB_USERNAME}/{gist_id}.js"></script>
+
+[View on GitHub]({gist_url})
+</details>
+"""
+        # Insert into Public Stories section
+        public_marker = "### Public Stories\n\n<!-- Public story entries below -->"
+        if public_marker in content:
+            content = content.replace(
+                public_marker,
+                f"### Public Stories\n\n<!-- Public story entries below -->\n{story_entry}"
+            )
+
+    elif privacy_level == 'private':
+        # Private: Hash-only proof
+        content_hash = hashlib.sha256(json.dumps(gist_data).encode()).hexdigest()
+
+        story_entry = f"""
+- 🔒 **{description}** - `{created_at[:10]}`
+  - Hash: `{content_hash[:16]}...`
+  - [Verify proof]({gist_url}) (requires authentication)
+"""
+        # Insert into Private Stories section
+        private_marker = "### Private Stories\n\n<!-- Private story entries (hash-only proofs) below -->"
+        if private_marker in content:
+            content = content.replace(
+                private_marker,
+                f"### Private Stories\n\n<!-- Private story entries (hash-only proofs) below -->\n{story_entry}"
+            )
+
+    # Write updated README
+    readme.write_text(content)
+    print(f"✅ Added to story wall ({privacy_level}): {description}")
+
+    return content
+
+def create_story_from_voice_memo(voice_memo_data, privacy_level='public'):
+    """
+    Complete workflow: Voice memo → Gist → Story wall
+
+    Args:
+        voice_memo_data (dict): Voice memo metadata
+        privacy_level (str): 'public' or 'private'
+
+    Returns:
+        dict: Gist data with story wall info
+    """
+    # Create gist
+    timestamp = voice_memo_data.get('timestamp', datetime.now(timezone.utc).isoformat())
+    filename = f"voice-memo-{timestamp[:10]}.json"
+    content = json.dumps(voice_memo_data, indent=2)
+    title = voice_memo_data.get('title', 'Voice Memo')
+    description = f"{title} - Recorded from iPhone"
+
+    # Create gist (always public URL, but content may be obfuscated)
+    public = (privacy_level == 'public')
+    gist = create_gist(filename, content, description, public=public)
+
+    # Add to story wall
+    add_to_story_wall(gist, privacy_level=privacy_level)
+
+    return {
+        'gist': gist,
+        'privacy_level': privacy_level,
+        'story_wall_updated': True
+    }
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create GitHub gist')
     parser.add_argument('--file', required=True, help='File to upload')
