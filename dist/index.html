@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra - Building the Non-Typing Internet</title>
+    <meta name="description" content="Voice-first interaction platform with shadow accounts, offline queue, and privacy-first architecture.">
+    <style>
+        /* GitHub-inspired styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #24292f;
+            background-color: #ffffff;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid #d0d7de;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid #d0d7de;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background-color: rgba(175, 184, 193, 0.2);
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-size: 85%;
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        }
+
+        pre {
+            background-color: #f6f8fa;
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.25rem;
+        }
+
+        blockquote {
+            padding-left: 1rem;
+            border-left: 0.25rem solid #d0d7de;
+            color: #57606a;
+            margin-bottom: 1rem;
+        }
+
+        hr {
+            height: 0.25em;
+            padding: 0;
+            margin: 24px 0;
+            background-color: #d0d7de;
+            border: 0;
+        }
+
+        /* Merkle proof badge */
+        .merkle-proof {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .merkle-proof code {
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="soulfra">Soulfra</h1>
+<p><strong>Building the non-typing internet</strong></p>
+<blockquote>
+<p>Voice memos, QR scans, emoji navigation, gesture controls. Just login, scan, and go.</p>
+</blockquote>
+<hr />
+<h2 id="what-im-building">🎤 What I'm Building</h2>
+<h3 id="cringeproof-voice-archive"><a href="https://cringeproof.com">CringeProof</a> / voice-archive</h3>
+<p>Instant voice recording → AI extraction → Published ideas</p>
+<p><strong>The flow:</strong>
+1. Record voice memo on iPhone (one tap, no typing)
+2. Shadow account system (no login required - browser fingerprinting)
+3. Offline queue (record anywhere, uploads when online)
+4. AI extracts ideas from transcription (Ollama + Whisper)
+5. Published to GitHub Pages with cryptographic signatures</p>
+<p><strong>Try it:</strong>
+- 📱 <a href="https://cringeproof.com/mobile.html">Mobile Interface</a>
+- 🧪 <a href="https://cringeproof.com/test-deployment.html">Debug Page</a></p>
+<p><strong>Features:</strong>
+- Shadow accounts (Canvas + WebGL + Audio fingerprinting)
+- Offline-first PWA (IndexedDB + ServiceWorker)
+- Zero typing required
+- Privacy-first (PII scrubbing, local-first)
+- Works on: Local WiFi, GitHub Pages, Custom Domains</p>
+<hr />
+<h2 id="core-philosophy-gameplay-loops-over-polish">🎮 Core Philosophy: Gameplay Loops Over Polish</h2>
+<p><strong>Roblox, Minecraft, RuneScape don't look great but have addictive gameplay.</strong></p>
+<p>Focus areas:
+1. <strong>Non-typing interaction</strong>
+   - Voice control (speak commands)
+   - QR scanning (login, actions, pre-fill forms)
+   - Emoji navigation (react, filter, choose)
+   - Gesture controls (swipe, tap patterns)
+   - Menu-only mode (click-based accessibility)</p>
+<ol>
+<li><strong>Instant contribution</strong></li>
+<li>No signup friction</li>
+<li>Shadow accounts (fingerprint-based)</li>
+<li>Offline queue (record first, sync later)</li>
+<li>
+<p>One-tap recording</p>
+</li>
+<li>
+<p><strong>Community-driven content</strong></p>
+</li>
+<li>Users contribute voice memos</li>
+<li>Select accounts when contributing ideas</li>
+<li>Multi-brand system (CalRiven, DeathToData, HowToCookAtHome)</li>
+</ol>
+<hr />
+<h2 id="active-projects">🛠️ Active Projects</h2>
+<h3 id="voice-archive"><a href="https://github.com/Soulfra/voice-archive">voice-archive</a></h3>
+<p><strong>OSS voice recording component</strong></p>
+<p>Deploy to your own domain with your own backend:
+- GitHub Pages hosting (free)
+- Router config auto-detects environment
+- Works local (same WiFi) or production (Cloudflare Workers, VPS)
+- Full deployment docs and debug tools</p>
+<h3 id="soulfragithubio"><a href="https://soulfra.github.io">soulfra.github.io</a></h3>
+<p><strong>Multi-brand showcase</strong></p>
+<p>Voice predictions archive with community brands:
+- CalRiven (data analysis)
+- DeathToData (calling out cringe)
+- HowToCookAtHome (recipes)
+- StPetePros, Hollowtown, Niceleak, Oofbox</p>
+<h3 id="network-architecture-evolution">Network Architecture Evolution</h3>
+<p>Building routing infrastructure from <strong>Phase 1</strong> (local WiFi) → <strong>Phase 4</strong> (fully serverless):</p>
+<div class="codehilite"><pre><span></span><code>Phase 1: Local Network
+  iPhone + MacBook (same WiFi)
+  https://192.168.1.87:5001
+
+Phase 2: Cloudflare Workers Router
+  YOUR router code (not Tailscale, not ngrok)
+  api.cringeproof.com → Cloudflare Worker → Tunnel → MacBook
+
+Phase 3: VPS + nginx
+  Permanent backend, full control
+  $5/month VPS with reverse proxy
+
+Phase 4: Fully Serverless
+  Cloudflare Workers + R2 + Supabase
+  No MacBook dependency, scales automatically
+</code></pre></div>
+
+<hr />
+<h2 id="technologies">🧩 Technologies</h2>
+<p><strong>Frontend:</strong>
+- Vanilla JS (no frameworks - keep it fast)
+- Shadow DOM for accessibility menu
+- MediaRecorder API for voice
+- IndexedDB for offline queue
+- Service Workers for PWA</p>
+<p><strong>Backend:</strong>
+- Flask (Python)
+- SQLite (local development)
+- Ollama (local AI - no API keys)
+- Whisper (transcription)</p>
+<p><strong>Deployment:</strong>
+- GitHub Pages (static hosting)
+- Cloudflare Workers (serverless routing)
+- Local network (MacBook Flask server)</p>
+<p><strong>Infrastructure You Control:</strong>
+- router-config.js (auto-detect environment)
+- No third-party tunnels in production
+- Own your routing logic
+- Own your domains</p>
+<hr />
+<h2 id="deployment-strategy">📦 Deployment Strategy</h2>
+<p>All projects designed to be <strong>forkable and deployable</strong> by anyone:</p>
+<ol>
+<li><strong>Clone repo</strong></li>
+<li><strong>Configure backend</strong> (<code>.env.example</code> → <code>.env</code>)</li>
+<li><strong>Test locally</strong> (<code>test-deployment.html</code>)</li>
+<li><strong>Deploy to GitHub Pages</strong> (<code>git push</code>)</li>
+</ol>
+<p>No vendor lock-in. No proprietary services. Just static HTML/CSS/JS + your own backend.</p>
+<hr />
+<h2 id="live-urls">🌐 Live URLs</h2>
+<ul>
+<li><strong>CringeProof:</strong> https://cringeproof.com</li>
+<li><strong>Mobile App:</strong> https://cringeproof.com/mobile.html</li>
+<li><strong>Debug Tools:</strong> https://cringeproof.com/test-deployment.html</li>
+<li><strong>Main Site:</strong> https://soulfra.github.io</li>
+<li><strong>RSS Feed:</strong> https://soulfra.github.io/feed.xml</li>
+</ul>
+<hr />
+<h2 id="privacy-security">🔐 Privacy &amp; Security</h2>
+<p><strong>Privacy-first architecture:</strong>
+- No tracking, no analytics
+- PII scrubbing (names, emails, phones removed)
+- Local AI processing (Ollama - your machine, your data)
+- Shadow accounts (browser fingerprinting, not personal info)
+- Cryptographic signatures (SHA-256 proof of authenticity)</p>
+<p><strong>Security practices:</strong>
+- <code>.gitignore</code> for secrets (.env, <em>.pem, </em>.key)
+- SSH keyring authentication (no passwords in terminal)
+- CORS configuration for API access
+- HTTPS required for microphone API</p>
+<hr />
+<h2 id="current-focus">💡 Current Focus</h2>
+<p><strong>Making the non-typing internet real:</strong></p>
+<ol>
+<li><strong>Accessibility menu</strong> - Universal input mode switcher (voice, scan, emoji, gesture, menu)</li>
+<li><strong>Workflow coordinator</strong> - State machine routing input modes based on page context</li>
+<li><strong>Shadow account system</strong> - No login required, just start using</li>
+<li><strong>Offline queue</strong> - Record anywhere, sync when online</li>
+<li><strong>Router infrastructure</strong> - Own your routing between domains and backends</li>
+</ol>
+<p><strong>Not building:</strong>
+- Complex UI frameworks
+- Beautiful graphics
+- Typing-required interfaces</p>
+<p><strong>Building:</strong>
+- Addictive gameplay loops
+- Zero-friction contribution
+- Non-typing interactions
+- Community-driven content</p>
+<hr />
+<h2 id="documentation">📖 Documentation</h2>
+<ul>
+<li><strong>Deployment:</strong> <a href="https://github.com/Soulfra/voice-archive/blob/main/DEPLOY.md">voice-archive/DEPLOY.md</a></li>
+<li><strong>Network Setup:</strong> <a href="https://github.com/Soulfra/voice-archive/blob/main/NETWORK-SETUP.md">NETWORK-SETUP.md</a></li>
+<li><strong>Debug Tools:</strong> <a href="https://cringeproof.com/test-deployment.html">test-deployment.html</a></li>
+</ul>
+<hr />
+<h2 id="philosophy">🤝 Philosophy</h2>
+<p><strong>"Reverse engineer all the nodes"</strong></p>
+<ul>
+<li>Learn how routing works (HTTP proxying, CORS, SSL)</li>
+<li>Learn tunnel mechanics (SSH, WebSocket, nginx upstream)</li>
+<li>Learn serverless architecture (edge functions, state management)</li>
+<li>Build your own router infrastructure</li>
+<li>No dependency on third-party tunnels</li>
+</ul>
+<p><strong>From local network → production serverless:</strong>
+- Phase by phase evolution guide
+- Understand each layer
+- Own your stack</p>
+<hr />
+<h2 id="get-in-touch">📬 Get In Touch</h2>
+<ul>
+<li><strong>GitHub:</strong> <a href="https://github.com/Soulfra">@Soulfra</a></li>
+<li><strong>Issues:</strong> Open an issue on any repo</li>
+<li><strong>Fork:</strong> All projects MIT licensed - fork and build your own</li>
+</ul>
+<hr />
+<p><strong>Built for privacy-conscious creators who want to own their infrastructure</strong></p>
+<p>No Tailscale. No ngrok. No vendor lock-in. Just you, your code, your domains.</p>
+
+    <!-- Merkle Root Proof -->
+    <div class="merkle-proof">
+        <strong>🔐 Cryptographic Proof</strong><br>
+        <code id="merkle-root">Loading merkle root...</code><br>
+        <small>Committed: <span id="commit-timestamp">2026-01-04T17:37:52.496074+00:00</span></small>
+    </div>
+
+    <script>
+        // Load merkle proof from assets
+        fetch('assets/merkle-root.json')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('merkle-root').textContent = data.root;
+            })
+            .catch(() => {
+                document.getElementById('merkle-root').textContent = 'Merkle proof pending';
+            });
+    </script>
+</body>
+</html>

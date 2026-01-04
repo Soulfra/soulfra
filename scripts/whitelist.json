@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "description": "Privacy whitelist for Soulfra assets",
+  "levels": {
+    "public": {
+      "description": "Fully visible content",
+      "files": [
+        "assets/screenshots/mobile-recorder.png",
+        "assets/demos/accessibility-menu.gif",
+        "assets/docs/architecture-diagram.svg"
+      ]
+    },
+    "watermarked": {
+      "description": "Public but with cryptographic watermark embedded",
+      "files": [
+        "assets/audio/sample-voice-memo.webm"
+      ],
+      "watermark_config": {
+        "type": "metadata",
+        "signature_key": "soulfra-2026",
+        "visible": false
+      }
+    },
+    "obfuscated": {
+      "description": "Blurred preview only, full version requires auth",
+      "files": [],
+      "blur_radius": 10,
+      "preview_quality": 30
+    },
+    "hash_only": {
+      "description": "Only hash published, content stays private",
+      "files": []
+    }
+  },
+  "merkle_tree": {
+    "enabled": true,
+    "include_private_hashes": true,
+    "root_publish_location": "README.md",
+    "commit_to_blockchain": false
+  }
+}
