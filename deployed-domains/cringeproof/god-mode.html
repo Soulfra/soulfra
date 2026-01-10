@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎛️ God Mode - Universal Control Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+
+        .output {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 100px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .status.online { background: #4caf50; color: white; }
+        .status.offline { background: #f44336; color: white; }
+
+        .quick-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .quick-link {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .quick-link:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎛️ God Mode</h1>
+            <p class="subtitle">Universal Control Panel - Connect to Anything</p>
+        </header>
+
+        <div class="grid">
+            <!-- Ollama AI Panel -->
+            <div class="panel">
+                <h2>🤖 Ollama AI</h2>
+                <div class="input-group">
+                    <label>Ask Ollama Anything</label>
+                    <textarea id="ollamaInput" rows="3" placeholder="e.g., Analyze cringeproof.com and tell me what it does"></textarea>
+                </div>
+                <button onclick="askOllama()">Ask AI</button>
+                <div id="ollamaOutput" class="output">Response will appear here...</div>
+            </div>
+
+            <!-- Website Scraper -->
+            <div class="panel">
+                <h2>🕷️ Universal Website Scraper</h2>
+                <div class="input-group">
+                    <label>Target URL</label>
+                    <input type="url" id="scrapeUrl" placeholder="https://cringeproof.com">
+                </div>
+                <div class="input-group">
+                    <label>What to Extract</label>
+                    <select id="scrapeType">
+                        <option value="keywords">Keywords</option>
+                        <option value="content">All Content</option>
+                        <option value="links">All Links</option>
+                        <option value="images">All Images</option>
+                        <option value="api">Find APIs</option>
+                    </select>
+                </div>
+                <button onclick="scrapeWebsite()">Scrape Website</button>
+                <div id="scrapeOutput" class="output">Scraped data will appear here...</div>
+            </div>
+
+            <!-- Fake User Generator -->
+            <div class="panel">
+                <h2>👤 Fake User Generator</h2>
+                <div class="input-group">
+                    <label>Email Address (Any)</label>
+                    <input type="email" id="fakeEmail" placeholder="anythingworks@example.com">
+                </div>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="fakeUsername" placeholder="testuser">
+                </div>
+                <button onclick="createFakeUser()">Create User (No Verification)</button>
+                <div id="userOutput" class="output">User info will appear here...</div>
+            </div>
+
+            <!-- Voice Modulation -->
+            <div class="panel">
+                <h2>🎤 Voice Modulation</h2>
+                <div class="input-group">
+                    <label>Voice Style</label>
+                    <select id="voiceStyle">
+                        <option value="almost-human">Almost Human (Like Shaving)</option>
+                        <option value="robotic">Slightly Robotic</option>
+                        <option value="natural">Natural</option>
+                        <option value="whisper">Whisper</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Pitch Shift (%)</label>
+                    <input type="range" id="pitchShift" min="50" max="150" value="100">
+                    <span id="pitchValue">100%</span>
+                </div>
+                <div class="input-group">
+                    <label>Speed</label>
+                    <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1">
+                    <span id="speedValue">1.0x</span>
+                </div>
+                <button onclick="applyVoiceSettings()">Apply Voice Settings</button>
+                <div id="voiceOutput" class="output">Voice settings saved...</div>
+            </div>
+
+            <!-- API Connector -->
+            <div class="panel">
+                <h2>🔌 API Connector</h2>
+                <div class="input-group">
+                    <label>Service</label>
+                    <select id="apiService">
+                        <option value="doordash">DoorDash</option>
+                        <option value="uber-eats">Uber Eats</option>
+                        <option value="google-maps">Google Maps</option>
+                        <option value="apple-maps">Apple Maps</option>
+                        <option value="stripe">Stripe</option>
+                        <option value="custom">Custom API</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>API Endpoint</label>
+                    <input type="url" id="apiEndpoint" placeholder="https://api.example.com/v1/...">
+                </div>
+                <div class="input-group">
+                    <label>API Key (Optional)</label>
+                    <input type="password" id="apiKey" placeholder="sk-...">
+                </div>
+                <button onclick="testAPI()">Test Connection</button>
+                <div id="apiOutput" class="output">API response will appear here...</div>
+            </div>
+
+            <!-- Tripilize Calculator -->
+            <div class="panel">
+                <h2>📈 Tripilize Calculator</h2>
+                <div class="input-group">
+                    <label>Base Marketing Budget ($)</label>
+                    <input type="number" id="baseBudget" placeholder="1000">
+                </div>
+                <div class="input-group">
+                    <label>Workflow Multiplier</label>
+                    <select id="multiplier">
+                        <option value="3">3x (Tripilize)</option>
+                        <option value="5">5x (Quintuple)</option>
+                        <option value="10">10x (Decuple)</option>
+                    </select>
+                </div>
+                <button onclick="calculateTrip()">Calculate ROI</button>
+                <div id="tripOutput" class="output">Results will appear here...</div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="panel">
+            <h2>🔗 Quick Access</h2>
+            <div class="quick-links">
+                <a href="http://192.168.1.87:5002/" class="quick-link">Voice Archive (Port 5002)</a>
+                <a href="http://192.168.1.87:3001/health" class="quick-link">API Health (Port 3001)</a>
+                <a href="http://localhost:8000/" class="quick-link">Local Sites (Port 8000)</a>
+                <a href="https://cringeproof.com" class="quick-link">CringeProof Live</a>
+                <a href="https://soulfra.com" class="quick-link">Soulfra Live</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ollama AI
+        async function askOllama() {
+            const input = document.getElementById('ollamaInput').value;
+            const output = document.getElementById('ollamaOutput');
+
+            output.textContent = '🤖 Thinking...';
+
+            try {
+                // Try localhost:3001 API first
+                const response = await fetch('http://192.168.1.87:3001/api/ollama/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: input })
+                });
+
+                const data = await response.json();
+                output.textContent = data.response || data.message || JSON.stringify(data, null, 2);
+            } catch (error) {
+                output.textContent = `Error: ${error.message}\n\nNote: Make sure Ollama is running locally.`;
+            }
+        }
+
+        // Website Scraper
+        async function scrapeWebsite() {
+            const url = document.getElementById('scrapeUrl').value;
+            const type = document.getElementById('scrapeType').value;
+            const output = document.getElementById('scrapeOutput');
+
+            output.textContent = `🕷️ Scraping ${url}...`;
+
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                let result = '';
+
+                switch(type) {
+                    case 'keywords':
+                        const meta = doc.querySelector('meta[name="keywords"]');
+                        result = meta ? meta.content : 'No keywords found';
+                        break;
+                    case 'content':
+                        result = doc.body.innerText.substring(0, 1000) + '...';
+                        break;
+                    case 'links':
+                        const links = Array.from(doc.querySelectorAll('a')).map(a => a.href);
+                        result = links.slice(0, 20).join('\n');
+                        break;
+                    case 'images':
+                        const images = Array.from(doc.querySelectorAll('img')).map(img => img.src);
+                        result = images.slice(0, 20).join('\n');
+                        break;
+                    case 'api':
+                        result = 'Searching for API endpoints...\n';
+                        const scripts = Array.from(doc.querySelectorAll('script')).map(s => s.src).filter(Boolean);
+                        result += scripts.join('\n');
+                        break;
+                }
+
+                output.textContent = result;
+            } catch (error) {
+                output.textContent = `Error: ${error.message}\n\nCORS may be blocking this. Try a server-side scraper.`;
+            }
+        }
+
+        // Fake User Generator
+        async function createFakeUser() {
+            const email = document.getElementById('fakeEmail').value;
+            const username = document.getElementById('fakeUsername').value;
+            const output = document.getElementById('userOutput');
+
+            const user = {
+                id: 'user_' + Math.random().toString(36).substr(2, 9),
+                email: email,
+                username: username,
+                created: new Date().toISOString(),
+                verified: false,
+                tier: 'unlimited',
+                tokens: 10000
+            };
+
+            output.textContent = JSON.stringify(user, null, 2);
+
+            // Save to localStorage
+            localStorage.setItem('fakeUser', JSON.stringify(user));
+        }
+
+        // Voice Modulation
+        function applyVoiceSettings() {
+            const style = document.getElementById('voiceStyle').value;
+            const pitch = document.getElementById('pitchShift').value;
+            const speed = document.getElementById('speed').value;
+            const output = document.getElementById('voiceOutput');
+
+            const settings = {
+                style: style,
+                pitch: pitch + '%',
+                speed: speed + 'x',
+                timestamp: new Date().toISOString()
+            };
+
+            output.textContent = `Voice Settings Applied:\n${JSON.stringify(settings, null, 2)}`;
+
+            localStorage.setItem('voiceSettings', JSON.stringify(settings));
+        }
+
+        // API Connector
+        async function testAPI() {
+            const service = document.getElementById('apiService').value;
+            const endpoint = document.getElementById('apiEndpoint').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const output = document.getElementById('apiOutput');
+
+            output.textContent = `🔌 Testing ${service} API...`;
+
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+
+                const response = await fetch(endpoint, { headers });
+                const data = await response.json();
+
+                output.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                output.textContent = `Error: ${error.message}\n\nCheck API endpoint and key.`;
+            }
+        }
+
+        // Tripilize Calculator
+        function calculateTrip() {
+            const budget = parseFloat(document.getElementById('baseBudget').value);
+            const multiplier = parseFloat(document.getElementById('multiplier').value);
+            const output = document.getElementById('tripOutput');
+
+            const result = {
+                baseBudget: `$${budget}`,
+                multiplier: `${multiplier}x`,
+                projectedROI: `$${(budget * multiplier).toFixed(2)}`,
+                profit: `$${(budget * (multiplier - 1)).toFixed(2)}`,
+                breakdown: {
+                    marketing: `$${budget}`,
+                    automation: `$${(budget * 0.3).toFixed(2)}`,
+                    content: `$${(budget * 0.3).toFixed(2)}`,
+                    ai: `$${(budget * 0.4).toFixed(2)}`
+                }
+            };
+
+            output.textContent = JSON.stringify(result, null, 2);
+        }
+
+        // Update range values
+        document.getElementById('pitchShift').addEventListener('input', (e) => {
+            document.getElementById('pitchValue').textContent = e.target.value + '%';
+        });
+
+        document.getElementById('speed').addEventListener('input', (e) => {
+            document.getElementById('speedValue').textContent = e.target.value + 'x';
+        });
+    </script>
+</body>
+</html>

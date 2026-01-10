@@ -1,0 +1,14 @@
+# Domain Configuration - One Codebase, Multiple Sites
+# Format: domain | category | tagline
+#
+# Example:
+# howtocookathome.com | cooking | Simple recipes for home cooks
+#
+# Categories: cooking, tech, privacy, business, health, art
+#
+# Add your domains below:
+
+howtocookathome.com | cooking | Simple recipes for home cooks 🍳
+soulfra.com | tech | Self-documenting development platform
+deathtodata.com | privacy | Privacy-first data protection tools
+calriven.com | tech | Technical excellence and code quality

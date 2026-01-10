@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}{{ concept.title }} - Wiki{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+    <!-- Breadcrumb -->
+    <div style="margin-bottom: 20px; font-size: 0.9em; color: #666;">
+        <a href="/wiki" style="color: #667eea;">Wiki</a>
+        {% if concept.category_name %}
+        → <a href="/wiki/category/{{ concept.category_slug }}" style="color: #667eea;">{{ concept.category_name }}</a>
+        {% endif %}
+        → {{ concept.title }}
+    </div>
+
+    <!-- Concept Header -->
+    <h1 style="font-size: 2.5em; margin-bottom: 15px;">{{ concept.title }}</h1>
+
+    {% if concept.description %}
+    <p style="font-size: 1.2em; color: #666; margin-bottom: 30px;">{{ concept.description }}</p>
+    {% endif %}
+
+    <!-- Narrative Game Link (if attached) -->
+    {% if has_narrative %}
+    <div style="
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 40px;">
+        <h3 style="margin: 0 0 10px 0; font-size: 1.5em;">🎮 Interactive Narrative Experience</h3>
+        <p style="margin: 0 0 20px 0; opacity: 0.9;">
+            This concept includes an interactive narrative game. Experience the story firsthand!
+        </p>
+        <a href="/cringeproof/narrative/{{ concept.narrative_brand_slug }}"
+           style="
+               display: inline-block;
+               padding: 12px 30px;
+               background: white;
+               color: #667eea;
+               text-decoration: none;
+               border-radius: 8px;
+               font-weight: 600;
+               transition: all 0.3s;">
+            Play Narrative Game →
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Concept Content -->
+    <div style="
+        line-height: 1.8;
+        font-size: 1.1em;
+        margin-bottom: 60px;
+        border-left: 3px solid #667eea;
+        padding-left: 30px;">
+        {{ concept.content|markdown|safe }}
+    </div>
+
+    <!-- Comments Section -->
+    <div style="border-top: 2px solid #eee; padding-top: 40px;">
+        <h2 style="font-size: 2em; margin-bottom: 30px;">💬 Discussion ({{ comments|length }})</h2>
+
+        <!-- Comments -->
+        {% if comments %}
+        <div style="margin-bottom: 40px;">
+            {% for comment in comments %}
+            <div style="
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 15px;
+                {% if comment.is_ai_persona %}
+                background: linear-gradient(135deg, #f093fb22, #f5576c22);
+                border-left: 4px solid #f093fb;
+                {% endif %}
+                ">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <strong>{{ comment.display_name }}</strong>
+                    {% if comment.is_ai_persona %}
+                    <span style="
+                        font-size: 0.8em;
+                        padding: 3px 8px;
+                        background: #f093fb;
+                        color: white;
+                        border-radius: 12px;">
+                        AI Persona
+                    </span>
+                    {% endif %}
+                    <span style="font-size: 0.9em; color: #999;">
+                        {{ comment.created_at }}
+                    </span>
+                </div>
+                <div style="color: #333;">{{ comment.content }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color: #999; font-style: italic; margin-bottom: 30px;">
+            No comments yet. Be the first to discuss this concept!
+        </p>
+        {% endif %}
+
+        <!-- Add Comment Form -->
+        <div style="
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;">
+            <h3 style="margin: 0 0 15px 0;">Add your thoughts</h3>
+            <form method="POST" action="/wiki/concept/{{ concept.slug }}/comment">
+                <textarea
+                    name="comment"
+                    placeholder="Share your insights on this concept..."
+                    style="
+                        width: 100%;
+                        min-height: 120px;
+                        padding: 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        font-family: inherit;
+                        font-size: 1em;
+                        margin-bottom: 15px;
+                        resize: vertical;"
+                    required></textarea>
+                <button type="submit" style="
+                    padding: 12px 30px;
+                    background: #667eea;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 1em;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s;">
+                    Post Comment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ollama Widget Placeholder -->
+    <div style="
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s;"
+        title="Chat with AI about this concept (coming soon)">
+        💬
+    </div>
+</div>
+
+<style>
+.wiki-concept img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.wiki-concept code {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.wiki-concept pre {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.wiki-concept pre code {
+    background: none;
+    padding: 0;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" class="preload">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Debug - {{ domain_name }}</title>
+
+    <!-- Include theme CSS -->
+    <link rel="stylesheet" href="/static/css/theme.css">
+
+    <!-- Additional styles -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2em; margin-bottom: 10px; }
+        .content { padding: 30px; }
+        .section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        /* Color Picker */
+        .color-picker-section {
+            text-align: center;
+        }
+        #colorPicker {
+            width: 200px;
+            height: 60px;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+        }
+        #hexInput {
+            width: 150px;
+            padding: 10px;
+            font-size: 1.1em;
+            font-family: monospace;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        /* Feature Bars */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .feature-label {
+            min-width: 140px;
+            font-weight: 600;
+            color: #333;
+        }
+        .feature-bar-container {
+            flex: 1;
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .feature-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+        .feature-value {
+            min-width: 60px;
+            text-align: right;
+            font-family: monospace;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* Binary Features */
+        .binary-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .binary-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        .binary-badge.active {
+            background: #667eea;
+            color: white;
+        }
+        .binary-badge.inactive {
+            background: #e9ecef;
+            color: #999;
+        }
+
+        /* Color Wheel */
+        .color-wheel {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Explanations */
+        .explanations {
+            margin-top: 15px;
+        }
+        .explanation-item {
+            padding: 10px;
+            background: white;
+            border-left: 3px solid #667eea;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        /* Personality Prediction */
+        .personality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .personality-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .personality-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+        .personality-bar-container {
+            background: #e9ecef;
+            height: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .personality-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Neural Network Debug</h1>
+            <p>12-Feature Color Extraction System</p>
+        </div>
+
+        <div class="content">
+            <!-- Color Picker Section -->
+            <div class="section color-picker-section">
+                <h2>🎨 Color Picker</h2>
+                <input type="color" id="colorPicker" value="#667eea">
+                <input type="text" id="hexInput" value="#667eea" placeholder="#RRGGBB">
+                <p style="margin-top: 10px; color: #666;">
+                    Pick a color or enter a hex code to see feature extraction
+                </p>
+            </div>
+
+            <!-- Core Features (0-6) -->
+            <div class="section">
+                <h2>📊 Core Features (7 continuous values)</h2>
+                <div class="features-grid">
+                    <div class="feature-row">
+                        <div class="feature-label">0️⃣ Hue</div>
+                        <div class="feature-bar-container">
+                            <div class="feature-bar" id="bar-hue" style="width: 0%">
+                                <span id="bar-hue-text"></span>
+                            </div>
+                        </div>
+                        <div class="feature-value" id="val-hue">0.00</div>
+                    </div>
+
+                    <div class="feature-row">
+                        <div class="feature-label">1️⃣ Saturation</div>
+                        <div class="feature-bar-container">
+                            <div class="feature-bar" id="bar-sat" style="width: 0%">
+                                <span id="bar-sat-text"></span>
+                            </div>
+                        </div>
+                        <div class="feature-value" id="val-sat">0.00</div>
+                    </div>
+
+                    <div class="feature-row">
+                        <div class="feature-label">2️⃣ Brightness</div>
+                        <div class="feature-bar-container">
+                            <div class="feature-bar" id="bar-val" style="width: 0%">
+                                <span id="bar-val-text"></span>
+                            </div>
+                        </div>
+                        <div class="feature-value" id="val-val">0.00</div>
+                    </div>
+
+                    <div class="feature-row">
+                        <div class="feature-label">3️⃣ Temperature</div>
+                        <div class="feature-bar-container">
+                            <div class="feature-bar" id="bar-temp" style="width: 0%">
+                                <span id="bar-temp-text"></span>
+                            </div>
+                        </div>
+                        <div class="feature-value" id="val-temp">0.00</div>
+                    </div>
+
+                    <div class="feature-row">
+                        <div class="feature-label">4️⃣ Red Dominance</div>
+                        <div class="feature-bar-container">
+                            <div class="feature-bar" id="bar-r" style="width: 0%">
+                                <span id="bar-r-text"></span>
+                            </div>
+                        </div>
+                        <div class="feature-value" id="val-r">0.00</div>
+                    </div>
+
+                    <div class="feature-row">
+                        <div class="feature-label">5️⃣ Green Dominance</div>
+                        <div class="feature-bar-container">
+                            <div class="feature-bar" id="bar-g" style="width: 0%">
+                                <span id="bar-g-text"></span>
+                            </div>
+                        </div>
+                        <div class="feature-value" id="val-g">0.00</div>
+                    </div>
+
+                    <div class="feature-row">
+                        <div class="feature-label">6️⃣ Blue Dominance</div>
+                        <div class="feature-bar-container">
+                            <div class="feature-bar" id="bar-b" style="width: 0%">
+                                <span id="bar-b-text"></span>
+                            </div>
+                        </div>
+                        <div class="feature-value" id="val-b">0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Binary Features (7-11) -->
+            <div class="section">
+                <h2>🎯 Binary Features (5 flags)</h2>
+                <div class="binary-features">
+                    <div class="binary-badge inactive" id="badge-vibrant">7️⃣ Vibrant</div>
+                    <div class="binary-badge inactive" id="badge-muted">8️⃣ Muted</div>
+                    <div class="binary-badge inactive" id="badge-bright">9️⃣ Bright</div>
+                    <div class="binary-badge inactive" id="badge-dark">🔟 Dark</div>
+                    <div class="binary-badge inactive" id="badge-gray">1️⃣1️⃣ Grayscale</div>
+                </div>
+            </div>
+
+            <!-- Color Wheel Visualization -->
+            <div class="section">
+                <h2>🎡 Color Wheel Position</h2>
+                <div class="color-wheel" id="colorWheel"></div>
+            </div>
+
+            <!-- Human Explanations -->
+            <div class="section">
+                <h2>💬 Human-Readable Explanations</h2>
+                <div class="explanations" id="explanations"></div>
+            </div>
+
+            <!-- Personality Prediction (if model exists) -->
+            {% if has_model %}
+            <div class="section">
+                <h2>🔮 Personality Prediction</h2>
+                <p style="margin-bottom: 15px; color: #666;">
+                    Neural network prediction based on color features
+                </p>
+                <div class="personality-grid" id="personalityGrid"></div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const colorPicker = document.getElementById('colorPicker');
+        const hexInput = document.getElementById('hexInput');
+
+        // RGB to HSV conversion
+        function rgbToHsv(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            const delta = max - min;
+
+            let h = 0;
+            if (delta !== 0) {
+                if (max === r) h = ((g - b) / delta) % 6;
+                else if (max === g) h = (b - r) / delta + 2;
+                else h = (r - g) / delta + 4;
+                h /= 6;
+                if (h < 0) h += 1;
+            }
+
+            const s = max === 0 ? 0 : delta / max;
+            const v = max;
+
+            return [h, s, v];
+        }
+
+        // Extract color features (matches Python implementation)
+        function extractColorFeatures(hex) {
+            // Parse hex
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+
+            // Normalize to 0-1
+            const rNorm = r / 255;
+            const gNorm = g / 255;
+            const bNorm = b / 255;
+
+            // Convert to HSV
+            const [h, s, v] = rgbToHsv(r, g, b);
+
+            // Temperature score
+            const hueDegrees = h * 360;
+            let temperature;
+            if (hueDegrees < 60 || hueDegrees > 300) {
+                temperature = 0.8 + (s * 0.2);
+            } else if (hueDegrees >= 120 && hueDegrees <= 240) {
+                temperature = 0.2 - (s * 0.2);
+            } else {
+                if (hueDegrees < 120) {
+                    temperature = 0.5 + (60 - (hueDegrees - 60)) / 120;
+                } else {
+                    temperature = 0.5 - (60 - (hueDegrees - 240)) / 120;
+                }
+            }
+            temperature = Math.max(0, Math.min(1, temperature));
+
+            // Channel dominance
+            const total = rNorm + gNorm + bNorm;
+            const rDom = total > 0 ? rNorm / total : 0.33;
+            const gDom = total > 0 ? gNorm / total : 0.33;
+            const bDom = total > 0 ? bNorm / total : 0.33;
+
+            // Binary features
+            const isVibrant = s > 0.6 ? 1 : 0;
+            const isMuted = s < 0.3 ? 1 : 0;
+            const isBright = v > 0.7 ? 1 : 0;
+            const isDark = v < 0.3 ? 1 : 0;
+            const isGray = s < 0.1 ? 1 : 0;
+
+            return {
+                features: [h, s, v, temperature, rDom, gDom, bDom, isVibrant, isMuted, isBright, isDark, isGray],
+                rgb: [r, g, b],
+                hueDegrees
+            };
+        }
+
+        // Generate color wheel SVG
+        function generateColorWheel(hueDegrees) {
+            const angleRad = (hueDegrees - 90) * (Math.PI / 180);
+            const pointerX = 50 + 35 * Math.cos(angleRad);
+            const pointerY = 50 + 35 * Math.sin(angleRad);
+
+            return `
+                <svg width="150" height="150" viewBox="0 0 100 100" style="margin: 1rem auto; display: block;">
+                    <defs>
+                        <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                            <stop offset="17%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                            <stop offset="33%" style="stop-color:rgb(0,255,0);stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:rgb(0,255,255);stop-opacity:1" />
+                            <stop offset="67%" style="stop-color:rgb(0,0,255);stop-opacity:1" />
+                            <stop offset="83%" style="stop-color:rgb(255,0,255);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="url(#rainbow)" stroke-width="12"/>
+                    <line x1="50" y1="50" x2="${pointerX}" y2="${pointerY}"
+                          stroke="#333" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="${pointerX}" cy="${pointerY}" r="5" fill="#333"/>
+                </svg>
+            `;
+        }
+
+        // Get hue name
+        function getHueName(hueDegrees) {
+            if (hueDegrees < 15 || hueDegrees >= 345) return "Red";
+            if (hueDegrees < 45) return "Red-Orange";
+            if (hueDegrees < 75) return "Orange";
+            if (hueDegrees < 105) return "Yellow";
+            if (hueDegrees < 135) return "Yellow-Green";
+            if (hueDegrees < 165) return "Green";
+            if (hueDegrees < 195) return "Cyan";
+            if (hueDegrees < 225) return "Blue";
+            if (hueDegrees < 255) return "Blue-Violet";
+            if (hueDegrees < 285) return "Violet";
+            if (hueDegrees < 315) return "Magenta";
+            return "Red-Magenta";
+        }
+
+        // Update UI with features
+        function updateFeatures(hex) {
+            const { features, rgb, hueDegrees } = extractColorFeatures(hex);
+            const [h, s, v, temp, rDom, gDom, bDom, isVib, isMut, isBri, isDark, isGray] = features;
+
+            // Update continuous features
+            const updateBar = (id, value, suffix = '') => {
+                const percent = Math.round(value * 100);
+                document.getElementById(`bar-${id}`).style.width = `${percent}%`;
+                document.getElementById(`bar-${id}-text`).textContent = percent > 20 ? `${percent}%` : '';
+                document.getElementById(`val-${id}`).textContent = value.toFixed(2) + suffix;
+            };
+
+            updateBar('hue', h);
+            updateBar('sat', s);
+            updateBar('val', v);
+            updateBar('temp', temp);
+            updateBar('r', rDom);
+            updateBar('g', gDom);
+            updateBar('b', bDom);
+
+            // Update binary features
+            const updateBadge = (id, isActive) => {
+                const badge = document.getElementById(`badge-${id}`);
+                badge.className = `binary-badge ${isActive ? 'active' : 'inactive'}`;
+            };
+
+            updateBadge('vibrant', isVib);
+            updateBadge('muted', isMut);
+            updateBadge('bright', isBri);
+            updateBadge('dark', isDark);
+            updateBadge('gray', isGray);
+
+            // Update color wheel
+            document.getElementById('colorWheel').innerHTML = generateColorWheel(hueDegrees);
+
+            // Update explanations
+            const hueName = getHueName(hueDegrees);
+            const satDesc = isGray ? "Grayscale" : isMut ? "Muted" : isVib ? "Vibrant" : "Moderate";
+            const brightDesc = isDark ? "Dark" : isBri ? "Bright" : "Medium";
+            const tempDesc = temp > 0.7 ? "Very warm" : temp > 0.55 ? "Warm" : temp < 0.3 ? "Very cool" : temp < 0.45 ? "Cool" : "Neutral";
+
+            const dominant = rDom > gDom && rDom > bDom ? 'Red' : gDom > bDom ? 'Green' : 'Blue';
+
+            document.getElementById('explanations').innerHTML = `
+                <div class="explanation-item">🎨 Hue: ${Math.round(hueDegrees)}° (${hueName})</div>
+                <div class="explanation-item">🌈 Saturation: ${Math.round(s * 100)}% (${satDesc})</div>
+                <div class="explanation-item">💡 Brightness: ${Math.round(v * 100)}% (${brightDesc})</div>
+                <div class="explanation-item">🌡️ Temperature: ${Math.round(temp * 100)}% (${tempDesc})</div>
+                <div class="explanation-item">🎯 Dominant: ${dominant} (${Math.round(Math.max(rDom, gDom, bDom) * 100)}%)</div>
+                <div class="explanation-item">🔢 RGB: (${rgb[0]}, ${rgb[1]}, ${rgb[2]})</div>
+            `;
+
+            // Update personality prediction if available
+            {% if has_model %}
+            fetch('/api/predict-personality?color=' + encodeURIComponent(hex))
+                .then(r => r.json())
+                .then(data => {
+                    const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+                    document.getElementById('personalityGrid').innerHTML = sorted.map(([trait, score]) => `
+                        <div class="personality-item">
+                            <div class="personality-name">${trait}</div>
+                            <div class="personality-bar-container">
+                                <div class="personality-bar" style="width: ${Math.round(score * 100)}%"></div>
+                            </div>
+                            <div style="text-align: right; margin-top: 5px; font-size: 0.9em; color: #666;">
+                                ${(score * 100).toFixed(1)}%
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(err => console.error('Personality prediction error:', err));
+            {% endif %}
+        }
+
+        // Event listeners
+        colorPicker.addEventListener('input', (e) => {
+            const hex = e.target.value;
+            hexInput.value = hex;
+            updateFeatures(hex);
+        });
+
+        hexInput.addEventListener('input', (e) => {
+            let hex = e.target.value;
+            if (hex.startsWith('#') && hex.length === 7) {
+                colorPicker.value = hex;
+                updateFeatures(hex);
+            }
+        });
+
+        // Initial update
+        updateFeatures(colorPicker.value);
+    </script>
+
+    <!-- Include theme toggle script -->
+    <script src="/static/js/theme-toggle.js"></script>
+</body>
+</html>

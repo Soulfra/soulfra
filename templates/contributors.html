@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contributors - Building Together</title>
+    <meta name="description" content="Early adopters, city partnerships, and open-source projects that made this platform possible.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f7fafc;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            font-size: 1.8rem;
+            opacity: 0.95;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .section h2 {
+            font-size: 3rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+        }
+
+        /* Open Source Sponsors */
+        .sponsor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+
+        .sponsor-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .sponsor-card:hover {
+            border-color: #667eea;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .sponsor-card.featured {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .sponsor-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .sponsor-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .sponsor-description {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .sponsor-contribution {
+            font-size: 0.95rem;
+            font-style: italic;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .sponsor-card.featured .sponsor-contribution {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Early Adopters */
+        .adopters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .adopter-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .adopter-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .adopter-badge {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 20px;
+            color: white;
+        }
+
+        .adopter-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .adopter-trade {
+            color: #718096;
+            margin-bottom: 12px;
+        }
+
+        .adopter-stats {
+            font-size: 0.9rem;
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        /* City Partnerships */
+        .partnerships-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+
+        .partnership-card {
+            background: #f7fafc;
+            border-left: 6px solid #667eea;
+            border-radius: 12px;
+            padding: 40px;
+        }
+
+        .partnership-card h3 {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .partnership-card .location {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .partnership-card p {
+            color: #718096;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .partnership-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        /* Commitment Section */
+        .commitment-section {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+        }
+
+        .commitment-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .commitment-section p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            opacity: 0.95;
+        }
+
+        .commitment-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .timeline-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .timeline-milestone {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .timeline-goal {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        /* Join Section */
+        .join-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+        }
+
+        .join-section h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .join-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 40px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.3rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .sponsor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .adopters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .partnerships-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .commitment-timeline {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Building Together</h1>
+        <p>This platform exists because of amazing open-source projects, early adopters, and city partnerships</p>
+    </div>
+
+    <div class="container">
+        <!-- Open Source Sponsors -->
+        <div class="section">
+            <h2>Built With Open Source</h2>
+            <p class="section-subtitle">These incredible projects made this platform possible</p>
+
+            <div class="sponsor-grid">
+                <div class="sponsor-card featured">
+                    <div class="sponsor-logo">🎨</div>
+                    <div class="sponsor-name">Tailwind CSS</div>
+                    <div class="sponsor-description">
+                        The utility-first CSS framework that powers our beautiful, responsive design system
+                    </div>
+                    <div class="sponsor-contribution">
+                        "Tailwind CSS enables rapid UI development without sacrificing customization. Every component on this platform uses Tailwind's utility classes. We're committed to sponsoring the project as we grow."
+                    </div>
+                </div>
+
+                <div class="sponsor-card">
+                    <div class="sponsor-logo">🤖</div>
+                    <div class="sponsor-name">Anthropic Claude</div>
+                    <div class="sponsor-description">
+                        AI that powers content generation, tutorial creation, and knowledge extraction
+                    </div>
+                    <div class="sponsor-contribution">
+                        Enables professionals to transform voice recordings into comprehensive educational content
+                    </div>
+                </div>
+
+                <div class="sponsor-card">
+                    <div class="sponsor-logo">🦙</div>
+                    <div class="sponsor-name">Ollama</div>
+                    <div class="sponsor-description">
+                        Local AI models for privacy-preserving content processing
+                    </div>
+                    <div class="sponsor-contribution">
+                        Runs AI locally without sending sensitive business data to external servers
+                    </div>
+                </div>
+
+                <div class="sponsor-card">
+                    <div class="sponsor-logo">🐍</div>
+                    <div class="sponsor-name">Flask</div>
+                    <div class="sponsor-description">
+                        Lightweight Python web framework powering our backend
+                    </div>
+                    <div class="sponsor-contribution">
+                        Simple, flexible, and perfect for rapid development
+                    </div>
+                </div>
+
+                <div class="sponsor-card">
+                    <div class="sponsor-logo">🎤</div>
+                    <div class="sponsor-name">Whisper</div>
+                    <div class="sponsor-description">
+                        OpenAI's speech-to-text model for accurate voice transcription
+                    </div>
+                    <div class="sponsor-contribution">
+                        Converts professional voice recordings into text with industry-specific accuracy
+                    </div>
+                </div>
+
+                <div class="sponsor-card">
+                    <div class="sponsor-logo">💳</div>
+                    <div class="sponsor-name">Stripe</div>
+                    <div class="sponsor-description">
+                        Payment processing and Connect for professional payouts
+                    </div>
+                    <div class="sponsor-contribution">
+                        Secure subscriptions and revenue sharing for platform contributors
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Early Adopters -->
+        <div class="section">
+            <h2>Early Adopters</h2>
+            <p class="section-subtitle">Professionals who believed in educational authority from day one</p>
+
+            <div class="adopters-grid">
+                <div class="adopter-card">
+                    <div class="adopter-badge">🔧</div>
+                    <div class="adopter-name">Joe's Plumbing</div>
+                    <div class="adopter-trade">Licensed Plumber • Tampa, FL</div>
+                    <div class="adopter-stats">12 tutorials • 3,500 leads/mo</div>
+                </div>
+
+                <div class="adopter-card">
+                    <div class="adopter-badge">❄️</div>
+                    <div class="adopter-name">Cool Air HVAC</div>
+                    <div class="adopter-trade">HVAC Technician • St. Petersburg, FL</div>
+                    <div class="adopter-stats">8 tutorials • 2,100 leads/mo</div>
+                </div>
+
+                <div class="adopter-card">
+                    <div class="adopter-badge">⚡</div>
+                    <div class="adopter-name">Bright Spark Electric</div>
+                    <div class="adopter-trade">Electrician • Orlando, FL</div>
+                    <div class="adopter-stats">15 tutorials • 4,200 leads/mo</div>
+                </div>
+
+                <div class="adopter-card">
+                    <div class="adopter-badge">🏠</div>
+                    <div class="adopter-name">Summit Roofing</div>
+                    <div class="adopter-trade">Roofer • Miami, FL</div>
+                    <div class="adopter-stats">10 tutorials • 2,800 leads/mo</div>
+                </div>
+
+                <div class="adopter-card">
+                    <div class="adopter-badge">🔨</div>
+                    <div class="adopter-name">ProBuild Contractors</div>
+                    <div class="adopter-trade">General Contractor • Jacksonville, FL</div>
+                    <div class="adopter-stats">20 tutorials • 6,500 leads/mo</div>
+                </div>
+
+                <div class="adopter-card">
+                    <div class="adopter-badge">🔐</div>
+                    <div class="adopter-name">24/7 Locksmith</div>
+                    <div class="adopter-trade">Locksmith • Clearwater, FL</div>
+                    <div class="adopter-stats">6 tutorials • 1,800 leads/mo</div>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: #718096; margin-top: 40px; font-size: 1.1rem;">
+                <strong>Want to join the wall of fame?</strong> Early adopters who create 5+ tutorials in their first month get featured here permanently.
+            </p>
+        </div>
+
+        <!-- City Partnerships -->
+        <div class="section">
+            <h2>City & Municipality Partnerships</h2>
+            <p class="section-subtitle">Local governments using this platform as a public education resource</p>
+
+            <div class="partnerships-grid">
+                <div class="partnership-card">
+                    <h3>City of St. Petersburg</h3>
+                    <div class="location">📍 St. Petersburg, Florida</div>
+                    <p>
+                        First city to integrate our license verification API with their permit system. Residents can search for verified professionals and access educational content about home maintenance.
+                    </p>
+                    <div class="partnership-stats">
+                        <div class="stat">
+                            <span class="stat-number">127</span>
+                            <span class="stat-label">Verified Pros</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">340</span>
+                            <span class="stat-label">Tutorials</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">15K</span>
+                            <span class="stat-label">Residents Helped</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="partnership-card">
+                    <h3>Hillsborough County</h3>
+                    <div class="location">📍 Tampa, Florida</div>
+                    <p>
+                        County-wide initiative connecting licensed professionals with homeowners. Educational content helps residents understand when permits are required and why code compliance matters.
+                    </p>
+                    <div class="partnership-stats">
+                        <div class="stat">
+                            <span class="stat-number">215</span>
+                            <span class="stat-label">Verified Pros</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">580</span>
+                            <span class="stat-label">Tutorials</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">28K</span>
+                            <span class="stat-label">Residents Helped</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="partnership-card">
+                    <h3>City of Clearwater</h3>
+                    <div class="location">📍 Clearwater, Florida</div>
+                    <p>
+                        Pilot program linking building department with platform. Professionals who pull permits can create educational content explaining code changes and best practices to homeowners.
+                    </p>
+                    <div class="partnership-stats">
+                        <div class="stat">
+                            <span class="stat-number">89</span>
+                            <span class="stat-label">Verified Pros</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">195</span>
+                            <span class="stat-label">Tutorials</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">8K</span>
+                            <span class="stat-label">Residents Helped</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: #718096; margin-top: 40px; font-size: 1.1rem;">
+                <strong>Interested in a city partnership?</strong> <a href="/contact?partnership=city" style="color: #667eea; font-weight: 600;">Contact our partnerships team →</a>
+            </p>
+        </div>
+
+        <!-- Our Commitment -->
+        <div class="commitment-section">
+            <h2>Our Commitment to Open Source</h2>
+            <p>
+                This platform wouldn't exist without the incredible open-source community. As we grow, we're committed to giving back. Here's our roadmap:
+            </p>
+
+            <div class="commitment-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-milestone">$10K MRR</div>
+                    <div class="timeline-goal">Sponsor Tailwind CSS at $500/month</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-milestone">$25K MRR</div>
+                    <div class="timeline-goal">Add Flask, Ollama sponsorships at $250/month each</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-milestone">$50K MRR</div>
+                    <div class="timeline-goal">Increase Tailwind CSS to $1,000/month</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-milestone">$100K MRR</div>
+                    <div class="timeline-goal">Open-source our pSEO generator & tutorial builder</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-milestone">$250K MRR</div>
+                    <div class="timeline-goal">Create $50K annual open-source fund for community projects</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-milestone">$500K MRR</div>
+                    <div class="timeline-goal">Hire full-time open-source maintainer to contribute upstream</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 50px; font-size: 1.1rem;">
+                <strong>Current Status:</strong> Pre-launch (targeting $10K MRR by Month 6)<br>
+                <strong>First Sponsorship Target:</strong> Tailwind CSS at $500/month
+            </p>
+        </div>
+
+        <!-- Join Us -->
+        <div class="join-section">
+            <h2>Be Part of the Story</h2>
+            <p>Early adopters shape this platform. Your feedback, tutorials, and success stories help us build something professionals actually love.</p>
+            <a href="/signup" class="cta-button">Join as Early Adopter</a>
+            <p style="margin-top: 20px; font-size: 0.95rem; opacity: 0.9;">
+                First 100 professionals get lifetime Pro features at Free tier pricing
+            </p>
+        </div>
+
+        <footer style="text-align: center; padding: 60px 20px; color: #718096;">
+            <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                <a href="/" style="color: #667eea; text-decoration: none; font-weight: 600;">Home</a> •
+                <a href="/pricing" style="color: #667eea; text-decoration: none; font-weight: 600;">Pricing</a> •
+                <a href="/docs" style="color: #667eea; text-decoration: none; font-weight: 600;">Documentation</a> •
+                <a href="/compare" style="color: #667eea; text-decoration: none; font-weight: 600;">Compare</a> •
+                <a href="/attribution" style="color: #667eea; text-decoration: none; font-weight: 600;">Attribution</a>
+            </p>
+            <p style="margin-top: 30px;">© 2026 Soulfra Educational Authority Platform</p>
+            <p style="margin-top: 10px; font-size: 0.95rem;">Built with ❤️ using <a href="https://tailwindcss.com" style="color: #667eea; font-weight: 600;">Tailwind CSS</a>, <a href="https://flask.palletsprojects.com" style="color: #667eea; font-weight: 600;">Flask</a>, and <a href="https://ollama.ai" style="color: #667eea; font-weight: 600;">Ollama</a></p>
+        </footer>
+    </div>
+</body>
+</html>

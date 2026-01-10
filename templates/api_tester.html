@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester | Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .response-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .response-container.visible {
+            display: block;
+        }
+
+        .response-header {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-error {
+            background: #ef4444;
+            color: white;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .api-keys-section {
+            background: #f0f4ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .api-keys-section h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .api-key-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .api-key-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .api-key-item.selected {
+            border: 2px solid #667eea;
+            background: #f0f4ff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-free { background: #e0e7ff; color: #4338ca; }
+        .badge-pro { background: #fef3c7; color: #92400e; }
+        .badge-enterprise { background: #dbeafe; color: #1e40af; }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 API Tester</h1>
+        <p class="subtitle">Test your Soulfra API endpoints in real-time</p>
+
+        <!-- API Keys Section -->
+        <div class="api-keys-section" id="apiKeysSection">
+            <h3>📋 Your API Keys (Click to select)</h3>
+            <div id="apiKeysList">Loading...</div>
+        </div>
+
+        <!-- Test Form -->
+        <form id="apiTestForm">
+            <div class="form-group">
+                <label for="apiKey">API Key</label>
+                <input
+                    type="text"
+                    id="apiKey"
+                    placeholder="SK-..."
+                    required
+                >
+                <p class="help-text">Get your API key from the freelancer signup page</p>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="endpoint">Endpoint</label>
+                    <select id="endpoint">
+                        <option value="/api/v1/{brand}/comment">Generate Comment</option>
+                        <option value="/api/v1/{brand}/usage">Check Usage</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="brand">Brand Slug</label>
+                    <input
+                        type="text"
+                        id="brand"
+                        placeholder="calriven"
+                        value="calriven"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group" id="postIdGroup">
+                <label for="postId">Post ID</label>
+                <input
+                    type="number"
+                    id="postId"
+                    placeholder="1"
+                    value="1"
+                    min="1"
+                >
+                <p class="help-text">The ID of the post to comment on</p>
+            </div>
+
+            <button type="submit" id="submitBtn">🚀 Test API</button>
+        </form>
+
+        <!-- Response -->
+        <div class="response-container" id="responseContainer">
+            <div class="response-header">
+                <span>Response:</span>
+                <span class="status-badge" id="statusBadge"></span>
+                <span id="responseTime" style="font-size: 12px; color: #666;"></span>
+            </div>
+            <pre id="responseContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('apiTestForm');
+        const apiKeyInput = document.getElementById('apiKey');
+        const brandInput = document.getElementById('brand');
+        const endpointSelect = document.getElementById('endpoint');
+        const postIdInput = document.getElementById('postId');
+        const postIdGroup = document.getElementById('postIdGroup');
+        const submitBtn = document.getElementById('submitBtn');
+        const responseContainer = document.getElementById('responseContainer');
+        const statusBadge = document.getElementById('statusBadge');
+        const responseContent = document.getElementById('responseContent');
+        const responseTime = document.getElementById('responseTime');
+        const apiKeysList = document.getElementById('apiKeysList');
+
+        // Load API keys
+        async function loadApiKeys() {
+            try {
+                const response = await fetch('/api/keys/list');
+                const data = await response.json();
+
+                if (data.success && data.keys.length > 0) {
+                    apiKeysList.innerHTML = data.keys.map(key => `
+                        <div class="api-key-item" data-key="${key.api_key}" data-brand="${key.brand_slug}">
+                            <strong>${key.brand_slug}</strong>
+                            <span class="badge badge-${key.tier}">${key.tier}</span>
+                            <br>
+                            <span style="color: #666;">${key.api_key}</span>
+                        </div>
+                    `).join('');
+
+                    // Add click handlers
+                    document.querySelectorAll('.api-key-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            // Remove previous selection
+                            document.querySelectorAll('.api-key-item').forEach(i => i.classList.remove('selected'));
+                            // Mark as selected
+                            item.classList.add('selected');
+                            // Fill in form
+                            apiKeyInput.value = item.dataset.key;
+                            brandInput.value = item.dataset.brand;
+                        });
+                    });
+
+                    // Auto-select first key
+                    document.querySelector('.api-key-item').click();
+                } else {
+                    apiKeysList.innerHTML = '<p style="color: #666; font-size: 14px;">No API keys found. <a href="/freelancer-signup" style="color: #667eea;">Create one here</a></p>';
+                }
+            } catch (error) {
+                apiKeysList.innerHTML = '<p style="color: #ef4444; font-size: 14px;">Error loading API keys</p>';
+            }
+        }
+
+        // Load keys on page load
+        loadApiKeys();
+
+        // Show/hide post_id field based on endpoint
+        endpointSelect.addEventListener('change', () => {
+            if (endpointSelect.value.includes('comment')) {
+                postIdGroup.style.display = 'block';
+            } else {
+                postIdGroup.style.display = 'none';
+            }
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const apiKey = apiKeyInput.value.trim();
+            const brand = brandInput.value.trim();
+            const endpoint = endpointSelect.value.replace('{brand}', brand);
+            const postId = postIdInput.value;
+
+            // Build URL
+            let url = `http://localhost:5001${endpoint}`;
+
+            if (endpoint.includes('comment')) {
+                url += `?post_id=${postId}&key=${apiKey}`;
+            } else {
+                url += `?key=${apiKey}`;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Testing...';
+
+            const startTime = Date.now();
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const elapsed = Date.now() - startTime;
+
+                // Show response
+                responseContainer.classList.add('visible');
+                responseContent.textContent = JSON.stringify(data, null, 2);
+                responseTime.textContent = `(${elapsed}ms)`;
+
+                // Update status badge
+                if (response.ok) {
+                    statusBadge.textContent = `${response.status} OK`;
+                    statusBadge.className = 'status-badge status-success';
+                } else {
+                    statusBadge.textContent = `${response.status} Error`;
+                    statusBadge.className = 'status-badge status-error';
+                }
+
+                // Scroll to response
+                responseContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                responseContainer.classList.add('visible');
+                responseContent.textContent = `Error: ${error.message}`;
+                statusBadge.textContent = 'Network Error';
+                statusBadge.className = 'status-badge status-error';
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = '🚀 Test API';
+        });
+    </script>
+</body>
+</html>

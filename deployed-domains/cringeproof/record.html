@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Record Voice Idea - CringeProof</title>
+<meta name="description" content="Record a voice idea and send it to your local Ollama">
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+.recorder-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.recorder-status {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.recorder-button {
+    background: #ff006e;
+    color: white;
+    border: 4px solid #000;
+    padding: 2rem 3rem;
+    font-size: 2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 8px 8px 0 #000;
+    transition: all 0.1s;
+    text-transform: uppercase;
+    display: inline-block;
+    margin: 1rem;
+}
+
+.recorder-button:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 #000;
+}
+
+.recorder-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0 #000;
+}
+
+.recorder-button.recording {
+    background: #000;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.server-config {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 8px 8px 0 #bdb2ff;
+}
+
+.server-config input {
+    width: 100%;
+    padding: 1rem;
+    border: 3px solid #000;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    margin-top: 0.5rem;
+}
+
+.status-message {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 6px 6px 0 #bdb2ff;
+    display: none;
+}
+
+.status-message.show {
+    display: block;
+}
+
+.status-message.success {
+    border-color: #00C49A;
+}
+
+.status-message.error {
+    border-color: #FF4136;
+}
+
+.waveform {
+    height: 100px;
+    background: #fff;
+    border: 3px solid #000;
+    margin: 2rem 0;
+    display: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.waveform.active {
+    display: block;
+}
+
+.waveform-bar {
+    position: absolute;
+    bottom: 0;
+    width: 4px;
+    background: #ff006e;
+    transition: height 0.1s;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="https://cringeproof.com/" class="soulfra-logo">
+            🚫 CringeProof
+        </a>
+
+        <div class="soulfra-links">
+            <a href="https://cringeproof.com/ideas/">💡 Ideas</a>
+            <a href="https://cringeproof.com/">🎤 Voice Archive</a>
+            <a href="https://cringeproof.com/record.html" class="soulfra-record-btn">🎙️ Record</a>
+            <a href="https://cringeproof.com/screenshot.html">📸 Screenshot</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+<header>
+    <h1>🎙️ Record Voice Idea</h1>
+    <p class="subtitle">Speak your idea, AI extracts the insights</p>
+</header>
+
+<div class="recorder-container">
+
+    <div class="server-config">
+        <label for="server-url">
+            <strong>Local Server URL</strong><br>
+            <small>(Your Whisper + Ollama server)</small>
+        </label>
+        <input
+            type="text"
+            id="server-url"
+            placeholder="https://192.168.1.87:5001"
+            value=""
+        >
+    </div>
+
+    <div class="recorder-status" id="status">
+        Ready to Record
+    </div>
+
+    <div class="waveform" id="waveform"></div>
+
+    <button class="recorder-button" id="record-btn" onclick="toggleRecording()">
+        🎤 Start Recording
+    </button>
+
+    <div class="status-message" id="message"></div>
+
+</div>
+
+</div>
+
+<footer>
+    <div style="margin-bottom: 2rem; padding: 2rem; background: #ff006e; border: 4px solid #000;">
+        <p style="font-size: 2rem; font-weight: 900; margin-bottom: 1rem;">📊 How This Works</p>
+        <p style="margin-bottom: 1rem;">
+            1. Click "Start Recording" and speak your idea<br>
+            2. Recording POSTs to your local server (CORS enabled)<br>
+            3. Whisper transcribes your voice<br>
+            4. Ollama extracts structured insights<br>
+            5. Idea appears on voice-archive in minutes
+        </p>
+        <p style="font-size: 0.875rem; opacity: 0.8;">
+            <strong>Production:</strong> Railway-hosted API (works from anywhere)<br>
+            <strong>Local Development:</strong> Use https://192.168.1.87:5002 for testing
+        </p>
+    </div>
+
+    <p><strong>📊 Technical Details</strong></p>
+    <p style="margin-top: 0.5rem; opacity: 0.8;">
+        GitHub Pages (static HTML) → fetch() with CORS → Local Flask → Whisper → Ollama → Static rebuild
+    </p>
+    <p style="margin-top: 1.5rem;">
+        <a href="https://github.com/Soulfra/voice-archive">GitHub</a> |
+        <a href="https://cringeproof.com/">Voice Archive</a> |
+        <a href="https://cringeproof.com/ideas/">Ideas Hub</a> |
+        <a href="https://cringeproof.com/">CringeProof</a>
+    </p>
+</footer>
+
+<script>
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+let audioContext;
+let analyser;
+let dataArray;
+let animationId;
+
+function toggleRecording() {
+    if (isRecording) {
+        stopRecording();
+    } else {
+        startRecording();
+    }
+}
+
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        // Setup audio visualization
+        audioContext = new AudioContext();
+        analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+
+        // Show waveform
+        document.getElementById('waveform').classList.add('active');
+        visualize();
+
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            await uploadAudio(audioBlob);
+
+            // Stop visualization
+            cancelAnimationFrame(animationId);
+            document.getElementById('waveform').classList.remove('active');
+
+            // Close audio context
+            if (audioContext) {
+                audioContext.close();
+            }
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+
+        document.getElementById('status').textContent = '🔴 Recording...';
+        document.getElementById('record-btn').textContent = '⏹️ Stop Recording';
+        document.getElementById('record-btn').classList.add('recording');
+
+    } catch (error) {
+        showMessage(`Microphone error: ${error.message}`, 'error');
+        console.error('Recording error:', error);
+    }
+}
+
+function stopRecording() {
+    if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+
+        document.getElementById('status').textContent = '⏳ Processing...';
+        document.getElementById('record-btn').textContent = '🎤 Start Recording';
+        document.getElementById('record-btn').classList.remove('recording');
+
+        // Stop all tracks
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+    }
+}
+
+async function uploadAudio(audioBlob) {
+    const serverUrl = document.getElementById('server-url').value.trim();
+
+    if (!serverUrl) {
+        showMessage('Please enter your local server URL', 'error');
+        document.getElementById('status').textContent = 'Ready to Record';
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'recording.webm');
+
+    try {
+        const response = await fetch(`${serverUrl}/api/simple-voice/save`, {
+            method: 'POST',
+            body: formData,
+            mode: 'cors'  // Enable CORS
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            showMessage(`✅ Recording saved! ID: ${result.recording_id}`, 'success');
+            document.getElementById('status').textContent = 'Recording Saved!';
+
+            // Auto-redirect to ideas hub after 3 seconds
+            setTimeout(() => {
+                window.location.href = '/ideas/';
+            }, 3000);
+        } else {
+            const errorText = await response.text();
+            showMessage(`Upload failed: ${response.status} - ${errorText}`, 'error');
+            document.getElementById('status').textContent = 'Ready to Record';
+        }
+    } catch (error) {
+        showMessage(`Upload error: ${error.message}. Is your local server running with CORS enabled?`, 'error');
+        document.getElementById('status').textContent = 'Ready to Record';
+        console.error('Upload error:', error);
+    }
+}
+
+function showMessage(text, type) {
+    const messageEl = document.getElementById('message');
+    messageEl.textContent = text;
+    messageEl.className = `status-message show ${type}`;
+}
+
+function visualize() {
+    const waveformEl = document.getElementById('waveform');
+    const width = waveformEl.offsetWidth;
+    const barCount = 50;
+    const barWidth = width / barCount;
+
+    // Clear existing bars
+    waveformEl.innerHTML = '';
+
+    // Create bars
+    const bars = [];
+    for (let i = 0; i < barCount; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'waveform-bar';
+        bar.style.left = `${i * barWidth}px`;
+        bar.style.width = `${barWidth - 2}px`;
+        waveformEl.appendChild(bar);
+        bars.push(bar);
+    }
+
+    function draw() {
+        animationId = requestAnimationFrame(draw);
+
+        analyser.getByteFrequencyData(dataArray);
+
+        for (let i = 0; i < barCount; i++) {
+            const dataIndex = Math.floor(i * dataArray.length / barCount);
+            const height = (dataArray[dataIndex] / 255) * 100;
+            bars[i].style.height = `${height}%`;
+        }
+    }
+
+    draw();
+}
+
+// Save server URL to localStorage
+document.getElementById('server-url').addEventListener('change', (e) => {
+    localStorage.setItem('voice-archive-server', e.target.value);
+});
+
+// Auto-detect server URL based on environment
+window.addEventListener('DOMContentLoaded', () => {
+    const savedServer = localStorage.getItem('voice-archive-server');
+
+    if (savedServer) {
+        // User has manually set a server
+        document.getElementById('server-url').value = savedServer;
+    } else {
+        // Auto-detect environment
+        const hostname = window.location.hostname;
+        let defaultServer;
+
+        if (hostname === 'cringeproof.com' || hostname.includes('github.io')) {
+            // Production: GitHub Pages → Railway API
+            defaultServer = 'https://cringeproof-api-production.up.railway.app';
+        } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            // Local development: localhost → local Flask
+            defaultServer = 'https://localhost:5001';
+        } else {
+            // LAN access (e.g., from iPhone): use LAN IP
+            defaultServer = 'https://192.168.1.87:5001';
+        }
+
+        document.getElementById('server-url').value = defaultServer;
+        console.log(`🔧 Auto-detected server: ${defaultServer}`);
+    }
+});
+</script>
+</body>
+</html>

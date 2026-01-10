@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CringeProof">
+  <meta name="theme-color" content="#ff006e">
+  <title>CringeProof Mobile - Record Ideas</title>
+
+  <!-- PWA Support -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/static/images/icon-192.png">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      background: #1a1a1a;
+      padding: 15px 20px;
+      z-index: 100;
+      border-bottom: 1px solid #333;
+    }
+
+    .header h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .header p {
+      font-size: 0.85rem;
+      opacity: 0.6;
+      margin-top: 3px;
+    }
+
+    /* Feed */
+    .feed {
+      padding: 0;
+      padding-bottom: 100px;
+    }
+
+    .idea-card {
+      background: #111;
+      padding: 15px 20px;
+      border-bottom: 1px solid #222;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .idea-card:active {
+      transform: scale(0.98);
+    }
+
+    .idea-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .idea-tier {
+      font-size: 1.5rem;
+    }
+
+    .idea-score {
+      background: rgba(255,107,107,0.2);
+      color: #ff6b6b;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .idea-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .idea-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 8px 0;
+      color: #ccc;
+    }
+
+    .idea-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      opacity: 0.5;
+    }
+
+    /* Bottom Action Bar */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      border-top: 1px solid #333;
+      padding: 12px 20px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      z-index: 200;
+    }
+
+    .btn-record {
+      width: 100%;
+      padding: 18px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #ff006e;
+      color: white;
+      transition: all 0.2s;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-record:active {
+      background: #d6005c;
+      transform: scale(0.98);
+    }
+
+    .btn-record.recording {
+      background: #000;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Recording Modal */
+    .recording-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #0a0a0a;
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .recording-modal.active {
+      display: flex;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .voice-wave {
+      display: flex;
+      gap: 4px;
+      margin: 30px 0;
+    }
+
+    .wave-bar {
+      width: 6px;
+      background: #ff006e;
+      border-radius: 3px;
+      animation: voiceWave 1s ease-in-out infinite alternate;
+    }
+
+    .wave-bar:nth-child(1) { animation-delay: 0s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+    @keyframes voiceWave {
+      from { height: 20px; }
+      to { height: 60px; }
+    }
+
+    .recording-timer {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin: 20px 0;
+    }
+
+    .recording-text {
+      font-size: 0.95rem;
+      opacity: 0.6;
+    }
+
+    .btn-stop {
+      margin-top: 40px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #ff006e;
+      border: 4px solid #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-stop:active {
+      transform: scale(0.95);
+    }
+
+    /* Haptic Feedback */
+    .haptic-light { animation: hapticLight 0.1s ease; }
+    .haptic-medium { animation: hapticMedium 0.15s ease; }
+    .haptic-heavy { animation: hapticHeavy 0.2s ease; }
+
+    @keyframes hapticLight {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @keyframes hapticMedium {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes hapticHeavy {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Touch Targets */
+    .touch-target {
+      min-height: 48px;
+      min-width: 48px;
+    }
+
+    /* Connection Status */
+    .connection-badge {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      z-index: 150;
+    }
+
+    .connection-badge.online {
+      background: rgba(0, 196, 154, 0.2);
+      color: #00C49A;
+    }
+
+    .connection-badge.offline {
+      background: rgba(255, 0, 110, 0.2);
+      color: #ff006e;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .empty-state-text {
+      font-size: 1.1rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <!-- Connection Status -->
+  <div class="connection-badge online" id="connectionBadge">
+    ● Online
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>🚫 CringeProof</h1>
+    <p>Speak your ideas, no typing needed</p>
+  </div>
+
+  <!-- Feed -->
+  <div class="feed" id="feed">
+    <div class="empty-state">
+      <div class="empty-state-icon">🎤</div>
+      <div class="empty-state-text">Tap record to speak your first idea</div>
+    </div>
+  </div>
+
+  <!-- Bottom Action Bar -->
+  <div class="action-bar">
+    <button class="btn-record touch-target" id="btnRecord">
+      <span id="recordIcon">🎤</span>
+      <span id="recordText">Record Idea</span>
+    </button>
+  </div>
+
+  <!-- Recording Modal -->
+  <div class="recording-modal" id="recordingModal">
+    <div class="voice-wave">
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+    </div>
+
+    <div class="recording-timer" id="timer">0:00</div>
+    <div class="recording-text">Recording...</div>
+
+    <button class="btn-stop touch-target" id="btnStop">■</button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./shadow-account.js"></script>
+  <script src="./queue-manager.js"></script>
+  <script src="./connection-monitor.js"></script>
+  <script src="./mobile.js"></script>
+</body>
+</html>

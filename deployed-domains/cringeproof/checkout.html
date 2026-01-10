@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Checkout - CringeProof</title>
+<meta name="description" content="Speak your address, we'll handle the rest">
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+.checkout-container {
+    max-width: 700px;
+    margin: 2rem auto;
+}
+
+.voice-input-section {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 8px 8px 0 #bdb2ff;
+}
+
+.voice-button {
+    background: #ff006e;
+    color: white;
+    border: 4px solid #000;
+    padding: 2rem 3rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 8px 8px 0 #000;
+    transition: all 0.1s;
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.voice-button:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 #000;
+}
+
+.voice-button.recording {
+    background: #000;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.address-display {
+    background: #f0f0f0;
+    border: 3px solid #000;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    font-family: 'Courier New', monospace;
+    min-height: 120px;
+    display: none;
+}
+
+.address-display.show {
+    display: block;
+}
+
+.address-field {
+    margin-bottom: 1rem;
+}
+
+.address-field label {
+    font-weight: 900;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.address-field input {
+    width: 100%;
+    padding: 1rem;
+    border: 3px solid #000;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+}
+
+.checkout-button {
+    background: #00C49A;
+    color: white;
+    border: 4px solid #000;
+    padding: 1.5rem 2rem;
+    font-size: 1.25rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 6px 6px 0 #000;
+    transition: all 0.1s;
+    text-transform: uppercase;
+    display: none;
+    width: 100%;
+}
+
+.checkout-button.show {
+    display: block;
+}
+
+.checkout-button:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 #000;
+}
+
+.status {
+    background: #fff;
+    border: 3px solid #000;
+    padding: 1rem;
+    margin: 1rem 0;
+    display: none;
+}
+
+.status.show {
+    display: block;
+}
+
+.status.error {
+    border-color: #FF4136;
+    background: #ffe8e8;
+}
+
+.status.success {
+    border-color: #00C49A;
+    background: #e8ffe8;
+}
+
+.help-text {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="https://cringeproof.com/" class="soulfra-logo">
+            🚫 CringeProof
+        </a>
+
+        <div class="soulfra-links">
+            <a href="https://cringeproof.com/ideas/">💡 Ideas</a>
+            <a href="https://cringeproof.com/">🎤 Voice Archive</a>
+            <a href="https://cringeproof.com/checkout.html" class="soulfra-record-btn">🛒 Checkout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+<header>
+    <h1>🎤 Voice Checkout</h1>
+    <p class="subtitle">Speak your address, AI handles the rest</p>
+</header>
+
+<div class="checkout-container">
+
+    <div class="voice-input-section">
+        <h2>Step 1: Tell us your address</h2>
+        <p class="help-text">Click the microphone and speak your full address clearly. Example: "123 Main Street, Apartment 4B, New York, New York, 10001"</p>
+
+        <button class="voice-button" id="voice-btn" onclick="toggleVoiceInput()">
+            🎤 Click to Speak Address
+        </button>
+
+        <div class="address-display" id="address-display">
+            <strong>Detected address:</strong>
+            <div id="transcription" style="margin-top: 1rem; white-space: pre-wrap;"></div>
+        </div>
+
+        <div class="status" id="status"></div>
+    </div>
+
+    <div class="voice-input-section">
+        <h2>Step 2: Review and edit</h2>
+        <p class="help-text">Make any corrections needed:</p>
+
+        <div class="address-field">
+            <label>Street Address</label>
+            <input type="text" id="street" placeholder="123 Main St">
+        </div>
+
+        <div class="address-field">
+            <label>Apartment/Unit (optional)</label>
+            <input type="text" id="unit" placeholder="Apt 4B">
+        </div>
+
+        <div class="address-field">
+            <label>City</label>
+            <input type="text" id="city" placeholder="New York">
+        </div>
+
+        <div class="address-field">
+            <label>State</label>
+            <input type="text" id="state" placeholder="NY">
+        </div>
+
+        <div class="address-field">
+            <label>ZIP Code</label>
+            <input type="text" id="zip" placeholder="10001">
+        </div>
+
+        <div class="address-field">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="your@email.com">
+        </div>
+    </div>
+
+    <div class="voice-input-section">
+        <h2>Step 3: Choose payment method</h2>
+        <p class="help-text">All payments are $1.00 (non-refundable):</p>
+
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="radio" name="payment_method" value="lightning" checked>
+                <strong>Lightning Network</strong> - Instant, <$0.01 fee (Bitcoin)
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="radio" name="payment_method" value="btcpay">
+                <strong>BTCPay Server</strong> - Self-hosted, $0 fee (Bitcoin/Cards)
+            </label>
+            <label style="display: block; margin-bottom: 0.5rem;">
+                <input type="radio" name="payment_method" value="coinbase">
+                <strong>Coinbase Commerce</strong> - Crypto, 1% fee
+            </label>
+        </div>
+    </div>
+
+    <button class="checkout-button" id="checkout-btn" onclick="proceedToPayment()">
+        Continue to Payment →
+    </button>
+
+    <div class="voice-input-section" id="lightning-invoice" style="display: none;">
+        <h2>⚡ Lightning Payment</h2>
+        <p class="help-text">Scan this QR code with your Lightning wallet:</p>
+        <div id="qr-code" style="text-align: center; margin: 2rem 0;"></div>
+        <div style="background: #f0f0f0; border: 3px solid #000; padding: 1rem; word-break: break-all; font-family: monospace; font-size: 0.8rem;">
+            <div id="invoice-text"></div>
+        </div>
+        <button class="checkout-button" onclick="checkLightningPayment()" style="display: block; margin-top: 1rem;">
+            Check Payment Status
+        </button>
+    </div>
+
+</div>
+
+</div>
+
+<footer>
+    <div style="margin-bottom: 2rem; padding: 2rem; background: #00C49A; border: 4px solid #000;">
+        <p style="font-size: 2rem; font-weight: 900; margin-bottom: 1rem;">🎯 How It Works</p>
+        <p style="margin-bottom: 1rem;">
+            1. Click microphone and speak your address<br>
+            2. AI transcribes and auto-fills form fields<br>
+            3. Review and correct if needed<br>
+            4. Checkout with Apple Pay / Google Pay / Card<br>
+            5. Done in 30 seconds!
+        </p>
+        <p style="font-size: 0.875rem; opacity: 0.8;">
+            <strong>Privacy:</strong> Voice data processed locally, not stored<br>
+            <strong>Payment:</strong> Powered by Stripe (PCI compliant)
+        </p>
+    </div>
+
+    <p><strong>📊 Technical Stack</strong></p>
+    <p style="margin-top: 0.5rem; opacity: 0.8;">
+        Web Speech API + Stripe Payment Links + GitHub Pages
+    </p>
+</footer>
+
+<script>
+let recognition;
+let isRecording = false;
+
+// Initialize Web Speech API
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('transcription').textContent = transcript;
+        document.getElementById('address-display').classList.add('show');
+
+        // Auto-parse address into fields
+        parseAddress(transcript);
+
+        // Show checkout button
+        document.getElementById('checkout-btn').classList.add('show');
+
+        showStatus('Address captured! Review and edit if needed.', 'success');
+    };
+
+    recognition.onerror = (event) => {
+        showStatus(`Error: ${event.error}. Make sure microphone is enabled.`, 'error');
+        resetVoiceButton();
+    };
+
+    recognition.onend = () => {
+        resetVoiceButton();
+    };
+} else {
+    showStatus('Voice recognition not supported in this browser. Please type your address manually.', 'error');
+    // Show checkout button anyway so user can type
+    document.getElementById('checkout-btn').classList.add('show');
+}
+
+function toggleVoiceInput() {
+    if (!recognition) {
+        showStatus('Voice not supported. Please type your address.', 'error');
+        return;
+    }
+
+    if (isRecording) {
+        recognition.stop();
+        resetVoiceButton();
+    } else {
+        recognition.start();
+        isRecording = true;
+        document.getElementById('voice-btn').textContent = '⏹️ Stop Recording';
+        document.getElementById('voice-btn').classList.add('recording');
+        showStatus('Listening... Speak your full address now!', '');
+    }
+}
+
+function resetVoiceButton() {
+    isRecording = false;
+    document.getElementById('voice-btn').textContent = '🎤 Click to Speak Address';
+    document.getElementById('voice-btn').classList.remove('recording');
+}
+
+function parseAddress(text) {
+    // Simple regex-based address parsing
+    // Format: "123 Main St, Apt 4B, New York, NY, 10001"
+
+    const parts = text.split(',').map(p => p.trim());
+
+    if (parts.length >= 3) {
+        document.getElementById('street').value = parts[0] || '';
+
+        // Check if second part looks like apt/unit or city
+        if (parts[1] && /^(apt|apartment|unit|suite|#)/i.test(parts[1])) {
+            document.getElementById('unit').value = parts[1] || '';
+            document.getElementById('city').value = parts[2] || '';
+            document.getElementById('state').value = parts[3] || '';
+            document.getElementById('zip').value = parts[4] || '';
+        } else {
+            document.getElementById('city').value = parts[1] || '';
+            document.getElementById('state').value = parts[2] || '';
+            document.getElementById('zip').value = parts[3] || '';
+        }
+    } else {
+        // Fallback: put everything in street
+        document.getElementById('street').value = text;
+    }
+
+    // Extract ZIP code with regex if present
+    const zipMatch = text.match(/\b\d{5}(-\d{4})?\b/);
+    if (zipMatch) {
+        document.getElementById('zip').value = zipMatch[0];
+    }
+}
+
+let currentPaymentHash = null;
+
+async function proceedToPayment() {
+    const address = {
+        street: document.getElementById('street').value.trim(),
+        unit: document.getElementById('unit').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        state: document.getElementById('state').value.trim(),
+        zip: document.getElementById('zip').value.trim(),
+        email: document.getElementById('email').value.trim()
+    };
+
+    // Validation
+    if (!address.street || !address.city || !address.state || !address.zip) {
+        showStatus('Please fill in all required fields (street, city, state, ZIP)', 'error');
+        return;
+    }
+
+    if (!address.email) {
+        showStatus('Please enter your email address', 'error');
+        return;
+    }
+
+    // Get selected payment method
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+    // Store address in localStorage
+    localStorage.setItem('checkout_address', JSON.stringify(address));
+
+    // Create OSS payment
+    showStatus('Creating payment...', '');
+
+    const fullAddress = `${address.street}${address.unit ? ', ' + address.unit : ''}, ${address.city}, ${address.state} ${address.zip}`;
+
+    // Determine server URL (local dev vs production)
+    const serverUrl = localStorage.getItem('voice-archive-server') || detectServerUrl();
+
+    try {
+        const response = await fetch(`${serverUrl}/api/oss-checkout/create`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({...address, payment_method: paymentMethod}),
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                if (paymentMethod === 'lightning') {
+                    // Show Lightning invoice
+                    currentPaymentHash = data.payment_hash;
+                    document.getElementById('invoice-text').textContent = data.invoice;
+                    document.getElementById('lightning-invoice').style.display = 'block';
+                    showStatus(`✅ Lightning invoice created! Scan QR code to pay.`, 'success');
+
+                    // Generate QR code (simple text version for now)
+                    document.getElementById('qr-code').innerHTML = `
+                        <div style="background: white; padding: 2rem; border: 4px solid #000; display: inline-block;">
+                            <p style="font-size: 3rem;">📱</p>
+                            <p style="font-size: 0.9rem;">Scan with Lightning wallet</p>
+                        </div>
+                    `;
+
+                    if (data.note) {
+                        showStatus(`⚠️ ${data.note}`, 'error');
+                    }
+                } else if (paymentMethod === 'btcpay' || paymentMethod === 'coinbase') {
+                    // Redirect to hosted checkout
+                    showStatus(`✅ Redirecting to ${paymentMethod} checkout...`, 'success');
+                    setTimeout(() => {
+                        window.location.href = data.checkout_url;
+                    }, 1000);
+                }
+            } else {
+                showStatus(`Error: ${data.error}`, 'error');
+            }
+        } else {
+            // Fallback: Show demo mode
+            showStatus(`✅ Address confirmed: ${fullAddress}`, 'success');
+            setTimeout(() => {
+                alert(`Demo mode - Server not available (${response.status}).\n\nIn production:\n- Lightning: Show QR code invoice\n- BTCPay: Redirect to self-hosted checkout\n- Coinbase: Redirect to crypto checkout\n\nAddress: ${fullAddress}\nPayment: ${paymentMethod}`);
+            }, 1000);
+        }
+    } catch (error) {
+        // Fallback for no server
+        showStatus(`✅ Address confirmed: ${fullAddress}`, 'success');
+        setTimeout(() => {
+            alert(`Demo mode - Server not running.\n\nIn production: ${paymentMethod} payment would be processed\n\nAddress: ${fullAddress}`);
+        }, 1000);
+    }
+}
+
+async function checkLightningPayment() {
+    if (!currentPaymentHash) {
+        showStatus('No payment hash found', 'error');
+        return;
+    }
+
+    const serverUrl = localStorage.getItem('voice-archive-server') || detectServerUrl();
+
+    showStatus('Checking payment status...', '');
+
+    try {
+        const response = await fetch(`${serverUrl}/api/oss-checkout/verify`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                payment_method: 'lightning',
+                session_id: currentPaymentHash
+            }),
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.paid) {
+                showStatus('✅ Payment received! Thank you!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'https://cringeproof.com/success.html';
+                }, 2000);
+            } else {
+                showStatus(`Waiting for payment... ${data.error || ''}`, '');
+            }
+        } else {
+            showStatus('Could not verify payment. Try again in a moment.', 'error');
+        }
+    } catch (error) {
+        showStatus(`Error checking payment: ${error.message}`, 'error');
+    }
+}
+
+function detectServerUrl() {
+    const hostname = window.location.hostname;
+    if (hostname === 'cringeproof.com' || hostname.includes('github.io')) {
+        return 'https://wooden-example-happy-fine.trycloudflare.com';
+    } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'https://wooden-example-happy-fine.trycloudflare.com';
+    } else {
+        return 'https://wooden-example-happy-fine.trycloudflare.com';
+    }
+}
+
+function showStatus(message, type) {
+    const statusEl = document.getElementById('status');
+    statusEl.textContent = message;
+    statusEl.className = `status show ${type}`;
+}
+</script>
+</body>
+</html>

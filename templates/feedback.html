@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback - Soulfra</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{{ url_for('index') }}" class="logo">Soulfra</a>
+      <div class="nav-links">
+        <a href="{{ url_for('index') }}">Posts</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('feedback') }}" style="font-weight: bold;">Feedback</a>
+      </div>
+    </nav>
+  </header>
+
+  <main style="max-width: 600px; margin: 2rem auto; padding: 2rem;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="{{ category }}" style="padding: 1rem; margin-bottom: 1rem; border-radius: 4px; background: {% if category == 'error' %}#fee{% elif category == 'success' %}#efe{% else %}#eef{% endif %};">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h1 style="margin-bottom: 1rem;">💬 Send Feedback</h1>
+    
+    <p style="color: #666; margin-bottom: 2rem;">
+      Found a bug? Have a suggestion? Tell us what's broken or what could be better. 
+      <strong>No login required!</strong>
+    </p>
+
+    <form method="POST" style="background: #f9f9f9; padding: 2rem; border-radius: 8px;">
+      <div style="margin-bottom: 1.5rem;">
+        <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+          Name (optional)
+        </label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          placeholder="Your name"
+          style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem;">
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+          Email (optional)
+        </label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          placeholder="your@email.com"
+          style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem;">
+        <small style="color: #666;">We'll only use this to follow up if needed</small>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="component" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+          What's broken or needs improvement?
+        </label>
+        <select 
+          id="component" 
+          name="component"
+          style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem;">
+          <option value="">Select a component...</option>
+          {% for comp in components %}
+            <option value="{{ comp }}">{{ comp }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+          Feedback <span style="color: red;">*</span>
+        </label>
+        <textarea 
+          id="message" 
+          name="message" 
+          rows="6" 
+          required
+          placeholder="Describe what's broken, what you expected to happen, steps to reproduce, or your suggestion..."
+          style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;"></textarea>
+      </div>
+
+      <button 
+        type="submit"
+        style="width: 100%; padding: 1rem; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">
+        📨 Send Feedback
+      </button>
+
+      <p style="margin-top: 1rem; color: #666; font-size: 0.9rem; text-align: center;">
+        Your feedback will be sent directly to the admin dashboard
+      </p>
+    </form>
+
+    <div style="margin-top: 2rem; padding: 1.5rem; background: #e6f2ff; border-radius: 8px;">
+      <h3 style="margin: 0 0 0.5rem 0;">📚 Other Ways to Contribute</h3>
+      <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+        <li><a href="{{ url_for('signup') }}">Sign up</a> to comment on posts</li>
+        <li>Browse <a href="/soul/calriven">souls</a> and see how they evolve</li>
+        <li>Check out the <a href="/admin">admin panel</a> to write posts</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: #666;">
+    <p>&copy; 2025 Soulfra. <a href="{{ url_for('subscribe') }}">Subscribe</a> | <a href="{{ url_for('feedback') }}">Feedback</a></p>
+  </footer>
+</body>
+</html>

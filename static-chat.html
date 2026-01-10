@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Chat - Static</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        /* API Key Section */
+        .api-key-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .api-key-section.hidden {
+            display: none;
+        }
+
+        .api-key-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .api-key-section input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .api-key-section input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .api-key-section button {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .api-key-section button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .api-status {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .message.user .message-content {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .message-meta {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            width: fit-content;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-container textarea {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: none;
+            height: 50px;
+        }
+
+        .input-container textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-container button {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .input-container button:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .input-container button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #51cf66;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌙 Soulfra Chat</h1>
+            <p>Static GitHub Pages + Your Ollama</p>
+        </div>
+
+        <!-- API Key Section -->
+        <div class="api-key-section" id="apiKeySection">
+            <h3>🔑 Enter Your API Key</h3>
+            <input
+                type="password"
+                id="apiKeyInput"
+                placeholder="sk_github_yourname_abc123"
+                onkeypress="if(event.key==='Enter') saveApiKey()">
+            <input
+                type="text"
+                id="ollamaUrlInput"
+                placeholder="Ollama URL (e.g., https://abc123.ngrok.io)"
+                value="http://localhost:11434">
+            <button onclick="saveApiKey()">Save & Connect</button>
+            <div class="api-status" id="apiStatus"></div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div style="text-align: center; opacity: 0.7; padding: 50px 20px;">
+                    <div style="font-size: 3em; margin-bottom: 20px;">💬</div>
+                    <h3>Get started</h3>
+                    <p style="margin-top: 10px;">Enter your API key above to start chatting with AI</p>
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="chat-input">
+                <div class="input-container">
+                    <textarea
+                        id="messageInput"
+                        placeholder="Type your message..."
+                        onkeydown="handleKeyPress(event)"
+                        disabled></textarea>
+                    <button id="sendBtn" onclick="sendMessage()" disabled>Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                Need an API key?
+                <a href="https://github.com/your-username/soulfra" target="_blank">Connect GitHub</a>
+                | Powered by Ollama
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        let API_KEY = localStorage.getItem('soulfra_api_key') || '';
+        let OLLAMA_URL = localStorage.getItem('soulfra_ollama_url') || 'http://localhost:11434';
+        let isProcessing = false;
+
+        // Initialize
+        window.addEventListener('load', () => {
+            if (API_KEY) {
+                document.getElementById('apiKeyInput').value = API_KEY;
+                document.getElementById('ollamaUrlInput').value = OLLAMA_URL;
+                document.getElementById('apiKeySection').classList.add('hidden');
+                enableChat();
+                testConnection();
+            }
+        });
+
+        // Save API key
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            const ollamaUrl = document.getElementById('ollamaUrlInput').value.trim();
+
+            if (!apiKey) {
+                showStatus('Please enter an API key', 'error');
+                return;
+            }
+
+            if (!ollamaUrl) {
+                showStatus('Please enter Ollama URL', 'error');
+                return;
+            }
+
+            API_KEY = apiKey;
+            OLLAMA_URL = ollamaUrl;
+            localStorage.setItem('soulfra_api_key', apiKey);
+            localStorage.setItem('soulfra_ollama_url', ollamaUrl);
+
+            document.getElementById('apiKeySection').classList.add('hidden');
+            enableChat();
+            testConnection();
+        }
+
+        // Test connection
+        async function testConnection() {
+            showStatus('Testing connection...', '');
+
+            try {
+                const response = await fetch(`${OLLAMA_URL}/api/tags`, {
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const models = data.models || [];
+                    showStatus(`✅ Connected! ${models.length} models available`, 'success');
+
+                    // Clear placeholder message
+                    const placeholder = document.querySelector('#chatMessages > div[style*="text-align"]');
+                    if (placeholder) placeholder.remove();
+
+                    addMessage('assistant', `Connected to Ollama! Available models: ${models.map(m => m.name).join(', ')}`);
+                } else {
+                    showStatus(`❌ Connection failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Connection error: ${error.message}`, 'error');
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('apiStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `api-status ${type}`;
+        }
+
+        // Enable chat
+        function enableChat() {
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendBtn').disabled = false;
+            document.getElementById('messageInput').focus();
+        }
+
+        // Add message to UI
+        function addMessage(sender, content, timestamp = null) {
+            const messagesDiv = document.getElementById('chatMessages');
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+
+            const avatar = sender === 'user' ? '👤' : '🤖';
+            const time = timestamp || new Date().toLocaleTimeString();
+
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    ${content}
+                    <div class="message-meta">${time}</div>
+                </div>
+            `;
+
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const message = input.value.trim();
+
+            if (!message || isProcessing) return;
+
+            isProcessing = true;
+            input.disabled = true;
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+
+            // Show typing indicator
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.classList.add('active');
+
+            try {
+                const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'llama3',
+                        prompt: message,
+                        stream: false
+                    })
+                });
+
+                typingIndicator.classList.remove('active');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    addMessage('assistant', data.response || 'No response from AI');
+                } else {
+                    const error = await response.text();
+                    addMessage('assistant', `❌ Error: ${response.status} - ${error}`);
+                }
+            } catch (error) {
+                typingIndicator.classList.remove('active');
+                addMessage('assistant', `❌ Connection error: ${error.message}\n\nMake sure:\n1. Ollama is running\n2. ngrok/tunnel is active\n3. CORS is enabled\n4. API key is valid`);
+            } finally {
+                isProcessing = false;
+                input.disabled = false;
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+                input.focus();
+            }
+        }
+
+        // Handle Enter key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Logout (clear API key)
+        function logout() {
+            if (confirm('Clear API key and disconnect?')) {
+                localStorage.removeItem('soulfra_api_key');
+                localStorage.removeItem('soulfra_ollama_url');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

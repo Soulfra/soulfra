@@ -1,0 +1,53 @@
+/**
+ * {{brand}} Universal Theme
+ * Auto-generated from brand-vars.json using Formula Engine
+ *
+ * This demonstrates the SAME pattern as theme_compiler.py
+ * but using the universal formula engine!
+ */
+
+:root {
+    /* ========================================
+       BRAND COLORS
+    ======================================== */
+    --brand-primary: {{primaryColor}};
+    --brand-primary-dark: {{darken(primaryColor, 0.3)}};
+    --brand-primary-darker: {{darken(primaryColor, 0.5)}};
+    --brand-primary-light: {{lighten(primaryColor, 0.3)}};
+    --brand-primary-lighter: {{lighten(primaryColor, 0.5)}};
+
+    /* ========================================
+       TYPOGRAPHY (Formula-based!)
+    ======================================== */
+    --font-size-base: {{fontSize}}px;
+    --font-size-sm: {{fontSize * 0.875}}px;
+    --font-size-lg: {{fontSize * 1.25}}px;
+    --font-size-xl: {{fontSize * 1.5}}px;
+    --font-size-2xl: {{fontSize * 2}}px;
+
+    /* ========================================
+       SPACING (Formula-based!)
+    ======================================== */
+    --spacing-1: {{spacing}}px;
+    --spacing-2: {{spacing * 2}}px;
+    --spacing-3: {{spacing * 3}}px;
+    --spacing-4: {{spacing * 4}}px;
+    --spacing-5: {{spacing * 5}}px;
+
+    /* ========================================
+       TARGETING COLORS (Same as theme compiler)
+    ======================================== */
+    --target-0-primary: {{primaryColor}};
+    --target-1-primary: {{lighten(primaryColor, 0.1)}};
+    --target-2-primary: {{darken(primaryColor, 0.1)}};
+    --target-3-primary: {{lighten(primaryColor, 0.2)}};
+}
+
+/* Brand utility classes */
+.text-brand {
+    color: var(--brand-primary);
+}
+
+.bg-brand {
+    background-color: var(--brand-primary);
+}

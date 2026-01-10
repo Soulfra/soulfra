@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Color Challenge - {{ domain_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header .mood { font-size: 1.5em; opacity: 0.95; margin: 10px 0; }
+        .content { padding: 40px 30px; }
+
+        .challenge-desc {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .color-picker-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        #colorWheel {
+            border: 4px solid {{ theme_primary }};
+            border-radius: 50%;
+            cursor: crosshair;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #colorDisplay {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 15px auto;
+            border: 3px solid #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        #colorHex {
+            font-family: monospace;
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .result.show { display: block; }
+
+        .score {
+            font-size: 4em;
+            font-weight: 700;
+            color: {{ theme_primary }};
+            margin: 20px 0;
+        }
+
+        .reputation-earned {
+            font-size: 1.5em;
+            color: #28a745;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+
+        .feedback {
+            font-size: 1.2em;
+            color: #666;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .personality-insight {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid {{ theme_primary }};
+        }
+
+        .personality-insight h3 {
+            color: {{ theme_primary }};
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .personality-trait {
+            display: inline-block;
+            background: {{ theme_accent }};
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .visual-showcase {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #e0e0e0;
+        }
+
+        .visual-showcase h3 {
+            color: {{ theme_primary }};
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .visual-item {
+            text-align: center;
+        }
+
+        .visual-item img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .visual-item p {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .download-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: {{ theme_accent }};
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: transform 0.2s;
+        }
+
+        .download-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .leaderboard-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: {{ theme_primary }};
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .already-submitted {
+            text-align: center;
+            padding: 40px;
+            background: #fff3cd;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .already-submitted h2 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Daily Color Challenge</h1>
+            <div class="mood">{{ challenge.target_mood | title }}</div>
+            <div>{{ challenge.challenge_date }}</div>
+        </div>
+
+        <div class="content">
+            {% if already_submitted %}
+            <div class="already-submitted">
+                <h2>Already Completed!</h2>
+                <p>You've already submitted today's challenge.</p>
+                <p>Your score: <strong>{{ submission.similarity_score }}%</strong></p>
+                <p>Reputation earned: <strong>+{{ submission.reputation_earned }}</strong></p>
+                <a href="/rankings" class="leaderboard-link">View Rankings</a>
+            </div>
+            {% else %}
+            <div class="challenge-desc">
+                <p>{{ challenge.description }}</p>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #999;">
+                    Pick a color that matches the mood. The neural network will score your choice!
+                </p>
+            </div>
+
+            <div class="color-picker-section">
+                <label style="font-weight: 600; font-size: 1.2em; color: #333;">
+                    Choose Your Color:
+                </label>
+                <canvas id="colorWheel"></canvas>
+                <div id="colorDisplay" style="background: #667eea;"></div>
+                <div id="colorHex">#667eea</div>
+            </div>
+
+            <button class="submit-btn" id="submitBtn">Submit Color</button>
+
+            <div class="result" id="result">
+                <h2>Your Score</h2>
+                <div class="score" id="scoreDisplay">0%</div>
+                <div class="reputation-earned" id="repDisplay">+0 reputation</div>
+                <div class="feedback" id="feedbackText"></div>
+
+                <div class="personality-insight" id="personalitySection" style="display: none;">
+                    <h3>🧠 Color Personality Analysis</h3>
+                    <p id="personalityInsight" style="color: #555; margin: 10px 0;"></p>
+                    <div>
+                        <span class="personality-trait" id="energyTrait"></span>
+                        <span class="personality-trait" id="warmthTrait"></span>
+                    </div>
+                </div>
+
+                <div class="visual-showcase" id="visualShowcase" style="display: none;">
+                    <h3>🎨 Generated Brand Assets</h3>
+                    <p style="color: #666; margin-bottom: 15px;">Here's what your color creates:</p>
+
+                    <div class="visual-grid">
+                        <div class="visual-item">
+                            <img id="avatarImg" src="" alt="Avatar">
+                            <p>Avatar</p>
+                        </div>
+                        <div class="visual-item">
+                            <img id="faviconImg" src="" alt="Favicon" style="image-rendering: pixelated; width: 64px; height: 64px;">
+                            <p>Favicon</p>
+                        </div>
+                        <div class="visual-item">
+                            <div id="logoSvg" style="width: 128px; height: 128px; margin: 0 auto;"></div>
+                            <p>Logo</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <img id="paletteImg" src="" alt="Color Palette" style="width: 100%; max-width: 500px; border-radius: 8px; display: block; margin: 0 auto;">
+                        <p style="text-align: center; margin-top: 10px;">Full Color Palette</p>
+                    </div>
+                </div>
+
+                <a href="/rankings" class="leaderboard-link">View Rankings</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="/static/js/color-wheel.js"></script>
+    <script>
+        const submitBtn = document.getElementById('submitBtn');
+        const result = document.getElementById('result');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const repDisplay = document.getElementById('repDisplay');
+        const feedbackText = document.getElementById('feedbackText');
+        const colorDisplay = document.getElementById('colorDisplay');
+        const colorHex = document.getElementById('colorHex');
+
+        // Initialize circular color picker
+        let selectedColor = '#667eea';
+        const picker = new CircularColorPicker('colorWheel', {
+            size: 200,
+            defaultColor: '#667eea',
+            onChange: (color) => {
+                selectedColor = color;
+                colorDisplay.style.background = color;
+                colorHex.textContent = color;
+            }
+        });
+
+        if (submitBtn) {
+            submitBtn.addEventListener('click', async function() {
+                const color = selectedColor;
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Analyzing...';
+
+                try {
+                    const response = await fetch('/api/challenge/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            challenge_id: {{ challenge.id }},
+                            color: color
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Show result
+                        scoreDisplay.textContent = Math.round(data.similarity_score) + '%';
+                        repDisplay.textContent = '+' + data.reputation_earned + ' reputation';
+                        feedbackText.textContent = data.feedback;
+
+                        // Show personality analysis if available
+                        if (data.personality_insight) {
+                            const personalitySection = document.getElementById('personalitySection');
+                            const personalityInsight = document.getElementById('personalityInsight');
+                            const energyTrait = document.getElementById('energyTrait');
+                            const warmthTrait = document.getElementById('warmthTrait');
+
+                            personalityInsight.textContent = data.personality_insight;
+                            energyTrait.textContent = data.energy + ' Energy';
+                            warmthTrait.textContent = data.warmth;
+
+                            personalitySection.style.display = 'block';
+                        }
+
+                        // Show generated visual assets if available
+                        if (data.visuals) {
+                            const visualShowcase = document.getElementById('visualShowcase');
+                            const avatarImg = document.getElementById('avatarImg');
+                            const faviconImg = document.getElementById('faviconImg');
+                            const logoSvg = document.getElementById('logoSvg');
+                            const paletteImg = document.getElementById('paletteImg');
+
+                            avatarImg.src = data.visuals.avatar;
+                            faviconImg.src = data.visuals.favicon;
+                            logoSvg.innerHTML = data.visuals.logo_svg;
+                            paletteImg.src = data.visuals.palette;
+
+                            visualShowcase.style.display = 'block';
+                        }
+
+                        result.classList.add('show');
+                        submitBtn.style.display = 'none';
+                    } else {
+                        alert(data.error || 'Failed to submit');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Submit Color';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to submit. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Color';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

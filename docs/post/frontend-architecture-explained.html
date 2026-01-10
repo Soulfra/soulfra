@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Frontend Architecture: HTML, API, and Web Components - Soulfra Platform</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="../docs/index.html">Docs</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main>
+        <article class="post">
+            <h1>The Frontend Architecture: HTML, API, and Web Components</h1>
+            <p class="date">2025-12-20</p>
+            <div class="content">
+                # The Frontend Architecture
+
+Soulfra uses three different frontend approaches depending on complexity.
+
+## 1. Pure HTML (Form POST)
+
+**Example**: Cringeproof game
+```html
+<form method="POST" action="/cringeproof/submit">
+  <input type="radio" name="q1" value="1"> Strongly Disagree
+  <input type="radio" name="q1" value="5"> Strongly Agree
+  <button type="submit">Submit</button>
+</form>
+```
+
+**Flow**:
+Browser → Server → Process → Return HTML
+
+**When to use**:
+- Simple forms
+- No real-time updates needed
+- Works without JavaScript
+
+## 2. HTML + API (fetch() Calls)
+
+**Example**: Brand discussions
+```javascript
+fetch('/api/studio/chat', {
+  method: 'POST',
+  body: JSON.stringify({message, persona})
+})
+.then(r => r.json())
+.then(data => addMessage(data.response))
+```
+
+**Flow**:
+Browser ←fetch()→ Server → AI → JSON response
+
+**When to use**:
+- Real-time features (chat, live updates)
+- Dynamic content
+- Progressive enhancement
+
+## 3. Web Components (Future)
+
+**Example**: Reusable game questions
+```html
+<cringeproof-question
+  text="I triple-check my texts"
+  id="q1">
+</cringeproof-question>
+```
+
+**When to use**:
+- Reusable UI elements
+- Custom behavior encapsulation
+- Future-proof architecture
+
+## Strategy
+
+Start with **Pure HTML** (works everywhere).
+Add **API calls** when needed (real-time).
+Refactor to **Web Components** when patterns emerge.
+
+Progressive enhancement FTW!
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <p><a href="../index.html">← Back to posts</a></p>
+    </footer>
+</body>
+</html>

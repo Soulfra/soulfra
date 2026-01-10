@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Builder - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .main {
+            padding: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .panel h2 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.3em;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        textarea, select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            min-height: 300px;
+            resize: vertical;
+        }
+
+        select {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .example {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .example h3 {
+            margin-bottom: 10px;
+            color: #856404;
+        }
+
+        .example pre {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .preset-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-card:hover {
+            border-color: #667eea;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .preset-card.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .preset-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .preset-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .preset-desc {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .preset-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .preset-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/admin/dashboard" class="back-link">← Back to Dashboard</a>
+            <h1>🛠️ Template Form Builder</h1>
+            <p>Define fields → Pick brand → Generate template + route + schema</p>
+        </div>
+
+        <div class="main">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Natural Language Mode -->
+            <div class="preset-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                <h2 style="color: white;">💬 Just Type What You Want (No YAML Needed)</h2>
+                <p style="opacity: 0.9; margin-bottom: 20px;">Describe your form in plain English and AI will generate everything for you.</p>
+
+                <textarea id="natural-language-input"
+                          placeholder="Example: I want a game where roommates signup with their username, town name, and QR code. They compete for points on a leaderboard. Include news posts."
+                          style="min-height: 120px; background: white; color: #333; font-family: -apple-system, system-ui, sans-serif;"></textarea>
+
+                <button type="button" id="generate-from-description" class="btn" style="background: white; color: #667eea; margin-top: 15px;">
+                    🤖 Generate from Description
+                </button>
+
+                <div id="ai-status" style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; display: none;">
+                    <span id="ai-status-text"></span>
+                </div>
+            </div>
+
+            <!-- Quick Start Presets -->
+            <div class="preset-section">
+                <h2>⚡ Or Choose a Template</h2>
+                <div class="presets-grid">
+                    {% for preset_id, preset in presets.items() %}
+                    <div class="preset-card" onclick="loadPreset('{{ preset_id }}')">
+                        <div class="preset-icon">{{ preset.icon }}</div>
+                        <div class="preset-name">{{ preset.name }}</div>
+                        <div class="preset-desc">{{ preset.description }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <form method="POST">
+                <div class="grid">
+                    <!-- Left: Define Form -->
+                    <div class="panel">
+                        <h2>1️⃣ Define Your Form</h2>
+
+                        <div class="example">
+                            <h3>Example YAML:</h3>
+                            <pre>name: QR Code Generator
+route: /qr/generate
+table: qr_codes
+fields:
+  - name: roommate_name
+    type: text
+    label: Roommate Name
+    required: true
+  - name: town_name
+    type: text
+    label: Town Name
+  - name: qr_code_url
+    type: text
+    label: QR Code URL</pre>
+                        </div>
+
+                        <label for="form_definition">Form Definition (YAML) *</label>
+                        <textarea id="form_definition" name="form_definition" required placeholder="Enter your form definition in YAML format...">{{ form_definition if form_definition }}</textarea>
+                    </div>
+
+                    <!-- Right: Pick Brand -->
+                    <div class="panel">
+                        <h2>2️⃣ Pick Brand Theme</h2>
+
+                        <label for="brand">Brand Theme *</label>
+                        <select id="brand" name="brand" required>
+                            <option value="">-- Select Brand --</option>
+                            {% for theme_name, theme_data in brands.items() %}
+                                <option value="{{ theme_name }}" {% if brand == theme_name %}selected{% endif %}>
+                                    {{ theme_data.emoji }} {{ theme_name }} - {{ theme_data.personality }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <div style="margin-top: 20px;">
+                            <h3 style="margin-bottom: 10px;">Preview:</h3>
+                            <div id="brand-preview" style="padding: 15px; border-radius: 6px; background: #f8f9fa;">
+                                Select a brand to see colors
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button type="submit" class="btn">🚀 Generate Template + Route + Schema</button>
+            </form>
+
+            <!-- Output -->
+            {% if generated %}
+                <div class="success">
+                    ✅ Successfully generated! Files created:
+                    <ul>
+                        <li>{{ generated.template_path }}</li>
+                        <li>{{ generated.route_added }}</li>
+                        <li>{{ generated.schema_updated }}</li>
+                    </ul>
+                </div>
+
+                <h2 style="margin-top: 30px; margin-bottom: 15px;">📄 Generated Code</h2>
+
+                <h3>Template ({{ generated.template_path }}):</h3>
+                <div class="output">{{ generated.template_code }}</div>
+
+                <h3 style="margin-top: 20px;">Route (app.py):</h3>
+                <div class="output">{{ generated.route_code }}</div>
+
+                <h3 style="margin-top: 20px;">Schema (api/schema.json):</h3>
+                <div class="output">{{ generated.schema_code }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Brand preview
+        const brands = {{ brands|tojson }};
+        const presets = {{ presets|tojson }};
+        const brandSelect = document.getElementById('brand');
+        const brandPreview = document.getElementById('brand-preview');
+        const formDefinitionTextarea = document.getElementById('form_definition');
+
+        brandSelect.addEventListener('change', (e) => {
+            const selectedBrand = e.target.value;
+            if (selectedBrand && brands[selectedBrand]) {
+                const theme = brands[selectedBrand];
+                brandPreview.style.background = theme.colors.background;
+                brandPreview.style.color = theme.colors.text;
+                brandPreview.style.borderLeft = `4px solid ${theme.colors.primary}`;
+                brandPreview.innerHTML = `
+                    <strong>${theme.emoji} ${selectedBrand}</strong><br>
+                    Primary: ${theme.colors.primary}<br>
+                    Background: ${theme.colors.background}<br>
+                    Text: ${theme.colors.text}<br>
+                    Personality: ${theme.personality}
+                `;
+            } else {
+                brandPreview.style.background = '#f8f9fa';
+                brandPreview.style.color = '#333';
+                brandPreview.style.borderLeft = 'none';
+                brandPreview.innerHTML = 'Select a brand to see colors';
+            }
+        });
+
+        // Load preset template
+        function loadPreset(presetId) {
+            const preset = presets[presetId];
+            if (!preset || !preset.template) return;
+
+            // Convert template to YAML
+            const yamlTemplate = convertToYAML(preset.template);
+
+            // Fill form definition textarea
+            formDefinitionTextarea.value = yamlTemplate;
+
+            // Highlight selected preset card
+            document.querySelectorAll('.preset-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.preset-card').classList.add('active');
+
+            // Scroll to form definition
+            formDefinitionTextarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Convert preset template object to YAML string
+        function convertToYAML(template) {
+            let yaml = '';
+            yaml += `name: ${template.name}\n`;
+            yaml += `route: ${template.route}\n`;
+            yaml += `table: ${template.table}\n`;
+
+            if (template.subdomain) {
+                yaml += `subdomain: ${template.subdomain}\n`;
+            }
+
+            if (template.features && template.features.length > 0) {
+                yaml += `features:\n`;
+                template.features.forEach(feature => {
+                    yaml += `  - ${feature}\n`;
+                });
+            }
+
+            yaml += `fields:\n`;
+            template.fields.forEach(field => {
+                yaml += `  - name: ${field.name}\n`;
+                yaml += `    type: ${field.type}\n`;
+                yaml += `    label: ${field.label}\n`;
+                yaml += `    required: ${field.required}\n`;
+                if (field.validation) {
+                    yaml += `    validation: ${field.validation}\n`;
+                }
+                if (field.description) {
+                    yaml += `    description: ${field.description}\n`;
+                }
+                if (field.rows) {
+                    yaml += `    rows: ${field.rows}\n`;
+                }
+                if (field.options) {
+                    yaml += `    options:\n`;
+                    field.options.forEach(opt => {
+                        yaml += `      - "${opt}"\n`;
+                    });
+                }
+                if (field.min !== undefined) yaml += `    min: ${field.min}\n`;
+                if (field.max !== undefined) yaml += `    max: ${field.max}\n`;
+            });
+
+            if (template.additional_routes && template.additional_routes.length > 0) {
+                yaml += `additional_routes:\n`;
+                template.additional_routes.forEach(route => {
+                    yaml += `  - route: ${route.route}\n`;
+                    yaml += `    type: ${route.type}\n`;
+                    yaml += `    description: ${route.description}\n`;
+                });
+            }
+
+            return yaml;
+        }
+
+        // Handle natural language → YAML conversion
+        const generateBtn = document.getElementById('generate-from-description');
+        const naturalInput = document.getElementById('natural-language-input');
+        const aiStatus = document.getElementById('ai-status');
+        const aiStatusText = document.getElementById('ai-status-text');
+
+        if (generateBtn) {
+            generateBtn.addEventListener('click', async () => {
+                const description = naturalInput.value.trim();
+
+                if (!description) {
+                    alert('Please describe what you want to build');
+                    return;
+                }
+
+                // Show loading status
+                aiStatus.style.display = 'block';
+                aiStatusText.textContent = '🤖 Asking AI to understand your description...';
+                generateBtn.disabled = true;
+
+                try {
+                    // Call backend API to parse natural language
+                    const response = await fetch('/api/form-builder/parse-description', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({description: description})
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to parse description');
+                    }
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    // Success! Fill in the YAML
+                    aiStatusText.textContent = '✅ AI understood! Filling in form definition...';
+                    formDefinitionTextarea.value = data.yaml;
+
+                    // Scroll to form definition
+                    setTimeout(() => {
+                        formDefinitionTextarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        aiStatus.style.display = 'none';
+                        generateBtn.disabled = false;
+                    }, 1500);
+
+                } catch (error) {
+                    aiStatusText.textContent = `❌ Error: ${error.message}`;
+                    generateBtn.disabled = false;
+                    setTimeout(() => {
+                        aiStatus.style.display = 'none';
+                    }, 3000);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

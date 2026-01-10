@@ -1,0 +1,100 @@
+{% extends "stpetepros/base.html" %}
+
+{% block title %}Inbox - StPetePros{% endblock %}
+
+{% block description %}View messages from customers{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-4xl font-bold text-slate-900 mb-2">Inbox</h1>
+      <p class="text-slate-600">
+        {% if unread_count > 0 %}
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-sky-100 text-sky-700">
+            {{ unread_count }} unread message{{ 's' if unread_count != 1 else '' }}
+          </span>
+        {% else %}
+          All messages read
+        {% endif %}
+      </p>
+    </div>
+    <a href="/professional/inbox" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-semibold hover:bg-slate-200 transition-colors">
+      Refresh
+    </a>
+  </div>
+</div>
+
+{% if messages %}
+  <div class="space-y-4">
+    {% for message in messages %}
+      <div class="bg-white p-6 rounded-xl border-2 {{ 'border-sky-500 bg-sky-50' if not message['read'] else 'border-slate-200' }} transition-all">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-slate-400 to-slate-600 rounded-full flex items-center justify-center text-xl text-white font-bold">
+              {{ (message['from_display_name'] or message['from_username'] or 'Customer')[:1] }}
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900">{{ message['from_display_name'] or message['from_username'] or 'Customer' }}</h3>
+              <p class="text-sm text-slate-500">{{ message['created_at'] }}</p>
+            </div>
+          </div>
+          {% if not message['read'] %}
+            <span class="px-3 py-1 bg-sky-500 text-white text-xs font-semibold rounded-full">New</span>
+          {% endif %}
+        </div>
+
+        <div class="bg-white p-4 rounded-lg border border-slate-200">
+          <p class="text-slate-700 leading-relaxed">{{ message['content'] }}</p>
+        </div>
+
+        <div class="mt-4 flex gap-3">
+          <button onclick="replyToMessage({{ message['id'] }})" class="px-4 py-2 bg-sky-500 text-white rounded-lg font-semibold hover:bg-sky-600 transition-colors">
+            Reply
+          </button>
+          {% if not message['read'] %}
+            <button onclick="markAsRead({{ message['id'] }})" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors">
+              Mark as Read
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="text-center py-16 bg-slate-100 rounded-xl">
+    <div class="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center text-4xl text-slate-400 mx-auto mb-4">
+      ✉
+    </div>
+    <h2 class="text-2xl font-bold text-slate-900 mb-2">No messages yet</h2>
+    <p class="text-slate-600">Customer inquiries will appear here</p>
+  </div>
+{% endif %}
+
+<script>
+function markAsRead(messageId) {
+  fetch(`/professional/message/${messageId}/mark-read`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Reload page to show updated status
+      window.location.reload();
+    }
+  })
+  .catch(error => {
+    console.error('Error marking message as read:', error);
+    alert('Failed to mark message as read');
+  });
+}
+
+function replyToMessage(messageId) {
+  // TODO: Implement reply functionality
+  alert('Reply feature coming soon! For now, please respond via email or phone.');
+}
+</script>
+{% endblock %}

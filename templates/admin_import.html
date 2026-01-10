@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import Subscribers - Soulfra Admin</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .import-box {
+      background: #f9f9f9;
+      padding: 40px;
+      border-radius: 8px;
+      border: 2px dashed #ddd;
+      text-align: center;
+    }
+    .upload-form {
+      margin-top: 30px;
+    }
+    .file-input {
+      display: none;
+    }
+    .file-label {
+      display: inline-block;
+      padding: 15px 30px;
+      background: #000;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .file-label:hover {
+      background: #333;
+    }
+    .file-name {
+      margin-top: 15px;
+      color: #666;
+      font-style: italic;
+    }
+    .upload-btn {
+      margin-top: 20px;
+      padding: 15px 40px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+    }
+    .upload-btn:hover {
+      background: #333;
+    }
+    .upload-btn.visible {
+      display: inline-block;
+    }
+    .format-info {
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 30px;
+      text-align: left;
+    }
+    .format-info h3 {
+      margin-top: 0;
+    }
+    .format-info code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+    .example-csv {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #000;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <h2>Soulfra Admin</h2>
+    <nav class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/subscribers">Subscribers</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    <a href="/admin/subscribers" class="back-link">← Back to Subscribers</a>
+
+    <h1>📥 Import Subscribers</h1>
+
+    <div class="import-box">
+      <h2>Upload CSV File</h2>
+      <p>Import subscribers from Mailchimp, Substack, or any CSV file</p>
+
+      <form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+        <label for="csv_file" class="file-label">
+          📄 Choose CSV File
+        </label>
+        <input type="file" name="csv_file" id="csv_file" accept=".csv" class="file-input" required>
+
+        <div class="file-name" id="fileName">No file chosen</div>
+
+        <button type="submit" class="upload-btn" id="uploadBtn">
+          ⬆️ Import Subscribers
+        </button>
+      </form>
+    </div>
+
+    <div class="format-info">
+      <h3>📋 CSV Format Requirements</h3>
+      <ul>
+        <li>Must include an <code>Email</code> column (or any column with "email" in the name)</li>
+        <li>Optional: <code>Status</code> column (Active, Subscribed, Unsubscribed, etc.)</li>
+        <li>Works with Mailchimp, Substack, and most newsletter platform exports</li>
+        <li>Duplicates will be skipped automatically</li>
+      </ul>
+
+      <h4>Example CSV Format:</h4>
+      <div class="example-csv">
+Email,Status<br>
+alice@example.com,Active<br>
+bob@example.com,Subscribed<br>
+charlie@example.com,Unsubscribed
+      </div>
+
+      <h4>Mailchimp Export:</h4>
+      <div class="example-csv">
+Email Address,First Name,Last Name,Member Rating<br>
+alice@example.com,Alice,Smith,4<br>
+bob@example.com,Bob,Jones,5
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('csv_file');
+    const fileName = document.getElementById('fileName');
+    const uploadBtn = document.getElementById('uploadBtn');
+
+    fileInput.addEventListener('change', function() {
+      if (this.files && this.files.length > 0) {
+        fileName.textContent = this.files[0].name;
+        uploadBtn.classList.add('visible');
+      } else {
+        fileName.textContent = 'No file chosen';
+        uploadBtn.classList.remove('visible');
+      }
+    });
+  </script>
+</body>
+</html>

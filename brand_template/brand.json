@@ -1,0 +1,57 @@
+{
+  "name": "YourBrand",
+  "display_name": "Your Brand Name",
+  "description": "Your AI-powered brand workspace",
+  "icon": "🌙",
+  "colors": {
+    "primary": "#667eea",
+    "secondary": "#764ba2",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+  },
+  "ollama": {
+    "host": "http://localhost:11434",
+    "default_model": "llama2",
+    "preferred_models": [
+      "llama2",
+      "mistral",
+      "codellama"
+    ]
+  },
+  "features": {
+    "chat": true,
+    "captcha": true,
+    "federation": false
+  },
+  "captcha": {
+    "enabled": true,
+    "type": "ollama_challenge",
+    "model": "llama2",
+    "prompts": [
+      "What is 2+2 in hexadecimal?",
+      "Name a primary color in lowercase",
+      "What day comes after Monday?",
+      "How many legs does a spider have?"
+    ],
+    "validation": "flexible"
+  },
+  "federation": {
+    "enabled": false,
+    "domain": "yourbrand.com",
+    "port": 8080,
+    "trusted_peers": []
+  },
+  "deployment": {
+    "type": "static",
+    "hosting": [
+      "GitHub Pages",
+      "Netlify",
+      "Vercel",
+      "AWS S3",
+      "Any static host"
+    ]
+  },
+  "contact": {
+    "website": "https://yourbrand.com",
+    "email": "contact@yourbrand.com"
+  }
+}

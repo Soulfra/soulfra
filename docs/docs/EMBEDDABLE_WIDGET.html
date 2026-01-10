@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embeddable Widget Guide - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="embeddable-widget-guide">Embeddable Widget Guide</h1>
+
+<p><strong>How to embed Soulfra's AI chat widget on WordPress, static sites, or any web page</strong></p>
+
+<hr />
+
+<h2 id="quick-embed-copy-paste">Quick Embed (Copy-Paste)</h2>
+
+<p>Add this to any HTML page:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cm">&lt;!-- Soulfra Chat Widget --&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;soulfra-widget-container&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://your-domain.com/static/widget-embed.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="nx">SoulWidget</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">apiEndpoint</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://your-domain.com&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bottom-right&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">primaryColor</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#667eea&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">welcomeMessage</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Hey! Talk to me about anything.&#39;</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p><strong>That's it.</strong> The widget will appear in the bottom-right corner.</p>
+
+<hr />
+
+<h2 id="wordpress-integration">WordPress Integration</h2>
+
+<h3 id="method-1-custom-html-block-easiest">Method 1: Custom HTML Block (Easiest)</h3>
+
+<ol>
+<li><strong>Edit your page/post</strong> in WordPress</li>
+<li><strong>Add a Custom HTML block</strong> (+ button → Custom HTML)</li>
+<li><strong>Paste the embed code</strong> (from Quick Embed above)</li>
+<li><strong>Publish</strong></li>
+</ol>
+
+<p>The widget will appear on that specific page.</p>
+
+<h3 id="method-2-theme-footer-site-wide">Method 2: Theme Footer (Site-Wide)</h3>
+
+<p><strong>For all pages:</strong></p>
+
+<ol>
+<li>Go to <strong>Appearance → Theme Editor</strong></li>
+<li>Open <strong>footer.php</strong></li>
+<li>Add embed code <strong>before <code>&lt;/body&gt;</code></strong></li>
+<li><strong>Update File</strong></li>
+</ol>
+
+<p><strong>⚠️ Caution:</strong> This edits your theme directly. Use a child theme if possible.</p>
+
+<h3 id="method-3-plugin-recommended">Method 3: Plugin (Recommended)</h3>
+
+<p><strong>Install "Insert Headers and Footers" plugin:</strong></p>
+
+<ol>
+<li><strong>Plugins → Add New</strong> → Search "Insert Headers and Footers"</li>
+<li><strong>Install &amp; Activate</strong></li>
+<li><strong>Settings → Insert Headers and Footers</strong></li>
+<li><strong>Paste embed code in "Footer" section</strong></li>
+<li><strong>Save</strong></li>
+</ol>
+
+<p>Widget will appear on all pages without editing theme files.</p>
+
+<hr />
+
+<h2 id="configuration-options">Configuration Options</h2>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">SoulWidget</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+<span class="w">  </span><span class="c1">// Required</span>
+<span class="w">  </span><span class="nx">apiEndpoint</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://your-domain.com&#39;</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">// Optional</span>
+<span class="w">  </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bottom-right&#39;</span><span class="p">,</span><span class="w">        </span><span class="c1">// or &#39;bottom-left&#39;</span>
+<span class="w">  </span><span class="nx">primaryColor</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#667eea&#39;</span><span class="p">,</span><span class="w">         </span><span class="c1">// Brand color</span>
+<span class="w">  </span><span class="nx">buttonIcon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;💬&#39;</span><span class="p">,</span><span class="w">                </span><span class="c1">// Chat bubble icon</span>
+<span class="w">  </span><span class="nx">welcomeMessage</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Hello!&#39;</span><span class="p">,</span><span class="w">        </span><span class="c1">// First message</span>
+<span class="w">  </span><span class="nx">placeholder</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Type here...&#39;</span><span class="p">,</span><span class="w">     </span><span class="c1">// Input placeholder</span>
+
+<span class="w">  </span><span class="c1">// Advanced</span>
+<span class="w">  </span><span class="nx">width</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;400px&#39;</span><span class="p">,</span><span class="w">                  </span><span class="c1">// Widget width</span>
+<span class="w">  </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;600px&#39;</span><span class="p">,</span><span class="w">                 </span><span class="c1">// Widget height</span>
+<span class="w">  </span><span class="nx">sessionDuration</span><span class="o">:</span><span class="w"> </span><span class="mf">3600</span><span class="p">,</span><span class="w">           </span><span class="c1">// Session timeout (seconds)</span>
+<span class="w">  </span><span class="nx">enableNotifications</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">       </span><span class="c1">// Browser notifications</span>
+
+<span class="w">  </span><span class="c1">// Branding</span>
+<span class="w">  </span><span class="nx">brandName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Soulfra&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">brandLogo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://your-domain.com/logo.png&#39;</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">// Features</span>
+<span class="w">  </span><span class="nx">enableFileUpload</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">enableVoiceInput</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">enableMarkdown</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">});</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="standalone-widget-file">Standalone Widget File</h2>
+
+<p>Create <code>static/widget-embed.js</code> on your Soulfra server:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">SoulWidget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">    </span><span class="nx">isOpen</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">sessionId</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+
+<span class="w">    </span><span class="nx">init</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">apiEndpoint</span><span class="o">:</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">origin</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bottom-right&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">primaryColor</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#667eea&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">buttonIcon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;💬&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">welcomeMessage</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Hi! How can I help?&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">placeholder</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Type your message...&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">width</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;400px&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;600px&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">brandName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Soulfra&#39;</span>
+<span class="w">      </span><span class="p">},</span><span class="w"> </span><span class="nx">options</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">createWidget</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">attachEventListeners</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">generateSessionId</span><span class="p">();</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="nx">generateSessionId</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;session_&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mf">36</span><span class="p">).</span><span class="nx">substr</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">9</span><span class="p">);</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="nx">createWidget</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-container&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">container</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Widget container not found&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="c1">// Chat button</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">button</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;soulfra-widget-button&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">button</span><span class="p">.</span><span class="nx">className</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;soulfra-widget-button&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">button</span><span class="p">.</span><span class="nx">innerHTML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">buttonIcon</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">button</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">cssText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">        position: fixed;</span>
+<span class="sb">        </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;right: 20px&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;left: 20px&#39;</span><span class="si">}</span><span class="sb">;</span>
+<span class="sb">        bottom: 20px;</span>
+<span class="sb">        width: 60px;</span>
+<span class="sb">        height: 60px;</span>
+<span class="sb">        border-radius: 50%;</span>
+<span class="sb">        background: </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">primaryColor</span><span class="si">}</span><span class="sb">;</span>
+<span class="sb">        color: white;</span>
+<span class="sb">        font-size: 28px;</span>
+<span class="sb">        display: flex;</span>
+<span class="sb">        align-items: center;</span>
+<span class="sb">        justify-content: center;</span>
+<span class="sb">        cursor: pointer;</span>
+<span class="sb">        box-shadow: 0 4px 12px rgba(0,0,0,0.15);</span>
+<span class="sb">        z-index: 9999;</span>
+<span class="sb">        transition: transform 0.2s;</span>
+<span class="sb">      `</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// Chat window</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">widget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">widget</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;soulfra-widget-window&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">widget</span><span class="p">.</span><span class="nx">className</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;soulfra-widget-window&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">widget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">cssText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">        position: fixed;</span>
+<span class="sb">        </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;right: 20px&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;left: 20px&#39;</span><span class="si">}</span><span class="sb">;</span>
+<span class="sb">        bottom: 90px;</span>
+<span class="sb">        width: </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">width</span><span class="si">}</span><span class="sb">;</span>
+<span class="sb">        height: </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">height</span><span class="si">}</span><span class="sb">;</span>
+<span class="sb">        background: white;</span>
+<span class="sb">        border-radius: 12px;</span>
+<span class="sb">        box-shadow: 0 8px 24px rgba(0,0,0,0.2);</span>
+<span class="sb">        z-index: 9999;</span>
+<span class="sb">        display: none;</span>
+<span class="sb">        flex-direction: column;</span>
+<span class="sb">        overflow: hidden;</span>
+<span class="sb">      `</span><span class="p">;</span>
+
+<span class="w">      </span><span class="nx">widget</span><span class="p">.</span><span class="nx">innerHTML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">        &lt;div style=&quot;background: </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">primaryColor</span><span class="si">}</span><span class="sb">; color: white; padding: 16px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;&quot;&gt;</span>
+<span class="sb">          &lt;span&gt;</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">brandName</span><span class="si">}</span><span class="sb">&lt;/span&gt;</span>
+<span class="sb">          &lt;span id=&quot;soulfra-widget-close&quot; style=&quot;cursor: pointer; font-size: 20px;&quot;&gt;&amp;times;&lt;/span&gt;</span>
+<span class="sb">        &lt;/div&gt;</span>
+<span class="sb">        &lt;div id=&quot;soulfra-widget-messages&quot; style=&quot;flex: 1; overflow-y: auto; padding: 16px; background: #f9f9f9;&quot;&gt;&lt;/div&gt;</span>
+<span class="sb">        &lt;div style=&quot;padding: 16px; border-top: 1px solid #ddd; background: white;&quot;&gt;</span>
+<span class="sb">          &lt;div style=&quot;display: flex; gap: 8px;&quot;&gt;</span>
+<span class="sb">            &lt;input type=&quot;text&quot; id=&quot;soulfra-widget-input&quot; placeholder=&quot;</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">placeholder</span><span class="si">}</span><span class="sb">&quot; style=&quot;flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;&quot;&gt;</span>
+<span class="sb">            &lt;button id=&quot;soulfra-widget-send&quot; style=&quot;padding: 12px 20px; background: </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">primaryColor</span><span class="si">}</span><span class="sb">; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;&quot;&gt;Send&lt;/button&gt;</span>
+<span class="sb">          &lt;/div&gt;</span>
+<span class="sb">        &lt;/div&gt;</span>
+<span class="sb">      `</span><span class="p">;</span>
+
+<span class="w">      </span><span class="nx">container</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">button</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">container</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">widget</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// Add welcome message</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">addMessage</span><span class="p">(</span><span class="s1">&#39;assistant&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">welcomeMessage</span><span class="p">);</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="nx">attachEventListeners</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-button&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">closeBtn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-close&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">sendBtn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-send&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-input&#39;</span><span class="p">);</span>
+
+<span class="w">      </span><span class="nx">button</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">toggleWidget</span><span class="p">());</span>
+<span class="w">      </span><span class="nx">closeBtn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">toggleWidget</span><span class="p">());</span>
+<span class="w">      </span><span class="nx">sendBtn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sendMessage</span><span class="p">());</span>
+<span class="w">      </span><span class="nx">input</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;keypress&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;Enter&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sendMessage</span><span class="p">();</span>
+<span class="w">      </span><span class="p">});</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="nx">toggleWidget</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">widget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-window&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-button&#39;</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">isOpen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">isOpen</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">widget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">isOpen</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;flex&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">button</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">transform</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">isOpen</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;scale(0.9)&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;scale(1)&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="nx">sendMessage</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-input&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">trim</span><span class="p">();</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">message</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// Add user message</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">addMessage</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">input</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+<span class="w">      </span><span class="c1">// Send to backend</span>
+<span class="w">      </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">apiEndpoint</span><span class="si">}</span><span class="sb">/assistant/chat`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">          </span><span class="nx">session_id</span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">sessionId</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="nx">message</span>
+<span class="w">        </span><span class="p">})</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">this</span><span class="p">.</span><span class="nx">addMessage</span><span class="p">(</span><span class="s1">&#39;assistant&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">this</span><span class="p">.</span><span class="nx">addMessage</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Error: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">      </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">addMessage</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Connection error. Please try again.&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Widget error:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">      </span><span class="p">});</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="nx">addMessage</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">sender</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">messagesDiv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;soulfra-widget-messages&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">messageDiv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">);</span>
+
+<span class="w">      </span><span class="nx">messageDiv</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">cssText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">        margin-bottom: 12px;</span>
+<span class="sb">        padding: 12px;</span>
+<span class="sb">        border-radius: 8px;</span>
+<span class="sb">        </span><span class="si">${</span><span class="nx">sender</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="w"> </span><span class="o">?</span>
+<span class="w">          </span><span class="s1">&#39;background: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">primaryColor</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;; color: white; text-align: right; margin-left: 20%;&#39;</span><span class="w"> </span><span class="o">:</span>
+<span class="w">          </span><span class="s1">&#39;background: white; color: #333; margin-right: 20%;&#39;</span><span class="si">}</span>
+<span class="sb">        </span><span class="si">${</span><span class="nx">sender</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;background: #fee; color: #c33; border: 1px solid #fcc;&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span>
+<span class="sb">      `</span><span class="p">;</span>
+
+<span class="w">      </span><span class="nx">messageDiv</span><span class="p">.</span><span class="nx">textContent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">content</span><span class="p">;</span>
+<span class="w">      </span><span class="nx">messagesDiv</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">messageDiv</span><span class="p">);</span>
+<span class="w">      </span><span class="nx">messagesDiv</span><span class="p">.</span><span class="nx">scrollTop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">messagesDiv</span><span class="p">.</span><span class="nx">scrollHeight</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="c1">// Expose globally</span>
+<span class="w">  </span><span class="nb">window</span><span class="p">.</span><span class="nx">SoulWidget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">SoulWidget</span><span class="p">;</span>
+<span class="p">})();</span>
+</code></pre>
+</div>
+
+<p><strong>Host this file</strong> on your Soulfra server at <code>/static/widget-embed.js</code>.</p>
+
+<hr />
+
+<h2 id="self-hosted-setup">Self-Hosted Setup</h2>
+
+<p>If you want to self-host the entire widget:</p>
+
+<h3 id="1-copy-widget-files">1. Copy Widget Files</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># On your WordPress server</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>/var/www/html/soulfra-widget
+<span class="nb">cd</span><span class="w"> </span>/var/www/html/soulfra-widget
+
+<span class="c1"># Download widget files</span>
+curl<span class="w"> </span>-O<span class="w"> </span>https://your-soulfra.com/static/widget-embed.js
+curl<span class="w"> </span>-O<span class="w"> </span>https://your-soulfra.com/static/widget-styles.css
+</code></pre>
+</div>
+
+<h3 id="2-update-embed-code">2. Update Embed Code</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;soulfra-widget-container&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;/soulfra-widget/widget-embed.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="nx">SoulWidget</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">apiEndpoint</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://your-soulfra-backend.com&#39;</span><span class="w">  </span><span class="c1">// Your Soulfra API</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="cors-configuration">CORS Configuration</h2>
+
+<p>If widget is on different domain than API, enable CORS in <code>app.py</code>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask_cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORS</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="p">{</span>
+    <span class="sa">r</span><span class="s2">&quot;/assistant/*&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;origins&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;https://your-wordpress-site.com&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;methods&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;allow_headers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre>
+</div>
+
+<p>Install CORS:</p>
+
+<div class="codehilite">
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>flask-cors
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="advanced-wordpress-plugin">Advanced: WordPress Plugin</h2>
+
+<p><strong>Create a custom plugin</strong> for easier installation:</p>
+
+<p><strong>File:</strong> <code>wp-content/plugins/soulfra-widget/soulfra-widget.php</code></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="sd">/**</span>
+<span class="sd"> * Plugin Name: Soulfra Chat Widget</span>
+<span class="sd"> * Description: Embeds Soulfra AI chat widget on your WordPress site</span>
+<span class="sd"> * Version: 1.0</span>
+<span class="sd"> * Author: Your Name</span>
+<span class="sd"> */</span>
+
+<span class="c1">// Add settings page</span>
+<span class="nx">add_action</span><span class="p">(</span><span class="s1">&#39;admin_menu&#39;</span><span class="p">,</span> <span class="s1">&#39;soulfra_widget_menu&#39;</span><span class="p">);</span>
+
+<span class="k">function</span> <span class="nf">soulfra_widget_menu</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">add_options_page</span><span class="p">(</span>
+        <span class="s1">&#39;Soulfra Widget Settings&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Soulfra Widget&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;manage_options&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra-widget&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra_widget_settings_page&#39;</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">soulfra_widget_settings_page</span><span class="p">()</span> <span class="p">{</span>
+    <span class="cp">?&gt;</span>
+<span class="x">    &lt;div class=&quot;wrap&quot;&gt;</span>
+<span class="x">        &lt;h1&gt;Soulfra Widget Settings&lt;/h1&gt;</span>
+<span class="x">        &lt;form method=&quot;post&quot; action=&quot;options.php&quot;&gt;</span>
+<span class="x">            </span><span class="cp">&lt;?php</span>
+            <span class="nx">settings_fields</span><span class="p">(</span><span class="s1">&#39;soulfra_widget_options&#39;</span><span class="p">);</span>
+            <span class="nx">do_settings_sections</span><span class="p">(</span><span class="s1">&#39;soulfra-widget&#39;</span><span class="p">);</span>
+            <span class="nx">submit_button</span><span class="p">();</span>
+            <span class="cp">?&gt;</span>
+<span class="x">        &lt;/form&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+<span class="x">    </span><span class="cp">&lt;?php</span>
+<span class="p">}</span>
+
+<span class="c1">// Register settings</span>
+<span class="nx">add_action</span><span class="p">(</span><span class="s1">&#39;admin_init&#39;</span><span class="p">,</span> <span class="s1">&#39;soulfra_widget_settings&#39;</span><span class="p">);</span>
+
+<span class="k">function</span> <span class="nf">soulfra_widget_settings</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">register_setting</span><span class="p">(</span><span class="s1">&#39;soulfra_widget_options&#39;</span><span class="p">,</span> <span class="s1">&#39;soulfra_api_endpoint&#39;</span><span class="p">);</span>
+    <span class="nx">register_setting</span><span class="p">(</span><span class="s1">&#39;soulfra_widget_options&#39;</span><span class="p">,</span> <span class="s1">&#39;soulfra_primary_color&#39;</span><span class="p">);</span>
+
+    <span class="nx">add_settings_section</span><span class="p">(</span>
+        <span class="s1">&#39;soulfra_widget_main&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Main Settings&#39;</span><span class="p">,</span>
+        <span class="k">null</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra-widget&#39;</span>
+    <span class="p">);</span>
+
+    <span class="nx">add_settings_field</span><span class="p">(</span>
+        <span class="s1">&#39;soulfra_api_endpoint&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;API Endpoint&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra_api_endpoint_callback&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra-widget&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra_widget_main&#39;</span>
+    <span class="p">);</span>
+
+    <span class="nx">add_settings_field</span><span class="p">(</span>
+        <span class="s1">&#39;soulfra_primary_color&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Primary Color&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra_primary_color_callback&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra-widget&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;soulfra_widget_main&#39;</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">soulfra_api_endpoint_callback</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$value</span> <span class="o">=</span> <span class="nx">get_option</span><span class="p">(</span><span class="s1">&#39;soulfra_api_endpoint&#39;</span><span class="p">,</span> <span class="s1">&#39;https://your-domain.com&#39;</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="s1">&#39;&lt;input type=&quot;text&quot; name=&quot;soulfra_api_endpoint&quot; value=&quot;&#39;</span> <span class="o">.</span> <span class="nx">esc_attr</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">.</span> <span class="s1">&#39;&quot; style=&quot;width: 100%; max-width: 400px;&quot;&gt;&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">soulfra_primary_color_callback</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$value</span> <span class="o">=</span> <span class="nx">get_option</span><span class="p">(</span><span class="s1">&#39;soulfra_primary_color&#39;</span><span class="p">,</span> <span class="s1">&#39;#667eea&#39;</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="s1">&#39;&lt;input type=&quot;color&quot; name=&quot;soulfra_primary_color&quot; value=&quot;&#39;</span> <span class="o">.</span> <span class="nx">esc_attr</span><span class="p">(</span><span class="nv">$value</span><span class="p">)</span> <span class="o">.</span> <span class="s1">&#39;&quot;&gt;&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Inject widget into footer</span>
+<span class="nx">add_action</span><span class="p">(</span><span class="s1">&#39;wp_footer&#39;</span><span class="p">,</span> <span class="s1">&#39;soulfra_widget_inject&#39;</span><span class="p">);</span>
+
+<span class="k">function</span> <span class="nf">soulfra_widget_inject</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$api_endpoint</span> <span class="o">=</span> <span class="nx">get_option</span><span class="p">(</span><span class="s1">&#39;soulfra_api_endpoint&#39;</span><span class="p">,</span> <span class="s1">&#39;https://your-domain.com&#39;</span><span class="p">);</span>
+    <span class="nv">$primary_color</span> <span class="o">=</span> <span class="nx">get_option</span><span class="p">(</span><span class="s1">&#39;soulfra_primary_color&#39;</span><span class="p">,</span> <span class="s1">&#39;#667eea&#39;</span><span class="p">);</span>
+    <span class="cp">?&gt;</span>
+<span class="x">    &lt;div id=&quot;soulfra-widget-container&quot;&gt;&lt;/div&gt;</span>
+<span class="x">    &lt;script src=&quot;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">esc_url</span><span class="p">(</span><span class="nv">$api_endpoint</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x">/static/widget-embed.js&quot;&gt;&lt;/script&gt;</span>
+<span class="x">    &lt;script&gt;</span>
+<span class="x">      SoulWidget.init({</span>
+<span class="x">        apiEndpoint: &#39;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">esc_js</span><span class="p">(</span><span class="nv">$api_endpoint</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x">&#39;,</span>
+<span class="x">        primaryColor: &#39;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">esc_js</span><span class="p">(</span><span class="nv">$primary_color</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x">&#39;</span>
+<span class="x">      });</span>
+<span class="x">    &lt;/script&gt;</span>
+<span class="x">    </span><span class="cp">&lt;?php</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p><strong>Install:</strong>
+1. Create <code>wp-content/plugins/soulfra-widget/</code> directory
+2. Add <code>soulfra-widget.php</code> file
+3. <strong>Activate</strong> in WordPress Plugins
+4. <strong>Configure</strong> in Settings → Soulfra Widget</p>
+
+<hr />
+
+<h2 id="iframe-embed-alternative">Iframe Embed (Alternative)</h2>
+
+<p>If you can't use JavaScript, use an iframe:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">iframe</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://your-soulfra.com/widget-embed&quot;</span>
+  <span class="na">width</span><span class="o">=</span><span class="s">&quot;100%&quot;</span>
+  <span class="na">height</span><span class="o">=</span><span class="s">&quot;600px&quot;</span>
+  <span class="na">frameborder</span><span class="o">=</span><span class="s">&quot;0&quot;</span>
+  <span class="na">style</span><span class="o">=</span><span class="s">&quot;border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">iframe</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p><strong>Add route to <code>app.py</code>:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/widget-embed&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">widget_embed</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standalone embeddable widget page&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;widget_embed.html&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>Create <code>templates/widget_embed.html</code>:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;UTF-8&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Soulfra Widget<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="nt">body</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="k">font-family</span><span class="p">:</span><span class="w"> </span><span class="n">system-ui</span><span class="p">,</span><span class="w"> </span><span class="kc">sans-serif</span><span class="p">;</span>
+<span class="w">      </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="kc">transparent</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="cm">&lt;!-- Your existing widget HTML from base.html --&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;assistant-widget&quot;</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;/static/assistant-widget.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="testing">Testing</h2>
+
+<p><strong>Test the widget works:</strong></p>
+
+<ol>
+<li><strong>Open WordPress page</strong> with widget</li>
+<li><strong>Click chat bubble</strong> in bottom-right</li>
+<li><strong>Send message:</strong> "Hello"</li>
+<li><strong>Verify response</strong> from Soulfra AI</li>
+<li><strong>Check browser console</strong> for errors (F12)</li>
+</ol>
+
+<p><strong>Common Issues:</strong></p>
+
+<ul>
+<li><strong>CORS error:</strong> Enable CORS on Soulfra backend</li>
+<li><strong>404 on widget.js:</strong> Check file path and server HTTPS</li>
+<li><strong>No response:</strong> Verify API endpoint URL is correct</li>
+<li><strong>Widget not appearing:</strong> Check container div exists</li>
+</ul>
+
+<hr />
+
+<h2 id="production-checklist">Production Checklist</h2>
+
+<ul>
+<li>[ ] Widget loads on all pages</li>
+<li>[ ] HTTPS enabled (required for cross-origin)</li>
+<li>[ ] CORS configured correctly</li>
+<li>[ ] Session persistence works</li>
+<li>[ ] Mobile responsive</li>
+<li>[ ] Conversation history saved</li>
+<li>[ ] Rate limiting enabled on backend</li>
+<li>[ ] Error messages user-friendly</li>
+<li>[ ] Analytics tracking (optional)</li>
+</ul>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>Once embedded, users can:</p>
+
+<ul>
+<li><strong>Chat naturally</strong> with your AI</li>
+<li><strong>Generate blog posts</strong> with <code>/generate post</code></li>
+<li><strong>Search content</strong> with <code>/research &lt;topic&gt;</code></li>
+<li><strong>Create QR codes</strong> with <code>/qr &lt;text&gt;</code></li>
+<li><strong>Play D&amp;D campaigns</strong> with <code>/dnd start</code></li>
+</ul>
+
+<p><strong>Your Soulfra widget is now embeddable anywhere.</strong> 🎉</p>
+
+<hr />
+
+<h2 id="documentation">Documentation</h2>
+
+<ul>
+<li><a href="DEPLOYMENT.md">Main Deployment Guide</a></li>
+<li><a href="HOW_IT_ALL_CONNECTS.md">How It All Connects</a></li>
+<li><a href="BLOG_GENERATOR_GUIDE.md">Blog Generator Guide</a></li>
+</ul>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

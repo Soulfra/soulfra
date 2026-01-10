@@ -1,0 +1,20 @@
+{
+  "name": "DeathToData",
+  "slug": "deathtodata",
+  "tagline": "Search without surveillance. Deal with it, Google.",
+  "emoji": null,
+  "colors": {
+    "primary": "#e74c3c",
+    "secondary": "#c0392b",
+    "accent": "#f39c12"
+  },
+  "personality": {
+    "tone": "Rebellious, defiant",
+    "traits": null,
+    "ai_style": "edgy, confrontational, challenges status quo"
+  },
+  "category": "Privacy Search",
+  "tier": "foundation",
+  "domain": null,
+  "exported_at": "2025-12-26T10:17:58.910586"
+}

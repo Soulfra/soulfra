@@ -1,0 +1,67 @@
+{
+  "core": [
+    {
+      "name": "soulfra",
+      "type": "core",
+      "content_type": "\ud83c\udfe0 Hub / Main Platform",
+      "slots_used": 2,
+      "slots_total": 26,
+      "is_full": false,
+      "available_letters": [
+        "A",
+        "C",
+        "D",
+        "E",
+        "F"
+      ]
+    },
+    {
+      "name": "calriven",
+      "type": "core",
+      "content_type": "\ud83d\udcdd Blog / Writing",
+      "slots_used": 4,
+      "slots_total": 26,
+      "is_full": false,
+      "available_letters": [
+        "B",
+        "D",
+        "E",
+        "F",
+        "G"
+      ]
+    },
+    {
+      "name": "deathtodata",
+      "type": "core",
+      "content_type": "\ud83c\udde8\ud83c\uddf3 Data / Chinese Market",
+      "slots_used": 3,
+      "slots_total": 26,
+      "is_full": false,
+      "available_letters": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ]
+    },
+    {
+      "name": "cringeproof",
+      "type": "core",
+      "content_type": "\ud83c\udfa4 Voice Memos / Filter",
+      "slots_used": 1,
+      "slots_total": 26,
+      "is_full": false,
+      "available_letters": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ]
+    }
+  ],
+  "custom": [],
+  "total_core": 4,
+  "total_custom": 0
+}

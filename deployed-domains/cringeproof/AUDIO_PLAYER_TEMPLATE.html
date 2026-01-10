@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audio Player Template - CringeProof</title>
+<meta name="description" content="Simple HTML5 audio player template">
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+/* Audio Player Styles */
+.audio-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #fff;
+    border: 5px solid #000;
+    box-shadow: 12px 12px 0 #bdb2ff;
+}
+
+.audio-player {
+    width: 100%;
+    margin: 2rem 0;
+    border: 3px solid #000;
+    border-radius: 4px;
+}
+
+.audio-info {
+    padding: 1.5rem;
+    background: #ffe5ec;
+    border: 3px solid #ff006e;
+    margin-top: 2rem;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="/" class="soulfra-logo">🚫 CringeProof</a>
+        <div class="soulfra-links">
+            <a href="/">Home</a>
+            <a href="/record-simple.html">Record</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="audio-container">
+        <h1>🎵 Audio Player Template</h1>
+
+        <!-- BASIC AUDIO PLAYER -->
+        <h2 style="margin-top: 2rem;">Basic Player</h2>
+        <audio controls class="audio-player">
+            <source src="audio/7/recording.wav" type="audio/wav">
+            Your browser doesn't support audio playback.
+        </audio>
+
+        <!-- ADVANCED PLAYER with all attributes -->
+        <h2 style="margin-top: 3rem;">Advanced Player</h2>
+        <audio
+            controls
+            preload="metadata"
+            class="audio-player"
+            id="advancedPlayer"
+        >
+            <source src="audio/7/recording.wav" type="audio/wav">
+            <source src="audio/6/recording.webm" type="audio/webm">
+            Your browser doesn't support audio playback.
+        </audio>
+
+        <!-- Info Box -->
+        <div class="audio-info">
+            <h3 style="margin-bottom: 1rem;">📋 How It Works</h3>
+            <p><strong>HTML5 <code>&lt;audio&gt;</code> tag</strong> - Works on all modern browsers</p>
+            <ul style="margin-top: 1rem; line-height: 1.8;">
+                <li><code>controls</code> - Shows play/pause, volume, scrubber</li>
+                <li><code>preload="metadata"</code> - Loads duration without downloading whole file</li>
+                <li><code>&lt;source&gt;</code> - Specify audio file + format</li>
+                <li>Multiple sources = fallback if browser doesn't support one format</li>
+            </ul>
+        </div>
+
+        <!-- Code Examples -->
+        <h2 style="margin-top: 3rem;">📝 Code Examples</h2>
+
+        <h3 style="margin-top: 2rem;">WAV File:</h3>
+        <pre style="background: #f5f5f5; padding: 1rem; border: 2px solid #000; overflow-x: auto;"><code>&lt;audio controls&gt;
+    &lt;source src="recording.wav" type="audio/wav"&gt;
+    Your browser doesn't support audio.
+&lt;/audio&gt;</code></pre>
+
+        <h3 style="margin-top: 2rem;">WebM File:</h3>
+        <pre style="background: #f5f5f5; padding: 1rem; border: 2px solid #000; overflow-x: auto;"><code>&lt;audio controls&gt;
+    &lt;source src="recording.webm" type="audio/webm"&gt;
+    Your browser doesn't support audio.
+&lt;/audio&gt;</code></pre>
+
+        <h3 style="margin-top: 2rem;">MP3 File:</h3>
+        <pre style="background: #f5f5f5; padding: 1rem; border: 2px solid #000; overflow-x: auto;"><code>&lt;audio controls&gt;
+    &lt;source src="recording.mp3" type="audio/mpeg"&gt;
+    Your browser doesn't support audio.
+&lt;/audio&gt;</code></pre>
+
+        <h3 style="margin-top: 2rem;">With Multiple Formats (fallback):</h3>
+        <pre style="background: #f5f5f5; padding: 1rem; border: 2px solid #000; overflow-x: auto;"><code>&lt;audio controls preload="metadata"&gt;
+    &lt;source src="recording.webm" type="audio/webm"&gt;
+    &lt;source src="recording.mp3" type="audio/mpeg"&gt;
+    &lt;source src="recording.wav" type="audio/wav"&gt;
+    Your browser doesn't support audio.
+&lt;/audio&gt;</code></pre>
+
+        <!-- JavaScript Controls (Optional) -->
+        <h2 style="margin-top: 3rem;">⚙️ Optional: JavaScript Controls</h2>
+        <div style="margin-top: 1rem;">
+            <button onclick="document.getElementById('advancedPlayer').play()" style="padding: 0.5rem 1rem; margin-right: 0.5rem; background: #10b981; color: white; border: 2px solid #000; font-weight: 700; cursor: pointer;">
+                ▶️ Play
+            </button>
+            <button onclick="document.getElementById('advancedPlayer').pause()" style="padding: 0.5rem 1rem; margin-right: 0.5rem; background: #ff006e; color: white; border: 2px solid #000; font-weight: 700; cursor: pointer;">
+                ⏸️ Pause
+            </button>
+            <button onclick="document.getElementById('advancedPlayer').currentTime = 0" style="padding: 0.5rem 1rem; background: #000; color: white; border: 2px solid #000; font-weight: 700; cursor: pointer;">
+                ⏮️ Restart
+            </button>
+        </div>
+
+        <pre style="background: #f5f5f5; padding: 1rem; border: 2px solid #000; overflow-x: auto; margin-top: 1rem;"><code>&lt;script&gt;
+const player = document.getElementById('advancedPlayer');
+
+// Play
+player.play();
+
+// Pause
+player.pause();
+
+// Restart
+player.currentTime = 0;
+
+// Set volume (0.0 to 1.0)
+player.volume = 0.5;
+
+// Events
+player.addEventListener('play', () => console.log('Playing'));
+player.addEventListener('pause', () => console.log('Paused'));
+player.addEventListener('ended', () => console.log('Finished'));
+&lt;/script&gt;</code></pre>
+    </div>
+</div>
+
+<footer style="text-align: center; padding: 2rem; opacity: 0.7; margin-top: 4rem;">
+    <p><strong>CringeProof</strong> - Simple HTML5 audio players</p>
+    <p style="margin-top: 0.5rem;">
+        No JavaScript required • Works offline • Copy and paste
+    </p>
+</footer>
+</body>
+</html>

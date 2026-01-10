@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Idea - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .theme-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.5;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 13px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .info-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .info-box h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-box li {
+            margin-bottom: 4px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if parent_idea %}
+        <h1>🔄 Improve an Idea</h1>
+        <p class="subtitle">Refine and build upon the original idea</p>
+        {% else %}
+        <h1>💡 Submit Your Idea</h1>
+        <p class="subtitle">Share your idea with the Soulfra community</p>
+        {% endif %}
+
+        {% if theme %}
+        <div class="theme-badge">
+            Theme: {{ theme|title }}
+        </div>
+        {% endif %}
+
+        {% if parent_idea %}
+        <div class="info-box" style="background: #fff3cd; border-left-color: #ffc107;">
+            <h3>📋 Original Idea ({{ parent_idea.tracking_id }})</h3>
+            <p style="color: #333; margin-top: 8px;">{{ parent_idea.idea_text }}</p>
+            <p style="font-size: 13px; color: #666; margin-top: 8px; font-style: italic;">
+                How would you improve or refine this idea? Add technical depth, expand the scope, or pivot in a new direction.
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="info-box">
+            <h3>What happens next?</h3>
+            <ul>
+                <li>Your idea gets classified by AI neural networks</li>
+                <li>Matched to the most relevant brand (CalRiven, Privacy Guard, or The Auditor)</li>
+                <li>You receive an email confirmation with a tracking ID</li>
+                <li>Check your idea's status anytime with the tracking link</li>
+                <li>Earn soul tokens and multipliers based on activity</li>
+            </ul>
+        </div>
+
+        <form method="POST" action="/submit-idea" id="ideaForm">
+            <input type="hidden" name="theme" value="{{ theme or '' }}">
+            <input type="hidden" name="domain" value="{{ domain or '' }}">
+            {% if parent_idea %}
+            <input type="hidden" name="parent_tracking_id" value="{{ parent_idea.tracking_id }}">
+            {% endif %}
+
+            <div class="form-group">
+                <label for="idea">
+                    Your Idea <span class="required">*</span>
+                </label>
+                <textarea
+                    name="idea"
+                    id="idea"
+                    placeholder="Describe your idea in detail. What problem does it solve? How would it work?"
+                    required
+                    minlength="10"
+                    maxlength="2000"
+                ></textarea>
+                <div class="char-count">
+                    <span id="charCount">0</span> / 2000 characters
+                </div>
+                <p class="help-text">
+                    Be specific! Better ideas get higher scores and more rewards.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="email">
+                    Email <span class="required">*</span>
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="you@example.com"
+                    required
+                >
+                <p class="help-text">
+                    We'll send your tracking ID to this email
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">
+                    Phone (optional)
+                </label>
+                <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    placeholder="+1 (555) 123-4567"
+                >
+                <p class="help-text">
+                    Optional: Receive SMS updates about your idea
+                </p>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                🚀 Submit Idea
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Character counter
+        const ideaTextarea = document.getElementById('idea');
+        const charCount = document.getElementById('charCount');
+
+        ideaTextarea.addEventListener('input', () => {
+            charCount.textContent = ideaTextarea.value.length;
+        });
+
+        // Collect device fingerprint data
+        const form = document.getElementById('ideaForm');
+
+        form.addEventListener('submit', (e) => {
+            // Add hidden fields with device data
+            const deviceData = {
+                screen_resolution: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                language: navigator.language,
+                platform: navigator.platform
+            };
+
+            // Add to form
+            Object.entries(deviceData).forEach(([key, value]) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            });
+        });
+    </script>
+</body>
+</html>

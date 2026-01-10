@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Similar Souls to {{ user['display_name'] }} - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 2rem auto; padding: 0 1rem;">
+  <!-- Header -->
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+    <h1 style="margin: 0 0 0.5rem 0;">Similar Souls to {{ user['display_name'] }}</h1>
+    <p style="margin: 0; opacity: 0.9;">Finding users with matching interests, values, and essence</p>
+  </div>
+
+  <!-- Base Soul Info -->
+  <div style="background: #f9f9f9; border-left: 4px solid #667eea; padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem;">
+    <h3 style="margin: 0 0 1rem 0;">{{ user['display_name'] }}'s Interests</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+      {% for interest in soul.extract_interests(top_n=10) %}
+        <span style="background: white; border: 2px solid #667eea; color: #667eea; padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem; font-weight: 500;">{{ interest }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Similar Souls -->
+  {% if similarities %}
+    <h2 style="margin: 0 0 1.5rem 0;">Most Similar Souls</h2>
+
+    {% for sim in similarities %}
+      <div style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; transition: all 0.2s;">
+        <!-- Header with similarity score -->
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+          <div style="flex: 1;">
+            <h3 style="margin: 0 0 0.5rem 0;">
+              <a href="{{ url_for('soul_view', username=sim.user['username']) }}" style="color: #667eea; text-decoration: none;">
+                {{ sim.user['display_name'] }}
+              </a>
+            </h3>
+            <p style="color: #999; margin: 0; font-size: 0.9rem;">@{{ sim.user['username'] }}</p>
+          </div>
+          <div style="text-align: center;">
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1rem; border-radius: 50%; width: 80px; height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold;">
+              <div style="font-size: 1.5rem;">{{ (sim.similarity * 100)|int }}%</div>
+              <div style="font-size: 0.65rem; opacity: 0.9;">MATCH</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Match visualization -->
+        <div style="margin: 1rem 0;">
+          <div style="background: #f0f0f0; height: 10px; border-radius: 5px; overflow: hidden;">
+            <div style="background: linear-gradient(90deg, #667eea, #764ba2); width: {{ (sim.similarity * 100)|int }}%; height: 100%; transition: width 0.3s;"></div>
+          </div>
+        </div>
+
+        <!-- Interests -->
+        <div style="margin: 1rem 0;">
+          <strong style="color: #555; display: block; margin-bottom: 0.5rem;">Shared Interests:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            {% for interest in sim.interests %}
+              <span style="background: #e8f5e9; color: #2e7d32; padding: 0.3rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">{{ interest }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #666; font-size: 0.85rem;">
+            Activity: <strong>{{ sim.activity }}</strong>
+          </span>
+          <div style="display: flex; gap: 1rem;">
+            <a href="{{ url_for('soul_view', username=sim.user['username']) }}" style="color: #667eea; text-decoration: none; font-size: 0.85rem; font-weight: bold;">
+              View Soul →
+            </a>
+            <a href="{{ url_for('user_profile', username=sim.user['username']) }}" style="color: #667eea; text-decoration: none; font-size: 0.85rem; font-weight: bold;">
+              View Profile →
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div style="text-align: center; padding: 4rem; background: #f9f9f9; border-radius: 8px;">
+      <p style="color: #999; margin: 0; font-size: 1.1rem;">No similar souls found</p>
+      <p style="color: #666; margin: 0.5rem 0 0 0;">This soul is unique!</p>
+    </div>
+  {% endif %}
+
+  <!-- Actions -->
+  <div style="margin-top: 2rem; text-align: center;">
+    <a href="{{ url_for('soul_view', username=user['username']) }}" style="color: #667eea; text-decoration: none; margin-right: 2rem;">← Back to Soul</a>
+    <a href="{{ url_for('souls_index') }}" style="color: #667eea; text-decoration: none;">Browse All Souls →</a>
+  </div>
+</div>
+{% endblock %}

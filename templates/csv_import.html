@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Import - Soulfra Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            margin-bottom: 30px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .example {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border-left: 4px solid #667eea;
+        }
+
+        .example code {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            display: block;
+            margin: 4px 0;
+            font-size: 12px;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #status {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        #status.analyzing {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            display: block;
+        }
+
+        #status.success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            display: block;
+        }
+
+        #status.error {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            display: block;
+        }
+
+        .status-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        #preview {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .preview-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .preview-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .preview-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .emoji-cell {
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-foundation {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-business {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-creative {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .counter {
+            margin-top: 8px;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .template-match {
+            font-size: 12px;
+            color: #10b981;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin/domains" class="back-link">← Back to Domains</a>
+
+        <div class="card">
+            <div class="header">
+                <h1>📄 Import Domains from CSV</h1>
+                <p>Paste your CSV data and import 50-200 domains in seconds</p>
+            </div>
+
+            <div class="content">
+                <!-- Step 1: Paste CSV -->
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Paste Your CSV Data
+                    </div>
+                    <div class="step-description">
+                        Copy your CSV content (with or without headers). Each line = one domain.
+                    </div>
+
+                    <div class="example">
+                        <strong>CSV Format:</strong>
+                        <code>name,domain,category,tier,emoji,brand_type,tagline,target_audience,purpose,ssl_enabled,deployed</code>
+                        <code>My Cooking Blog,mycookingblog.com,cooking,creative,🍳,blog,"Quick recipes",Home cooks,"Share recipes",false,false</code>
+                        <code>Tech Startup,techstartup.io,tech,business,💻,platform,"Startup tools",Entrepreneurs,"Business solutions",false,false</code>
+                    </div>
+
+                    <textarea
+                        id="csvInput"
+                        placeholder="Paste your CSV here...&#10;&#10;name,domain,category,tier,emoji,brand_type,tagline,target_audience,purpose,ssl_enabled,deployed&#10;MyCookingBlog,mycookingblog.com,cooking,creative,🍳,blog,Quick recipes,Home cooks,Share recipes,false,false"
+                    ></textarea>
+
+                    <div id="csvCount" class="counter"></div>
+                </div>
+
+                <!-- Parse Button -->
+                <div class="btn-container">
+                    <button id="parseBtn" class="btn" onclick="parseCSV()">
+                        📋 Parse & Preview
+                    </button>
+                </div>
+
+                <!-- Status -->
+                <div id="status">
+                    <span class="status-icon" id="statusIcon"></span>
+                    <span class="status-message" id="statusMessage"></span>
+                </div>
+
+                <!-- Preview -->
+                <div id="preview">
+                    <div class="step-title" style="margin-bottom: 20px;">
+                        <span class="step-number">2</span>
+                        Review Domains
+                    </div>
+                    <div id="previewContent"></div>
+
+                    <div class="btn-container">
+                        <button id="importBtn" class="btn" onclick="importDomains()">
+                            ✅ Import All Domains
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let parsedDomains = [];
+
+        // Update count as user types
+        document.getElementById('csvInput').addEventListener('input', function(e) {
+            const text = e.target.value.trim();
+            const lines = text.split('\n').filter(line => {
+                line = line.trim();
+                return line && !line.startsWith('#') && line.includes(',');
+            });
+
+            // Skip header if present
+            const hasHeader = lines[0] && lines[0].toLowerCase().includes('name,domain');
+            const count = hasHeader ? lines.length - 1 : lines.length;
+
+            const countEl = document.getElementById('csvCount');
+            if (count > 0) {
+                countEl.textContent = `${count} domain${count === 1 ? '' : 's'} ready to import`;
+            } else {
+                countEl.textContent = '';
+            }
+        });
+
+        function parseCSV() {
+            const input = document.getElementById('csvInput').value.trim();
+            const status = document.getElementById('status');
+            const preview = document.getElementById('preview');
+
+            if (!input) {
+                showStatus('error', '⚠️', 'Please paste CSV data');
+                return;
+            }
+
+            showStatus('analyzing', '⚙️', 'Parsing CSV...');
+
+            const lines = input.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+
+            // Check if first line is header
+            const firstLine = lines[0].toLowerCase();
+            const hasHeader = firstLine.includes('name,domain');
+            const dataLines = hasHeader ? lines.slice(1) : lines;
+
+            parsedDomains = [];
+
+            for (const line of dataLines) {
+                const parts = line.split(',').map(p => p.trim().replace(/^"|"$/g, ''));
+
+                if (parts.length < 2) continue; // Skip invalid lines
+
+                const domain = {
+                    name: parts[0] || parts[1].split('.')[0],
+                    domain: parts[1],
+                    category: parts[2] || 'tech',
+                    tier: parts[3] || 'creative',
+                    emoji: parts[4] || '🌐',
+                    brand_type: parts[5] || 'blog',
+                    tagline: parts[6] || '',
+                    target_audience: parts[7] || '',
+                    purpose: parts[8] || '',
+                    ssl_enabled: parts[9] === 'true',
+                    deployed: parts[10] === 'true'
+                };
+
+                parsedDomains.push(domain);
+            }
+
+            if (parsedDomains.length === 0) {
+                showStatus('error', '❌', 'No valid domains found in CSV');
+                return;
+            }
+
+            showPreview(parsedDomains);
+            showStatus('success', '✅', `Parsed ${parsedDomains.length} domains successfully!`);
+        }
+
+        function showStatus(type, icon, message) {
+            const status = document.getElementById('status');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusMessage = document.getElementById('statusMessage');
+
+            status.className = type;
+            statusIcon.textContent = icon;
+            statusMessage.textContent = message;
+        }
+
+        function showPreview(domains) {
+            const preview = document.getElementById('preview');
+            const content = document.getElementById('previewContent');
+
+            const html = `
+                <table class="preview-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Domain</th>
+                            <th>Category</th>
+                            <th>Tier</th>
+                            <th>Type</th>
+                            <th>Tagline</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${domains.map((d, i) => `
+                            <tr>
+                                <td class="emoji-cell">${d.emoji}</td>
+                                <td><strong>${d.name}</strong></td>
+                                <td>${d.domain}</td>
+                                <td>${d.category}</td>
+                                <td><span class="badge badge-${d.tier}">${d.tier}</span></td>
+                                <td>${d.brand_type}</td>
+                                <td>${d.tagline}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            content.innerHTML = html;
+            preview.style.display = 'block';
+        }
+
+        async function importDomains() {
+            const btn = document.getElementById('importBtn');
+
+            if (parsedDomains.length === 0) {
+                alert('No domains to import');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Importing...';
+
+            try {
+                const response = await fetch('/api/domains/import-csv', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domains: parsedDomains })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus('success', '🎉', `Successfully imported ${result.imported} domain${result.imported === 1 ? '' : 's'}!`);
+
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/admin/domains';
+                    }, 2000);
+                } else {
+                    showStatus('error', '❌', result.error || 'Failed to import domains');
+                    btn.disabled = false;
+                    btn.innerHTML = '✅ Import All Domains';
+                }
+            } catch (error) {
+                showStatus('error', '❌', `Error: ${error.message}`);
+                btn.disabled = false;
+                btn.innerHTML = '✅ Import All Domains';
+            }
+        }
+    </script>
+</body>
+</html>

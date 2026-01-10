@@ -1,0 +1,209 @@
+<!-- Share Button Component - Embed in game results -->
+<style>
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, {{ theme_primary|default('#667eea') }} 0%, {{ theme_secondary|default('#764ba2') }} 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.share-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.share-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+.share-modal.active { display: flex; }
+
+.share-modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.share-modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+.share-modal-content input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+.share-modal-content textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    resize: vertical;
+    margin-bottom: 15px;
+}
+.share-modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+.share-modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn-submit {
+    background: {{ theme_primary|default('#667eea') }};
+    color: white;
+}
+.btn-submit:hover {
+    background: {{ theme_secondary|default('#764ba2') }};
+}
+.btn-cancel {
+    background: #f0f0f0;
+    color: #666;
+}
+.btn-cancel:hover {
+    background: #e0e0e0;
+}
+
+.share-success {
+    display: none;
+    padding: 20px;
+    background: #d4edda;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+.share-success.active { display: block; }
+.share-link {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    margin: 10px 0;
+    word-break: break-all;
+}
+</style>
+
+<!-- Share Button -->
+<button class="share-button" onclick="openShareModal()">
+    💌 Get a Second Opinion
+</button>
+
+<!-- Share Modal -->
+<div class="share-modal" id="shareModal">
+    <div class="share-modal-content">
+        <h2>Share for Peer Review</h2>
+        <p style="color: #666; margin-bottom: 20px;">Send your game results to a friend for honest feedback and AI analysis.</p>
+
+        <form id="shareForm" onsubmit="submitShare(event)">
+            <input type="email"
+                   id="recipient_email"
+                   placeholder="Friend's email address"
+                   required>
+
+            <input type="text"
+                   id="sender_name"
+                   placeholder="Your name (optional)">
+
+            <textarea id="message"
+                      rows="3"
+                      placeholder="Personal message (optional)">Can you review my answers and give me your honest feedback?</textarea>
+
+            <div class="share-modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeShareModal()">Cancel</button>
+                <button type="submit" class="btn-submit">Send Review Link</button>
+            </div>
+        </form>
+
+        <div class="share-success" id="shareSuccess">
+            <strong>✅ Share link created!</strong>
+            <div class="share-link" id="shareLink"></div>
+            <p style="margin-top: 10px; color: #666;">We'll send an email to your friend with this review link.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const GAME_TYPE = '{{ game_type|default("cringeproof") }}';
+const GAME_DATA = {{ game_data|tojson|safe }};
+
+function openShareModal() {
+    document.getElementById('shareModal').classList.add('active');
+}
+
+function closeShareModal() {
+    document.getElementById('shareModal').classList.remove('active');
+    document.getElementById('shareForm').reset();
+    document.getElementById('shareSuccess').classList.remove('active');
+}
+
+async function submitShare(event) {
+    event.preventDefault();
+
+    const formData = {
+        game_type: GAME_TYPE,
+        game_data: GAME_DATA,
+        recipient_email: document.getElementById('recipient_email').value,
+        sender_name: document.getElementById('sender_name').value || null,
+        message: document.getElementById('message').value || null
+    };
+
+    try {
+        const response = await fetch('/games/share', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Show success message
+            const reviewUrl = `${window.location.origin}${data.review_url}`;
+            document.getElementById('shareLink').textContent = reviewUrl;
+            document.getElementById('shareSuccess').classList.add('active');
+            document.getElementById('shareForm').style.display = 'none';
+
+            // Close modal after 5 seconds
+            setTimeout(closeShareModal, 5000);
+        } else {
+            alert('Error: ' + data.error);
+        }
+    } catch (error) {
+        alert('Error creating share link: ' + error);
+    }
+}
+
+// Close modal when clicking outside
+document.getElementById('shareModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeShareModal();
+    }
+});
+</script>

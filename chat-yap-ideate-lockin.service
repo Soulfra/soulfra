@@ -1,0 +1,67 @@
+[Unit]
+Description=Chat-Yap-Ideate-LockIn Draft Timer Service
+Documentation=https://github.com/soulfra/soulfra-simple
+After=network.target
+
+[Service]
+Type=simple
+
+# User to run as
+User=%i
+Group=%i
+
+# Working directory
+WorkingDirectory=/Users/matthewmauer/Desktop/roommate-chat/soulfra-simple
+
+# Environment variables
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="FLASK_ENV=production"
+Environment="DRAFT_TIMER_SERVICE=chat-yap-ideate-lockin"
+
+# Load environment from .env file
+EnvironmentFile=-/Users/matthewmauer/Desktop/roommate-chat/soulfra-simple/.env
+
+# Start the draft timer daemon
+# Manages voice → chat → yap → ideate → lock-in pipeline
+# Processes:
+#   - Draft expiration (15 min default timer)
+#   - Token economy (earn/spend for extensions)
+#   - Quiz completion rewards
+#   - Achievement unlocking
+ExecStart=/usr/bin/python3 /Users/matthewmauer/Desktop/roommate-chat/soulfra-simple/draft_timer_daemon.py \
+    --check-interval=10 \
+    --auto-lock-expired=true \
+    --token-integration=true \
+    --quiz-rewards=true
+
+# Auto-lock expired drafts on startup
+ExecStartPost=/usr/bin/curl -X POST http://localhost:5001/api/drafts/auto-lock-expired
+
+# Health check command (every 60 seconds)
+ExecReload=/bin/kill -HUP $MAINPID
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/Users/matthewmauer/Desktop/roommate-chat/soulfra-simple
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=chat-yap-ideate-lockin
+
+# Monitored by tattoo-pounds-evidence-correlation for cross-domain verification
+WantedBy=tattoo-pounds-evidence-correlation.service
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+  <h1>💭 Reasoning Dashboard</h1>
+
+  <div style="background: #e6f2ff; padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+    <strong>AI Reasoning Threads</strong>
+    <br><small style="color: #666;">View all AI analysis threads where CalRiven, TheAuditor, Soulfra, and DeathToData analyze posts</small>
+  </div>
+
+  <!-- Stats -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #007bff;">{{ stats.total_threads }}</div>
+      <div style="color: #666;">Total Threads</div>
+    </div>
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #28a745;">{{ stats.total_steps }}</div>
+      <div style="color: #666;">Total Reasoning Steps</div>
+    </div>
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #fd7e14;">{{ stats.active_threads }}</div>
+      <div style="color: #666;">Active Threads</div>
+    </div>
+  </div>
+
+  <!-- Threads List -->
+  <div style="margin-top: 2rem;">
+    <h2>All Reasoning Threads</h2>
+
+    {% if threads %}
+      {% for thread in threads %}
+        <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid {% if thread.status == 'active' %}#28a745{% elif thread.status == 'completed' %}#007bff{% else %}#6c757d{% endif %};">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+            <div>
+              <h3 style="margin: 0 0 0.5rem 0;">
+                <a href="/post/{{ thread.post_slug }}" style="color: #007bff; text-decoration: none;">
+                  {{ thread.post_title }}
+                </a>
+              </h3>
+              <div style="color: #666; font-size: 0.9rem;">
+                <strong>Topic:</strong> {{ thread.topic }}
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span style="background: {% if thread.status == 'active' %}#28a745{% elif thread.status == 'completed' %}#007bff{% else %}#6c757d{% endif %}; color: white; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">
+                {{ thread.status }}
+              </span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 2rem; margin-top: 1rem;">
+            <div>
+              <strong>Thread #{{ thread.id }}</strong>
+            </div>
+            <div>
+              <strong>{{ thread.step_count }}</strong> reasoning steps
+            </div>
+            <div style="color: #666;">
+              Created: {{ thread.created_at[:16] }}
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <a href="/post/{{ thread.post_slug }}#reasoning" style="color: #007bff; text-decoration: none; font-weight: bold;">
+              → View Reasoning Steps on Post
+            </a>
+            <span style="color: #666; margin: 0 0.5rem;">|</span>
+            <a href="/api/reasoning/threads/{{ thread.id }}" style="color: #007bff; text-decoration: none;">
+              View JSON (API)
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div style="background: #fff3cd; padding: 2rem; border-radius: 8px; text-align: center; border-left: 4px solid #ffc107;">
+        <strong>No reasoning threads yet</strong>
+        <br><small>Reasoning threads are created when AI personas analyze posts</small>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- How It Works -->
+  <details style="margin-top: 3rem;">
+    <summary style="cursor: pointer; font-size: 1.2rem; font-weight: bold; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+      ℹ️ How Reasoning Works
+    </summary>
+    <div style="margin-top: 1rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px;">
+      <h3>The 4 AI Personas</h3>
+      <ul style="line-height: 1.8;">
+        <li><strong>🤖 CalRiven</strong> - Technical architecture & synthesis</li>
+        <li><strong>🔍 TheAuditor</strong> - Validation & integrity checking</li>
+        <li><strong>🌐 Soulfra</strong> - Platform perspective & security</li>
+        <li><strong>💀 DeathToData</strong> - Privacy implications & critical questions</li>
+      </ul>
+
+      <h3 style="margin-top: 1.5rem;">Workflow</h3>
+      <ol style="line-height: 1.8;">
+        <li>Post is created</li>
+        <li>Reasoning engine analyzes the post</li>
+        <li>Each AI persona generates their analysis (reasoning steps)</li>
+        <li>Steps are stored in the reasoning_threads and reasoning_steps tables</li>
+        <li>Users can view the full reasoning process on the post page</li>
+      </ol>
+
+      <h3 style="margin-top: 1.5rem;">API Access</h3>
+      <p>All reasoning data is available via the API:</p>
+      <ul style="font-family: monospace; font-size: 0.9rem;">
+        <li>GET /api/reasoning/threads - List all threads</li>
+        <li>GET /api/reasoning/threads/{id} - Get thread with all steps</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Quick Links -->
+  <div style="margin: 3rem 0; padding: 1.5rem; background: #e6f2ff; border-radius: 8px;">
+    <h3>🔗 Quick Links</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <a href="/" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Home</a>
+      <a href="/status" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Status</a>
+      <a href="/admin" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Admin</a>
+      <a href="/api/reasoning/threads" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">API (JSON)</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

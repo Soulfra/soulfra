@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Rankings - {{ domain_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { opacity: 0.95; }
+        .content { padding: 30px; }
+        .leaderboard { list-style: none; }
+        .player {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid {{ theme_primary }};
+            transition: transform 0.2s;
+        }
+        .player:hover { transform: translateX(5px); }
+        .rank {
+            font-size: 2em;
+            font-weight: 700;
+            color: {{ theme_primary }};
+            min-width: 60px;
+        }
+        .rank.top1 { color: #FFD700; }
+        .rank.top2 { color: #C0C0C0; }
+        .rank.top3 { color: #CD7F32; }
+        .player-info { flex: 1; margin: 0 20px; }
+        .player-name { font-size: 1.2em; font-weight: 600; color: #333; }
+        .town-name { color: #666; font-size: 0.9em; margin-top: 4px; }
+        .reputation {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: {{ theme_primary }};
+        }
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .season-banner {
+            background: linear-gradient(135deg, {{ theme_accent }} 0%, {{ theme_primary }} 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .season-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .season-dates {
+            opacity: 0.9;
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+        .season-prizes {
+            background: rgba(255,255,255,0.2);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-size: 0.9em;
+        }
+        .season-nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .season-btn {
+            padding: 8px 16px;
+            background: {{ theme_primary }};
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .season-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .season-btn.inactive {
+            background: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Rankings</h1>
+            <p>Top players in {{ domain_name }}</p>
+        </div>
+
+        <div class="content">
+            {% if current_season %}
+            <div class="season-banner">
+                <div class="season-title">🎯 {{ current_season.theme }}</div>
+                <div class="season-dates">
+                    Season {{ current_season.season_number }} •
+                    {{ current_season.start_date }} to {{ current_season.end_date }}
+                </div>
+                {% if current_season.prize_pool %}
+                <div class="season-prizes">
+                    🏅 Prizes: {{ current_season.prize_pool }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if past_seasons %}
+            <div class="season-nav">
+                <a href="/rankings" class="season-btn">Current Season</a>
+                {% for season in past_seasons %}
+                <a href="/rankings/season/{{ season.id }}" class="season-btn inactive">
+                    Season {{ season.season_number }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if players %}
+                <ul class="leaderboard">
+                    {% for player in players %}
+                    <li class="player">
+                        <div class="rank {% if loop.index == 1 %}top1{% elif loop.index == 2 %}top2{% elif loop.index == 3 %}top3{% endif %}">
+                            #{{ loop.index }}
+                        </div>
+                        <div class="player-info">
+                            <div class="player-name">
+                                <a href="/profile/{{ player.username }}" style="color: inherit; text-decoration: none;">
+                                    {{ player.username }}
+                                </a>
+                            </div>
+                            <div class="town-name">{{ player.town_name }}</div>
+                        </div>
+                        <div class="reputation">
+                            {{ player.reputation_points }} pts
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty">
+                    <h3>No players yet!</h3>
+                    <p>Be the first to join and claim the top spot.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

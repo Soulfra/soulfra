@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StPetePros Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-sky-500 to-emerald-500 text-white py-6 px-4 shadow-lg">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-3xl font-bold">StPetePros Admin Dashboard</h1>
+            <p class="text-sky-100 mt-1">Manage professionals, approve signups, export data</p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+                <div class="text-sm font-semibold text-slate-600 uppercase">Total Professionals</div>
+                <div class="text-3xl font-bold text-slate-900 mt-2">{{ stats.total }}</div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
+                <div class="text-sm font-semibold text-slate-600 uppercase">Pending Approval</div>
+                <div class="text-3xl font-bold text-yellow-600 mt-2">{{ stats.pending }}</div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+                <div class="text-sm font-semibold text-slate-600 uppercase">Approved</div>
+                <div class="text-3xl font-bold text-green-600 mt-2">{{ stats.approved }}</div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+                <div class="text-sm font-semibold text-slate-600 uppercase">New Today</div>
+                <div class="text-3xl font-bold text-purple-600 mt-2">{{ stats.new_today }}</div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-4">Professionals by Category</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {% for category, count in categories.items() %}
+                    <div class="bg-slate-50 rounded-lg p-4">
+                        <div class="text-sm text-slate-600">{{ category|title|replace('_', ' ')|replace('-', ' ') }}</div>
+                        <div class="text-2xl font-bold text-slate-900">{{ count }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="bg-{{ 'green' if category == 'success' else 'yellow' }}-50 border border-{{ 'green' if category == 'success' else 'yellow' }}-200 text-{{ 'green' if category == 'success' else 'yellow' }}-800 px-4 py-3 rounded-lg mb-6">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Professionals Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-slate-900">All Professionals</h2>
+                <div class="flex gap-3">
+                    <a href="/admin/database" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors text-sm">
+                        Database Admin
+                    </a>
+                    <button onclick="exportCSV()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm">
+                        Export to CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Business Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Contact</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Signed Up</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        {% for pro in professionals %}
+                            <tr class="hover:bg-slate-50">
+                                <!-- Color-Coded Status -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if pro.approval_status == 'approved' %}
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            ✓ Approved
+                                        </span>
+                                    {% elif pro.approval_status == 'rejected' %}
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
+                                            ✗ Rejected
+                                        </span>
+                                    {% else %}
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            ⏳ Pending
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Business Info -->
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-semibold text-slate-900">{{ pro.business_name }}</div>
+                                    <div class="text-sm text-slate-500">ID: #{{ pro.id }}</div>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
+                                        {{ pro.category|title|replace('_', ' ')|replace('-', ' ') }}
+                                    </span>
+                                </td>
+
+                                <td class="px-6 py-4 text-sm">
+                                    <div class="text-slate-900">{{ pro.email }}</div>
+                                    <div class="text-slate-500">{{ pro.phone }}</div>
+                                </td>
+
+                                <td class="px-6 py-4 text-sm text-slate-500">
+                                    {{ pro.created_at[:10] if pro.created_at else 'N/A' }}
+                                </td>
+
+                                <!-- Actions -->
+                                <td class="px-6 py-4 text-sm font-medium space-x-2">
+                                    <a href="/professional/{{ pro.id }}" class="text-sky-600 hover:text-sky-900">View</a>
+
+                                    {% if pro.approval_status == 'pending' %}
+                                        <form action="/admin/stpetepros/approve/{{ pro.id }}" method="POST" style="display:inline;">
+                                            <button type="submit" class="text-green-600 hover:text-green-900">Approve</button>
+                                        </form>
+                                        <form action="/admin/stpetepros/reject/{{ pro.id }}" method="POST" style="display:inline;">
+                                            <button type="submit" class="text-red-600 hover:text-red-900">Reject</button>
+                                        </form>
+                                    {% endif %}
+
+                                    {% if pro.qr_business_card %}
+                                        <a href="/professional/{{ pro.id }}/qr" class="text-purple-600 hover:text-purple-900">QR</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if not professionals %}
+                <div class="text-center py-12">
+                    <div class="text-slate-400 text-lg mb-2">No professionals yet</div>
+                    <a href="/signup/professional" class="text-sky-500 hover:text-sky-600 font-semibold">
+                        Add the first professional →
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/signup/professional" class="block bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-lg font-bold mb-2">Add Professional</h3>
+                <p class="text-sky-100 text-sm">Create a new professional listing</p>
+            </a>
+
+            <a href="/admin/database" class="block bg-slate-700 text-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-lg font-bold mb-2">Database Admin</h3>
+                <p class="text-slate-300 text-sm">View all tables and export data</p>
+            </a>
+
+            <a href="/professionals" class="block bg-purple-600 text-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-lg font-bold mb-2">Public View</h3>
+                <p class="text-purple-200 text-sm">See the public professional directory</p>
+            </a>
+        </div>
+    </div>
+
+    <script>
+    function exportCSV() {
+        // Build CSV from table data
+        const rows = [];
+        const headers = ['Status', 'Business Name', 'Category', 'Email', 'Phone', 'Address', 'City', 'ZIP', 'Signed Up'];
+        rows.push(headers.join(','));
+
+        {% for pro in professionals %}
+            const row = [
+                '{{ pro.approval_status }}',
+                '{{ pro.business_name }}',
+                '{{ pro.category }}',
+                '{{ pro.email }}',
+                '{{ pro.phone }}',
+                '{{ pro.address }}',
+                '{{ pro.city }}',
+                '{{ pro.zip_code }}',
+                '{{ pro.created_at[:10] if pro.created_at else "N/A" }}'
+            ];
+            rows.push(row.map(v => `"${v}"`).join(','));
+        {% endfor %}
+
+        const csv = rows.join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `stpetepros_professionals_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscribe - Soulfra Newsletter</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">Soulfra</a>
+      <div class="nav-links">
+        <a href="index.html">Posts</a>
+        <a href="about.html">About</a>
+        <a href="subscribe.html">Subscribe</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="subscribe-page">
+      <h1>Subscribe to Soulfra</h1>
+      <p>Get updates on AI, privacy, and technology delivered to your inbox.</p>
+
+      <form method="POST" action="/subscribe" class="subscribe-form">
+        <input
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+        >
+        <button type="submit">Subscribe</button>
+      </form>
+
+      <p class="privacy-note">
+        No spam, ever. Unsubscribe anytime.
+        Read our <a href="/privacy.html">privacy policy</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Soulfra. <a href="feed.xml">RSS</a> | <a href="subscribe.html">Subscribe</a></p>
+  </footer>
+</body>
+</html>

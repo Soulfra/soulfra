@@ -1,0 +1,34 @@
+[
+  {
+    "id": "SOULFRA-MERCH-A8E0A6",
+    "title": "Soulfra T-Shirt",
+    "description": "Privacy-focused t-shirt",
+    "availability": "out of stock",
+    "condition": "new",
+    "price": "25.00 USD",
+    "link": "https://soulfra.com/products/soulfra-merch-a8e0a6",
+    "image_link": "https://soulfra.com/images/products/soulfra-merch-a8e0a6.png",
+    "brand": "Soulfra",
+    "gtin": "100176385489",
+    "product_type": "merch",
+    "custom_label_0": "soulfra",
+    "custom_label_1": "tier_2",
+    "custom_label_2": "Identity & Security"
+  },
+  {
+    "id": "SOULFRA-MERCH-04F248",
+    "title": "Privacy Manifesto Poster",
+    "description": "Privacy principles poster",
+    "availability": "out of stock",
+    "condition": "new",
+    "price": "15.00 USD",
+    "link": "https://soulfra.com/products/soulfra-merch-04f248",
+    "image_link": "https://soulfra.com/images/products/soulfra-merch-04f248.png",
+    "brand": "Soulfra",
+    "gtin": "100122373317",
+    "product_type": "merch",
+    "custom_label_0": "soulfra",
+    "custom_label_1": "tier_2",
+    "custom_label_2": "Identity & Security"
+  }
+]

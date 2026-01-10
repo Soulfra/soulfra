@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{brand}} Newsletter</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: {{fontSize}}px;
+            line-height: 1.6;
+            background: #f5f5f5;
+            padding: {{spacing * 3}}px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: {{spacing}}px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: {{primaryColor}};
+            color: white;
+            padding: {{spacing * 4}}px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: {{fontSize * 2}}px;
+        }
+
+        .content {
+            padding: {{spacing * 3}}px;
+        }
+
+        .cta {
+            display: inline-block;
+            background: {{primaryColor}};
+            color: white;
+            padding: {{spacing * 2}}px {{spacing * 4}}px;
+            border-radius: {{spacing}}px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: {{spacing * 2}}px 0;
+        }
+
+        .cta:hover {
+            background: {{darken(primaryColor, 0.1)}};
+        }
+
+        .footer {
+            background: #f9f9f9;
+            padding: {{spacing * 3}}px;
+            text-align: center;
+            font-size: {{fontSize * 0.875}}px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{brand}}</h1>
+            <p>{{tagline}}</p>
+        </div>
+
+        <div class="content">
+            <h2>Welcome to {{brand}}!</h2>
+            <p>
+                This email template was generated using the Universal Formula Engine.
+                Notice how ALL the styling comes from variables:
+            </p>
+            <ul>
+                <li>Brand color: {{primaryColor}}</li>
+                <li>Font size: {{fontSize}}px</li>
+                <li>Spacing unit: {{spacing}}px</li>
+            </ul>
+
+            <p>
+                Change ONE value in brand-vars.json and recompile →
+                Everything updates automatically!
+            </p>
+
+            <!-- AI-Generated Content Section -->
+            <div style="margin: {{spacing * 3}}px 0; padding: {{spacing * 3}}px; background: #f9f9f9; border-left: 4px solid {{primaryColor}}; border-radius: {{spacing}}px;">
+                <h3 style="color: {{darken(primaryColor, 0.2)}}; margin-bottom: {{spacing * 2}}px;">✨ AI-Generated Content</h3>
+                <div style="color: #333; line-height: 1.6;">
+                    {{generated_content}}
+                </div>
+            </div>
+
+            <a href="https://{{domain}}" class="cta">Visit {{brand}}</a>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 {{brand}} | {{domain}}</p>
+            <p>This email uses the Universal Formula Engine</p>
+        </div>
+    </div>
+</body>
+</html>

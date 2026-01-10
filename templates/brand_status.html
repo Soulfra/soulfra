@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand System Status - Soulfra Admin</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Sandbox warning banner */
+    .sandbox-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .sandbox-banner-icon {
+      font-size: 24px;
+    }
+
+    /* Health Score */
+    .health-score-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .health-score-card.healthy {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+    .health-score-card.warning {
+      background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+    }
+    .health-score-card.error {
+      background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+    }
+    .health-score-number {
+      font-size: 72px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .health-score-label {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    /* Status Cards Grid */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    .status-card {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 8px;
+      border-left: 4px solid #007bff;
+    }
+    .status-card h3 {
+      margin-top: 0;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .status-card.healthy {
+      border-left-color: #28a745;
+    }
+    .status-card.warning {
+      border-left-color: #ffc107;
+    }
+    .status-card.error {
+      border-left-color: #dc3545;
+    }
+
+    /* Health Checks */
+    .health-checks {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .health-check-item {
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .health-check-item.passed {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+    }
+    .health-check-item.failed {
+      background: #f8d7da;
+      border-left: 4px solid #dc3545;
+    }
+    .health-check-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .health-check-content {
+      flex-grow: 1;
+    }
+    .health-check-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .health-check-message {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* Brand List */
+    .brand-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .brand-list li {
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #fff;
+      border-radius: 4px;
+      border-left: 3px solid #007bff;
+    }
+    .brand-list li.synced {
+      border-left-color: #28a745;
+    }
+    .brand-list li.missing {
+      border-left-color: #dc3545;
+    }
+
+    /* Test Predictions */
+    .prediction-item {
+      padding: 15px;
+      margin-bottom: 15px;
+      background: #fff;
+      border-radius: 6px;
+      border-left: 4px solid #007bff;
+    }
+    .prediction-item.correct {
+      border-left-color: #28a745;
+    }
+    .prediction-item.incorrect {
+      border-left-color: #dc3545;
+    }
+    .prediction-text {
+      font-style: italic;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .prediction-result {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    .prediction-brands {
+      color: #333;
+    }
+    .prediction-confidence {
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #007bff;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #218838;
+    }
+    .btn-warning {
+      background: #ffc107;
+      color: #000;
+    }
+    .btn-warning:hover {
+      background: #e0a800;
+    }
+
+    /* Stats */
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+    .stat-label {
+      font-weight: 500;
+      color: #666;
+    }
+    .stat-value {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <h2>Soulfra Admin - Brand System Status</h2>
+    <nav class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/automation">Automation</a>
+      <a href="/admin/brand-status">Brand Status</a>
+      <a href="/admin/subscribers">Subscribers</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    {% if is_sandbox %}
+    <div class="sandbox-banner">
+      <div class="sandbox-banner-icon">🧪</div>
+      <div>
+        <strong>SANDBOX MODE</strong> - Using test database: {{ db_name }}<br>
+        <small>All changes happen in sandbox only. Production database (soulfra.db) is safe!</small>
+      </div>
+    </div>
+    {% endif %}
+
+    <h1>🎨 Brand System Status Dashboard</h1>
+
+    <!-- Health Score -->
+    <div class="health-score-card {{ status.health.status }}">
+      <div class="health-score-number">{{ status.health.score }}</div>
+      <div class="health-score-label">
+        System Health Score
+        <br>
+        <small>{{ status.health.passed }}/{{ status.health.total }} checks passed</small>
+      </div>
+    </div>
+
+    <!-- Health Checks -->
+    <div class="health-checks">
+      <h2>🔍 Health Checks</h2>
+      {% for check in status.health.checks %}
+      <div class="health-check-item {{ 'passed' if check.passed else 'failed' }}">
+        <div class="health-check-icon">{{ '✅' if check.passed else '❌' }}</div>
+        <div class="health-check-content">
+          <div class="health-check-name">{{ check.name }}</div>
+          <div class="health-check-message">{{ check.message }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Status Cards Grid -->
+    <div class="status-grid">
+      <!-- Brand Sync Status -->
+      <div class="status-card {{ 'healthy' if status.sync_status.missing_from_db|length == 0 else 'warning' }}">
+        <h3>📦 Brand Sync Status</h3>
+        <div class="stat-row">
+          <span class="stat-label">Manifest Brands:</span>
+          <span class="stat-value">{{ status.sync_status.in_manifest|length }}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Database Brands:</span>
+          <span class="stat-value">{{ status.sync_status.in_database|length }}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Synced:</span>
+          <span class="stat-value">{{ status.sync_status.synced|length }}</span>
+        </div>
+        {% if status.sync_status.missing_from_db|length > 0 %}
+        <div class="stat-row">
+          <span class="stat-label">Missing:</span>
+          <span class="stat-value" style="color: #dc3545;">{{ status.sync_status.missing_from_db|length }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Associations Status -->
+      <div class="status-card {{ 'healthy' if status.associations.orphaned_associations == 0 else 'error' }}">
+        <h3>🔗 Brand-Post Associations</h3>
+        <div class="stat-row">
+          <span class="stat-label">Total:</span>
+          <span class="stat-value">{{ status.associations.total_associations }}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Valid:</span>
+          <span class="stat-value">{{ status.associations.valid_associations }}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Orphaned:</span>
+          <span class="stat-value" style="color: {{ '#28a745' if status.associations.orphaned_associations == 0 else '#dc3545' }};">
+            {{ status.associations.orphaned_associations }}
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Brands with Posts:</span>
+          <span class="stat-value">{{ status.associations.brands_with_posts|length }}</span>
+        </div>
+      </div>
+
+      <!-- ML Models Status -->
+      <div class="status-card {{ 'healthy' if status.ml_models.brand_voice_model else 'warning' }}">
+        <h3>🧠 ML Models</h3>
+        <div class="stat-row">
+          <span class="stat-label">Total Models:</span>
+          <span class="stat-value">{{ status.ml_models.total_models }}</span>
+        </div>
+        {% if status.ml_models.brand_voice_model %}
+        <div class="stat-row">
+          <span class="stat-label">Brand Voice:</span>
+          <span class="stat-value" style="color: #28a745;">✅ Trained</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Training Size:</span>
+          <span class="stat-value">{{ status.ml_models.brand_voice_model.training_size }} posts</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Brands:</span>
+          <span class="stat-value">{{ status.ml_models.brand_voice_model.brands|length }}</span>
+        </div>
+        {% else %}
+        <div class="stat-row">
+          <span class="stat-label">Brand Voice:</span>
+          <span class="stat-value" style="color: #dc3545;">❌ Not Trained</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Missing Brands Warning -->
+    {% if status.sync_status.missing_from_db|length > 0 %}
+    <div class="health-checks">
+      <h2>⚠️ Missing Brands</h2>
+      <p>These brands are in <code>themes/manifest.yaml</code> but NOT in database:</p>
+      <ul class="brand-list">
+        {% for slug in status.sync_status.missing_from_db %}
+        <li class="missing">❌ {{ slug }}</li>
+        {% endfor %}
+      </ul>
+      <p style="margin-top: 20px;">
+        <strong>Fix:</strong> Click "Run Bootstrap" below to sync from manifest.
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- Test Predictions -->
+    {% if status.test_predictions|length > 0 %}
+    <div class="health-checks">
+      <h2>🧪 Test Predictions</h2>
+      <p>Testing brand voice classifier with sample texts:</p>
+      {% for pred in status.test_predictions %}
+      <div class="prediction-item {{ 'correct' if pred.correct else 'incorrect' }}">
+        <div class="prediction-text">"{{ pred.text }}"</div>
+        <div class="prediction-result">
+          <div class="prediction-brands">
+            Expected: <strong>{{ pred.expected_brand }}</strong>
+            | Got: <strong>{{ pred.predicted_brand or 'None' }}</strong>
+          </div>
+          <div class="prediction-confidence">
+            {{ (pred.confidence * 100)|int }}% confidence
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Brands with Posts -->
+    {% if status.associations.brands_with_posts|length > 0 %}
+    <div class="health-checks">
+      <h2>📊 Posts per Brand</h2>
+      <ul class="brand-list">
+        {% for brand in status.associations.brands_with_posts %}
+        <li class="{{ 'synced' if brand.post_count > 0 else 'missing' }}">
+          {{ brand.name }} ({{ brand.slug }}): <strong>{{ brand.post_count }}</strong> posts
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <form method="POST" action="/admin/automation/bootstrap" style="display: inline-block;">
+        <button type="submit" class="btn btn-warning" onclick="return confirm('Sync brands from manifest.yaml?')">
+          🚀 Run Bootstrap
+        </button>
+      </form>
+
+      <form method="POST" action="/admin/automation/train-brand-models" style="display: inline-block;">
+        <button type="submit" class="btn btn-success" onclick="return confirm('Train brand voice ML models?')">
+          🎭 Train Models
+        </button>
+      </form>
+
+      <a href="/api/brand/status" class="btn btn-primary" target="_blank">
+        📊 View JSON
+      </a>
+
+      <a href="/admin/automation" class="btn btn-primary">
+        ⚙️ Automation Panel
+      </a>
+    </div>
+
+    <!-- Timestamp -->
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #999; font-size: 14px;">
+      Last checked: {{ status.timestamp }}
+    </div>
+
+  </div>
+</body>
+</html>

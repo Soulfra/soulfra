@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CringeProof - 4 Domains, Daily Voice Questions</title>
+<meta name="description" content="Answer daily questions for each domain with voice memos">
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+body {
+    background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+}
+
+.header h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ff006e 0%, #bdb2ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header p {
+    font-size: 1.5rem;
+    color: #ffe5ec;
+    opacity: 0.9;
+}
+
+.domains-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.domain-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 3px solid;
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s;
+}
+
+.domain-card:hover {
+    transform: translateY(-5px);
+}
+
+.domain-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.domain-badge {
+    padding: 0.5rem 1rem;
+    font-weight: 900;
+    border: 3px solid #000;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    color: #000;
+}
+
+.domain-name {
+    flex: 1;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.domain-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.question-box {
+    background: rgba(255, 230, 109, 0.15);
+    border: 2px solid #ffe66d;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.question-label {
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: #ffe66d;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.question-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.answers-list {
+    margin-bottom: 1.5rem;
+}
+
+.answers-header {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.answer-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.answer-item audio {
+    flex: 1;
+    height: 32px;
+}
+
+.answer-time {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+}
+
+.answer-excerpt {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+.notepad-section {
+    margin-top: 1rem;
+}
+
+.notepad-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    resize: vertical;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+}
+
+.notepad-input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.notepad-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.notepad-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.record-btn-small {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 900;
+    color: white;
+    border: 3px solid #000;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 #000;
+}
+
+.record-btn-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #000;
+}
+
+.record-btn-small:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 0 #000;
+}
+
+.cache-status {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+.no-answers {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🎙️ CringeProof</h1>
+        <p>4 Domains · Daily Voice Questions · Zero Performance Anxiety</p>
+    </div>
+
+    <div id="domainsGrid" class="domains-grid">
+        <div class="loading">Loading domains...</div>
+    </div>
+</div>
+
+<script>
+const API_BASE = window.location.origin;
+const DOMAINS = ['cringeproof', 'soulfra', 'calriven', 'deathtodata'];
+
+async function loadDomains() {
+    const grid = document.getElementById('domainsGrid');
+    grid.innerHTML = '';
+
+    for (const domain of DOMAINS) {
+        try {
+            // Fetch question and answers in parallel
+            const [questionResp, answersResp] = await Promise.all([
+                fetch(`${API_BASE}/api/domain/${domain}/question-of-day`),
+                fetch(`${API_BASE}/api/domain/${domain}/recent-answers?limit=3`)
+            ]);
+
+            const questionData = await questionResp.json();
+            const answersData = await answersResp.json();
+
+            const card = createDomainCard(domain, questionData, answersData);
+            grid.appendChild(card);
+        } catch (error) {
+            console.error(`Failed to load ${domain}:`, error);
+        }
+    }
+}
+
+function createDomainCard(domain, questionData, answersData) {
+    const card = document.createElement('div');
+    card.className = 'domain-card';
+
+    const color = questionData.domain_info?.color || '#00C49A';
+    card.style.borderColor = color;
+
+    card.innerHTML = `
+        <div class="domain-header">
+            <div class="domain-badge" style="background: ${color};">${domain.toUpperCase()}</div>
+            <div class="domain-name">${questionData.domain_info?.description || domain}</div>
+        </div>
+
+        <div class="domain-desc">${questionData.domain_info?.theme || ''}</div>
+
+        <div class="question-box">
+            <div class="question-label">💡 Question of the Day</div>
+            <div class="question-text">${questionData.question}</div>
+        </div>
+
+        <div class="answers-list">
+            <div class="answers-header">🎤 Recent Answers (${answersData.total})</div>
+            ${answersData.answers && answersData.answers.length > 0
+                ? answersData.answers.map(answer => `
+                    <div class="answer-item" style="border-color: ${color};">
+                        <audio controls src="${API_BASE}${answer.audio_url}"></audio>
+                        <span class="answer-time">${answer.time_ago}</span>
+                    </div>
+                    ${answer.excerpt ? `<div class="answer-excerpt">"${answer.excerpt}..."</div>` : ''}
+                `).join('')
+                : '<div class="no-answers">No answers yet. Be the first!</div>'
+            }
+        </div>
+
+        <div class="notepad-section">
+            <textarea
+                class="notepad-input"
+                placeholder="Type or record your answer here..."
+                data-domain="${domain}"
+                data-question="${questionData.question.replace(/'/g, "\\'")}"
+                oninput="handleNotepadInput(this, '${domain}')"
+            ></textarea>
+            <div class="notepad-footer">
+                <button class="record-btn-small" style="background: ${color};" onclick="recordAnswer('${domain}', '${questionData.question.replace(/'/g, "\\'")}')">
+                    🎙️ Voice
+                </button>
+                <span class="cache-status" id="status-${domain}">💾 Cached locally</span>
+            </div>
+        </div>
+    `;
+
+    return card;
+}
+
+function recordAnswer(domain, question) {
+    // Redirect to domain studio with pre-selected domain
+    window.location.href = `/domain-studio.html?domain=${domain}&question=${encodeURIComponent(question)}`;
+}
+
+// localStorage cache management
+function getCachedAnswers() {
+    const cached = localStorage.getItem('notepadAnswers');
+    return cached ? JSON.parse(cached) : {};
+}
+
+function setCachedAnswer(domain, text) {
+    const answers = getCachedAnswers();
+    answers[domain] = text;
+    localStorage.setItem('notepadAnswers', JSON.stringify(answers));
+}
+
+function handleNotepadInput(textarea, domain) {
+    const text = textarea.value;
+    setCachedAnswer(domain, text);
+
+    // Update status indicator
+    const status = document.getElementById(`status-${domain}`);
+    if (text.trim().length > 0) {
+        status.textContent = `💾 Cached (${text.trim().split(/\s+/).length} words)`;
+    } else {
+        status.textContent = '💾 Cached locally';
+    }
+
+    // Extract wordmap in real-time (debounced)
+    clearTimeout(textarea.wordmapTimer);
+    textarea.wordmapTimer = setTimeout(() => {
+        extractWordmap(domain, text);
+    }, 500);
+}
+
+function extractWordmap(domain, text) {
+    // Simple word frequency extraction
+    const words = text.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '')
+        .split(/\s+/)
+        .filter(w => w.length > 2);
+
+    const wordmap = {};
+    words.forEach(word => {
+        wordmap[word] = (wordmap[word] || 0) + 1;
+    });
+
+    // Store in localStorage
+    const allWordmaps = JSON.parse(localStorage.getItem('wordmaps') || '{}');
+    allWordmaps[domain] = wordmap;
+    localStorage.setItem('wordmaps', JSON.stringify(allWordmaps));
+
+    console.log(`[${domain}] Wordmap updated:`, wordmap);
+}
+
+function restoreCachedAnswers() {
+    const cached = getCachedAnswers();
+    Object.keys(cached).forEach(domain => {
+        const textarea = document.querySelector(`textarea[data-domain="${domain}"]`);
+        if (textarea) {
+            textarea.value = cached[domain];
+            handleNotepadInput(textarea, domain);
+        }
+    });
+}
+
+// Load domains on page load
+loadDomains().then(() => {
+    // Restore cached answers after cards are rendered
+    setTimeout(restoreCachedAnswers, 100);
+});
+
+// Refresh every 30 seconds (but preserve user input)
+setInterval(() => {
+    const currentInputs = {};
+    document.querySelectorAll('.notepad-input').forEach(textarea => {
+        currentInputs[textarea.dataset.domain] = textarea.value;
+    });
+
+    loadDomains().then(() => {
+        // Restore inputs after refresh
+        Object.keys(currentInputs).forEach(domain => {
+            const textarea = document.querySelector(`textarea[data-domain="${domain}"]`);
+            if (textarea) {
+                textarea.value = currentInputs[domain];
+            }
+        });
+    });
+}, 30000);
+</script>
+
+</body>
+</html>

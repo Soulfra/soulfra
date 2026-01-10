@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Social Network Vision - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-social-network-vision">Soulfra Social Network Vision</h1>
+
+<p><strong>MySpace + AI Clippy + The Sims</strong></p>
+
+<p>The future of self-owned, AI-enhanced social profiles.</p>
+
+<hr />
+
+<h2 id="the-core-idea">The Core Idea</h2>
+
+<p><strong>What if you owned your username like a domain name?</strong></p>
+
+<ul>
+<li><strong>calriven.soulfra.com</strong> → Your personal site</li>
+<li><strong>calriven@soulfra.com</strong> → Your email address</li>
+<li><strong>calriven.soul</strong> → Your license (expires in 1 year, renewable)</li>
+</ul>
+
+<p><strong>Plus:</strong>
+- AI assistant living on your page (like Clippy)
+- Character progression system (like The Sims)
+- Exportable brands as ZIP packages
+- Complete data ownership (SQLite + git)</p>
+
+<hr />
+
+<h2 id="platform-components">Platform Components</h2>
+
+<h3 id="1-username-licensing-ens-style">1. Username Licensing (ENS-Style)</h3>
+
+<p><strong>Purchase usernames that expire:</strong></p>
+
+<pre><code>calriven.soul
+├─ Purchased: Jan 1, 2025
+├─ Expires: Jan 1, 2026
+├─ Renewal: $10/year
+├─ Transferable: Yes
+└─ Email Forward: calriven@soulfra.com → real@gmail.com
+</code></pre>
+
+<p><strong>Features:</strong>
+- <strong>Buy username</strong> → Get subdomain + email forwarding
+- <strong>Automatic renewal</strong> or manual (like ENS domains)
+- <strong>Transfer ownership</strong> (like Runescape name changes or Xbox gamertags)
+- <strong>Grace period</strong> after expiration (30 days to renew before release)
+- <strong>Premium usernames</strong> cost more (short names, keywords)</p>
+
+<p><strong>No subscription lock-in.</strong> You OWN the username for the duration you've paid for.</p>
+
+<h3 id="2-personal-subdomains">2. Personal Subdomains</h3>
+
+<p><strong>Every user gets:</strong></p>
+
+<pre><code>username.soulfra.com
+</code></pre>
+
+<p><strong>What it shows:</strong>
+- Personal profile page (MySpace-style customization)
+- Blog posts tagged to your username
+- AI assistant widget (embedded on your page)
+- Character stats and progression (The Sims-style)
+- Export button → Download entire profile as ZIP</p>
+
+<p><strong>Customization:</strong>
+- Choose color scheme
+- Upload profile pic and banner
+- Write bio and links
+- Select personality for AI assistant
+- Configure public/private content</p>
+
+<h3 id="3-ai-assistant-clippy-style">3. AI Assistant (Clippy-Style)</h3>
+
+<p><strong>Every profile has an AI companion:</strong></p>
+
+<ul>
+<li><strong>Embedded widget</strong> on your page (purple chat bubble)</li>
+<li><strong>Learns from conversations</strong> to generate content</li>
+<li><strong>Helps visitors</strong> interact with your content</li>
+<li><strong>Generates blog posts</strong> from chat transcripts</li>
+<li><strong>Answers questions</strong> about your posts/projects</li>
+</ul>
+
+<p><strong>Commands:</strong>
+- <code>/generate post</code> → Turn conversation into blog post
+- <code>/research &lt;topic&gt;</code> → Search your content
+- <code>/qr &lt;text&gt;</code> → Generate QR codes
+- <code>/neural &lt;text&gt;</code> → Get brand predictions
+- <code>/dnd start</code> → Play D&amp;D campaigns (fun easter egg)</p>
+
+<p><strong>The AI acts as your personal assistant</strong> that visitors can talk to.</p>
+
+<h3 id="4-character-progression-the-sims">4. Character Progression (The Sims)</h3>
+
+<p><strong>Your profile levels up:</strong></p>
+
+<pre><code>CalRiven - Level 12 Builder
+├─ Posts Written: 47
+├─ Conversations: 328
+├─ Projects Built: 5
+├─ Followers: 142
+├─ XP: 3,420 / 4,000 (to Level 13)
+└─ Badges: 🔧 Code Wizard, 📝 Prolific Writer, 🌟 Early Adopter
+</code></pre>
+
+<p><strong>Earn XP by:</strong>
+- Writing posts (50 XP each)
+- Having conversations (10 XP per session)
+- Getting upvotes/reactions (5 XP each)
+- Completing quests (100-500 XP)
+- Building projects (200 XP each)</p>
+
+<p><strong>Unlock features:</strong>
+- <strong>Level 5</strong> → Custom CSS for profile
+- <strong>Level 10</strong> → API access
+- <strong>Level 15</strong> → Create subdomains for projects
+- <strong>Level 20</strong> → White-label export (remove Soulfra branding)</p>
+
+<p><strong>Visual stats like The Sims:</strong>
+- Creativity meter
+- Technical skill
+- Social engagement
+- Content output</p>
+
+<h3 id="5-exportable-brands">5. Exportable Brands</h3>
+
+<p><strong>Download your entire profile as a package:</strong></p>
+
+<pre><code>calriven-profile.zip
+├─ posts/
+│   ├─ post-1.md
+│   ├─ post-2.md
+│   └─ post-3.md
+├─ config.json (colors, personality, settings)
+├─ profile.json (bio, links, stats)
+├─ soulfra.db (local SQLite database)
+├─ models/ (trained ML models for your writing style)
+├─ images/ (profile pic, banner, uploads)
+└─ README.md (installation instructions)
+</code></pre>
+
+<p><strong>Install anywhere:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>unzip<span class="w"> </span>calriven-profile.zip
+<span class="nb">cd</span><span class="w"> </span>calriven-profile
+pip<span class="w"> </span>install<span class="w"> </span>soulfra
+python3<span class="w"> </span>app.py
+</code></pre>
+</div>
+
+<p><strong>Now you have a self-hosted version of your profile</strong> running on your own server.</p>
+
+<p><strong>This is the "branch" pattern:</strong>
+- Soulfra is the main platform
+- You export your brand as a standalone site
+- Host it yourself or give it to someone else
+- Complete independence from the platform</p>
+
+<hr />
+
+<h2 id="how-its-different">How It's Different</h2>
+
+<h3 id="vs-substack">vs. Substack</h3>
+
+<ul>
+<li><strong>Substack:</strong> 10% fee forever, they own the platform</li>
+<li><strong>Soulfra:</strong> One-time username fee, export and self-host anytime</li>
+</ul>
+
+<h3 id="vs-medium">vs. Medium</h3>
+
+<ul>
+<li><strong>Medium:</strong> They own your audience and analytics</li>
+<li><strong>Soulfra:</strong> You own the SQLite database, export to git</li>
+</ul>
+
+<h3 id="vs-wordpress">vs. WordPress</h3>
+
+<ul>
+<li><strong>WordPress:</strong> Manual content creation, plugin hell</li>
+<li><strong>Soulfra:</strong> AI-generated content from conversations, minimal plugins</li>
+</ul>
+
+<h3 id="vs-twitterx">vs. Twitter/X</h3>
+
+<ul>
+<li><strong>Twitter:</strong> Algorithmic feed, no customization, can be banned</li>
+<li><strong>Soulfra:</strong> Full profile customization, exportable, you control content</li>
+</ul>
+
+<h3 id="vs-myspace-the-og">vs. MySpace (the OG)</h3>
+
+<ul>
+<li><strong>MySpace:</strong> Dead platform, centralized, no export</li>
+<li><strong>Soulfra:</strong> Self-hosted option, AI integration, modern stack</li>
+</ul>
+
+<hr />
+
+<h2 id="user-journey">User Journey</h2>
+
+<h3 id="step-1-purchase-username">Step 1: Purchase Username</h3>
+
+<pre><code>Visit: soulfra.com/register
+Enter: calriven
+Price: $15/year
+Payment: Crypto or card
+Result: calriven.soul registered
+</code></pre>
+
+<p>You now own:
+- <code>calriven.soulfra.com</code> subdomain
+- <code>calriven@soulfra.com</code> email forwarding
+- Personal AI assistant
+- Character profile (Level 1)</p>
+
+<h3 id="step-2-customize-profile">Step 2: Customize Profile</h3>
+
+<pre><code>Visit: calriven.soulfra.com/edit
+Set colors: Purple gradient (#667eea → #764ba2)
+Upload banner: banner.jpg
+Write bio: "Building AI tools and self-hosted platforms"
+Set AI personality: Technical + Friendly
+</code></pre>
+
+<h3 id="step-3-create-content">Step 3: Create Content</h3>
+
+<p><strong>Option A: Write manually</strong>
+- Create new post
+- Write markdown
+- Publish</p>
+
+<p><strong>Option B: Talk to AI</strong>
+- Open chat widget
+- Have a conversation about your project
+- Type <code>/generate post</code>
+- AI creates structured blog post from transcript</p>
+
+<h3 id="step-4-grow-character">Step 4: Grow Character</h3>
+
+<pre><code>🎉 Level Up! You're now Level 3.
+Unlocked: Custom profile CSS
+
+New Quest Available:
+"Write 5 posts about AI" → 250 XP + Badge: 🤖 AI Enthusiast
+</code></pre>
+
+<h3 id="step-5-export-self-host">Step 5: Export &amp; Self-Host</h3>
+
+<pre><code>Visit: calriven.soulfra.com/export
+Click: Download Profile Package
+Receive: calriven-profile.zip
+
+Deploy on your own server:
+unzip calriven-profile.zip
+python3 app.py
+
+Now running at: https://calriven.com
+</code></pre>
+
+<p><strong>Your content is now independent of Soulfra.</strong></p>
+
+<hr />
+
+<h2 id="technical-stack">Technical Stack</h2>
+
+<h3 id="frontend">Frontend</h3>
+
+<ul>
+<li><strong>Profile Pages:</strong> Jinja2 templates (customizable)</li>
+<li><strong>Widget:</strong> Vanilla JavaScript (embeddable anywhere)</li>
+<li><strong>Styling:</strong> Custom CSS per user</li>
+</ul>
+
+<h3 id="backend">Backend</h3>
+
+<ul>
+<li><strong>Framework:</strong> Flask (Python)</li>
+<li><strong>Database:</strong> SQLite (one per user, exportable)</li>
+<li><strong>AI:</strong> Ollama (local inference, llama2)</li>
+<li><strong>ML:</strong> scikit-learn (brand classification)</li>
+</ul>
+
+<h3 id="infrastructure">Infrastructure</h3>
+
+<ul>
+<li><strong>DNS:</strong> Subdomain routing via nginx/Caddy</li>
+<li><strong>Email:</strong> Postfix/mail forwarding</li>
+<li><strong>Hosting:</strong> Self-hosted or cloud (DigitalOcean, Linode)</li>
+<li><strong>Storage:</strong> Filesystem-as-database (git-trackable)</li>
+</ul>
+
+<h3 id="licensing-system">Licensing System</h3>
+
+<ul>
+<li><strong>Database:</strong> username_licenses table</li>
+<li><strong>Expiration:</strong> Cron job checks daily</li>
+<li><strong>Transfers:</strong> username_transfers table (audit trail)</li>
+<li><strong>Payments:</strong> Stripe or crypto integration</li>
+</ul>
+
+<hr />
+
+<h2 id="revenue-model">Revenue Model</h2>
+
+<h3 id="username-sales">Username Sales</h3>
+
+<ul>
+<li><strong>Standard:</strong> $10-15/year (5+ characters)</li>
+<li><strong>Premium:</strong> $50-100/year (3-4 characters)</li>
+<li><strong>Elite:</strong> $500+/year (2 characters or keywords)</li>
+</ul>
+
+<h3 id="feature-unlocks">Feature Unlocks</h3>
+
+<ul>
+<li><strong>White-label export:</strong> $50 one-time (remove Soulfra branding)</li>
+<li><strong>Custom domain:</strong> $20/year (yourname.com → your profile)</li>
+<li><strong>API access:</strong> $25/year (programmatic content creation)</li>
+</ul>
+
+<h3 id="no-recurring-revenue-cut">No Recurring Revenue Cut</h3>
+
+<ul>
+<li><strong>We don't take 10% forever like Substack</strong></li>
+<li><strong>You pay for the username, that's it</strong></li>
+<li><strong>Export and self-host whenever you want</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="social-features">Social Features</h2>
+
+<h3 id="connections">Connections</h3>
+
+<ul>
+<li><strong>Follow users</strong> → See their posts in feed</li>
+<li><strong>@mention system</strong> → Tag other users</li>
+<li><strong>Comments</strong> → React to posts (optional, can disable)</li>
+</ul>
+
+<h3 id="collaborative-quests">Collaborative Quests</h3>
+
+<ul>
+<li><strong>6-8 person D&amp;D campaigns</strong> (multiplayer AI dungeon master)</li>
+<li><strong>Group projects</strong> → Shared git repos</li>
+<li><strong>Co-authored posts</strong> → Multiple contributors</li>
+</ul>
+
+<h3 id="matchmaking">Matchmaking</h3>
+
+<ul>
+<li><strong>Find collaborators</strong> based on:
+<ul>
+<li>Skills (ML, design, writing)</li>
+<li>Interests (AI, privacy, gaming)</li>
+<li>Character level (match similar XP)</li>
+<li>Projects (looking for contributors)</li>
+</ul></li>
+</ul>
+
+<p><strong>Game theory:</strong> Incentivize collaboration through XP bonuses.</p>
+
+<hr />
+
+<h2 id="privacy-ownership">Privacy &amp; Ownership</h2>
+
+<h3 id="what-you-own">What You Own</h3>
+
+<ul>
+<li>SQLite database file</li>
+<li>All post markdown files</li>
+<li>Profile images and uploads</li>
+<li>Trained ML models</li>
+<li>Configuration files</li>
+</ul>
+
+<h3 id="what-you-control">What You Control</h3>
+
+<ul>
+<li>Public/private post visibility</li>
+<li>Email forwarding on/off</li>
+<li>AI assistant personality</li>
+<li>Profile customization</li>
+<li>Export at any time</li>
+</ul>
+
+<h3 id="what-we-store">What We Store</h3>
+
+<ul>
+<li>Username registration (for DNS routing)</li>
+<li>Payment records (for renewals)</li>
+<li>Encrypted email forward target</li>
+<li>Public profile data (if you choose to publish)</li>
+</ul>
+
+<p><strong>No tracking, no analytics without consent, no selling data.</strong></p>
+
+<hr />
+
+<h2 id="local-development-before-launch">Local Development (Before Launch)</h2>
+
+<p><strong>Test everything locally FIRST:</strong></p>
+
+<h3 id="1-local-subdomains">1. Local Subdomains</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Edit /etc/hosts</span>
+sudo<span class="w"> </span>nano<span class="w"> </span>/etc/hosts
+
+<span class="c1"># Add</span>
+<span class="m">127</span>.0.0.1<span class="w">  </span>soulfra.local
+<span class="m">127</span>.0.0.1<span class="w">  </span>calriven.soulfra.local
+<span class="m">127</span>.0.0.1<span class="w">  </span>alice.soulfra.local
+</code></pre>
+</div>
+
+<h3 id="2-subdomain-router">2. Subdomain Router</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">before_request</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">route_by_subdomain</span><span class="p">():</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">host</span>
+    <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
+        <span class="n">subdomain</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">subdomain</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;soulfra&#39;</span><span class="p">,</span> <span class="s1">&#39;www&#39;</span><span class="p">]:</span>
+            <span class="c1"># Route to user profile</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;user_profile&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">subdomain</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<h3 id="3-test-locally">3. Test Locally</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start server</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># Visit in browser</span>
+http://calriven.soulfra.local:5001
+</code></pre>
+</div>
+
+<p><strong>Build the entire system locally before deploying.</strong></p>
+
+<hr />
+
+<h2 id="deployment-path">Deployment Path</h2>
+
+<h3 id="phase-1-local-now">Phase 1: Local (Now)</h3>
+
+<ul>
+<li>Build username licensing system</li>
+<li>Subdomain routing with /etc/hosts</li>
+<li>Email forwarding config (test with local mail server)</li>
+<li>Character progression and XP system</li>
+<li>Export functionality</li>
+</ul>
+
+<h3 id="phase-2-private-beta-friends">Phase 2: Private Beta (Friends)</h3>
+
+<ul>
+<li>Deploy on real domain (soulfra.com)</li>
+<li>Invite 10-20 friends to test</li>
+<li>Collect feedback</li>
+<li>Fix bugs</li>
+</ul>
+
+<h3 id="phase-3-public-launch">Phase 3: Public Launch</h3>
+
+<ul>
+<li>Open registration</li>
+<li>Marketing (Product Hunt, Hacker News)</li>
+<li>Document everything</li>
+<li>Support email/chat</li>
+</ul>
+
+<h3 id="phase-4-ecosystem">Phase 4: Ecosystem</h3>
+
+<ul>
+<li>WordPress plugin for widget embedding</li>
+<li>API for third-party tools</li>
+<li>Community marketplace (themes, plugins)</li>
+<li>White-label licensing for enterprises</li>
+</ul>
+
+<hr />
+
+<h2 id="competitive-advantages">Competitive Advantages</h2>
+
+<ol>
+<li><strong>Ownership:</strong> Export your entire profile anytime</li>
+<li><strong>AI-Native:</strong> Content generation built-in, not an add-on</li>
+<li><strong>Gamification:</strong> Character progression keeps users engaged</li>
+<li><strong>No Lock-In:</strong> Self-host option from day one</li>
+<li><strong>Privacy:</strong> Local AI, no data mining</li>
+<li><strong>Simplicity:</strong> Python + SQLite, no blockchain complexity</li>
+<li><strong>Customization:</strong> MySpace-level profile personalization</li>
+</ol>
+
+<hr />
+
+<h2 id="why-this-matters">Why This Matters</h2>
+
+<p><strong>The web used to be personal.</strong></p>
+
+<ul>
+<li>GeoCities pages</li>
+<li>MySpace profiles</li>
+<li>Personal blogs</li>
+</ul>
+
+<p><strong>Then platforms took over:</strong></p>
+
+<ul>
+<li>Twitter: Algorithmic feed</li>
+<li>Medium: Paywall everything</li>
+<li>Substack: 10% forever</li>
+<li>WordPress.com: Upsell hosting</li>
+</ul>
+
+<p><strong>Soulfra brings back ownership:</strong></p>
+
+<ul>
+<li>You control your content</li>
+<li>You customize your space</li>
+<li>You export whenever you want</li>
+<li>You pay for the username, not perpetual rent</li>
+</ul>
+
+<p><strong>Plus modern AI superpowers:</strong></p>
+
+<ul>
+<li>Generate content from conversations</li>
+<li>Smart assistant on your page</li>
+<li>Auto-classification and tagging</li>
+<li>Research and synthesis</li>
+</ul>
+
+<hr />
+
+<h2 id="next-steps-development">Next Steps (Development)</h2>
+
+<ol>
+<li><strong>Build username licensing table</strong> (ENS-style)</li>
+<li><strong>Subdomain routing</strong> (Flask subdomain detection)</li>
+<li><strong>Email forwarding</strong> (Postfix config)</li>
+<li><strong>Character progression</strong> (XP system, badges)</li>
+<li><strong>Export functionality</strong> (ZIP package generator)</li>
+<li><strong>Profile customization</strong> (CSS editor, color picker)</li>
+<li><strong>Test locally</strong> with .local subdomains</li>
+<li><strong>Deploy private beta</strong> with real domain</li>
+</ol>
+
+<hr />
+
+<h2 id="the-vision-tldr">The Vision (TL;DR)</h2>
+
+<p><strong>Soulfra is:</strong></p>
+
+<ul>
+<li>A social network where you OWN your username (like ENS domains)</li>
+<li>A profile platform with AI assistant (like MySpace + Clippy)</li>
+<li>A content generator (talk → blog posts)</li>
+<li>A character progression system (like The Sims)</li>
+<li>A self-hosted export option (own your data forever)</li>
+</ul>
+
+<p><strong>No lock-in. No 10% fees. No algorithmic feed.</strong></p>
+
+<p><strong>Just you, your content, and an AI assistant.</strong></p>
+
+<hr />
+
+<h2 id="questions">Questions?</h2>
+
+<ul>
+<li><strong>How much?</strong> $10-15/year for username</li>
+<li><strong>Can I transfer?</strong> Yes, like domain names</li>
+<li><strong>Can I self-host?</strong> Yes, export anytime</li>
+<li><strong>What if Soulfra shuts down?</strong> You have the export, run it yourself</li>
+<li><strong>Is it open source?</strong> Yes, entire codebase on GitHub</li>
+</ul>
+
+<p><strong>This is the anti-platform platform.</strong></p>
+
+<p><strong>You wanted MySpace + AI + The Sims.</strong></p>
+
+<p><strong>This is it.</strong> 🎮🤖✨</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>api_keys | Soulfra Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { background: white; padding: 24px; border-radius: 12px; margin-bottom: 24px; }
+        .section { background: white; padding: 24px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; background: #f8f9fa; }
+        td { padding: 12px; border-bottom: 1px solid #f0f0f0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>api_keys</h1>
+        </header>
+        <div class="section">
+            <table><thead><tr><th>Id</th><th>User Email</th><th>Api Key</th><th>Tier</th><th>Brand Slug</th><th>Rate Limit</th><th>Calls Today</th><th>Calls Total</th><th>Last Reset At</th><th>Last Call At</th></tr></thead><tbody>{% for row in rows %}<tr><td>{{ row.id or '-' }}</td><td>{{ row.user_email or '-' }}</td><td>{{ row.api_key or '-' }}</td><td>{{ row.tier or '-' }}</td><td>{{ row.brand_slug or '-' }}</td><td>{{ row.rate_limit or '-' }}</td><td>{{ row.calls_today or '-' }}</td><td>{{ row.calls_total or '-' }}</td><td>{{ row.last_reset_at or '-' }}</td><td>{{ row.last_call_at or '-' }}</td></tr>{% endfor %}</tbody></table>
+        </div>
+    </div>
+</body>
+</html>

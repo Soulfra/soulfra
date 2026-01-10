@@ -1,0 +1,8 @@
+domain,brand_id,status,dns_configured,notes
+soulfra.github.io,1,active,yes,Main Soulfra homepage
+soulfra.github.io/calriven,3,active,yes,Calriven blog subdirectory
+soulfra.github.io/deathtodata,2,active,no,DeathToData (not yet deployed)
+soulfra.github.io/cringeproof,4,planned,no,Cringeproof (future)
+calriven.com,3,planned,no,Custom domain for Calriven (not purchased)
+deathtodata.com,2,planned,no,Custom domain for DeathToData (not purchased)
+cringeproof.com,4,planned,no,Custom domain for Cringeproof (not purchased)

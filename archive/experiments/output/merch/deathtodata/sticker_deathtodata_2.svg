@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circle background -->
+  <circle cx="100" cy="100" r="95" fill="#e74c3c" stroke="#f39c12" stroke-width="5"/>
+
+  <!-- Brand name -->
+  <text x="100" y="90" font-family="Arial, sans-serif" font-size="20"
+        font-weight="bold" fill="white" text-anchor="middle">
+    DeathToData
+  </text>
+
+  <!-- Keyword -->
+  <text x="100" y="120" font-family="Arial, sans-serif" font-size="16"
+        fill="white" text-anchor="middle">
+    Privacy
+  </text>
+</svg>

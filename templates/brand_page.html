@@ -1,0 +1,640 @@
+{% extends "base.html" %}
+
+{% block title %}{{ brand.name }} - Brand Vault{% endblock %}
+
+{% block content %}
+<!-- Dynamic Brand CSS - Makes this brand visually unique! -->
+{{ brand_css|safe }}
+
+<div class="container">
+    <div class="brand-page">
+        <div class="brand-header">
+            <h1>{{ brand.name }}</h1>
+            <div class="brand-stats">
+                <div class="stat-item">
+                    {% if brand.avg_rating > 0 %}
+                        <div class="star-rating">
+                            {% for i in range(5) %}
+                                {% if i < brand.avg_rating %}
+                                    <span class="star filled">★</span>
+                                {% else %}
+                                    <span class="star">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="rating-text">{{ brand.avg_rating }} ({{ brand.rating_count }} ratings)</span>
+                    {% else %}
+                        <span class="no-ratings">No ratings yet</span>
+                    {% endif %}
+                </div>
+                <div class="stat-item">
+                    📥 {{ brand.download_count }} downloads
+                </div>
+                <div class="stat-item">
+                    📖 {{ brand.post_count }} posts
+                </div>
+                {% if brand.latest_version %}
+                <div class="stat-item">
+                    🔖 v{{ brand.latest_version['version_number'] }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="brand-content">
+            <div class="brand-main">
+                <div class="brand-info">
+                    <h2>About This Brand</h2>
+                    <div class="info-row">
+                        <strong>Personality:</strong>
+                        <p>{{ brand.personality }}</p>
+                    </div>
+                    <div class="info-row">
+                        <strong>Tone:</strong>
+                        <p>{{ brand.tone }}</p>
+                    </div>
+                    {% if brand.license %}
+                    <div class="info-row">
+                        <strong>License:</strong>
+                        <div class="license-badge {{ brand.license['license_type'] }}">
+                            {{ brand.license['license_type'].upper() }}
+                        </div>
+                        <ul class="license-features">
+                            <li>
+                                {% if brand.license['attribution_required'] %}✅{% else %}❌{% endif %}
+                                Attribution required
+                            </li>
+                            <li>
+                                {% if brand.license['commercial_use_allowed'] %}✅{% else %}❌{% endif %}
+                                Commercial use
+                            </li>
+                            <li>
+                                {% if brand.license['modifications_allowed'] %}✅{% else %}❌{% endif %}
+                                Modifications allowed
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="brand-actions-panel">
+                    <a href="{{ url_for('brand_preview', slug=brand.slug) }}" class="btn-preview">
+                        👁️ Preview Brand on Content
+                    </a>
+                    <a href="{{ url_for('export_brand', slug=brand.slug) }}" class="btn-download" download>
+                        📦 Download Brand ZIP
+                    </a>
+                    <p class="install-hint">
+                        Install with: <code>python3 brand_theme_manager.py import {{ brand.slug }}-theme.zip</code>
+                    </p>
+                </div>
+
+                {% if brand.latest_version %}
+                <div class="version-info">
+                    <h2>Latest Version</h2>
+                    <div class="version-card">
+                        <div class="version-header">
+                            <strong>v{{ brand.latest_version['version_number'] }}</strong>
+                            <span class="version-date">{{ brand.latest_version['created_at'] }}</span>
+                        </div>
+                        {% if brand.latest_version['changelog'] %}
+                        <div class="changelog">
+                            <strong>Changelog:</strong>
+                            <p>{{ brand.latest_version['changelog'] }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="ratings-section">
+                    <h2>Ratings & Reviews</h2>
+
+                    <div class="rating-form">
+                        <h3>Leave a Review</h3>
+                        <form method="POST" action="{{ url_for('rate_brand', slug=brand.slug) }}">
+                            <div class="form-group">
+                                <label>Your Rating *</label>
+                                <div class="star-input">
+                                    <input type="radio" id="star5" name="rating" value="5" required>
+                                    <label for="star5" title="5 stars">★</label>
+
+                                    <input type="radio" id="star4" name="rating" value="4">
+                                    <label for="star4" title="4 stars">★</label>
+
+                                    <input type="radio" id="star3" name="rating" value="3">
+                                    <label for="star3" title="3 stars">★</label>
+
+                                    <input type="radio" id="star2" name="rating" value="2">
+                                    <label for="star2" title="2 stars">★</label>
+
+                                    <input type="radio" id="star1" name="rating" value="1">
+                                    <label for="star1" title="1 star">★</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="review">Your Review (optional)</label>
+                                <textarea id="review" name="review" rows="4"
+                                          placeholder="Share your experience with this brand..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-submit-review">Submit Review</button>
+                        </form>
+                    </div>
+
+                    {% if brand.ratings %}
+                    <div class="reviews-list">
+                        <h3>Recent Reviews ({{ brand.rating_count }})</h3>
+                        {% for rating in brand.ratings %}
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="review-author">
+                                    <strong>{{ rating.display_name or rating.username or 'Anonymous' }}</strong>
+                                    <div class="review-stars">
+                                        {% for i in range(5) %}
+                                            {% if i < rating.rating %}
+                                                <span class="star filled">★</span>
+                                            {% else %}
+                                                <span class="star">☆</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="review-date">
+                                    {{ rating.created_at }}
+                                </div>
+                            </div>
+                            {% if rating.review %}
+                            <div class="review-text">
+                                {{ rating.review }}
+                            </div>
+                            {% endif %}
+                            <div class="review-footer">
+                                <form method="POST" action="{{ url_for('mark_review_helpful', slug=brand.slug, review_id=rating.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn-helpful">
+                                        👍 Helpful ({{ rating.helpful_count }})
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="no-reviews">
+                        <p>No reviews yet. Be the first to review this brand!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="brand-sidebar">
+                <div class="sidebar-card">
+                    <h3>Quick Stats</h3>
+                    <ul class="stats-list">
+                        <li>
+                            <span class="stat-label">Downloads:</span>
+                            <span class="stat-value">{{ brand.download_count }}</span>
+                        </li>
+                        <li>
+                            <span class="stat-label">Ratings:</span>
+                            <span class="stat-value">{{ brand.rating_count }}</span>
+                        </li>
+                        <li>
+                            <span class="stat-label">Posts:</span>
+                            <span class="stat-value">{{ brand.post_count }}</span>
+                        </li>
+                        <li>
+                            <span class="stat-label">Created:</span>
+                            <span class="stat-value">{{ brand.created_at }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Brand Actions</h3>
+                    <ul class="actions-list">
+                        <li><a href="{{ url_for('brand_preview', slug=brand.slug) }}">👁️ Preview Styling</a></li>
+                        <li><a href="{{ url_for('export_brand', slug=brand.slug) }}">📦 Download ZIP</a></li>
+                        <li><a href="{{ url_for('brand_debug', slug=brand.slug) }}">🔧 Debug Panel</a></li>
+                        <li><a href="#reviews">⭐ Leave Review</a></li>
+                        <li><a href="{{ url_for('brands_marketplace') }}">🔙 Back to Marketplace</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.brand-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.brand-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.brand-header h1 {
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+}
+
+.brand-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.star-rating {
+    display: inline-flex;
+}
+
+.star {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
+}
+
+.star.filled {
+    color: #ffd700;
+}
+
+.rating-text {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.no-ratings {
+    opacity: 0.7;
+}
+
+.brand-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .brand-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.brand-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.brand-info,
+.brand-actions-panel,
+.version-info,
+.ratings-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.brand-info h2,
+.version-info h2,
+.ratings-section h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 0.5rem;
+}
+
+.info-row {
+    margin-bottom: 1.5rem;
+}
+
+.info-row strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.license-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.license-badge.cc0 {
+    background: #d4edda;
+    color: #155724;
+}
+
+.license-badge.cc-by {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.license-badge.licensed {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.license-badge.proprietary {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.license-features {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+}
+
+.license-features li {
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.brand-actions-panel {
+    text-align: center;
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.5rem;
+}
+
+.btn-preview {
+    display: block;
+    background: white;
+    border: 2px solid var(--brand-primary, #667eea);
+    color: var(--brand-primary, #667eea);
+    padding: 0.875rem 1.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn-preview:hover {
+    background: var(--brand-primary, #667eea);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-download {
+    display: block;
+    background: var(--brand-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+    color: white;
+    padding: 0.875rem 1.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-download:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.install-hint {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.install-hint code {
+    background: #f1f3f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.version-card {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.version-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.version-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.changelog {
+    margin-top: 0.5rem;
+}
+
+.rating-form {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.rating-form h3 {
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.star-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.25rem;
+}
+
+.star-input input {
+    display: none;
+}
+
+.star-input label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-input input:checked ~ label,
+.star-input label:hover,
+.star-input label:hover ~ label {
+    color: #ffd700;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.btn-submit-review {
+    background: #667eea;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-submit-review:hover {
+    background: #5568d3;
+}
+
+.reviews-list h3 {
+    margin-bottom: 1rem;
+}
+
+.review-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.review-author {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.review-stars .star {
+    color: #ddd;
+    font-size: 1rem;
+}
+
+.review-stars .star.filled {
+    color: #ffd700;
+}
+
+.review-date {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.review-text {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.btn-helpful {
+    background: white;
+    border: 2px solid #ddd;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.btn-helpful:hover {
+    border-color: #667eea;
+}
+
+.no-reviews {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.brand-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sidebar-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.stats-list,
+.actions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.stats-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.stats-list li:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: #666;
+}
+
+.stat-value {
+    font-weight: 600;
+}
+
+.actions-list li {
+    margin-bottom: 0.75rem;
+}
+
+.actions-list a {
+    display: block;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.2s;
+}
+
+.actions-list a:hover {
+    background: #e9ecef;
+}
+</style>
+{% endblock %}

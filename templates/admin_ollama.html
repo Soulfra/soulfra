@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama AI Dashboard | Soulfra Admin</title>
+    
+<style>
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .stat-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .stat-subtitle {
+        font-size: 13px;
+        color: #666;
+        margin-top: 8px;
+    }
+
+    .stat-trend {
+        font-size: 20px;
+        margin-left: 8px;
+    }
+
+    .stat-trend-up { color: #4caf50; }
+    .stat-trend-down { color: #f44336; }
+
+    /* Data Table */
+    .data-table-container {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .table-search {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .table-search:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th {
+        text-align: left;
+        padding: 12px;
+        background: #f8f9fa;
+        color: #666;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+    }
+
+    .data-table th:hover {
+        background: #e9ecef;
+    }
+
+    .data-table td {
+        padding: 12px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .data-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    /* Timeline */
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e0e0e0;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 24px;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: -25px;
+        width: 20px;
+        height: 20px;
+        background: #667eea;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 10px;
+    }
+
+    .timeline-content {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .timeline-timestamp {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 4px;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .timeline-description {
+        font-size: 14px;
+        color: #666;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-block;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary { background: #667eea; color: white; }
+    .btn-primary:hover { background: #5568d3; }
+
+    .btn-secondary { background: #e0e0e0; color: #333; }
+    .btn-secondary:hover { background: #d0d0d0; }
+
+    .btn-danger { background: #f44336; color: white; }
+    .btn-danger:hover { background: #d32f2f; }
+
+    .btn-success { background: #4caf50; color: white; }
+    .btn-success:hover { background: #45a049; }
+
+    .btn-small {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .btn-large {
+        padding: 14px 28px;
+        font-size: 16px;
+    }
+
+    /* Action Bar */
+    .action-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    /* Badges */
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .badge-success { background: #e8f5e9; color: #2e7d32; }
+    .badge-warning { background: #fff3e0; color: #e65100; }
+    .badge-error { background: #ffebee; color: #c62828; }
+    .badge-info { background: #e3f2fd; color: #1976d2; }
+    .badge-default { background: #f1f3f4; color: #5f6368; }
+
+    /* Search Bar */
+    .search-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .search-filter {
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    /* Section */
+    .section {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 24px;
+    }
+
+    .section h2 {
+        font-size: 20px;
+        color: #333;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+</style>
+
+</head>
+<body style="background: #f5f5f5; padding: 20px; font-family: system-ui;">
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <header style="background: white; padding: 40px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+            <h1 style="font-size: 36px; color: #333; margin-bottom: 8px;">🤖 Ollama AI Dashboard</h1>
+            <p style="color: #666; font-size: 16px;">AI model management and comment generation analytics</p>
+        </header>
+
+        
+<div class="action-bar">
+    <a href="/admin" class="btn btn-secondary btn-medium">🏠 Admin Home</a>
+<a href="/admin/ollama" class="btn btn-primary btn-medium">🔄 Refresh</a>
+</div>
+        
+<div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+    
+<div class="stat-card" style="border-left: 4px solid #667eea;">
+    <div class="stat-icon">🤖</div>
+    <div class="stat-label">Ollama Status</div>
+    <div class="stat-value"><span class="badge badge-success">Ollama RUNNING</span> </div>
+    
+</div>
+
+<div class="stat-card" style="border-left: 4px solid #667eea;">
+    <div class="stat-icon">💬</div>
+    <div class="stat-label">Total Comments</div>
+    <div class="stat-value">0 </div>
+    
+</div>
+
+<div class="stat-card" style="border-left: 4px solid #667eea;">
+    <div class="stat-icon">📅</div>
+    <div class="stat-label">Generated Today</div>
+    <div class="stat-value">0 </div>
+    
+</div>
+
+<div class="stat-card" style="border-left: 4px solid #667eea;">
+    <div class="stat-icon">⚡</div>
+    <div class="stat-label">Avg Response Time</div>
+    <div class="stat-value">0ms </div>
+    
+</div>
+</div>
+        
+<div class="section">
+    <h2>🆕 Recent AI Responses</h2>
+    
+<div class="data-table-container">
+    <input type="text" class="table-search" id="table-4347218688-search" placeholder="🔍 Search..." onkeyup="filterTable('table-4347218688')">
+    <table id="table-4347218688" class="data-table">
+        <thead><tr><th onclick="sortTable('table-4347218688', 'created_at')">Generated</th><th onclick="sortTable('table-4347218688', 'brand')">Brand</th><th onclick="sortTable('table-4347218688', 'model')">Model</th><th onclick="sortTable('table-4347218688', 'response_text')">Response</th></tr></thead>
+        <tbody></tbody>
+    </table>
+    
+</div>
+</div>
+    </div>
+    
+<script>
+    // Table search filter
+    function filterTable(tableId) {
+        const searchId = tableId + '-search';
+        const input = document.getElementById(searchId);
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const text = row.textContent || row.innerText;
+            row.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
+        }
+    }
+
+    // Table sorting
+    function sortTable(tableId, column) {
+        const table = document.getElementById(tableId);
+        const rows = Array.from(table.querySelectorAll('tbody tr'));
+        const columnIndex = Array.from(table.querySelectorAll('th')).findIndex(th => th.textContent.includes(column));
+
+        rows.sort((a, b) => {
+            const aVal = a.cells[columnIndex].textContent;
+            const bVal = b.cells[columnIndex].textContent;
+            return aVal.localeCompare(bVal);
+        });
+
+        const tbody = table.querySelector('tbody');
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+
+</body>
+</html>

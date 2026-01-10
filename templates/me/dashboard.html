@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}My Workspace - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+  .workspace-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .workspace-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .workspace-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+  }
+
+  .workspace-header p {
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .stat-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stat-card .value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #667eea;
+    margin: 0;
+  }
+
+  .ai-friend-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .ai-friend-card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+  }
+
+  .ai-friend-card .brand-emoji {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .section {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .section h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.3rem;
+    color: #333;
+  }
+
+  .quiz-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .quiz-item:last-child {
+    border-bottom: none;
+  }
+
+  .quiz-info {
+    flex: 1;
+  }
+
+  .quiz-brand {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+
+  .quiz-name {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.25rem;
+  }
+
+  .quiz-date {
+    font-size: 0.85rem;
+    color: #999;
+  }
+
+  .quiz-status {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .quiz-status.completed {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .quiz-status.active {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .action-btn {
+    display: block;
+    background: #667eea;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .action-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    color: white;
+  }
+
+  .action-btn.secondary {
+    background: #6c757d;
+  }
+
+  .action-btn.secondary:hover {
+    background: #5a6268;
+  }
+
+  .action-btn.danger {
+    background: #dc3545;
+  }
+
+  .action-btn.danger:hover {
+    background: #c82333;
+  }
+
+  .unlock-badge {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin: 0.25rem;
+    font-size: 0.85rem;
+  }
+
+  .unlock-badge.active {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #999;
+  }
+
+  .empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<div class="workspace-container">
+  <!-- Header -->
+  <div class="workspace-header">
+    <h1>👋 Welcome, {{ workspace.user.display_name }}</h1>
+    <p>@{{ workspace.user.username }} · Member for {{ workspace.user.account_age_days }} days</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Quizzes Completed</h3>
+      <p class="value">{{ workspace.stats.quizzes.completed }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Unlocked Features</h3>
+      <p class="value">{{ workspace.stats.unlocks }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Connections</h3>
+      <p class="value">{{ workspace.stats.connections }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Active Quizzes</h3>
+      <p class="value">{{ workspace.stats.quizzes.active }}</p>
+    </div>
+  </div>
+
+  <!-- AI Friend Match -->
+  {% if workspace.ai_friend %}
+  <div class="ai-friend-card">
+    <div class="brand-emoji">{{ workspace.ai_friend.emoji }}</div>
+    <h2>Your AI Friend: {{ workspace.ai_friend.name }}</h2>
+    <p>{{ workspace.ai_friend.tagline }}</p>
+    <p style="margin-top: 1rem; opacity: 0.9;">
+      Matched on {{ workspace.ai_friend.completed_at[:10] }}
+    </p>
+  </div>
+  {% endif %}
+
+  <!-- Recent Activity -->
+  <div class="section">
+    <h2>📊 Recent Activity</h2>
+
+    {% if workspace.recent_activity.quizzes %}
+      {% for quiz in workspace.recent_activity.quizzes %}
+        <div class="quiz-item">
+          <div style="display: flex; align-items: center; flex: 1;">
+            <div class="quiz-brand">{{ quiz.brand_emoji }}</div>
+            <div class="quiz-info">
+              <div class="quiz-name">{{ quiz.brand_name }}</div>
+              <div class="quiz-date">Started {{ quiz.created_at[:10] }}</div>
+            </div>
+          </div>
+          <div class="quiz-status {{ quiz.status }}">
+            {% if quiz.status == 'completed' %}✅ Completed{% else %}⏳ In Progress{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="/me/quizzes" style="color: #667eea; text-decoration: none; font-weight: bold;">
+          View All Quiz History →
+        </a>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <p>No quizzes yet! Take your first quiz to get started.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Unlocked Features -->
+  {% if workspace.unlocks %}
+  <div class="section">
+    <h2>🔓 Unlocked Features</h2>
+    <div>
+      {% for unlock in workspace.unlocks[:10] %}
+        <span class="unlock-badge active">{{ unlock.feature_key }}</span>
+      {% endfor %}
+      {% if workspace.unlocks|length > 10 %}
+        <span class="unlock-badge">+{{ workspace.unlocks|length - 10 }} more</span>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Quick Actions -->
+  <div class="section">
+    <h2>⚡ Quick Actions</h2>
+    <div class="quick-actions">
+      <a href="/start" class="action-btn">
+        🎮 Take Quiz
+      </a>
+      <a href="/me/quizzes" class="action-btn">
+        📊 View History
+      </a>
+      <a href="/me/settings" class="action-btn secondary">
+        ⚙️ Settings
+      </a>
+      <a href="/me/export" class="action-btn secondary">
+        💾 Export Data
+      </a>
+    </div>
+  </div>
+
+  <!-- Available Brands -->
+  <div class="section">
+    <h2>🎯 Available Quizzes</h2>
+    <div class="quick-actions">
+      {% for brand_slug in workspace.quick_actions.available_brands %}
+        <a href="/cringeproof/narrative/{{ brand_slug }}" class="action-btn">
+          {% if brand_slug == 'soulfra' %}🌙 Soulfra{% endif %}
+          {% if brand_slug == 'calriven' %}🏛️ CalRiven{% endif %}
+          {% if brand_slug == 'deathtodata' %}🔒 DeathToData{% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

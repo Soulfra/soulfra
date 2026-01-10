@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Domain Launch - Join the Waitlist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .stats-bar h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .total-signups {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .domain-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .domain-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+        }
+
+        .domain-card.launched {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4CAF50;
+        }
+
+        .domain-card.rank-1 {
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .domain-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .domain-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .rank-badge {
+            background: #ffd700;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .signup-count {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #ffd700;
+        }
+
+        .countdown {
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 100%;
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+
+        .letter-slots {
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .signup-form {
+            margin-top: 20px;
+        }
+
+        .signup-form input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .signup-form button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .signup-form button:hover {
+            background: #45a049;
+        }
+
+        .signup-form button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .launched-badge {
+            background: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4CAF50;
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #f44336;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0.8;
+        }
+
+        .referral-link {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .referral-link code {
+            background: rgba(0,0,0,0.3);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .domains-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Soulfra Domain Launch</h1>
+            <p class="tagline">Join the waitlist. Accelerate the launch. Be first.</p>
+        </header>
+
+        <div class="stats-bar">
+            <h2>Total Signups Across All Domains</h2>
+            <div class="total-signups" id="totalSignups">0</div>
+        </div>
+
+        <div class="domains-grid" id="domainsGrid">
+            <!-- Domain cards will be inserted here -->
+        </div>
+
+        <div class="footer">
+            <p>Every 10 signups = -1 day until launch</p>
+            <p>900+ signups = Instant Launch 🚀</p>
+            <p>Only 26 slots per domain (A-Z)</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStats = null;
+
+        // Fetch and display domain stats
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/waitlist/stats');
+                const data = await response.json();
+
+                currentStats = data;
+
+                // Update total signups
+                document.getElementById('totalSignups').textContent = data.total_signups;
+
+                // Render domain cards
+                renderDomains(data.domains);
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        function renderDomains(domains) {
+            const grid = document.getElementById('domainsGrid');
+            grid.innerHTML = '';
+
+            domains.forEach((domain, index) => {
+                const card = createDomainCard(domain, index + 1);
+                grid.appendChild(card);
+            });
+        }
+
+        function createDomainCard(domain, rank) {
+            const card = document.createElement('div');
+            card.className = `domain-card ${domain.is_launched ? 'launched' : ''} ${rank === 1 ? 'rank-1' : ''}`;
+
+            const progressPct = domain.progress_pct || 0;
+            const slotsRemaining = 26 - domain.signups;
+
+            card.innerHTML = `
+                <div class="domain-header">
+                    <div class="domain-name">${domain.domain_name}</div>
+                    <div class="rank-badge">#${rank}</div>
+                </div>
+
+                <div class="signup-count">${domain.signups} signups</div>
+
+                ${domain.is_launched ? `
+                    <div class="launched-badge">🚀 LAUNCHED</div>
+                    <p>Launched: ${new Date(domain.launched_at).toLocaleDateString()}</p>
+                ` : `
+                    <div class="countdown">
+                        ${domain.days_until === 0 ? 'READY TO LAUNCH!' : `${domain.days_until} days until launch`}
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progressPct}%"></div>
+                    </div>
+
+                    <div class="letter-slots">
+                        ${slotsRemaining > 0 ? `${slotsRemaining}/26 slots remaining` : '❌ FULL (26/26)'}
+                    </div>
+
+                    <div class="signup-form">
+                        <input type="email"
+                               id="email-${domain.domain_name}"
+                               placeholder="Your email"
+                               ${slotsRemaining === 0 ? 'disabled' : ''}>
+                        <input type="text"
+                               id="referral-${domain.domain_name}"
+                               placeholder="Referral code (optional)"
+                               ${slotsRemaining === 0 ? 'disabled' : ''}>
+                        <button onclick="signup('${domain.domain_name}')"
+                                ${slotsRemaining === 0 ? 'disabled' : ''}>
+                            ${slotsRemaining === 0 ? 'Waitlist Full' : 'Join Waitlist'}
+                        </button>
+                        <div class="message" id="message-${domain.domain_name}" style="display: none;"></div>
+                        <div class="referral-link" id="referral-${domain.domain_name}-link" style="display: none;"></div>
+                    </div>
+                `}
+            `;
+
+            return card;
+        }
+
+        async function signup(domainName) {
+            const emailInput = document.getElementById(`email-${domainName}`);
+            const referralInput = document.getElementById(`referral-${domainName}`);
+            const messageDiv = document.getElementById(`message-${domainName}`);
+            const referralDiv = document.getElementById(`referral-${domainName}-link`);
+
+            const email = emailInput.value.trim();
+            const referralCode = referralInput.value.trim();
+
+            if (!email || !email.includes('@')) {
+                showMessage(messageDiv, 'Please enter a valid email', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/waitlist/signup', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: email,
+                        domain_name: domainName,
+                        referred_by_code: referralCode
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(messageDiv,
+                        `✅ Signed up! Your letter: ${data.letter_code}`,
+                        'success');
+
+                    // Show referral link
+                    referralDiv.innerHTML = `
+                        <strong>Your referral code:</strong> <code>${data.referral_code}</code><br>
+                        Share this code to help ${domainName} launch faster!
+                    `;
+                    referralDiv.style.display = 'block';
+
+                    // Disable inputs
+                    emailInput.disabled = true;
+                    referralInput.disabled = true;
+
+                    // Reload stats
+                    setTimeout(loadStats, 1000);
+                } else {
+                    showMessage(messageDiv, `❌ ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(messageDiv, '❌ Network error. Try again.', 'error');
+            }
+        }
+
+        function showMessage(div, text, type) {
+            div.textContent = text;
+            div.className = `message ${type}`;
+            div.style.display = 'block';
+        }
+
+        // Auto-refresh stats every 10 seconds
+        loadStats();
+        setInterval(loadStats, 10000);
+    </script>
+</body>
+</html>

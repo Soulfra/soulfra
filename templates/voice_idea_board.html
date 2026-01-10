@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎤 Voice Idea Board - MySpace Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* MySpace-style panels */
+        .panel {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .panel-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 7px 7px 0 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Voice recorder */
+        .record-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: #ff4444;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 auto 20px;
+            display: block;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+        }
+
+        .record-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 68, 68, 0.6);
+        }
+
+        .record-btn.recording {
+            background: #44ff44;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .status {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Top Ideas - MySpace style */
+        .ideas-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .idea-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .idea-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .idea-rank {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .idea-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            padding-left: 30px;
+        }
+
+        .idea-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .idea-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .idea-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-expand {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-merge {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-expand:hover, .btn-merge:hover {
+            transform: scale(1.05);
+        }
+
+        /* Expanded idea view */
+        .idea-expanded {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 5px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .idea-card.expanded .idea-expanded {
+            display: block;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading .spinner {
+            display: block;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Voice Idea Board</h1>
+        <p class="subtitle">Speak your ideas • AI extracts the gems • MySpace-style ranking</p>
+
+        <!-- Recording Panel -->
+        <div class="panel">
+            <div class="panel-title">🎙️ Record Your Ideas</div>
+
+            <button class="record-btn" id="recordBtn">
+                START
+            </button>
+
+            <div class="status" id="status">Click to start recording</div>
+            <div class="spinner" id="spinner"></div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="totalIdeas">0</div>
+                    <div class="stat-label">Ideas</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalRecordings">0</div>
+                    <div class="stat-label">Recordings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="topScore">-</div>
+                    <div class="stat-label">Top Score</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Ideas Panel -->
+        <div class="panel">
+            <div class="panel-title">⭐ Top 10 Ideas (MySpace Friends Style)</div>
+            <div class="ideas-container" id="ideasContainer">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎤</div>
+                    <p>No ideas yet! Record your first voice memo above.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let ideas = [];
+
+        // DOM elements
+        const recordBtn = document.getElementById('recordBtn');
+        const status = document.getElementById('status');
+        const spinner = document.getElementById('spinner');
+        const ideasContainer = document.getElementById('ideasContainer');
+
+        // Init
+        loadIdeas();
+
+        // Recording
+        recordBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                await stopRecording();
+            }
+        });
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.addEventListener('dataavailable', event => {
+                    audioChunks.push(event.data);
+                });
+
+                mediaRecorder.addEventListener('stop', async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await uploadRecording(audioBlob);
+                    stream.getTracks().forEach(track => track.stop());
+                });
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                recordBtn.textContent = 'STOP';
+                recordBtn.classList.add('recording');
+                status.textContent = 'Recording... speak your ideas!';
+
+            } catch (error) {
+                console.error('Recording error:', error);
+                status.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+
+                recordBtn.textContent = 'START';
+                recordBtn.classList.remove('recording');
+                status.textContent = 'Processing...';
+                showSpinner();
+            }
+        }
+
+        async function uploadRecording(audioBlob) {
+            try {
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'recording.webm');
+
+                const response = await fetch('/api/voice-ideas/save', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                hideSpinner();
+
+                if (result.success) {
+                    status.textContent = `✅ ${result.ideas.length} ideas extracted!`;
+                    await loadIdeas();
+                } else {
+                    status.textContent = '❌ ' + (result.error || 'Failed to process');
+                }
+
+            } catch (error) {
+                hideSpinner();
+                console.error('Upload error:', error);
+                status.textContent = '❌ Upload failed: ' + error.message;
+            }
+        }
+
+        async function loadIdeas() {
+            try {
+                const response = await fetch('/api/voice-ideas/list');
+                const result = await response.json();
+
+                if (result.success) {
+                    ideas = result.ideas;
+                    renderIdeas();
+                    updateStats(result.stats);
+                }
+            } catch (error) {
+                console.error('Load error:', error);
+            }
+        }
+
+        function renderIdeas() {
+            if (ideas.length === 0) {
+                ideasContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎤</div>
+                        <p>No ideas yet! Record your first voice memo above.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by score (highest first)
+            const sortedIdeas = [...ideas].sort((a, b) => b.score - a.score);
+
+            ideasContainer.innerHTML = sortedIdeas.slice(0, 10).map((idea, index) => `
+                <div class="idea-card" data-id="${idea.id}" onclick="toggleExpand(${idea.id})">
+                    <div class="idea-rank">${index + 1}</div>
+                    <div class="idea-title">${idea.title}</div>
+                    <div class="idea-text">${idea.text.substring(0, 100)}${idea.text.length > 100 ? '...' : ''}</div>
+                    <div class="idea-expanded">
+                        <strong>Full Idea:</strong><br>${idea.text}<br><br>
+                        <strong>AI Insight:</strong><br>${idea.ai_insight || 'No additional insights'}
+                    </div>
+                    <div class="idea-meta">
+                        <span>Score: ${idea.score}/100</span>
+                        <div class="idea-actions" onclick="event.stopPropagation()">
+                            <button class="btn btn-expand" onclick="expandIdea(${idea.id})">Expand</button>
+                            <button class="btn btn-merge" onclick="mergeIdea(${idea.id})">Merge</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleExpand(id) {
+            const card = document.querySelector(`.idea-card[data-id="${id}"]`);
+            card.classList.toggle('expanded');
+        }
+
+        async function expandIdea(id) {
+            const idea = ideas.find(i => i.id === id);
+            if (!idea) return;
+
+            status.textContent = 'Expanding idea with AI...';
+            showSpinner();
+
+            try {
+                const response = await fetch('/api/voice-ideas/expand', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea_id: id })
+                });
+
+                const result = await response.json();
+                hideSpinner();
+
+                if (result.success) {
+                    status.textContent = '✅ Idea expanded!';
+                    await loadIdeas();
+                } else {
+                    status.textContent = '❌ Failed to expand';
+                }
+            } catch (error) {
+                hideSpinner();
+                console.error('Expand error:', error);
+            }
+        }
+
+        async function mergeIdea(id) {
+            const idea = ideas.find(i => i.id === id);
+            if (!idea) return;
+
+            // Find similar ideas to merge with
+            status.textContent = 'Finding similar ideas to merge...';
+            showSpinner();
+
+            try {
+                const response = await fetch('/api/voice-ideas/merge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea_id: id })
+                });
+
+                const result = await response.json();
+                hideSpinner();
+
+                if (result.success) {
+                    status.textContent = `✅ Merged ${result.merged_count} similar ideas!`;
+                    await loadIdeas();
+                } else {
+                    status.textContent = '❌ No similar ideas to merge';
+                }
+            } catch (error) {
+                hideSpinner();
+                console.error('Merge error:', error);
+            }
+        }
+
+        function updateStats(stats) {
+            if (stats) {
+                document.getElementById('totalIdeas').textContent = stats.total_ideas || 0;
+                document.getElementById('totalRecordings').textContent = stats.total_recordings || 0;
+                document.getElementById('topScore').textContent = stats.top_score || '-';
+            }
+        }
+
+        function showSpinner() {
+            spinner.parentElement.classList.add('loading');
+        }
+
+        function hideSpinner() {
+            spinner.parentElement.classList.remove('loading');
+        }
+    </script>
+</body>
+</html>

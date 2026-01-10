@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}{{ domain_with_emoji }} - Mesh Network{% endblock %}
+
+{% block content %}
+<style>
+  .domain-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .domain-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tier-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .tier-legendary { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+  .tier-epic { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+  .tier-rare { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); color: #333; }
+  .tier-common { background: #f0f0f0; color: #666; }
+
+  .domain-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 3rem;
+  }
+
+  .domain-header .description {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .wordmap-section {
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .wordmap-section h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .wordmap-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: 2rem;
+  }
+
+  .word-bubble {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: default;
+  }
+
+  .word-bubble:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  .word-bubble.size-huge {
+    font-size: 1.8rem;
+    padding: 1.2rem 2rem;
+  }
+
+  .word-bubble.size-large {
+    font-size: 1.4rem;
+    padding: 1rem 1.75rem;
+  }
+
+  .word-bubble.size-medium {
+    font-size: 1.1rem;
+    padding: 0.85rem 1.6rem;
+  }
+
+  .word-bubble.size-small {
+    font-size: 0.95rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .word-count {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.85em;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .alignment-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .alignment-card h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+
+  .alignment-score-big {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .ownership-pct {
+    font-size: 1rem;
+    opacity: 0.85;
+  }
+
+  .claim-btn {
+    display: block;
+    width: 100%;
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 1.25rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .claim-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .contributors-card {
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .contributors-card h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.3rem;
+    color: #333;
+  }
+
+  .contributor-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .contributor-item:last-child {
+    border-bottom: none;
+  }
+
+  .contributor-name {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .contributor-pct {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .no-content {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 3rem 1rem;
+  }
+
+  .login-prompt {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .login-prompt h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+
+  .login-btn {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+
+  .login-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+  }
+
+  .seo-section {
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+
+  .seo-section h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .seo-section p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0.5rem 0;
+  }
+</style>
+
+<div class="domain-container">
+  <div class="domain-header">
+    <div class="tier-badge tier-{{ tier }}">{{ tier }}</div>
+    <h1>{{ domain_with_emoji }}</h1>
+    <p class="description">{{ description or 'Voice-powered domain in the mesh network' }}</p>
+  </div>
+
+  {% if not user_logged_in %}
+  <div class="login-prompt">
+    <h3>🔒 Login to see your alignment and claim ownership</h3>
+    <p style="margin: 0 0 1rem 0; color: #666;">Record voice memos to match your authentic voice with this domain</p>
+    <a href="/signup" class="login-btn">Get Started</a>
+  </div>
+  {% endif %}
+
+  <div class="content-grid">
+    <div class="wordmap-section">
+      <h2>🧠 Domain Wordmap</h2>
+      {% if wordmap %}
+      <div class="wordmap-cloud">
+        {% set max_count = wordmap.values()|list|max if wordmap else 1 %}
+        {% for word, count in wordmap.items()[:30] %}
+          {% set size_ratio = count / max_count %}
+          {% if size_ratio > 0.7 %}
+            {% set size_class = 'size-huge' %}
+          {% elif size_ratio > 0.5 %}
+            {% set size_class = 'size-large' %}
+          {% elif size_ratio > 0.3 %}
+            {% set size_class = 'size-medium' %}
+          {% else %}
+            {% set size_class = 'size-small' %}
+          {% endif %}
+          <span class="word-bubble {{ size_class }}">
+            {{ word }}
+            <span class="word-count">{{ count|int }}</span>
+          </span>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="no-content">No wordmap yet - be the first contributor!</p>
+      {% endif %}
+    </div>
+
+    <div class="sidebar">
+      {% if user_logged_in and user_alignment is not none %}
+      <div class="alignment-card">
+        <h2>Your Alignment</h2>
+        <div class="alignment-score-big">{{ (user_alignment * 100)|round(1) }}%</div>
+        {% if user_ownership %}
+        <div class="ownership-pct">You own {{ user_ownership|round(2) }}%</div>
+        {% endif %}
+
+        {% if user_alignment >= 0.1 %}
+        <a href="/me" class="claim-btn">
+          Claim Ownership →
+        </a>
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Generate content to earn {{ (user_alignment * 100)|round(1) }}%</p>
+        {% else %}
+        <p style="font-size: 0.9rem; opacity: 0.85; margin-top: 1rem;">Record more voice memos to increase alignment</p>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="contributors-card">
+        <h2>🏆 Top Contributors</h2>
+        {% if contributors %}
+        {% for contributor in contributors %}
+        <div class="contributor-item">
+          <span class="contributor-name">{{ contributor.username }}</span>
+          <span class="contributor-pct">{{ contributor.ownership_percentage|round(2) }}%</span>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="no-content">No contributors yet</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="seo-section">
+    <h2>About {{ domain.split('.')[0]|title }}</h2>
+    <p>
+      This domain is part of the mesh network economy - a voice-powered system where authentic expression earns ownership.
+      The wordmap above represents the collective vocabulary of all contributors, weighted by their ownership percentage.
+    </p>
+    <p>
+      <strong>How it works:</strong> Record voice memos about topics you care about. Our AI extracts your authentic vocabulary
+      and matches you with domains that align with your voice. Generate content (pitch decks, blogs, social posts) from your
+      recordings, and if the content matches the domain's voice, you earn ownership percentage.
+    </p>
+    <p>
+      Current vocabulary size: <strong>{{ wordmap|length if wordmap else 0 }} unique words</strong> |
+      Total contributors: <strong>{{ contributors|length if contributors else 0 }}</strong>
+    </p>
+    <div style="margin-top: 1.5rem; text-align: center;">
+      <a href="/{{ domain.split('.')[0] }}/blog" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700;">
+        📚 Browse Blog Directory
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

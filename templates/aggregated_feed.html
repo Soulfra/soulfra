@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aggregated Feed - All Content Stitched Together</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    overflow-x: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 4px solid #ff006e;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: #ffe5ec;
+    font-size: 1.1rem;
+}
+
+.feed-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.feed-item {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.feed-item:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.source-badge {
+    display: inline-block;
+    background: #667eea;
+    color: #fff;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.source-badge.soulfra { background: #667eea; }
+.source-badge.calriven { background: #4facfe; }
+.source-badge.deathtodata { background: #f093fb; }
+.source-badge.voice-archive { background: #43e97b; }
+.source-badge.howtocookathome { background: #f5576c; }
+
+.feed-item h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.feed-item h2 a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.feed-item h2 a:hover {
+    color: #667eea;
+}
+
+.feed-item .date {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.feed-item .description {
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.feed-item .description p {
+    margin-bottom: 0.5rem;
+}
+
+.audio-player {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-top: 1rem;
+}
+
+.audio-player audio {
+    width: 100%;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+    font-size: 1.2rem;
+}
+
+.loading.active::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #667eea;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.end-of-feed {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+}
+
+.end-of-feed h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.stats {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.stats .stat {
+    display: inline-block;
+    margin: 0 1rem;
+    color: #888;
+}
+
+.stats .stat strong {
+    color: #667eea;
+    font-size: 1.5rem;
+}
+
+.search-box {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.search-box input {
+    width: 100%;
+    background: #0a0a0a;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .feed-container {
+        padding: 1rem 0.5rem;
+    }
+
+    .feed-item {
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+<div class="header">
+    <h1>📡 Aggregated Feed</h1>
+    <p>All content from all domains stitched together chronologically</p>
+</div>
+
+<div class="feed-container">
+    <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search across all feeds..." />
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <strong id="total-items">0</strong>
+            <div>Total Items</div>
+        </div>
+        <div class="stat">
+            <strong id="sources-count">0</strong>
+            <div>Sources</div>
+        </div>
+    </div>
+
+    <div id="feed-items"></div>
+    <div class="loading" id="loading">Loading...</div>
+    <div class="end-of-feed" id="end-of-feed" style="display: none;">
+        <h3>🎉 You've reached the end!</h3>
+        <p>That's all the aggregated content for now.</p>
+    </div>
+</div>
+
+<script>
+let offset = 0;
+const limit = 10;
+let loading = false;
+let hasMore = true;
+let searchTimeout = null;
+
+const feedContainer = document.getElementById('feed-items');
+const loadingIndicator = document.getElementById('loading');
+const endOfFeed = document.getElementById('end-of-feed');
+const searchInput = document.getElementById('search-input');
+const totalItemsEl = document.getElementById('total-items');
+const sourcesCountEl = document.getElementById('sources-count');
+
+async function loadFeed() {
+    if (loading || !hasMore) return;
+
+    loading = true;
+    loadingIndicator.classList.add('active');
+
+    try {
+        const response = await fetch(`/api/aggregated-feed?offset=${offset}&limit=${limit}`);
+        const data = await response.json();
+
+        data.items.forEach(item => {
+            const feedItem = createFeedItem(item);
+            feedContainer.appendChild(feedItem);
+        });
+
+        offset += data.items.length;
+        hasMore = data.has_more;
+
+        // Update stats
+        totalItemsEl.textContent = data.total;
+        const sources = new Set(data.items.map(i => i.source));
+        sourcesCountEl.textContent = sources.size;
+
+        if (!hasMore) {
+            endOfFeed.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Failed to load feed:', error);
+    } finally {
+        loading = false;
+        loadingIndicator.classList.remove('active');
+    }
+}
+
+function createFeedItem(item) {
+    const div = document.createElement('div');
+    div.className = 'feed-item';
+
+    // Source badge
+    const badge = document.createElement('span');
+    badge.className = `source-badge ${item.source}`;
+    badge.textContent = item.source;
+
+    // Title
+    const title = document.createElement('h2');
+    const link = document.createElement('a');
+    link.href = item.link;
+    link.target = '_blank';
+    link.textContent = item.title || 'Untitled';
+    title.appendChild(link);
+
+    // Date
+    const date = document.createElement('div');
+    date.className = 'date';
+    if (item.pub_date_str) {
+        const dateObj = new Date(item.pub_date_str);
+        date.textContent = dateObj.toLocaleString();
+    }
+
+    // Description
+    const description = document.createElement('div');
+    description.className = 'description';
+    description.innerHTML = item.description || '';
+
+    div.appendChild(badge);
+    div.appendChild(title);
+    div.appendChild(date);
+    div.appendChild(description);
+
+    // Audio player if enclosure exists
+    if (item.enclosure_url && item.enclosure_type && item.enclosure_type.startsWith('audio')) {
+        const audioContainer = document.createElement('div');
+        audioContainer.className = 'audio-player';
+
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.src = item.enclosure_url;
+
+        audioContainer.appendChild(audio);
+        div.appendChild(audioContainer);
+    }
+
+    return div;
+}
+
+// Infinite scroll
+window.addEventListener('scroll', () => {
+    if (loading || !hasMore) return;
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const pageHeight = document.documentElement.scrollHeight;
+
+    if (scrollPosition >= pageHeight - 500) {
+        loadFeed();
+    }
+});
+
+// Search functionality
+searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+
+    const query = e.target.value.trim();
+
+    if (query.length < 2) {
+        // Reset to normal feed
+        feedContainer.innerHTML = '';
+        offset = 0;
+        hasMore = true;
+        endOfFeed.style.display = 'none';
+        loadFeed();
+        return;
+    }
+
+    searchTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`/api/aggregated-feed/search?q=${encodeURIComponent(query)}&limit=50`);
+            const data = await response.json();
+
+            feedContainer.innerHTML = '';
+
+            if (data.results.length === 0) {
+                feedContainer.innerHTML = '<div class="loading">No results found.</div>';
+                return;
+            }
+
+            data.results.forEach(item => {
+                const feedItem = createFeedItem(item);
+                feedContainer.appendChild(feedItem);
+            });
+
+            totalItemsEl.textContent = data.count;
+            hasMore = false;
+            endOfFeed.style.display = 'none';
+        } catch (error) {
+            console.error('Search failed:', error);
+        }
+    }, 500);
+});
+
+// Initial load
+loadFeed();
+</script>
+</body>
+</html>

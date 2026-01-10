@@ -1,0 +1,63 @@
+{% extends "stpetepros/base.html" %}
+
+{% block title %}Categories - StPetePros{% endblock %}
+
+{% block description %}Browse professional services by category in St. Petersburg{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-slate-900 to-blue-900 text-white -mx-4 -mt-8 px-4 py-12 mb-8">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold mb-2">Professional Categories</h1>
+    <p class="text-lg opacity-90">{{ total_categories }} categories available</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+  {% for cat in categories %}
+  <a href="/professionals/category/{{ cat.slug }}" class="bg-white border border-slate-200 rounded-lg p-6 text-center hover:shadow-xl transition-all hover:-translate-y-1 hover:border-sky-500">
+    <div class="text-5xl mb-3">
+      {% if 'plumbing' in cat.slug %}🔧
+      {% elif 'electrical' in cat.slug %}⚡
+      {% elif 'hvac' in cat.slug %}❄️
+      {% elif 'roof' in cat.slug %}🏠
+      {% elif 'legal' in cat.slug %}⚖️
+      {% elif 'landscape' in cat.slug %}🌳
+      {% elif 'clean' in cat.slug %}🧹
+      {% elif 'pest' in cat.slug %}🐛
+      {% elif 'paint' in cat.slug %}🎨
+      {% elif 'pool' in cat.slug %}🏊
+      {% elif 'real' in cat.slug or 'estate' in cat.slug %}🏘️
+      {% elif 'auto' in cat.slug %}🚗
+      {% elif 'chef' in cat.slug %}👨‍🍳
+      {% elif 'meal' in cat.slug %}🍱
+      {% elif 'podcast' in cat.slug %}🎙️
+      {% elif 'youtube' in cat.slug %}📹
+      {% elif 'gaming' in cat.slug %}🎮
+      {% elif 'tech' in cat.slug %}💻
+      {% elif 'privacy' in cat.slug %}🔒
+      {% else %}💼
+      {% endif %}
+    </div>
+
+    <h3 class="text-xl font-bold text-slate-900 mb-3">{{ cat.name }}</h3>
+
+    <div class="inline-block bg-sky-100 text-sky-700 px-4 py-2 rounded-full font-semibold">
+      {{ cat.count }} {% if cat.count == 1 %}professional{% else %}professionals{% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+{% if total_categories == 0 %}
+<div class="text-center py-16">
+  <p class="text-slate-500 text-xl mb-4">No categories available yet</p>
+  <a href="/signup/professional" class="inline-block px-8 py-3 bg-sky-500 text-white rounded-lg font-semibold hover:bg-sky-600">Be the First Professional</a>
+</div>
+{% endif %}
+
+<div class="bg-gradient-to-br from-sky-500 to-cyan-500 text-white rounded-xl p-12 text-center">
+  <h2 class="text-3xl font-bold mb-4">Don't See Your Category?</h2>
+  <p class="text-lg mb-6 opacity-95">Join StPetePros and we'll create it for you</p>
+  <a href="/signup/professional" class="inline-block px-12 py-4 bg-white text-slate-900 rounded-lg font-semibold text-lg hover:shadow-xl transition-all hover:-translate-y-1">Create Your Profile</a>
+</div>
+{% endblock %}

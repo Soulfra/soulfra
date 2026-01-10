@@ -1,0 +1,643 @@
+#!/usr/bin/env python3
+"""
+Domain Manager Builder - Static HTML for domain intake and "email web" visualization
+
+Creates a visual interface where you can:
+- Add your own domains to the ecosystem
+- See how domains interconnect (email web)
+- View letter slot availability across all domains
+- Manage content types (blogs → calriven, voice → cringeproof, etc.)
+
+Usage:
+    python3 build_domains_manager.py
+"""
+
+import os
+import json
+from database import get_db
+from launch_calculator import get_letter_allocation
+
+OUTPUT_DIR = './output/domains/'
+
+
+def get_core_domains():
+    """Get the 4 core waitlist domains with stats"""
+    core_domains = ['soulfra', 'calriven', 'deathtodata', 'cringeproof']
+
+    domains_data = []
+    for domain in core_domains:
+        allocation = get_letter_allocation(domain)
+
+        # Determine primary content type
+        content_types = {
+            'soulfra': '🏠 Hub / Main Platform',
+            'calriven': '📝 Blog / Writing',
+            'deathtodata': '🇨🇳 Data / Chinese Market',
+            'cringeproof': '🎤 Voice Memos / Filter'
+        }
+
+        domains_data.append({
+            'name': domain,
+            'type': 'core',
+            'content_type': content_types.get(domain, 'Unknown'),
+            'slots_used': 26 - allocation['remaining_slots'],
+            'slots_total': 26,
+            'is_full': allocation['is_full'],
+            'available_letters': allocation['available'][:5]  # First 5 available
+        })
+
+    return domains_data
+
+
+def get_custom_domains():
+    """Get user's custom domains from database"""
+    db = get_db()
+
+    rows = db.execute('''
+        SELECT domain_name, purpose, dns_status, github_repo,
+               deploy_status, content_type, language_codes, created_at
+        FROM custom_domains
+        ORDER BY created_at DESC
+    ''').fetchall()
+
+    db.close()
+
+    return [{
+        'name': row['domain_name'],
+        'type': 'custom',
+        'purpose': row['purpose'],
+        'dns_status': row['dns_status'],
+        'github_repo': row['github_repo'],
+        'deploy_status': row['deploy_status'],
+        'content_type': row['content_type'],
+        'languages': row['language_codes'].split(',') if row['language_codes'] else ['en']
+    } for row in rows]
+
+
+def generate_domains_html():
+    """Generate domain manager HTML"""
+    core_domains = get_core_domains()
+    custom_domains = get_custom_domains()
+
+    # Create domains data for JavaScript
+    domains_json = json.dumps({
+        'core': core_domains,
+        'custom': custom_domains
+    }, indent=2)
+
+    html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Manager - Email Web</title>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+
+        body {{
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }}
+
+        .container {{
+            max-width: 1400px;
+            margin: 0 auto;
+        }}
+
+        header {{
+            text-align: center;
+            margin-bottom: 40px;
+        }}
+
+        h1 {{
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }}
+
+        .tagline {{
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }}
+
+        .tabs {{
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }}
+
+        .tab {{
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }}
+
+        .tab.active {{
+            color: #fff;
+            border-bottom-color: #fff;
+        }}
+
+        .tab-content {{
+            display: none;
+        }}
+
+        .tab-content.active {{
+            display: block;
+        }}
+
+        .domain-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }}
+
+        .domain-card {{
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }}
+
+        .domain-card:hover {{
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }}
+
+        .domain-card.core {{
+            border-left: 5px solid #4CAF50;
+        }}
+
+        .domain-card.custom {{
+            border-left: 5px solid #FF9800;
+        }}
+
+        .domain-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }}
+
+        .domain-name {{
+            font-size: 1.5rem;
+            font-weight: bold;
+        }}
+
+        .domain-type {{
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }}
+
+        .domain-content-type {{
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }}
+
+        .letter-slots {{
+            margin: 15px 0;
+        }}
+
+        .slots-bar {{
+            background: rgba(0,0,0,0.3);
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }}
+
+        .slots-fill {{
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }}
+
+        .slots-fill.full {{
+            background: linear-gradient(90deg, #f44336, #ff5722);
+        }}
+
+        .available-letters {{
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }}
+
+        .letter {{
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+        }}
+
+        .add-domain-form {{
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }}
+
+        .form-group {{
+            margin-bottom: 20px;
+        }}
+
+        label {{
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }}
+
+        input, select, textarea {{
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+        }}
+
+        input::placeholder, textarea::placeholder {{
+            color: rgba(255,255,255,0.5);
+        }}
+
+        button {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }}
+
+        button:hover {{
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }}
+
+        .email-web {{
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            min-height: 500px;
+        }}
+
+        .web-canvas {{
+            width: 100%;
+            height: 600px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }}
+
+        .status-badge {{
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }}
+
+        .status-pending {{
+            background: #FF9800;
+        }}
+
+        .status-verified {{
+            background: #4CAF50;
+        }}
+
+        .status-deployed {{
+            background: #2196F3;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 Domain Manager</h1>
+            <p class="tagline">Build your email web across the SOULFRA ecosystem</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('overview')">📊 Overview</button>
+            <button class="tab" onclick="switchTab('add')">➕ Add Domain</button>
+            <button class="tab" onclick="switchTab('web')">🕸️ Email Web</button>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div id="tab-overview" class="tab-content active">
+            <h2 style="margin-bottom: 25px; font-size: 2rem;">Core Domains (Waitlist)</h2>
+            <div class="domain-grid" id="core-domains"></div>
+
+            <h2 style="margin: 40px 0 25px; font-size: 2rem;">Your Custom Domains</h2>
+            <div class="domain-grid" id="custom-domains"></div>
+        </div>
+
+        <!-- ADD DOMAIN TAB -->
+        <div id="tab-add" class="tab-content">
+            <div class="add-domain-form">
+                <h2 style="margin-bottom: 25px; font-size: 2rem;">Add New Domain</h2>
+                <form id="add-domain-form">
+                    <div class="form-group">
+                        <label>Domain Name</label>
+                        <input type="text" name="domain_name" placeholder="example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Purpose</label>
+                        <input type="text" name="purpose" placeholder="Personal blog, Portfolio, etc.">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Content Type</label>
+                        <select name="content_type">
+                            <option value="blog">📝 Blog / Writing</option>
+                            <option value="portfolio">💼 Portfolio</option>
+                            <option value="voice">🎤 Voice Memos</option>
+                            <option value="data">📊 Data / Analytics</option>
+                            <option value="hub">🏠 Personal Hub</option>
+                            <option value="other">🔧 Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>GitHub Repo (optional)</label>
+                        <input type="text" name="github_repo" placeholder="username/repo-name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Languages (comma-separated)</label>
+                        <input type="text" name="language_codes" placeholder="en,es,zh" value="en">
+                    </div>
+
+                    <button type="submit">Add Domain to Email Web</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- EMAIL WEB TAB -->
+        <div id="tab-web" class="tab-content">
+            <div class="email-web">
+                <h2 style="margin-bottom: 25px; font-size: 2rem;">Email Web Visualization</h2>
+                <p style="margin-bottom: 20px; opacity: 0.9;">
+                    This shows how your domains connect in the SOULFRA ecosystem.
+                    Core domains (green) are the waitlist domains, custom domains (orange) are yours.
+                </p>
+                <canvas id="web-canvas" class="web-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Domain data from Python
+        const domainsData = {domains_json};
+
+        // Switch tabs
+        function switchTab(tabName) {{
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            if (tabName === 'web') {{
+                drawEmailWeb();
+            }}
+        }}
+
+        // Render core domains
+        function renderCoreDomains() {{
+            const container = document.getElementById('core-domains');
+            container.innerHTML = '';
+
+            domainsData.core.forEach(domain => {{
+                const pct = (domain.slots_used / domain.slots_total) * 100;
+                const isFull = domain.is_full;
+
+                const card = document.createElement('div');
+                card.className = 'domain-card core';
+                card.innerHTML = `
+                    <div class="domain-header">
+                        <div class="domain-name">${{domain.name}}</div>
+                        <div class="domain-type">Core</div>
+                    </div>
+                    <div class="domain-content-type">${{domain.content_type}}</div>
+                    <div class="letter-slots">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Letter Slots</span>
+                            <span>${{domain.slots_used}}/${{domain.slots_total}}</span>
+                        </div>
+                        <div class="slots-bar">
+                            <div class="slots-fill ${{isFull ? 'full' : ''}}" style="width: ${{pct}}%">
+                                ${{pct.toFixed(0)}}%
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            Next available: ${{domain.available_letters.join(', ')}}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            }});
+        }}
+
+        // Render custom domains
+        function renderCustomDomains() {{
+            const container = document.getElementById('custom-domains');
+
+            if (domainsData.custom.length === 0) {{
+                container.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 40px;">No custom domains yet. Add one above!</p>';
+                return;
+            }}
+
+            container.innerHTML = '';
+
+            domainsData.custom.forEach(domain => {{
+                const card = document.createElement('div');
+                card.className = 'domain-card custom';
+
+                let statusBadge = '';
+                if (domain.dns_status === 'verified') {{
+                    statusBadge = '<span class="status-badge status-verified">✓ DNS Verified</span>';
+                }} else {{
+                    statusBadge = '<span class="status-badge status-pending">⏳ DNS Pending</span>';
+                }}
+
+                card.innerHTML = `
+                    <div class="domain-header">
+                        <div class="domain-name">${{domain.name}}</div>
+                        <div class="domain-type">Custom</div>
+                    </div>
+                    <div class="domain-content-type">${{domain.content_type || domain.purpose}}</div>
+                    <div style="margin-top: 15px;">
+                        <div style="margin-bottom: 8px;">
+                            <strong>Languages:</strong> ${{domain.languages.join(', ').toUpperCase()}}
+                        </div>
+                        ${{domain.github_repo ? '<div style="margin-bottom: 8px;"><strong>Repo:</strong> ' + domain.github_repo + '</div>' : ''}}
+                        ${{statusBadge}}
+                    </div>
+                `;
+                container.appendChild(card);
+            }});
+        }}
+
+        // Draw email web visualization
+        function drawEmailWeb() {{
+            const canvas = document.getElementById('web-canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Combine all domains
+            const allDomains = [
+                ...domainsData.core.map(d => ({{...d, type: 'core'}})),
+                ...domainsData.custom.map(d => ({{...d, type: 'custom'}}))
+            ];
+
+            // Calculate positions (circular layout)
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(canvas.width, canvas.height) * 0.35;
+
+            const positions = allDomains.map((domain, i) => {{
+                const angle = (i / allDomains.length) * 2 * Math.PI - Math.PI / 2;
+                return {{
+                    x: centerX + Math.cos(angle) * radius,
+                    y: centerY + Math.sin(angle) * radius,
+                    domain
+                }};
+            }});
+
+            // Draw connections
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 2;
+            positions.forEach((pos1, i) => {{
+                positions.forEach((pos2, j) => {{
+                    if (i < j) {{
+                        ctx.beginPath();
+                        ctx.moveTo(pos1.x, pos1.y);
+                        ctx.lineTo(pos2.x, pos2.y);
+                        ctx.stroke();
+                    }}
+                }});
+            }});
+
+            // Draw nodes
+            positions.forEach(pos => {{
+                const color = pos.domain.type === 'core' ? '#4CAF50' : '#FF9800';
+
+                // Outer circle
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 30, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Inner circle
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 25, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Label
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 14px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(pos.domain.name, pos.x, pos.y - 35);
+            }});
+        }}
+
+        // Handle form submission
+        document.getElementById('add-domain-form').addEventListener('submit', async (e) => {{
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {{
+                const response = await fetch('/api/domains/add', {{
+                    method: 'POST',
+                    headers: {{ 'Content-Type': 'application/json' }},
+                    body: JSON.stringify(data)
+                }});
+
+                if (response.ok) {{
+                    alert('Domain added successfully!');
+                    window.location.reload();
+                }} else {{
+                    alert('Failed to add domain. Please try again.');
+                }}
+            }} catch (err) {{
+                alert('Error: ' + err.message);
+            }}
+        }});
+
+        // Initialize
+        renderCoreDomains();
+        renderCustomDomains();
+    </script>
+</body>
+</html>'''
+
+    # Write HTML file
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    filepath = os.path.join(OUTPUT_DIR, 'index.html')
+
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(html)
+
+    print(f"✅ Domain manager built: {filepath}")
+
+    # Also generate JSON API for domains
+    api_dir = os.path.join(OUTPUT_DIR, 'api')
+    os.makedirs(api_dir, exist_ok=True)
+
+    with open(os.path.join(api_dir, 'domains.json'), 'w') as f:
+        json.dump({
+            'core': core_domains,
+            'custom': custom_domains,
+            'total_core': len(core_domains),
+            'total_custom': len(custom_domains)
+        }, f, indent=2)
+
+    print(f"✅ Domain API JSON: {api_dir}/domains.json")
+
+
+if __name__ == '__main__':
+    generate_domains_html()

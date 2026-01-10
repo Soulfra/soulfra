@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Manager - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: #2a2a2a;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #4ecca3;
+        }
+
+        header h1 {
+            font-size: 20px;
+            color: #4ecca3;
+        }
+
+        header .stats {
+            color: #888;
+            font-size: 14px;
+        }
+
+        header .tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        header .tab-btn {
+            background: #333;
+            color: #ccc;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        header .tab-btn:hover {
+            background: #444;
+        }
+
+        header .tab-btn.active {
+            background: #4ecca3;
+            color: #1a1a1a;
+        }
+
+        /* Main */
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 500px;
+            gap: 1px;
+            background: #000;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .panel {
+            background: #1a1a1a;
+            overflow-y: auto;
+        }
+
+        .panel h2 {
+            padding: 15px;
+            background: #2a2a2a;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #4ecca3;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* File List */
+        .file-list {
+            padding: 0;
+        }
+
+        .file-item {
+            padding: 15px;
+            border-bottom: 1px solid #2a2a2a;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .file-item:hover {
+            background: #2a2a2a;
+        }
+
+        .file-item.active {
+            background: #333;
+            border-left: 3px solid #4ecca3;
+        }
+
+        .file-info .name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .file-info .meta {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .file-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .file-badge.blog {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .file-badge.email {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            padding: 0;
+        }
+
+        .preview-tabs {
+            display: flex;
+            background: #2a2a2a;
+            border-bottom: 1px solid #444;
+        }
+
+        .preview-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .preview-tab.active {
+            border-bottom-color: #4ecca3;
+            color: #4ecca3;
+        }
+
+        .preview-content {
+            height: calc(100% - 100px);
+            overflow: auto;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .preview-code {
+            padding: 15px;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .preview-actions {
+            padding: 15px;
+            background: #2a2a2a;
+            border-bottom: 1px solid #444;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #4ecca3;
+            color: #1a1a1a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #53dbaf;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.delete-btn {
+            background: #ef4444;
+        }
+
+        button.delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #888;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        /* Generator Panel */
+        .generator-panel {
+            display: none;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .generator-panel.active {
+            display: block;
+        }
+
+        .generator-section {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .generator-section h3 {
+            color: #4ecca3;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4ecca3;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-field input[type="text"],
+        .form-field textarea,
+        .form-field select {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus,
+        .form-field select:focus {
+            outline: none;
+            border-color: #4ecca3;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: #4ecca3;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .generate-btn:hover {
+            background: #53dbaf;
+            transform: translateY(-2px);
+        }
+
+        .generate-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .status-message.error {
+            background: #ef4444;
+            color: white;
+        }
+
+        .status-message.info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .model-card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #333;
+        }
+
+        .model-card .model-name {
+            font-weight: 600;
+            color: #4ecca3;
+            margin-bottom: 5px;
+        }
+
+        .model-card .model-role {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .content-tabs {
+            display: none;
+        }
+
+        .content-tabs.active {
+            display: grid;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>📂 Content Manager</h1>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="browse">📂 Browse Files</button>
+                <button class="tab-btn" data-tab="generate">🤖 Generate Content</button>
+            </div>
+            <div class="stats" id="stats">Loading...</div>
+        </header>
+
+        <!-- Browse Tab -->
+        <div class="main content-tabs active" id="browseTab">
+            <!-- Left: File List -->
+            <div class="panel">
+                <h2>Deployed Files</h2>
+                <div id="fileList" class="file-list">
+                    <div class="loading">Loading files...</div>
+                </div>
+            </div>
+
+            <!-- Right: Preview -->
+            <div class="panel preview-panel">
+                <div class="preview-actions" id="previewActions" style="display: none;">
+                    <button id="openBtn">🔗 Open in New Tab</button>
+                    <button id="copyUrlBtn">📋 Copy URL</button>
+                    <button id="deleteBtn" class="delete-btn">🗑️ Delete</button>
+                </div>
+
+                <div class="preview-tabs" id="previewTabs" style="display: none;">
+                    <div class="preview-tab active" data-tab="visual">Visual</div>
+                    <div class="preview-tab" data-tab="code">Code</div>
+                </div>
+
+                <div class="preview-content">
+                    <iframe id="previewFrame" class="preview-iframe" style="display: none;"></iframe>
+                    <pre id="previewCode" class="preview-code" style="display: none;"></pre>
+                    <div id="emptyPreview" class="empty-state">
+                        <h3>No file selected</h3>
+                        <p>Click a file from the list to preview it</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Tab -->
+        <div class="generator-panel" id="generateTab">
+            <!-- Multi-AI Debate Generator -->
+            <div class="generator-section">
+                <h3>🤖 Multi-AI Debate Generator</h3>
+                <p style="color: #888; margin-bottom: 25px;">
+                    Generate comprehensive multi-perspective analysis by querying 5 different AI models simultaneously.
+                    Perfect for exploring complex topics from multiple angles.
+                </p>
+
+                <div class="form-field">
+                    <label>Topic / Question</label>
+                    <input type="text" id="debateTopic" placeholder="e.g., Should AI models be open source?" required>
+                </div>
+
+                <div class="form-field">
+                    <label>Additional Context (Optional)</label>
+                    <textarea id="debateContext" placeholder="Add any additional context, specific questions, or angles you want the AIs to consider..."></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label>Brand</label>
+                    <select id="debateBrand">
+                        <option value="soulfra">Soulfra</option>
+                        <option value="deathtodata">DeathToData</option>
+                        <option value="calos">Calos</option>
+                        <option value="publishing">Publishing</option>
+                    </select>
+                </div>
+
+                <div class="model-grid">
+                    <div class="model-card">
+                        <div class="model-name">🔐 Soulfra Model</div>
+                        <div class="model-role">Identity & Security</div>
+                    </div>
+                    <div class="model-card">
+                        <div class="model-name">🛡️ DeathToData Model</div>
+                        <div class="model-role">Privacy Perspective</div>
+                    </div>
+                    <div class="model-card">
+                        <div class="model-name">⚙️ Calos Model</div>
+                        <div class="model-role">Technical Analysis</div>
+                    </div>
+                    <div class="model-card">
+                        <div class="model-name">📰 Publishing Model</div>
+                        <div class="model-role">Journalistic View</div>
+                    </div>
+                    <div class="model-card">
+                        <div class="model-name">⚖️ LLaMA 3.2</div>
+                        <div class="model-role">Pro/Con Debate</div>
+                    </div>
+                </div>
+
+                <button class="generate-btn" id="generateDebateBtn">
+                    🚀 Generate Multi-AI Debate
+                </button>
+
+                <div class="status-message" id="debateStatus"></div>
+            </div>
+
+            <!-- Interactive Research Mode (Future) -->
+            <div class="generator-section" style="opacity: 0.5;">
+                <h3>🧠 Interactive Research Mode (Coming Soon)</h3>
+                <p style="color: #666; margin-bottom: 20px;">
+                    Answer questions yourself first, then see how AI models approach the same questions.
+                    Train your thinking by comparing your reasoning with AI perspectives.
+                </p>
+                <button class="generate-btn" disabled>Coming Soon</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let files = [];
+        let currentFile = null;
+
+        // Load files on page load
+        async function loadFiles() {
+            try {
+                const response = await fetch('/api/content/list');
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load files');
+                }
+
+                files = result.files;
+
+                // Update stats
+                document.getElementById('stats').textContent = `${files.length} file${files.length !== 1 ? 's' : ''}`;
+
+                // Render file list
+                const listEl = document.getElementById('fileList');
+
+                if (files.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No content yet</h3>
+                            <p>Deploy content from the Template Browser to see it here!</p>
+                            <a href="/templates/browse" style="color: #4ecca3;">Go to Template Browser →</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = '';
+
+                files.forEach(file => {
+                    const item = document.createElement('div');
+                    item.className = 'file-item';
+
+                    const date = new Date(file.modified).toLocaleString();
+                    const sizeKB = (file.size / 1024).toFixed(1);
+
+                    item.innerHTML = `
+                        <div class="file-info">
+                            <div class="name">${file.name}</div>
+                            <div class="meta">
+                                📁 ${file.domain} • 📅 ${date}
+                            </div>
+                        </div>
+                        <div class="file-badge ${file.type}">${file.type}</div>
+                        <div class="file-size">${sizeKB} KB</div>
+                    `;
+
+                    item.onclick = () => selectFile(file, item);
+                    listEl.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error('Error loading files:', error);
+                document.getElementById('fileList').innerHTML = `
+                    <div class="loading" style="color: #ef4444;">Error: ${error.message}</div>
+                `;
+            }
+        }
+
+        async function selectFile(file, element) {
+            // Update UI
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            currentFile = file;
+
+            // Show preview sections
+            document.getElementById('previewActions').style.display = 'flex';
+            document.getElementById('previewTabs').style.display = 'flex';
+            document.getElementById('emptyPreview').style.display = 'none';
+
+            // Load file content
+            try {
+                const response = await fetch('/api/content/read', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({path: file.path})
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
+
+                // Update preview
+                updatePreview(result.content);
+
+            } catch (error) {
+                console.error('Error loading file:', error);
+                alert('Failed to load file: ' + error.message);
+            }
+        }
+
+        function updatePreview(html) {
+            const iframe = document.getElementById('previewFrame');
+            const code = document.getElementById('previewCode');
+
+            // Update iframe
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(html);
+            doc.close();
+
+            // Update code view
+            code.textContent = html;
+
+            // Show visual tab by default
+            showTab('visual');
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            document.getElementById('previewFrame').style.display = tabName === 'visual' ? 'block' : 'none';
+            document.getElementById('previewCode').style.display = tabName === 'code' ? 'block' : 'none';
+        }
+
+        // Tab switching
+        document.querySelectorAll('.preview-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                showTab(tab.dataset.tab);
+            });
+        });
+
+        // Open in new tab
+        document.getElementById('openBtn').addEventListener('click', () => {
+            if (currentFile) {
+                window.open(currentFile.url, '_blank');
+            }
+        });
+
+        // Copy URL
+        document.getElementById('copyUrlBtn').addEventListener('click', () => {
+            if (currentFile) {
+                const url = window.location.origin + currentFile.url;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('✅ URL copied to clipboard!');
+                });
+            }
+        });
+
+        // Delete file
+        document.getElementById('deleteBtn').addEventListener('click', async () => {
+            if (!currentFile) return;
+
+            if (!confirm(`Are you sure you want to delete "${currentFile.name}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/content/delete', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({path: currentFile.path})
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
+
+                alert('✅ File deleted!');
+
+                // Hide preview
+                document.getElementById('previewActions').style.display = 'none';
+                document.getElementById('previewTabs').style.display = 'none';
+                document.getElementById('previewFrame').style.display = 'none';
+                document.getElementById('previewCode').style.display = 'none';
+                document.getElementById('emptyPreview').style.display = 'block';
+
+                currentFile = null;
+
+                // Reload file list
+                loadFiles();
+
+            } catch (error) {
+                console.error('Error deleting file:', error);
+                alert('Failed to delete file: ' + error.message);
+            }
+        });
+
+        // Load files on page load
+        loadFiles();
+
+        // =====================================================================
+        // TAB SWITCHING
+        // =====================================================================
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tab = this.dataset.tab;
+
+                // Update button states
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show/hide tabs
+                if (tab === 'browse') {
+                    document.getElementById('browseTab').classList.add('active');
+                    document.getElementById('generateTab').classList.remove('active');
+                    document.getElementById('stats').style.display = 'block';
+                } else if (tab === 'generate') {
+                    document.getElementById('browseTab').classList.remove('active');
+                    document.getElementById('generateTab').classList.add('active');
+                    document.getElementById('stats').style.display = 'none';
+                }
+            });
+        });
+
+        // =====================================================================
+        // MULTI-AI DEBATE GENERATOR
+        // =====================================================================
+
+        document.getElementById('generateDebateBtn').addEventListener('click', async function() {
+            const topic = document.getElementById('debateTopic').value.trim();
+            const context = document.getElementById('debateContext').value.trim();
+            const brand = document.getElementById('debateBrand').value;
+
+            if (!topic) {
+                showStatus('error', 'Please enter a topic or question');
+                return;
+            }
+
+            const btn = this;
+            const statusEl = document.getElementById('debateStatus');
+
+            btn.disabled = true;
+            btn.textContent = '🔄 Generating debate... (this may take 30-60 seconds)';
+            showStatus('info', 'Querying 5 AI models in parallel...');
+
+            try {
+                const formData = new FormData();
+                formData.append('topic', topic);
+                formData.append('text', context || topic);
+                formData.append('brand', brand);
+
+                const response = await fetch('/api/voice-to-debate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to generate debate');
+                }
+
+                showStatus('success', `✅ Debate generated successfully! Post saved to database.`);
+
+                // Build post URL from slug
+                const postUrl = `/post/${result.slug}`;
+                setTimeout(() => {
+                    if (confirm('Debate generated! Open in new tab?')) {
+                        window.open(postUrl, '_blank');
+                    }
+                }, 500);
+
+                // Clear form
+                document.getElementById('debateTopic').value = '';
+                document.getElementById('debateContext').value = '';
+
+            } catch (error) {
+                console.error('Debate generation error:', error);
+                showStatus('error', `Failed to generate debate: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Generate Multi-AI Debate';
+            }
+        });
+
+        function showStatus(type, message) {
+            const statusEl = document.getElementById('debateStatus');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            statusEl.style.display = 'block';
+
+            if (type !== 'info') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 8000);
+            }
+        }
+    </script>
+</body>
+</html>

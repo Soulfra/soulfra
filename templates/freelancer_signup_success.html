@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Soulfra API! | Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .api-key-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .api-key-label {
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .api-key-value {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: monospace;
+            color: #333;
+            word-break: break-all;
+            user-select: all;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .copy-btn {
+            margin-top: 12px;
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9ff;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .string {
+            color: #ce9178;
+        }
+
+        .code-block .keyword {
+            color: #569cd6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .api-key-value {
+                font-size: 18px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome to Soulfra API!</h1>
+            <p>Your API key is ready to use</p>
+        </div>
+
+        <div class="content">
+            <div class="api-key-box">
+                <div class="api-key-label">Your API Key</div>
+                <div class="api-key-value" id="apiKey">{{ api_key }}</div>
+                <button class="copy-btn" onclick="copyApiKey()">📋 Copy API Key</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Tier</div>
+                    <div class="stat-value">Free</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Brand Access</div>
+                    <div class="stat-value">{{ brand_slug|upper }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Rate Limit</div>
+                    <div class="stat-value">{{ rate_limit }}/day</div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>📚 Quick Start</h3>
+                <p style="color: #666; margin-bottom: 12px;">Try your first API call:</p>
+
+                <div class="code-block">
+<span class="comment"># Generate an AI comment</span>
+curl -H <span class="string">"X-API-Key: {{ api_key }}"</span> \
+  <span class="string">"http://localhost:5001/api/v1/{{ brand_slug }}/comment?post_id=1"</span>
+                </div>
+
+                <div class="code-block">
+<span class="comment"># Classify text with neural network</span>
+curl -H <span class="string">"X-API-Key: {{ api_key }}"</span> \
+  <span class="string">"http://localhost:5001/api/v1/{{ brand_slug }}/classify?text=Your+text+here"</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>💡 What You Can Do</h3>
+                <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li><strong>AI Comments:</strong> Generate contextual comments using brand AI personas</li>
+                    <li><strong>Text Classification:</strong> Classify text using trained neural networks</li>
+                    <li><strong>Email Replies:</strong> Reply to newsletter emails to auto-comment on posts</li>
+                    <li><strong>Real-time Analytics:</strong> Track your API usage and performance</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>📧 Check Your Email</h3>
+                <p style="color: #666;">
+                    We've sent a welcome email to <strong>{{ email }}</strong> with complete API documentation and examples.
+                </p>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/api/docs" class="btn btn-primary">📖 View API Docs</a>
+                <a href="/" class="btn btn-secondary">🏠 Go to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyApiKey() {
+            const apiKey = document.getElementById('apiKey').textContent;
+            navigator.clipboard.writeText(apiKey).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy API Key';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

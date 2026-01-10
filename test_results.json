@@ -1,0 +1,176 @@
+{
+  "timestamp": "2026-01-09T07:52:42.588712",
+  "test_users": [
+    {
+      "user": "Alice (Coder)",
+      "email": "alice@example.com",
+      "domain": "calriven",
+      "letter": "A",
+      "referral_code": "ADFF1EBB",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Wu (Chinese Market)",
+      "email": "wu@example.com",
+      "domain": "deathtodata",
+      "letter": "W",
+      "referral_code": "333AF2F5",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Bob (Hub User)",
+      "email": "bob@soulfra.ai",
+      "domain": "soulfra",
+      "letter": "B",
+      "referral_code": "ADBDA441",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Maria (Spanish)",
+      "email": "maria@ejemplo.es",
+      "domain": "calriven",
+      "letter": "M",
+      "referral_code": "663E7C93",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Yuki (Voice User)",
+      "email": "yuki@example.jp",
+      "domain": "cringeproof",
+      "letter": "Y",
+      "referral_code": "5AED29E7",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Wang (Chinese #2)",
+      "email": "wang@example.com",
+      "domain": "soulfra",
+      "letter": "W",
+      "referral_code": "2BAEC77E",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Pierre (French Blogger)",
+      "email": "pierre@exemple.fr",
+      "domain": "calriven",
+      "letter": "P",
+      "referral_code": "AE4B6ED4",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Sarah (Data Analyst)",
+      "email": "sarah@data.com",
+      "domain": "deathtodata",
+      "letter": "S",
+      "referral_code": "620D883D",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Carlos (Spanish Blogger)",
+      "email": "carlos@blog.es",
+      "domain": "calriven",
+      "letter": "C",
+      "referral_code": "2AF7A2EE",
+      "days_until_launch": 90
+    },
+    {
+      "user": "Li (Chinese #3)",
+      "email": "li@example.com",
+      "domain": "deathtodata",
+      "letter": "L",
+      "referral_code": "906C3EC8",
+      "days_until_launch": 90
+    }
+  ],
+  "total_signups": 10,
+  "domains": {
+    "soulfra": [
+      {
+        "user": "Bob (Hub User)",
+        "email": "bob@soulfra.ai",
+        "domain": "soulfra",
+        "letter": "B",
+        "referral_code": "ADBDA441",
+        "days_until_launch": 90
+      },
+      {
+        "user": "Wang (Chinese #2)",
+        "email": "wang@example.com",
+        "domain": "soulfra",
+        "letter": "W",
+        "referral_code": "2BAEC77E",
+        "days_until_launch": 90
+      }
+    ],
+    "calriven": [
+      {
+        "user": "Alice (Coder)",
+        "email": "alice@example.com",
+        "domain": "calriven",
+        "letter": "A",
+        "referral_code": "ADFF1EBB",
+        "days_until_launch": 90
+      },
+      {
+        "user": "Maria (Spanish)",
+        "email": "maria@ejemplo.es",
+        "domain": "calriven",
+        "letter": "M",
+        "referral_code": "663E7C93",
+        "days_until_launch": 90
+      },
+      {
+        "user": "Pierre (French Blogger)",
+        "email": "pierre@exemple.fr",
+        "domain": "calriven",
+        "letter": "P",
+        "referral_code": "AE4B6ED4",
+        "days_until_launch": 90
+      },
+      {
+        "user": "Carlos (Spanish Blogger)",
+        "email": "carlos@blog.es",
+        "domain": "calriven",
+        "letter": "C",
+        "referral_code": "2AF7A2EE",
+        "days_until_launch": 90
+      }
+    ],
+    "deathtodata": [
+      {
+        "user": "Wu (Chinese Market)",
+        "email": "wu@example.com",
+        "domain": "deathtodata",
+        "letter": "W",
+        "referral_code": "333AF2F5",
+        "days_until_launch": 90
+      },
+      {
+        "user": "Sarah (Data Analyst)",
+        "email": "sarah@data.com",
+        "domain": "deathtodata",
+        "letter": "S",
+        "referral_code": "620D883D",
+        "days_until_launch": 90
+      },
+      {
+        "user": "Li (Chinese #3)",
+        "email": "li@example.com",
+        "domain": "deathtodata",
+        "letter": "L",
+        "referral_code": "906C3EC8",
+        "days_until_launch": 90
+      }
+    ],
+    "cringeproof": [
+      {
+        "user": "Yuki (Voice User)",
+        "email": "yuki@example.jp",
+        "domain": "cringeproof",
+        "letter": "Y",
+        "referral_code": "5AED29E7",
+        "days_until_launch": 90
+      }
+    ]
+  }
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test - Does It Actually Work?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        .test-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 5px solid #ddd;
+        }
+        .test-item.pass { border-left-color: #4CAF50; }
+        .test-item.fail { border-left-color: #f44336; }
+        .test-name { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; }
+        .test-result { font-size: 1.5em; margin: 10px 0; }
+        .test-details { color: #666; font-size: 0.9em; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #5568d3; }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Simple Test - Does Anything Work?</h1>
+    <p>Real tests, real results, no bullshit.</p>
+
+    <div class="test-item {% if template_works %}pass{% else %}fail{% endif %}">
+        <div class="test-name">1. Template System</div>
+        <div class="test-result">{% if template_works %}✅ WORKING{% else %}❌ BROKEN{% endif %}</div>
+        <div class="test-details">
+            This template loaded successfully and received data from Python.
+            <br>Test value: "{{ test_value }}"
+        </div>
+    </div>
+
+    <div class="test-item {% if db_works %}pass{% else %}fail{% endif %}">
+        <div class="test-name">2. Database Connection</div>
+        <div class="test-result">{% if db_works %}✅ WORKING{% else %}❌ BROKEN{% endif %}</div>
+        <div class="test-details">
+            Found {{ posts_count }} posts, {{ brands_count }} brands in database
+        </div>
+    </div>
+
+    <div class="test-item {% if soulfra_chapters > 0 %}pass{% else %}fail{% endif %}">
+        <div class="test-name">3. Soulfra Story Content</div>
+        <div class="test-result">{% if soulfra_chapters > 0 %}✅ {{ soulfra_chapters }}/7 Chapters{% else %}❌ NO CONTENT{% endif %}</div>
+        <div class="test-details">
+            Soulfra narrative chapters exist in database
+        </div>
+    </div>
+
+    <div class="test-item {% if api_works %}pass{% else %}fail{% endif %}">
+        <div class="test-name">4. Narrative API</div>
+        <div class="test-result">{% if api_works %}✅ WORKING{% else %}❌ BROKEN{% endif %}</div>
+        <div class="test-details">
+            Test the API by clicking button below:
+            <br><button onclick="testAPI()">Test /api/narrative/start</button>
+            <div id="api-result" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <div class="test-item">
+        <div class="test-name">5. Play Narrative Game</div>
+        <div class="test-details">
+            <a href="/cringeproof/narrative/soulfra" target="_blank">
+                <button>Open Soulfra Game →</button>
+            </a>
+            <a href="/cringeproof/narrative/calriven" target="_blank">
+                <button>Open CalRiven Game →</button>
+            </a>
+        </div>
+    </div>
+
+    <h2 style="margin-top: 40px;">📊 Current State:</h2>
+    <pre>
+Posts: {{ posts_count }}
+Brands: {{ brands_count }}
+Comments: {{ comments_count }}
+Narrative Sessions: {{ sessions_count }}
+
+Template Variables Received:
+{{ debug_info }}
+    </pre>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '⏳ Testing...';
+
+            try {
+                const response = await fetch('/api/narrative/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({brand_slug: 'soulfra'})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `<strong style="color: green;">✅ API WORKS!</strong><br>
+                        Session ID: ${data.session_id}<br>
+                        Chapters: ${data.total_chapters}<br>
+                        Current: Chapter ${data.current_chapter}`;
+                } else {
+                    resultDiv.innerHTML = `<strong style="color: red;">❌ API ERROR:</strong><br>${data.error || 'Unknown error'}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<strong style="color: red;">❌ FAILED:</strong><br>${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Voice Recorder (HTTPS)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .status.ready {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.recording {
+            background: #ffebee;
+            color: #c62828;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .status.processing {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .record-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .record-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .record-button:active {
+            transform: scale(0.95);
+        }
+
+        .record-button.recording {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            animation: recordPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% {
+                box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 40px rgba(244, 67, 54, 0.8);
+            }
+        }
+
+        .settings {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .settings label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .settings input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: monospace;
+        }
+
+        .settings input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        .info strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .transcription {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .transcription.visible {
+            display: block;
+        }
+
+        .transcription h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .transcription p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #c62828;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+
+        .ssl-badge {
+            text-align: center;
+            margin-top: 20px;
+            color: #4caf50;
+            font-size: 12px;
+        }
+
+        .ssl-badge::before {
+            content: "🔒 ";
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Voice Recorder</h1>
+        <p class="subtitle">HTTPS Secure Recording</p>
+
+        <div class="status ready" id="status">
+            Ready to record
+        </div>
+
+        <div class="timer" id="timer" style="display: none;">
+            00:00
+        </div>
+
+        <button class="record-button" id="recordButton">
+            TAP TO<br>RECORD
+        </button>
+
+        <div class="settings">
+            <label for="serverUrl">Local Server URL:</label>
+            <input
+                type="text"
+                id="serverUrl"
+                value="https://192.168.1.87:5001"
+                placeholder="https://192.168.1.87:5001"
+            >
+        </div>
+
+        <div class="transcription" id="transcriptionBox">
+            <h3>Transcription:</h3>
+            <p id="transcriptionText"></p>
+        </div>
+
+        <div class="info">
+            <strong>How it works:</strong>
+            This page is served over HTTPS (GitHub Pages) so your browser allows microphone access.
+            Recordings are sent to your local Flask server via secure connection.
+        </div>
+
+        <div class="ssl-badge">
+            Secured with GitHub Pages SSL
+        </div>
+    </div>
+
+    <script>
+        // State
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let startTime = null;
+        let timerInterval = null;
+
+        // Elements
+        const recordButton = document.getElementById('recordButton');
+        const statusEl = document.getElementById('status');
+        const timerEl = document.getElementById('timer');
+        const transcriptionBox = document.getElementById('transcriptionBox');
+        const transcriptionText = document.getElementById('transcriptionText');
+        const serverUrlInput = document.getElementById('serverUrl');
+
+        // Update status
+        function setStatus(message, className) {
+            statusEl.textContent = message;
+            statusEl.className = `status ${className}`;
+        }
+
+        // Update timer
+        function updateTimer() {
+            if (!startTime) return;
+
+            const elapsed = Date.now() - startTime;
+            const seconds = Math.floor(elapsed / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+
+            timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // Start recording
+        async function startRecording() {
+            try {
+                // Request microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                // Create media recorder
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+
+                audioChunks = [];
+
+                // Collect audio data
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                // Handle recording stop
+                mediaRecorder.onstop = async () => {
+                    // Stop timer
+                    clearInterval(timerInterval);
+                    timerEl.style.display = 'none';
+
+                    // Create audio blob
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
+                    // Upload to server
+                    await uploadRecording(audioBlob);
+
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                // Start recording
+                mediaRecorder.start();
+                isRecording = true;
+
+                // Update UI
+                recordButton.textContent = 'STOP\nRECORDING';
+                recordButton.classList.add('recording');
+                setStatus('🔴 Recording...', 'recording');
+
+                // Start timer
+                startTime = Date.now();
+                timerEl.style.display = 'block';
+                timerInterval = setInterval(updateTimer, 100);
+
+            } catch (error) {
+                console.error('Error starting recording:', error);
+                setStatus('❌ Microphone access denied', 'ready');
+                alert('Please allow microphone access to record.');
+            }
+        }
+
+        // Stop recording
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+
+                // Update UI
+                recordButton.textContent = 'TAP TO\nRECORD';
+                recordButton.classList.remove('recording');
+                setStatus('⏳ Processing...', 'processing');
+            }
+        }
+
+        // Upload recording to server
+        async function uploadRecording(audioBlob) {
+            const serverUrl = serverUrlInput.value.trim();
+
+            if (!serverUrl) {
+                setStatus('❌ Enter server URL', 'ready');
+                return;
+            }
+
+            setStatus('📤 Uploading...', 'processing');
+
+            try {
+                // Create form data
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'recording.webm');
+
+                // Upload to server
+                const response = await fetch(`${serverUrl}/api/simple-voice/save`, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'cors'  // Allow cross-origin
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    setStatus('✅ Saved successfully!', 'ready');
+
+                    // Show transcription if available
+                    if (result.transcription) {
+                        transcriptionText.textContent = result.transcription;
+                        transcriptionBox.classList.add('visible');
+                    } else {
+                        transcriptionBox.classList.remove('visible');
+                    }
+
+                    console.log('Recording saved:', result);
+                } else {
+                    throw new Error(result.error || 'Upload failed');
+                }
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                setStatus(`❌ Upload failed: ${error.message}`, 'ready');
+
+                // Show detailed error
+                alert(`Failed to upload recording:\n\n${error.message}\n\nMake sure your local server is running at:\n${serverUrl}`);
+            }
+        }
+
+        // Button click handler
+        recordButton.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        // Check HTTPS
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+            setStatus('⚠️ HTTPS required for microphone access', 'ready');
+        }
+
+        // Load saved server URL
+        const savedUrl = localStorage.getItem('serverUrl');
+        if (savedUrl) {
+            serverUrlInput.value = savedUrl;
+        }
+
+        // Save server URL on change
+        serverUrlInput.addEventListener('change', () => {
+            localStorage.setItem('serverUrl', serverUrlInput.value);
+        });
+    </script>
+</body>
+</html>

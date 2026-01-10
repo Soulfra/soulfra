@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Layer Composer - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 20px;
+            image-rendering: pixelated;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #00aa00;
+            font-size: 1rem;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .panel h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        /* Layer Stack */
+        .layer-stack {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .layer {
+            background: #0f0f0f;
+            border: 1px solid #00aa00;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: move;
+            transition: all 0.2s;
+        }
+
+        .layer:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .layer.active {
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .layer-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .layer-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .layer-controls input[type="range"] {
+            flex: 1;
+        }
+
+        /* Canvas Area */
+        .canvas-container {
+            position: relative;
+            background: #000;
+            border: 3px solid #00ff00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+            box-shadow: inset 0 0 30px rgba(0, 255, 0, 0.2);
+        }
+
+        canvas {
+            border: 1px solid #00aa00;
+            image-rendering: pixelated;
+            cursor: crosshair;
+        }
+
+        .pixel-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* CRT Effects */
+        .crt-rainbow canvas {
+            filter: saturate(1.5) brightness(1.1) hue-rotate(0deg);
+        }
+
+        .crt-bw canvas {
+            filter: grayscale(100%) contrast(1.5);
+        }
+
+        .crt-grey canvas {
+            filter: grayscale(100%) brightness(0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+        }
+
+        .crt-white canvas {
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(20deg) contrast(1.2);
+        }
+
+        /* Color Mode Selector */
+        .color-modes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .color-mode {
+            padding: 15px;
+            background: #0f0f0f;
+            border: 2px solid #00aa00;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-mode:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .color-mode.active {
+            border-color: #00ff00;
+            background: #1a1a1a;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .color-mode-preview {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 5px;
+            border: 1px solid #00aa00;
+        }
+
+        .mode-rainbow {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+        }
+
+        .mode-bw {
+            background: linear-gradient(90deg, #000, #fff);
+        }
+
+        .mode-grey {
+            background: linear-gradient(90deg, #000, #444, #888, #ccc);
+        }
+
+        .mode-white {
+            background: #ff9900;
+        }
+
+        /* Blend Modes */
+        select {
+            width: 100%;
+            padding: 8px;
+            background: #0f0f0f;
+            color: #00ff00;
+            border: 1px solid #00aa00;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 10px;
+        }
+
+        /* Sliders */
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            color: #00ff00;
+            border: 2px solid #00aa00;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            background: #1a1a1a;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: #00aa00;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background: #00ff00;
+        }
+
+        /* Animation Timeline */
+        .timeline {
+            background: #0f0f0f;
+            border: 1px solid #00aa00;
+            padding: 10px;
+            margin-top: 20px;
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+        }
+
+        .frame {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #00aa00;
+            background: #000;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .frame.active {
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .frame-number {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #00aa00;
+            color: #000;
+            padding: 2px 4px;
+            font-size: 0.7rem;
+        }
+
+        /* Tools */
+        .tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tool {
+            padding: 10px;
+            background: #0f0f0f;
+            border: 2px solid #00aa00;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .tool.active {
+            border-color: #00ff00;
+            background: #1a1a1a;
+        }
+
+        .tool:hover {
+            border-color: #00ff00;
+        }
+
+        /* Stats */
+        .stats {
+            font-size: 0.8rem;
+            color: #00aa00;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #00aa00;
+        }
+
+        .stats div {
+            margin: 5px 0;
+        }
+
+        /* Scanlines Effect */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00aa00;
+            border: 1px solid #00ff00;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ PIXEL LAYER COMPOSER ⚡</h1>
+            <p class="subtitle">Diffusion-Style Visual Builder | CRT Tone Simulation</p>
+        </header>
+
+        <div class="workspace">
+            <!-- Left Panel: Layers -->
+            <div class="panel">
+                <h2>📚 Layers</h2>
+
+                <button onclick="addLayer()" class="btn-primary">+ Add Layer</button>
+
+                <div class="layer-stack" id="layerStack">
+                    <!-- Layers will be added here dynamically -->
+                </div>
+
+                <div class="stats">
+                    <div>Total Layers: <span id="layerCount">0</span></div>
+                    <div>Active Layer: <span id="activeLayer">None</span></div>
+                    <div>Canvas Size: <span id="canvasSize">512x512</span></div>
+                </div>
+            </div>
+
+            <!-- Center Panel: Canvas -->
+            <div class="panel">
+                <h2>🎨 Canvas</h2>
+
+                <div class="canvas-container" id="canvasContainer">
+                    <canvas id="mainCanvas" width="512" height="512"></canvas>
+                    <canvas class="pixel-grid" id="pixelGrid" width="512" height="512"></canvas>
+                    <div class="scanlines"></div>
+                </div>
+
+                <div class="timeline" id="timeline">
+                    <div class="frame active" data-frame="1">
+                        <span class="frame-number">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Controls -->
+            <div class="panel">
+                <h2>🎛️ Controls</h2>
+
+                <h3 style="font-size: 1rem; margin-bottom: 10px;">CRT Color Mode</h3>
+                <div class="color-modes">
+                    <div class="color-mode active" data-mode="rainbow" onclick="setCRTMode('rainbow')">
+                        <div class="color-mode-preview mode-rainbow"></div>
+                        <div>Rainbow</div>
+                    </div>
+                    <div class="color-mode" data-mode="bw" onclick="setCRTMode('bw')">
+                        <div class="color-mode-preview mode-bw"></div>
+                        <div>B&W</div>
+                    </div>
+                    <div class="color-mode" data-mode="grey" onclick="setCRTMode('grey')">
+                        <div class="color-mode-preview mode-grey"></div>
+                        <div>Greyscale</div>
+                    </div>
+                    <div class="color-mode" data-mode="white" onclick="setCRTMode('white')">
+                        <div class="color-mode-preview mode-white"></div>
+                        <div>Amber</div>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1rem; margin-top: 20px; margin-bottom: 10px;">Tools</h3>
+                <div class="tools">
+                    <div class="tool active" data-tool="pen" onclick="setTool('pen')">🖊️ Pen</div>
+                    <div class="tool" data-tool="eraser" onclick="setTool('eraser')">🧹 Eraser</div>
+                    <div class="tool" data-tool="fill" onclick="setTool('fill')">🪣 Fill</div>
+                    <div class="tool" data-tool="eyedropper" onclick="setTool('eyedropper')">💧 Dropper</div>
+                </div>
+
+                <label>
+                    Brush Color
+                    <input type="color" id="brushColor" value="#00ff00">
+                </label>
+
+                <label>
+                    Brush Size: <span id="brushSizeValue">4</span>px
+                    <input type="range" id="brushSize" min="1" max="32" value="4" oninput="updateBrushSize()">
+                </label>
+
+                <label>
+                    Brightness: <span id="brightnessValue">100</span>%
+                    <input type="range" id="brightness" min="50" max="150" value="100" oninput="updateCRTEffects()">
+                </label>
+
+                <label>
+                    Contrast: <span id="contrastValue">100</span>%
+                    <input type="range" id="contrast" min="50" max="200" value="100" oninput="updateCRTEffects()">
+                </label>
+
+                <label>
+                    <input type="checkbox" id="gridToggle" onchange="toggleGrid()" checked>
+                    Show Pixel Grid
+                </label>
+
+                <label>
+                    <input type="checkbox" id="scanlinesToggle" checked>
+                    CRT Scanlines
+                </label>
+
+                <button onclick="clearCanvas()" style="margin-top: 20px;">🗑️ Clear Canvas</button>
+                <button onclick="composeAll()" class="btn-primary">🎬 Render Composite</button>
+                <button onclick="exportGIF()">📦 Export as GIF</button>
+                <button onclick="exportPNG()">💾 Export as PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/layer-compositor.js"></script>
+</body>
+</html>

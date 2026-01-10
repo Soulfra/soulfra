@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra - Transparent Development Platform - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-transparent-development-platform">Soulfra - Transparent Development Platform</h1>
+
+<p><strong>AI-powered platform where development happens in public. Python-only, SQLite-based.</strong></p>
+
+<h2 id="whats-running">🚀 What's Running</h2>
+
+<p>This project has <strong>TWO different servers</strong> you can run:</p>
+
+<h3 id="port-5001-main-flask-app-apppy">Port 5001 - Main Flask App (app.py)</h3>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>app.py
+<span class="c1"># Visit: http://localhost:5001</span>
+</code></pre>
+</div>
+
+<ul>
+<li>Full-featured content platform</li>
+<li>Blog posts, comments, user profiles</li>
+<li>AI reasoning from 4 personas (CalRiven, DeathToData, TheAuditor, Soulfra)</li>
+<li>Flask + Jinja2 templates</li>
+<li>Uses: <code>soulfra.db</code></li>
+</ul>
+
+<h3 id="port-8888-zero-dependencies-demo-soulfra_zeropy">Port 8888 - Zero Dependencies Demo (soulfra_zero.py)</h3>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>soulfra_zero.py
+<span class="c1"># Visit: http://localhost:8888</span>
+</code></pre>
+</div>
+
+<ul>
+<li>Pure stdlib HTTP server (no Flask)</li>
+<li>Neural network training dashboard</li>
+<li>Multi-format output (JSON/CSV/TXT/HTML/RTF/Binary)</li>
+<li><strong>Zero external dependencies</strong> - demonstrates what's possible with pure Python</li>
+<li>Uses: <code>soulfra.db</code> (read-only)</li>
+</ul>
+
+<p><strong>Both servers access the same SQLite database (<code>soulfra.db</code>)</strong> but serve different purposes.
+Choose port 5001 for normal development, port 8888 for zero-dependency demos.</p>
+
+<h3 id="want-to-understand-how-it-actually-works">🔍 <strong>Want to understand HOW it actually works?</strong></h3>
+
+<p><strong>Read the docs:</strong>
+- <strong>📖</strong> <a href="HOW_IT_ACTUALLY_WORKS.md">HOW<em>IT</em>ACTUALLY_WORKS.md</a> - Complete explanation from bits → transistors → neural networks. No magic, just math!
+- <strong>📊</strong> <a href="STATUS.md">STATUS.md</a> - Usage guide and examples</p>
+
+<p><strong>Run the proof scripts:</strong>
+- <strong>🧠</strong> <code>python3 show_me_the_matrix.py</code> - See actual neural network weights and calculations
+- <strong>🎯</strong> <code>python3 prove_it_works.py</code> - End-to-end: Ollama → formats → email
+- <strong>🌐</strong> <code>python3 prove_everything.py</code> - Universal proof: Math, IPs, GPS, QR codes, UPC, websites</p>
+
+<p>All proof scripts demonstrate the <strong>tier system</strong> works with ANY data type using only Python stdlib + SQL.</p>
+
+<h3 id="homework-workflow-chat-blog-newsletter">📚 <strong>Homework Workflow - Chat → Blog → Newsletter</strong></h3>
+
+<p>Turn your learning conversations into published content automatically!</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Chat with Ollama (conversations stored)</span>
+python3<span class="w"> </span>ollama_chat.py
+
+<span class="c1"># 2. Compile chats into blog posts</span>
+python3<span class="w"> </span>compile_chats.py
+
+<span class="c1"># 3. Send weekly newsletter</span>
+python3<span class="w"> </span>newsletter_digest.py
+</code></pre>
+</div>
+
+<p><strong>Read:</strong> <a href="HOMEWORK_WORKFLOW.md">HOMEWORK_WORKFLOW.md</a> - Complete guide to turning conversations into content</p>
+
+<hr />
+
+<h2 id="what-this-is">What This Is</h2>
+
+<p>A self-documenting development platform:
+- Posts &amp; comments with AI reasoning
+- Soul system (digital identity based on activity)
+- Machine learning (Python stdlib only, no external libs)
+- Database-first architecture (everything in SQLite)
+- Build-in-public automation
+- <strong>No Node.js, no PostgreSQL, no external ML libraries</strong></p>
+
+<p><strong>See <a href="WHAT_IS_SOULFRA.md">WHAT<em>IS</em>SOULFRA.md</a> for complete explanation.</strong></p>
+
+<h3 id="new-ai-integration">🤖 NEW: AI Integration</h3>
+
+<p><strong>Get multi-perspective AI analysis of your posts before publishing!</strong></p>
+
+<p>Soulfra Simple now integrates with the Cal-Riven multi-LLM system to provide automatic 3-brand perspective analysis:
+- 🔐 Soulfra: Security &amp; encryption focus
+- 🕵️ DeathToData: Privacy &amp; anti-surveillance focus
+- 💻 CalRiven: Technical architecture &amp; data focus</p>
+
+<p>See <strong><a href="README-AI-INTEGRATION.md">README-AI-INTEGRATION.md</a></strong> for setup instructions.</p>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>flask<span class="w"> </span>markdown2
+
+<span class="c1"># 2. Write a post</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;# My First Post&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>posts/2025-12-20-hello.md
+
+<span class="c1"># 3. Build static site</span>
+python<span class="w"> </span>build.py
+
+<span class="c1"># 4. Deploy</span>
+git<span class="w"> </span>add<span class="w"> </span>docs/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;New post&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>push
+</code></pre>
+</div>
+
+<h2 id="file-structure">File Structure</h2>
+
+<pre><code>soulfra-simple/
+├── app.py           # Flask app (dev server)
+├── database.py      # SQLite database
+├── emails.py        # Email sender
+├── build.py         # Static site generator
+├── templates/       # HTML templates
+├── posts/           # Markdown posts
+├── static/          # CSS/images
+└── docs/            # Built site (GitHub Pages)
+</code></pre>
+
+<h2 id="how-it-works">How It Works</h2>
+
+<ol>
+<li><strong>Write</strong>: Create <code>posts/YYYY-MM-DD-slug.md</code></li>
+<li><strong>Build</strong>: Run <code>python build.py</code></li>
+<li><strong>Deploy</strong>: <code>git push</code> to GitHub</li>
+<li><strong>Done</strong>: Live at <code>yourusername.github.io</code></li>
+</ol>
+
+<h2 id="cost">Cost</h2>
+
+<ul>
+<li>GitHub Pages: <strong>$0</strong></li>
+<li>SQLite: <strong>$0</strong></li>
+<li>Email (Gmail SMTP): <strong>$0</strong></li>
+<li><strong>Total: $0/month</strong></li>
+</ul>
+
+<h2 id="vs-substack">vs Substack</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Substack</th>
+  <th>Soulfra Simple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Monthly cost</td>
+  <td>10% of revenue</td>
+  <td>$0</td>
+</tr>
+<tr>
+  <td>Owns your list</td>
+  <td>Substack</td>
+  <td>You</td>
+</tr>
+<tr>
+  <td>Can export</td>
+  <td>Yes</td>
+  <td>It's just SQLite</td>
+</tr>
+<tr>
+  <td>Custom domain</td>
+  <td>$50/year</td>
+  <td>Free (GitHub)</td>
+</tr>
+<tr>
+  <td>Email sending</td>
+  <td>Built-in</td>
+  <td>SMTP</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="optional-add-ons">Optional Add-Ons</h2>
+
+<p><strong>Monetization</strong>: Add Stripe payment link in posts
+<strong>RSS</strong>: Generated automatically
+<strong>Comments</strong>: Use GitHub Discussions
+<strong>Analytics</strong>: Google Analytics (1 line)</p>
+
+<h2 id="compliance">Compliance</h2>
+
+<ul>
+<li><strong>Privacy Policy</strong>: See <a href="PRIVACY.md">PRIVACY.md</a></li>
+<li><strong>Terms of Service</strong>: See <a href="TERMS.md">TERMS.md</a></li>
+<li><strong>GDPR Compliant</strong>: EU user data rights supported</li>
+<li><strong>CAN-SPAM Act</strong>: US email regulations followed</li>
+<li><strong>No SOC2 needed</strong>: Simple system, no enterprise features</li>
+</ul>
+
+<h2 id="deployment">Deployment</h2>
+
+<p>See <a href="DEPLOY.md">DEPLOY.md</a> for step-by-step instructions to deploy to GitHub Pages.</p>
+
+<h2 id="file-structure-2">File Structure</h2>
+
+<pre><code>soulfra-simple/
+├── app.py              # Flask dev server (test locally)
+├── database.py         # SQLite database (2 tables)
+├── emails.py           # Gmail SMTP email sender
+├── build.py            # Static site generator
+├── templates/          # HTML templates
+│   ├── base.html
+│   ├── index.html
+│   ├── post.html
+│   ├── subscribe.html
+│   ├── about.html
+│   └── unsubscribe.html
+├── posts/              # Markdown posts
+│   └── 2025-12-19-hello-world.md
+├── static/             # CSS/images
+│   └── style.css
+├── docs/               # Built site (GitHub Pages)
+├── DEPLOY.md           # Deployment guide
+├── PRIVACY.md          # Privacy policy
+└── TERMS.md            # Terms of service
+</code></pre>
+
+<hr />
+
+<p><strong>That's it. No tokens, no faucets, no challenges. Just newsletters.</strong></p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

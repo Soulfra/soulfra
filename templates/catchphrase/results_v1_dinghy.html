@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catchphrase Results - {{ domain_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.95; }
+        .content { padding: 40px 30px; }
+
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            color: {{ theme_primary }};
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid {{ theme_primary }};
+            padding-bottom: 10px;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid {{ theme_accent }};
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .catchphrase-text {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            flex: 1;
+        }
+
+        .variant-badge {
+            background: {{ theme_accent }};
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+
+        .reaction-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .stat-emoji {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-percentage {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: {{ theme_primary }};
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .approval-score {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .approval-score.negative {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+        }
+
+        .total-reactions {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            color: {{ theme_primary }};
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid {{ theme_primary }};
+            border-radius: 6px;
+            margin: 5px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: {{ theme_primary }};
+            color: white;
+        }
+
+        .winner-badge {
+            display: inline-block;
+            background: gold;
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Catchphrase A/B Test Results</h1>
+            <p>{{ domain_name }} - Brand Personality Testing</p>
+        </div>
+
+        <div class="content">
+            {% if results %}
+                {% for category, catchphrases in by_category.items() %}
+                <div class="category-section">
+                    <h2 class="category-title">{{ category | upper }}</h2>
+
+                    {% set best_score = catchphrases | map(attribute='approval_score') | max %}
+
+                    {% for result in catchphrases %}
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="catchphrase-text">
+                                "{{ result.text }}"
+                                {% if result.approval_score == best_score and best_score > 0 %}
+                                <span class="winner-badge">🏆 Top Performer</span>
+                                {% endif %}
+                            </div>
+                            <span class="variant-badge">Variant {{ result.variant_label }}</span>
+                        </div>
+
+                        <div class="reaction-stats">
+                            <div class="stat-item">
+                                <div class="stat-emoji">😍</div>
+                                <div class="stat-percentage">{{ result.love_pct }}%</div>
+                                <div class="stat-label">Love</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-emoji">👍</div>
+                                <div class="stat-percentage">{{ result.like_pct }}%</div>
+                                <div class="stat-label">Like</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-emoji">😐</div>
+                                <div class="stat-percentage">{{ result.meh_pct }}%</div>
+                                <div class="stat-label">Meh</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-emoji">👎</div>
+                                <div class="stat-percentage">{{ result.dislike_pct }}%</div>
+                                <div class="stat-label">Dislike</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-emoji">😬</div>
+                                <div class="stat-percentage">{{ result.cringe_pct }}%</div>
+                                <div class="stat-label">Cringe</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 15px;">
+                            <span class="approval-score {% if result.approval_score < 0 %}negative{% endif %}">
+                                Approval Score: {{ result.approval_score }}
+                            </span>
+                            <span class="total-reactions">
+                                ({{ result.total_reactions }} total reactions)
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h2>📭 No Data Yet</h2>
+                    <p>No catchphrases have been tested yet. Be the first to provide feedback!</p>
+                    <a href="/catchphrase/test" class="cta-button">Start Testing Catchphrases</a>
+                </div>
+            {% endif %}
+
+            <div class="navigation">
+                <a href="/catchphrase/test" class="nav-link">💬 Test More Catchphrases</a>
+                <a href="/" class="nav-link">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

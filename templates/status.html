@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+  <h1>🔧 Platform Status Dashboard</h1>
+
+  <div style="background: #e6f2ff; padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+    <strong>Live health check for Soulfra platform at localhost:5001</strong>
+    <br><small style="color: #666;">All systems and routes inventory</small>
+  </div>
+
+  <!-- Database Health -->
+  <div style="margin: 2rem 0;">
+    <h2>💾 Database</h2>
+    <div style="background: {% if db_healthy %}#d4edda{% else %}#f8d7da{% endif %}; padding: 1.5rem; border-radius: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="font-size: 1.2rem;">{% if db_healthy %}✅ {{ db_status }}{% else %}❌ {{ db_status }}{% endif %}</strong>
+          <br><small>soulfra.db ({{ "%.2f"|format(db_file_size) }} KB)</small>
+        </div>
+        <div style="font-size: 2rem;">
+          {% if db_healthy %}✅{% else %}❌{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform Stats -->
+  <div style="margin: 2rem 0;">
+    <h2>📊 Platform Stats</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: bold; color: #007bff;">{{ stats.posts }}</div>
+        <div style="color: #666;">Posts</div>
+      </div>
+      <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: bold; color: #28a745;">{{ stats.comments }}</div>
+        <div style="color: #666;">Comments</div>
+      </div>
+      <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: bold; color: #6f42c1;">{{ stats.users }}</div>
+        <div style="color: #666;">Users</div>
+      </div>
+      <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: bold; color: #fd7e14;">{{ stats.reasoning_threads }}</div>
+        <div style="color: #666;">Reasoning Threads</div>
+      </div>
+      <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: bold; color: #20c997;">{{ stats.feedback }}</div>
+        <div style="color: #666;">Feedback Items</div>
+      </div>
+      <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <div style="font-size: 2.5rem; font-weight: bold; color: #6c757d;">{{ stats.subscribers }}</div>
+        <div style="color: #666;">Subscribers</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Routes Inventory -->
+  <div style="margin: 2rem 0;">
+    <h2>🛣️ Routes Inventory</h2>
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 2px solid #ddd;">
+            <th style="text-align: left; padding: 0.75rem;">Route</th>
+            <th style="text-align: left; padding: 0.75rem;">Name</th>
+            <th style="text-align: center; padding: 0.75rem;">Status</th>
+            <th style="text-align: center; padding: 0.75rem;">Has Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for route in routes %}
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 0.75rem; font-family: monospace; font-size: 0.9rem;">{{ route.path }}</td>
+            <td style="padding: 0.75rem;">{{ route.name }}</td>
+            <td style="padding: 0.75rem; text-align: center;">
+              {% if route.status == 'working' %}
+                <span style="background: #28a745; color: white; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">✅ Working</span>
+              {% else %}
+                <span style="background: #ffc107; color: #333; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">⏳ Pending</span>
+              {% endif %}
+            </td>
+            <td style="padding: 0.75rem; text-align: center;">
+              {% if route.has_data %}
+                <span style="color: #28a745; font-size: 1.2rem;">✓</span>
+              {% else %}
+                <span style="color: #dc3545; font-size: 1.2rem;">✗</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- API Endpoints -->
+  <div style="margin: 2rem 0;">
+    <h2>🔌 API Endpoints</h2>
+    <div style="background: #fff3cd; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffc107;">
+      <strong>⚠️ API routes defined in openapi.yaml but not yet implemented</strong>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid #ddd;">
+            <th style="text-align: left; padding: 0.75rem;">Method</th>
+            <th style="text-align: left; padding: 0.75rem;">Endpoint</th>
+            <th style="text-align: center; padding: 0.75rem;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for endpoint in api_endpoints %}
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 0.75rem; font-weight: bold; color: #007bff;">{{ endpoint.method }}</td>
+            <td style="padding: 0.75rem; font-family: monospace; font-size: 0.9rem;">{{ endpoint.path }}</td>
+            <td style="padding: 0.75rem; text-align: center;">
+              <span style="background: #ffc107; color: #333; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">Pending</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Database Tables -->
+  <details style="margin: 2rem 0;">
+    <summary style="cursor: pointer; font-size: 1.2rem; font-weight: bold; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+      📋 Database Tables ({{ tables|length }})
+    </summary>
+    <div style="margin-top: 1rem; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.5rem;">
+        {% for table in tables %}
+        <div style="padding: 0.5rem; background: white; border-radius: 4px; display: flex; justify-content: space-between;">
+          <span style="font-family: monospace;">{{ table.name }}</span>
+          <span style="font-weight: bold; color: {% if table.count > 0 %}#28a745{% else %}#6c757d{% endif %};">{{ table.count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </details>
+
+  <!-- Recent Activity -->
+  <div style="margin: 2rem 0;">
+    <h2>⚡ Recent Activity</h2>
+
+    <details open>
+      <summary style="cursor: pointer; font-weight: bold; padding: 0.5rem;">Recent Posts ({{ recent_posts|length }})</summary>
+      <div style="margin-top: 1rem;">
+        {% for post in recent_posts %}
+        <div style="padding: 0.75rem; margin: 0.5rem 0; background: #f9f9f9; border-radius: 4px;">
+          <a href="/post/{{ post.slug|default('#') }}" style="color: #007bff; text-decoration: none; font-weight: bold;">
+            {{ post.title }}
+          </a>
+          <br><small style="color: #666;">{{ post.published_at[:16] }}</small>
+        </div>
+        {% endfor %}
+      </div>
+    </details>
+
+    <details open style="margin-top: 1.5rem;">
+      <summary style="cursor: pointer; font-weight: bold; padding: 0.5rem;">Recent Comments ({{ recent_comments|length }})</summary>
+      <div style="margin-top: 1rem;">
+        {% for comment in recent_comments %}
+        <div style="padding: 0.75rem; margin: 0.5rem 0; background: #f9f9f9; border-radius: 4px;">
+          <strong>{{ comment.username }}</strong>: {{ comment.content[:100] }}{% if comment.content|length > 100 %}...{% endif %}
+          <br><small style="color: #666;">{{ comment.created_at[:16] }}</small>
+        </div>
+        {% endfor %}
+      </div>
+    </details>
+
+    <details open style="margin-top: 1.5rem;">
+      <summary style="cursor: pointer; font-weight: bold; padding: 0.5rem;">Recent Feedback ({{ recent_feedback|length }})</summary>
+      <div style="margin-top: 1rem;">
+        {% for item in recent_feedback %}
+        <div style="padding: 0.75rem; margin: 0.5rem 0; background: #f9f9f9; border-radius: 4px;">
+          <span style="background: #e6f2ff; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.85rem;">{{ item.component }}</span>
+          {{ item.message[:100] }}{% if item.message|length > 100 %}...{% endif %}
+          <br><small style="color: #666;">{{ item.created_at[:16] }}</small>
+        </div>
+        {% endfor %}
+      </div>
+    </details>
+  </div>
+
+  <!-- Quick Links -->
+  <div style="margin: 3rem 0; padding: 1.5rem; background: #e6f2ff; border-radius: 8px;">
+    <h3>🔗 Quick Links</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <a href="/" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Home</a>
+      <a href="/admin" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Admin</a>
+      <a href="/admin/automation" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Automation</a>
+      <a href="/souls" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Souls</a>
+      <a href="/feedback" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Feedback</a>
+      <a href="/code" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Code Browser</a>
+    </div>
+  </div>
+
+  <p style="text-align: center; color: #666; margin: 2rem 0;">
+    Last updated: {{ "now"|default("Just now") }}
+    <br><small>Refresh page to update stats</small>
+  </p>
+</div>
+{% endblock %}

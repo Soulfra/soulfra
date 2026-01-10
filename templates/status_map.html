@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗺️ Status Map - Soulfra Deployment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #00ff00;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            border: 2px solid #00ff00;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.2em;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .category-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        .status-item {
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-left: 4px solid transparent;
+        }
+
+        .status-item.working {
+            border-left-color: #00ff00;
+        }
+
+        .status-item.needs-setup {
+            border-left-color: #ffaa00;
+        }
+
+        .status-item.broken {
+            border-left-color: #ff0000;
+        }
+
+        .status-item.warning {
+            border-left-color: #ff9900;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .status-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            min-width: 30px;
+        }
+
+        .status-name {
+            font-weight: bold;
+            flex: 1;
+            color: #fff;
+        }
+
+        .status-details {
+            color: #888;
+            font-size: 0.9em;
+            margin-left: 40px;
+            margin-top: 5px;
+        }
+
+        .status-action {
+            margin-left: 40px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            color: #00ff00;
+            font-size: 0.85em;
+            font-family: monospace;
+        }
+
+        .routes-section {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .routes-section h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .routes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .route-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid #333;
+            transition: all 0.2s ease;
+        }
+
+        .route-item:hover {
+            background: rgba(0, 255, 0, 0.05);
+            border-color: #00ff00;
+        }
+
+        .route-item a {
+            color: #00ff00;
+            text-decoration: none;
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .route-item a:hover {
+            text-decoration: underline;
+        }
+
+        .deployment-controls {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ffaa00;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .deployment-controls h2 {
+            color: #ffaa00;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .deploy-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #00ff00 0%, #00aa00 100%);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .deploy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .deploy-button.secondary {
+            background: linear-gradient(135deg, #0099ff 0%, #0066cc 100%);
+            box-shadow: 0 4px 15px rgba(0, 153, 255, 0.3);
+        }
+
+        .deploy-button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(0, 153, 255, 0.5);
+        }
+
+        .stats-banner {
+            background: rgba(255, 153, 0, 0.1);
+            border: 2px solid #ff9900;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stats-banner h3 {
+            color: #ff9900;
+            margin-bottom: 10px;
+        }
+
+        .stats-banner p {
+            color: #ffcc66;
+            font-size: 1.1em;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #00ffff;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .map-grid, .routes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .refresh-notice {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗺️ Status Map</h1>
+            <p class="subtitle">Game-like deployment debugging • Like cursor.directory but for voice</p>
+        </header>
+
+        <div class="stats-banner">
+            <h3>⚠️ Project Complexity Warning</h3>
+            <p>{{ py_files }} Python files • {{ md_files }} Markdown docs</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Consider archiving to <code>/archive/prototypes/</code> for deployment simplicity</p>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span style="font-size: 1.5em;">✅</span>
+                <span>Working</span>
+            </div>
+            <div class="legend-item">
+                <span style="font-size: 1.5em;">🔧</span>
+                <span>Needs Setup</span>
+            </div>
+            <div class="legend-item">
+                <span style="font-size: 1.5em;">❌</span>
+                <span>Broken</span>
+            </div>
+            <div class="legend-item">
+                <span style="font-size: 1.5em;">⚠️</span>
+                <span>Warning</span>
+            </div>
+        </div>
+
+        <div class="map-grid">
+            {% for category, checks in grouped_checks.items() %}
+            <div class="status-card">
+                <div class="card-header">
+                    <div class="category-name">{{ category }}</div>
+                </div>
+
+                {% for check in checks %}
+                <div class="status-item {% if check.status == '✅' %}working{% elif check.status == '🔧' %}needs-setup{% elif check.status == '❌' %}broken{% else %}warning{% endif %}">
+                    <div class="status-row">
+                        <div class="status-icon">{{ check.status }}</div>
+                        <div class="status-name">{{ check.name }}</div>
+                    </div>
+                    <div class="status-details">{{ check.details }}</div>
+                    {% if check.action %}
+                    <div class="status-action">💡 {{ check.action }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="routes-section">
+            <h2>🎯 Working Routes</h2>
+            <div class="routes-grid">
+                {% for route in working_routes %}
+                <div class="route-item">
+                    <span style="font-size: 1.5em;">{{ route.status }}</span>
+                    <a href="{{ route.path.replace('<id>', '1').replace('<brand>', 'deathtodata') }}">{{ route.path }}</a>
+                    <span style="color: #888; font-size: 0.9em; margin-left: auto;">{{ route.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="deployment-controls">
+            <h2>🚀 Deployment Controls</h2>
+            <p style="color: #888; margin-bottom: 20px;">One-command deployment like cursor.directory</p>
+
+            <div style="margin: 20px 0;">
+                <button class="deploy-button" onclick="window.location.href='/suggestion-box'">
+                    🎤 Open Voice Box
+                </button>
+                <button class="deploy-button secondary" onclick="refreshStatus()">
+                    🔄 Refresh Status
+                </button>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                <h3 style="color: #00ffff; margin-bottom: 15px;">📦 Deploy to Production</h3>
+                <p style="color: #888; margin-bottom: 10px;">Run from terminal:</p>
+                <pre style="background: #000; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>cd /Users/matthewmauer/Desktop/roommate-chat/soulfra-simple
+./deploy/DEPLOY_NOW.sh</code></pre>
+                <p style="color: #888; margin-top: 10px; font-size: 0.9em;">
+                    This script will:
+                    <br>• Check system dependencies
+                    <br>• Setup database and voice recordings
+                    <br>• Configure Nginx + SSL (production mode)
+                    <br>• Start Flask server (local or production)
+                </p>
+            </div>
+        </div>
+
+        <div class="refresh-notice">
+            <p>Status updates in real-time • Last checked: <span id="timestamp">{{ "now" }}</span></p>
+            <p style="margin-top: 5px;">Press <code>Cmd+R</code> to refresh</p>
+        </div>
+    </div>
+
+    <script>
+        function refreshStatus() {
+            location.reload();
+        }
+
+        // Update timestamp
+        document.getElementById('timestamp').textContent = new Date().toLocaleTimeString();
+
+        // Auto-refresh every 30 seconds
+        setTimeout(() => {
+            location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>

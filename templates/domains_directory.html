@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Domain Directory - Mesh Network{% endblock %}
+
+{% block content %}
+<style>
+  .domains-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .domains-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .domains-header h1 {
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+  }
+
+  .domains-header p {
+    margin: 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .domains-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .domain-card {
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .domain-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-color: #667eea;
+  }
+
+  .tier-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .tier-legendary { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+  .tier-epic { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+  .tier-rare { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); color: #333; }
+  .tier-common { background: #f0f0f0; color: #666; }
+
+  .domain-card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+    color: #333;
+    word-break: break-all;
+  }
+
+  .domain-card .description {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .wordmap-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    min-height: 100px;
+  }
+
+  .word-tag {
+    background: #f0f0f0;
+    color: #333;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .word-count {
+    background: rgba(102, 126, 234, 0.2);
+    padding: 0.1rem 0.4rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+  }
+
+  .alignment-score {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .alignment-score h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .alignment-score .score {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .claim-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .claim-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  .view-btn {
+    background: #f0f0f0;
+    color: #333;
+  }
+
+  .view-btn:hover {
+    background: #e0e0e0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .no-match {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+  }
+</style>
+
+<div class="domains-container">
+  <div class="domains-header">
+    <h1>🌐 Mesh Network Domains</h1>
+    <p>Record voice memos to earn ownership in domains that align with your authentic voice</p>
+  </div>
+
+  {% if not user_logged_in %}
+  <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; text-align: center;">
+    <h3 style="margin: 0 0 0.5rem 0;">🔒 Login to see your alignment scores</h3>
+    <p style="margin: 0 0 1rem 0;">Record voice memos and watch the mesh network find matching domains automatically</p>
+    <a href="/signup" style="display: inline-block; background: #667eea; color: white; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 700;">Get Started</a>
+  </div>
+  {% endif %}
+
+  <div class="domains-grid">
+    {% for domain in domains %}
+    <div class="domain-card">
+      <div class="tier-badge tier-{{ domain.tier }}">{{ domain.tier }}</div>
+
+      <h2>{{ domain.domain_with_emoji }}</h2>
+      <p class="description">{{ domain.description or 'Voice-powered domain' }}</p>
+
+      {% if domain.alignment_score is not none %}
+      <div class="alignment-score">
+        <h3>Your Alignment</h3>
+        <p class="score">{{ (domain.alignment_score * 100)|round(1) }}%</p>
+      </div>
+      {% endif %}
+
+      <div class="wordmap-preview">
+        {% if domain.top_words %}
+          {% for word, count in domain.top_words %}
+          <span class="word-tag">
+            {{ word }}
+            <span class="word-count">{{ count|int }}</span>
+          </span>
+          {% endfor %}
+        {% else %}
+          <p class="no-match">No wordmap yet - be the first contributor!</p>
+        {% endif %}
+      </div>
+
+      {% if user_logged_in %}
+        {% if domain.alignment_score and domain.alignment_score >= 0.1 %}
+        <a href="/{{ domain.domain.split('.')[0] }}" class="claim-btn">
+          Claim Ownership ({{ (domain.alignment_score * 100)|round(1) }}% match)
+        </a>
+        {% else %}
+        <a href="/{{ domain.domain.split('.')[0] }}" class="claim-btn view-btn">
+          View Domain →
+        </a>
+        {% endif %}
+      {% else %}
+      <a href="/{{ domain.domain.split('.')[0] }}" class="claim-btn view-btn">
+        Explore {{ domain.domain.split('.')[0] }} →
+      </a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div style="background: white; border: 2px solid #e0e0e0; border-radius: 16px; padding: 2rem; text-align: center;">
+    <h2 style="margin: 0 0 1rem 0;">How It Works</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+      <div>
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎤</div>
+        <h3 style="margin: 0 0 0.5rem 0;">1. Record Voice</h3>
+        <p style="margin: 0; color: #666;">Talk about your ideas, projects, interests</p>
+      </div>
+      <div>
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🧠</div>
+        <h3 style="margin: 0 0 0.5rem 0;">2. Wordmap Analysis</h3>
+        <p style="margin: 0; color: #666;">AI extracts your authentic vocabulary</p>
+      </div>
+      <div>
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🌐</div>
+        <h3 style="margin: 0 0 0.5rem 0;">3. Domain Matching</h3>
+        <p style="margin: 0; color: #666;">Mesh network finds aligned domains</p>
+      </div>
+      <div>
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">💎</div>
+        <h3 style="margin: 0 0 0.5rem 0;">4. Earn Ownership</h3>
+        <p style="margin: 0; color: #666;">Generate content, claim equity (%)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

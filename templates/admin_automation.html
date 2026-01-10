@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automation - Soulfra Admin</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .automation-card {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      border-left: 4px solid #007bff;
+    }
+    .automation-card h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    .automation-card p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .automation-card form {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .btn-run {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-run:hover {
+      background: #0056b3;
+    }
+    .btn-danger {
+      background: #dc3545;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .btn-success {
+      background: #28a745;
+    }
+    .btn-success:hover {
+      background: #218838;
+    }
+    .info-box {
+      background: #e6f2ff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+      border-left: 4px solid #007bff;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .status-enabled {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-manual {
+      background: #fff3cd;
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <h2>Soulfra Admin - Automation</h2>
+    <nav class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/automation">Automation</a>
+      <a href="/admin/brand-status">Brand Status</a>
+      <a href="/admin/subscribers">Subscribers</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    <h1>🤖 Build-in-Public Automation</h1>
+
+    <div class="info-box">
+      <strong>How it works:</strong><br>
+      These automations run the build-in-public workflow from within the admin panel.
+      You can also set up cron jobs to run them automatically (see AUTOMATION.md).
+      <br><br>
+      <strong>Your Role:</strong> <span class="status-badge status-enabled">{{ user_role }}</span>
+      {% if user_role == 'sysadmin' %}
+        <br><small style="color: #666;">Full access to all automation features</small>
+      {% elif user_role == 'admin' %}
+        <br><small style="color: #666;">Can run automation and manage content</small>
+      {% else %}
+        <br><small style="color: #666;">Contact sysadmin for automation access</small>
+      {% endif %}
+    </div>
+
+    <!-- Public Builder -->
+    <div class="automation-card">
+      <h3>🏗️ Public Builder</h3>
+      <span class="status-badge status-manual">Manual</span>
+      <p>
+        Checks feedback for high-priority items (bugs, features) and automatically:
+        <br>• CalRiven creates posts documenting fixes
+        <br>• Reasoning engine analyzes posts
+        <br>• Updates feedback status to "in-progress"
+      </p>
+      <form method="POST" action="/admin/automation/run-builder" onsubmit="return confirm('Run public builder automation?')">
+        <button type="submit" class="btn-run">▶️ Run Now</button>
+      </form>
+      <small style="color: #666;">Last run: Never | Next scheduled: Manual only</small>
+    </div>
+
+    <!-- Newsletter Digest Generator -->
+    <div class="automation-card">
+      <h3>📧 Weekly Newsletter Digest</h3>
+      <span class="status-badge status-manual">Manual</span>
+      <p>
+        Generates weekly digest with decision questions:
+        <br>• Groups feedback by theme (keyword similarity)
+        <br>• Analyzes AI consensus/disagreement
+        <br>• Creates clickable decision questions
+        <br>• Saves preview to weekly_digest_preview.html
+      </p>
+      <form method="POST" action="/admin/automation/generate-digest">
+        <button type="submit" class="btn-run">📝 Generate Preview</button>
+      </form>
+      <form method="POST" action="/admin/automation/send-digest" onsubmit="return confirm('Send digest to ALL subscribers?')">
+        <button type="submit" class="btn-run btn-success">📤 Send to Subscribers</button>
+      </form>
+      <br><br>
+      <small style="color: #666;">Last sent: Never | Next scheduled: Manual only</small>
+    </div>
+
+    <!-- QR Time Capsule Stats -->
+    <div class="automation-card">
+      <h3>🔗 QR Time Capsule</h3>
+      <span class="status-badge status-enabled">Active</span>
+      <p>
+        Tracks QR code scans automatically:
+        <br>• Records who/when/where each scan happened
+        <br>• Links scans together (chain tracking)
+        <br>• Shows "Last scanned by X in Y, Z hours ago"
+      </p>
+      <a href="/qr/stats" class="btn-run" style="text-decoration: none; display: inline-block;">📊 View Stats</a>
+      <br><br>
+      <small style="color: #666;">Status: Auto-tracking all QR scans</small>
+    </div>
+
+    <!-- Reasoning Engine -->
+    <div class="automation-card">
+      <h3>💭 Reasoning Engine</h3>
+      <span class="status-badge status-enabled">Active</span>
+      <p>
+        AI personas analyze posts automatically:
+        <br>• CalRiven: Technical analysis
+        <br>• TheAuditor: Validation
+        <br>• Soulfra: Platform perspective
+        <br>• DeathToData: Critical questions
+      </p>
+      <a href="/reasoning" class="btn-run" style="text-decoration: none; display: inline-block;">🔍 View Threads</a>
+      <br><br>
+      <small style="color: #666;">Status: Auto-analyzing all new posts</small>
+    </div>
+
+    <!-- Bootstrap System -->
+    <div class="automation-card">
+      <h3>🔧 Bootstrap System</h3>
+      <span class="status-badge status-manual">Manual</span>
+      <p>
+        Initialize and sync the brand ML system:
+        <br>• Syncs themes from manifest.yaml to database
+        <br>• Creates all 8 brand definitions (CalRiven, Ocean Dreams, etc.)
+        <br>• Cleans up orphaned brand-post associations
+        <br>• Verifies system integrity for training
+      </p>
+      <form method="POST" action="/admin/automation/bootstrap" onsubmit="return confirm('Run system bootstrap? This will sync brands from manifest.yaml.')">
+        <button type="submit" class="btn-run">🚀 Run Bootstrap</button>
+      </form>
+      <br><br>
+      <small style="color: #666;">Run this first if brand training fails | Self-healing system</small>
+    </div>
+
+    <!-- Website Structure ML Training -->
+    <div class="automation-card">
+      <h3>🧠 Website Structure ML</h3>
+      <span class="status-badge status-manual">Manual</span>
+      <p>
+        Train neural network on website architecture:
+        <br>• Analyzes sitemap routes (paths, methods, parameters)
+        <br>• Parses Jinja2 templates for variable patterns
+        <br>• Predicts missing routes (CRUD operations)
+        <br>• Suggests parameter names for new routes
+      </p>
+      <form method="POST" action="/admin/automation/train-website-model" onsubmit="return confirm('Train website structure ML model?')">
+        <button type="submit" class="btn-run">🤖 Train Model</button>
+      </form>
+      <a href="/api/website/missing-routes" class="btn-run" target="_blank" style="text-decoration: none; display: inline-block;">🔍 View Predictions</a>
+      <a href="/api/website/structure" class="btn-run" target="_blank" style="text-decoration: none; display: inline-block;">📊 View Structure</a>
+      <br><br>
+      <small style="color: #666;">Last trained: Never | Model learns website patterns</small>
+    </div>
+
+    <!-- Brand Voice ML Training -->
+    <div class="automation-card">
+      <h3>🎨 Brand Voice ML</h3>
+      <span class="status-badge status-manual">Manual</span>
+      <p>
+        Train neural networks on brand personalities and voice:
+        <br>• Learns vocabulary wordmaps per theme (CalRiven vs Ocean Dreams)
+        <br>• Analyzes emoji usage patterns per brand
+        <br>• Predicts which brand wrote text
+        <br>• Generates brand-consistent content with emoji
+      </p>
+      <form method="POST" action="/admin/automation/train-brand-models" onsubmit="return confirm('Train brand voice ML models?')">
+        <button type="submit" class="btn-run">🎭 Train Models</button>
+      </form>
+      <a href="/api/brand/wordmap/ocean-dreams" class="btn-run" target="_blank" style="text-decoration: none; display: inline-block;">📚 View Wordmaps</a>
+      <a href="/api/brand/voice/compare" class="btn-run" target="_blank" style="text-decoration: none; display: inline-block;">🔍 Compare Voices</a>
+      <br><br>
+      <small style="color: #666;">Last trained: Never | Model learns brand DNA from posts</small>
+    </div>
+
+    <!-- Auto-Syndication -->
+    <div class="automation-card">
+      <h3>🔄 Auto-Syndication</h3>
+      <span class="status-badge status-manual">Manual</span>
+      <p>
+        Automatically cross-post new content across all brand domains:
+        <br>• Syndicates posts from last 24 hours to network
+        <br>• Tracks what's been syndicated to avoid duplicates
+        <br>• Updates network_posts table with cross-references
+      </p>
+      <form method="POST" action="/admin/automation/run-syndication" onsubmit="return confirm('Run auto-syndication for posts from last 24 hours?')">
+        <button type="submit" class="btn-run">▶️ Run Syndication</button>
+      </form>
+      <br><br>
+      <small style="color: #666;">Last run: Never | Syndicates across all domains</small>
+    </div>
+
+    <!-- Publish to GitHub -->
+    <div class="automation-card">
+      <h3>🚀 Publish to GitHub</h3>
+      <span class="status-badge status-manual">Manual</span>
+      <p>
+        Auto-commit and push all static sites to GitHub Pages:
+        <br>• Commits changes in output/ directories
+        <br>• Pushes to GitHub (deploys to Pages)
+        <br>• Updates all live websites in ~2 minutes
+      </p>
+      <form method="POST" action="/admin/automation/publish-all" onsubmit="return confirm('Commit and push ALL sites to GitHub Pages?')">
+        <button type="submit" class="btn-run btn-success">🚀 Publish All Sites</button>
+      </form>
+      <br><br>
+      <small style="color: #666;">Pushes to: soulfra, calriven, deathtodata, howtocookathome</small>
+    </div>
+
+    <!-- Token Usage Dashboard -->
+    <div class="automation-card">
+      <h3>🪙 Token Usage Tracking</h3>
+      <span class="status-badge status-enabled">Active</span>
+      <p>
+        Ollama automatically tracks token usage per request:
+        <br>• Tokens generated (response size)
+        <br>• Tokens prompt (input size)
+        <br>• Generation time (milliseconds)
+        <br>• Per-brand usage breakdown
+      </p>
+      <a href="/admin/token-usage" class="btn-run" style="text-decoration: none; display: inline-block;">📊 View Token Usage</a>
+      <br><br>
+      <small style="color: #666;">Status: Auto-tracking all Ollama requests</small>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid #ddd; margin: 40px 0;">
+
+    <div class="info-box">
+      <strong>💡 Pro Tip:</strong> Set up cron jobs for automatic execution:<br>
+      <code style="background: white; padding: 2px 5px; border-radius: 3px;">
+        # Hourly: public_builder.py<br>
+        0 * * * * cd /path/to/soulfra && python3 public_builder.py<br>
+        <br>
+        # Weekly (Sunday 8pm): newsletter_digest.py<br>
+        0 20 * * 0 cd /path/to/soulfra && python3 newsletter_digest.py
+      </code>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-top: 30px;">
+          {% for category, message in messages %}
+            <div style="background: {% if category == 'success' %}#d4edda{% else %}#f8d7da{% endif %};
+                        color: {% if category == 'success' %}#155724{% else %}#721c24{% endif %};
+                        padding: 15px;
+                        border-radius: 5px;
+                        margin-bottom: 10px;">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+  </div>
+</body>
+</html>

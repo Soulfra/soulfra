@@ -1,0 +1,51 @@
+# ✅ USE THIS FILE FOR CSV IMPORT!
+#
+# How to import:
+# 1. Add your domains below the existing 4 examples
+# 2. Visit: http://localhost:5001/admin/domains/csv
+# 3. Copy ALL contents of this file (Cmd+A, Cmd+C)
+# 4. Paste into CSV import form
+# 5. Click Parse → Import → Done!
+#
+# OR import in batches (50 at a time):
+# - Copy header + first 50 domains → Import
+# - Copy header + next 50 domains → Import
+# - Repeat until all imported!
+
+name,domain,category,tier,emoji,brand_type,tagline,target_audience,purpose,ssl_enabled,deployed
+Soulfra,soulfra.com,tech,foundation,🌟,platform,"AI-powered development platform","Developers, tech enthusiasts","Central control hub for managing 200+ domains",true,true
+HowToCookAtHome,howtocookathome.com,cooking,creative,👨‍🍳,blog,"Simple recipes for home cooks","Parents age 25-45","Quick 30-minute meal recipes",false,false
+DeathToData,deathtodata.com,privacy,foundation,💀,blog,"Privacy-first data protection","Privacy advocates, tech users","Anti-tracking and data minimization",false,false
+Calriven,calriven.com,tech,foundation,🔧,blog,"Technical excellence and code quality","Software engineers","System architecture and best practices",false,false
+
+# Template - Copy this line for each of your 200+ domains:
+# DomainName,domainname.com,category,tier,emoji,type,tagline,audience,purpose,false,false
+
+# Instructions:
+# 1. Fill in all your domains below (one per line)
+# 2. Columns:
+#    - name: Brand name (e.g., "My Cooking Blog")
+#    - domain: Full domain (e.g., "mycookingblog.com")
+#    - category: cooking, tech, privacy, business, health, art, education, etc.
+#    - tier: foundation, business, creative
+#    - emoji: One emoji representing the brand
+#    - brand_type: blog, game, community, platform, directory
+#    - tagline: Short description
+#    - target_audience: Who visits this site?
+#    - purpose: What does this site do?
+#    - ssl_enabled: true or false
+#    - deployed: true or false
+
+# Categories available:
+# - cooking: Recipe blogs, food content
+# - tech: Developer tools, software, programming
+# - privacy: Data protection, security, anti-tracking
+# - business: Entrepreneurship, startups, consulting
+# - health: Fitness, wellness, nutrition
+# - art: Creative content, design, photography
+# - education: Learning, tutorials, courses
+# - gaming: Games, esports, game development
+# - finance: Money, investing, crypto
+# - local: Local businesses, directories, services
+
+# Add your 200+ domains below:

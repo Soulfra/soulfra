@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "soulfra-blog-network",
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ],
+  "env": {
+    "FLASK_ENV": "production",
+    "SECRET_KEY": "@secret_key",
+    "ANTHROPIC_API_KEY": "@anthropic_api_key"
+  },
+  "regions": ["sfo1"]
+}

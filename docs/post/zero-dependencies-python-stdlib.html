@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero Dependencies: Python Stdlib Only - Soulfra Platform</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="../docs/index.html">Docs</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main>
+        <article class="post">
+            <h1>Zero Dependencies: Python Stdlib Only</h1>
+            <p class="date">2025-12-24</p>
+            <div class="content">
+                # Zero Dependencies: Python Stdlib Only
+
+Soulfra runs entirely on Python standard library - no pip install required.
+
+## Why?
+
+**Dependencies rot**:
+- Libraries get abandoned
+- Breaking changes
+- Security vulnerabilities
+- Version conflicts
+
+**Stdlib is stable**:
+- Guaranteed to work
+- Security updates from Python
+- No dependency hell
+- Works offline
+
+## What We Built
+
+### QR Code Generator (`qr_encoder_stdlib.py`)
+- Pure Python Reed-Solomon error correction
+- BMP image generation
+- No pillow, no qrcode library
+
+### URL Shortener
+- Base64 encoding
+- Hash-based short codes
+- No external service
+
+### Email System
+- SMTP via `smtplib`
+- HTML email templates
+- No sendgrid, no mailgun
+
+### Session Management
+- Cookie-based sessions
+- No Redis, no memcached
+- Database-backed persistence
+
+## Tradeoffs
+
+**Pros**:
+- ✅ No dependencies to manage
+- ✅ Works offline
+- ✅ Security (less attack surface)
+- ✅ Longevity (still works in 10 years)
+
+**Cons**:
+- ⚠️ More code to write
+- ⚠️ Can't use fancy libraries
+- ⚠️ Reinvent some wheels
+
+## Philosophy
+
+**Dependencies are debt**.
+
+Every external library is a promise that:
+- It will keep working
+- It won't break your code
+- It will get security updates
+- The maintainer won't abandon it
+
+Most projects violate all four. So we use **stdlib only** and sleep well at night.
+
+The code is ours. Forever.
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <p><a href="../index.html">← Back to posts</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Launcher Guide - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-launcher-guide">Soulfra Launcher Guide</h1>
+
+<p><strong>All the ways to run Soulfra - from desktop icon to production server</strong></p>
+
+<hr />
+
+<h2 id="understanding-how-it-works">Understanding How It Works</h2>
+
+<p><strong>Soulfra is a Python web application</strong>, just like ReadTheDocs, Django, or any Flask-based platform.</p>
+
+<h3 id="the-stack-how-python-becomes-a-website">The Stack (How Python Becomes a Website)</h3>
+
+<pre><code>┌─────────────────────────────────────┐
+│   Your Code (app.py)                │  ← Python Flask application
+├─────────────────────────────────────┤
+│   Flask Framework                    │  ← Converts Python → HTTP server
+├─────────────────────────────────────┤
+│   Server (Flask dev / gunicorn)     │  ← Runs the Flask app
+├─────────────────────────────────────┤
+│   Reverse Proxy (nginx, optional)   │  ← Routes traffic, serves static files
+└─────────────────────────────────────┘
+           ↓
+    http://localhost:5001
+</code></pre>
+
+<p><strong>This is exactly how ReadTheDocs, Heroku, Render, etc. work!</strong></p>
+
+<p>When you run <code>python3 app.py</code>, your Python code BECOMES a web server listening on port 5001.</p>
+
+<hr />
+
+<h2 id="method-1-shell-script-easiest">Method 1: Shell Script (Easiest)</h2>
+
+<p><strong>For</strong>: Mac/Linux daily use</p>
+
+<h3 id="usage">Usage</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Make executable (first time only)</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>start_soulfra.sh
+
+<span class="c1"># Double-click in file manager</span>
+<span class="c1"># OR run from terminal:</span>
+./start_soulfra.sh
+</code></pre>
+</div>
+
+<h3 id="what-it-does">What it does</h3>
+
+<ol>
+<li>Checks Python is installed</li>
+<li>Checks database exists</li>
+<li>Kills any previous instance on port 5001</li>
+<li>Starts <code>python3 app.py</code></li>
+<li>Opens browser to http://localhost:5001</li>
+<li>Shows pretty colored output</li>
+</ol>
+
+<h3 id="when-to-use">When to use</h3>
+
+<ul>
+<li><strong>Development</strong>: Quick testing</li>
+<li><strong>Daily use</strong>: Personal blog</li>
+<li><strong>Learning</strong>: First time setup</li>
+</ul>
+
+<hr />
+
+<h2 id="method-2-windows-batch-file">Method 2: Windows Batch File</h2>
+
+<p><strong>For</strong>: Windows users</p>
+
+<h3 id="usage-2">Usage</h3>
+
+<pre><code>Double-click: start_soulfra.bat
+</code></pre>
+
+<h3 id="what-it-does-2">What it does</h3>
+
+<p>Same as shell script, but for Windows:
+- Checks Python installation
+- Creates .env if needed
+- Stops previous instances
+- Starts server</p>
+
+<h3 id="when-to-use-2">When to use</h3>
+
+<ul>
+<li>Windows development</li>
+<li>Non-technical Windows users</li>
+<li>Quick local testing</li>
+</ul>
+
+<hr />
+
+<h2 id="method-3-python-gui-launcher-cross-platform">Method 3: Python GUI Launcher (Cross-Platform)</h2>
+
+<p><strong>For</strong>: Non-technical users, visual interface</p>
+
+<h3 id="usage-3">Usage</h3>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>launcher.py
+</code></pre>
+</div>
+
+<h3 id="features">Features</h3>
+
+<ul>
+<li>✅ <strong>GUI window</strong> with Start/Stop buttons</li>
+<li>✅ <strong>Live server logs</strong> in the window</li>
+<li>✅ <strong>Status indicator</strong> (green = running, gray = stopped)</li>
+<li>✅ <strong>Open Browser</strong> button</li>
+<li>✅ <strong>Cross-platform</strong> (Mac, Windows, Linux)</li>
+</ul>
+
+<h3 id="screenshot">Screenshot</h3>
+
+<pre><code>╔═══════════════════════════════════════════════╗
+║            SOULFRA                           ║
+║   AI-Powered Ghost Writing Platform          ║
+╠═══════════════════════════════════════════════╣
+║ Status: 🟢 Server running                    ║
+║ URL: http://localhost:5001 (click to open)   ║
+║                                               ║
+║ [▶ Start] [⏹ Stop] [🌐 Open Browser]        ║
+║                                               ║
+║ Server Logs:                                  ║
+║ ┌───────────────────────────────────────────┐ ║
+║ │ ✓ Python 3.11.5                           │ ║
+║ │ ✓ Server started successfully!            │ ║
+║ │ → URL: http://localhost:5001              │ ║
+║ │ ✅ Loaded 4 neural networks              │ ║
+║ └───────────────────────────────────────────┘ ║
+╚═══════════════════════════════════════════════╝
+</code></pre>
+
+<h3 id="when-to-use-3">When to use</h3>
+
+<ul>
+<li>Non-technical users</li>
+<li>Want visual feedback</li>
+<li>Need to start/stop frequently</li>
+<li>Distributing to non-developers</li>
+</ul>
+
+<hr />
+
+<h2 id="method-4-system-service-production">Method 4: System Service (Production)</h2>
+
+<p><strong>For</strong>: Production servers, always-running deployments</p>
+
+<h3 id="setup-linuxmac">Setup (Linux/Mac)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Edit soulfra.service</span>
+nano<span class="w"> </span>soulfra.service
+<span class="c1"># Change paths:</span>
+<span class="c1">#   User=youruser</span>
+<span class="c1">#   WorkingDirectory=/path/to/soulfra-simple</span>
+
+<span class="c1"># 2. Create log directory</span>
+sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/var/log/soulfra
+sudo<span class="w"> </span>chown<span class="w"> </span>youruser:youruser<span class="w"> </span>/var/log/soulfra
+
+<span class="c1"># 3. Install service</span>
+sudo<span class="w"> </span>cp<span class="w"> </span>soulfra.service<span class="w"> </span>/etc/systemd/system/
+sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+
+<span class="c1"># 4. Enable (start on boot)</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>soulfra
+
+<span class="c1"># 5. Start service</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>soulfra
+
+<span class="c1"># 6. Check status</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<h3 id="managing-the-service">Managing the Service</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>soulfra
+
+<span class="c1"># Stop</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>soulfra
+
+<span class="c1"># Restart</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>soulfra
+
+<span class="c1"># View logs</span>
+sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>soulfra<span class="w"> </span>-f
+
+<span class="c1"># Check status</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<h3 id="what-it-does-3">What it does</h3>
+
+<ul>
+<li>✅ <strong>Runs on boot</strong> - Starts automatically when server boots</li>
+<li>✅ <strong>Auto-restart</strong> - Restarts if it crashes</li>
+<li>✅ <strong>Logging</strong> - Logs to systemd journal</li>
+<li>✅ <strong>Production-ready</strong> - Uses gunicorn with 4 workers</li>
+<li>✅ <strong>Resource limits</strong> - Memory/CPU limits configured</li>
+<li>✅ <strong>Security hardening</strong> - Sandboxing enabled</li>
+</ul>
+
+<h3 id="when-to-use-4">When to use</h3>
+
+<ul>
+<li><strong>Production servers</strong> (VPS, AWS, etc.)</li>
+<li><strong>24/7 availability</strong> required</li>
+<li><strong>Team/client websites</strong></li>
+<li><strong>Business deployments</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="method-5-docker-desktop-containerized">Method 5: Docker Desktop (Containerized)</h2>
+
+<p><strong>For</strong>: Consistent environments, easy deployment</p>
+
+<h3 id="usage-4">Usage</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># Stop</span>
+docker-compose<span class="w"> </span>down
+
+<span class="c1"># View logs</span>
+docker-compose<span class="w"> </span>logs<span class="w"> </span>-f
+
+<span class="c1"># Restart</span>
+docker-compose<span class="w"> </span>restart
+</code></pre>
+</div>
+
+<h3 id="what-it-includes">What it includes</h3>
+
+<ul>
+<li>✅ Soulfra web app</li>
+<li>✅ Ollama AI (for local inference)</li>
+<li>✅ Persistent storage (database, uploads)</li>
+<li>✅ Health checks</li>
+<li>✅ Auto-restart on failure</li>
+</ul>
+
+<h3 id="when-to-use-5">When to use</h3>
+
+<ul>
+<li>Want consistent environment</li>
+<li>Multiple deployments</li>
+<li>Kubernetes/cloud deployment</li>
+<li>Team development</li>
+</ul>
+
+<hr />
+
+<h2 id="method-6-github-auto-deployment">Method 6: GitHub Auto-Deployment</h2>
+
+<p><strong>For</strong>: Continuous deployment, team workflows</p>
+
+<h3 id="setup">Setup</h3>
+
+<ol>
+<li><p><strong>Add secrets to GitHub</strong>:</p>
+
+<ul>
+<li>Go to repo Settings → Secrets and variables → Actions</li>
+<li>Add secrets:
+<ul>
+<li><code>SERVER_HOST</code>: your-server.com</li>
+<li><code>SERVER_USER</code>: youruser</li>
+<li><code>SERVER_SSH_KEY</code>: (paste private SSH key)</li>
+<li><code>SERVER_PORT</code>: 22</li>
+<li><code>SLACK_WEBHOOK</code>: (optional, for notifications)</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Setup server</strong>:</p></li>
+</ol>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># On your server</span>
+<span class="nb">cd</span><span class="w"> </span>/var/www/soulfra-simple
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>https://github.com/yourusername/soulfra
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<ol start="3">
+<li><strong>Deploy</strong>:</li>
+</ol>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># On your local machine</span>
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update content&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
+
+<span class="c1"># GitHub Actions automatically:</span>
+<span class="c1"># - Pulls code to server</span>
+<span class="c1"># - Installs dependencies</span>
+<span class="c1"># - Runs migrations</span>
+<span class="c1"># - Restarts service</span>
+<span class="c1"># ✅ Website updates in ~30 seconds</span>
+</code></pre>
+</div>
+
+<h3 id="what-it-does-4">What it does</h3>
+
+<p>Every time you push to GitHub:
+1. Code pushed to GitHub
+2. GitHub Actions triggers
+3. Connects to your server via SSH
+4. Pulls latest code
+5. Installs dependencies
+6. Runs database migrations
+7. Restarts server
+8. Sends Slack notification</p>
+
+<h3 id="when-to-use-6">When to use</h3>
+
+<ul>
+<li>Team development</li>
+<li>Multiple contributors</li>
+<li>Want automated deployments</li>
+<li>Professional workflows</li>
+</ul>
+
+<hr />
+
+<h2 id="method-7-desktop-icon-linux">Method 7: Desktop Icon (Linux)</h2>
+
+<p><strong>For</strong>: Linux desktop users</p>
+
+<h3 id="setup-2">Setup</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Edit Soulfra.desktop</span>
+nano<span class="w"> </span>Soulfra.desktop
+<span class="c1"># Change paths:</span>
+<span class="c1">#   Icon=/path/to/soulfra-simple/icon.png</span>
+<span class="c1">#   Exec=/path/to/soulfra-simple/start_soulfra.sh</span>
+
+<span class="c1"># 2. Install</span>
+cp<span class="w"> </span>Soulfra.desktop<span class="w"> </span>~/.local/share/applications/
+chmod<span class="w"> </span>+x<span class="w"> </span>~/.local/share/applications/Soulfra.desktop
+
+<span class="c1"># 3. Update desktop database</span>
+update-desktop-database<span class="w"> </span>~/.local/share/applications/
+</code></pre>
+</div>
+
+<h3 id="usage-5">Usage</h3>
+
+<ul>
+<li>Find "Soulfra" in application menu</li>
+<li>Pin to dock/favorites</li>
+<li>Right-click for actions:
+<ul>
+<li>Open GUI Launcher</li>
+<li>Open in Browser</li>
+<li>Stop Server</li>
+</ul></li>
+</ul>
+
+<h3 id="when-to-use-7">When to use</h3>
+
+<ul>
+<li>Linux desktop</li>
+<li>Want app menu integration</li>
+<li>Daily use application</li>
+</ul>
+
+<hr />
+
+<h2 id="comparison-table">Comparison Table</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Method</th>
+  <th>Skill Level</th>
+  <th>Use Case</th>
+  <th>Auto-Start</th>
+  <th>Always Running</th>
+  <th>GUI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Shell Script</strong></td>
+  <td>Beginner</td>
+  <td>Dev/Testing</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><strong>Batch File</strong></td>
+  <td>Beginner</td>
+  <td>Windows Dev</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><strong>GUI Launcher</strong></td>
+  <td>Beginner</td>
+  <td>Non-tech users</td>
+  <td>No</td>
+  <td>No</td>
+  <td>✓</td>
+</tr>
+<tr>
+  <td><strong>System Service</strong></td>
+  <td>Intermediate</td>
+  <td>Production</td>
+  <td>✓</td>
+  <td>✓</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><strong>Docker</strong></td>
+  <td>Intermediate</td>
+  <td>Containers</td>
+  <td>No</td>
+  <td>✓</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><strong>GitHub Actions</strong></td>
+  <td>Intermediate</td>
+  <td>Auto-deploy</td>
+  <td>On push</td>
+  <td>N/A</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td><strong>Desktop Icon</strong></td>
+  <td>Beginner</td>
+  <td>Linux daily use</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="how-this-relates-to-other-platforms">How This Relates to Other Platforms</h2>
+
+<h3 id="vs-readthedocs">vs ReadTheDocs</h3>
+
+<p><strong>ReadTheDocs</strong>:</p>
+
+<pre><code>Sphinx (Python) → Flask → gunicorn → nginx → Web
+</code></pre>
+
+<p><strong>Soulfra</strong>:</p>
+
+<pre><code>Flask (Python) → Flask/gunicorn → nginx → Web
+</code></pre>
+
+<p><strong>Same architecture!</strong></p>
+
+<h3 id="vs-heroku">vs Heroku</h3>
+
+<p><strong>Heroku</strong>:
+- You push code
+- Heroku detects Python/requirements.txt
+- Runs gunicorn automatically
+- Assigns URL</p>
+
+<p><strong>Soulfra + GitHub Actions</strong>:
+- You push code
+- GitHub Actions detects push
+- Deploys to your server
+- You control the URL</p>
+
+<p><strong>Same workflow, but you own the server!</strong></p>
+
+<h3 id="vs-ghost-the-blogging-platform">vs Ghost (the blogging platform)</h3>
+
+<p><strong>Ghost</strong>:
+- Node.js application
+- Runs as system service
+- nginx reverse proxy</p>
+
+<p><strong>Soulfra</strong>:
+- Python application
+- Runs as system service (soulfra.service)
+- nginx reverse proxy (optional)</p>
+
+<p><strong>Same deployment model!</strong></p>
+
+<hr />
+
+<h2 id="recommended-setup-by-use-case">Recommended Setup by Use Case</h2>
+
+<h3 id="personal-blog-local">Personal Blog (Local)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Use: GUI Launcher</span>
+python3<span class="w"> </span>launcher.py
+</code></pre>
+</div>
+
+<ul>
+<li>Easy visual interface</li>
+<li>Start/stop with buttons</li>
+<li>Perfect for writing posts locally</li>
+</ul>
+
+<h3 id="personal-blog-hosted">Personal Blog (Hosted)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Use: System Service</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>soulfra
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<ul>
+<li>Always running</li>
+<li>Survives reboots</li>
+<li>Professional setup</li>
+</ul>
+
+<h3 id="teamagency-multiple-clients">Team/Agency (Multiple Clients)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Use: Docker + GitHub Actions</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">        </span><span class="c1"># Local development</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main<span class="w">        </span><span class="c1"># Auto-deploy to staging/production</span>
+</code></pre>
+</div>
+
+<ul>
+<li>Consistent environments</li>
+<li>Automated deployments</li>
+<li>Easy to scale</li>
+</ul>
+
+<h3 id="distribution-to-non-tech-users">Distribution to Non-Tech Users</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Use: GUI Launcher or Desktop Icon</span>
+python3<span class="w"> </span>launcher.py<span class="w">    </span><span class="c1"># Cross-platform GUI</span>
+<span class="c1"># OR</span>
+<span class="c1"># Package as Electron app (future enhancement)</span>
+</code></pre>
+</div>
+
+<ul>
+<li>No terminal needed</li>
+<li>Visual feedback</li>
+<li>One-click start</li>
+</ul>
+
+<hr />
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="port-5001-already-in-use">"Port 5001 already in use"</h3>
+
+<p><strong>Shell script</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>./start_soulfra.sh<span class="w">  </span><span class="c1"># Automatically kills previous instance</span>
+</code></pre>
+</div>
+
+<p><strong>Manual</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Find process</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># Kill it</span>
+<span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>PID
+</code></pre>
+</div>
+
+<h3 id="python-not-found">"Python not found"</h3>
+
+<p><strong>Install Python</strong>:
+- Mac: <code>brew install python3</code>
+- Linux: <code>sudo apt install python3</code>
+- Windows: https://www.python.org/downloads/</p>
+
+<h3 id="module-not-found">"Module not found"</h3>
+
+<p><strong>Install dependencies</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre>
+</div>
+
+<h3 id="service-wont-start">Service won't start</h3>
+
+<p><strong>Check logs</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>soulfra<span class="w"> </span>-f
+</code></pre>
+</div>
+
+<p><strong>Common issues</strong>:
+- Wrong paths in soulfra.service
+- Permissions (needs write access to database)
+- Port already in use</p>
+
+<h3 id="github-actions-failing">GitHub Actions failing</h3>
+
+<p><strong>Check secrets</strong>:
+- SERVER<em>HOST, SERVER</em>USER, SERVER<em>SSH</em>KEY must be set
+- SSH key must be private key (not public)
+- Server must allow SSH connections</p>
+
+<p><strong>Debug</strong>:
+- Go to Actions tab in GitHub
+- Click failed workflow
+- Read error messages</p>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+<li><strong>Try GUI Launcher</strong>: <code>python3 launcher.py</code></li>
+<li><strong>Set up auto-deploy</strong>: Configure GitHub Actions</li>
+<li><strong>Production deployment</strong>: Install systemd service</li>
+<li><strong>Add to application menu</strong>: Install desktop file</li>
+</ol>
+
+<hr />
+
+<h2 id="files-created">Files Created</h2>
+
+<ul>
+<li><code>start_soulfra.sh</code> - Shell launcher (Mac/Linux)</li>
+<li><code>start_soulfra.bat</code> - Batch launcher (Windows)</li>
+<li><code>launcher.py</code> - GUI launcher (all platforms)</li>
+<li><code>soulfra.service</code> - systemd service (Linux)</li>
+<li><code>.github/workflows/deploy.yml</code> - GitHub Actions auto-deploy</li>
+<li><code>Soulfra.desktop</code> - Desktop icon (Linux)</li>
+<li><code>docker-compose.yml</code> - Docker deployment (already exists)</li>
+</ul>
+
+<hr />
+
+<h2 id="the-big-picture">The Big Picture</h2>
+
+<p>All these methods are just <strong>different ways to start the same Python application</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># This is what they all do:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>The composition</strong>:
+1. Your code (Python) → Flask (HTTP server)
+2. Flask → gunicorn (production server)
+3. gunicorn → nginx (reverse proxy)
+4. nginx → Internet (domain + SSL)</p>
+
+<p><strong>It composes all the way up!</strong></p>
+
+<p>Just like:
+- Linux composes system calls → kernel → hardware
+- Docker composes containers → images → registries
+- Git composes commits → branches → remotes</p>
+
+<p><strong>Soulfra composes</strong>: Python → Web → Production → Auto-Deploy</p>
+
+<hr />
+
+<p><strong>Now you can run Soulfra anywhere, anytime, any way you want!</strong> 🚀</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

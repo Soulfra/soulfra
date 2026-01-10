@@ -1,0 +1,161 @@
+# Shipyard Manifest - Theme Registry
+# Ship classification system for Soulfra themes
+
+ship_classes:
+  dinghy:
+    name: "Dinghy Class"
+    description: "Minimal themes - emoji + colors + optional animation"
+    lines: "~26 lines"
+    use_case: "Quick prototypes, brutalist aesthetic, Craigslist-style"
+
+  schooner:
+    name: "Schooner Class"
+    description: "Enhanced themes - typography, spacing, borders, basic components"
+    lines: "50-80 lines"
+    use_case: "Professional blogs, portfolios, small business sites"
+
+  frigate:
+    name: "Frigate Class"
+    description: "Advanced themes - full components, animations, shadows, polish"
+    lines: "120-180 lines"
+    use_case: "Marketing sites, brand showcases, product pages"
+
+  galleon:
+    name: "Galleon Class"
+    description: "Complete design systems - component library, responsive, a11y"
+    lines: "250+ lines"
+    use_case: "Production apps, enterprise brands, complex platforms"
+
+themes:
+  # === DINGHY CLASS (Minimal) ===
+
+  ocean-dreams:
+    name: "Ocean Dreams"
+    emoji: "🌊"
+    class: dinghy
+    tier: free
+    colors:
+      primary: "#0066cc"
+      background: "#e6f3ff"
+      text: "#003366"
+    personality: "calm, deep, flowing"
+    tone: "peaceful and contemplative"
+    animation: "slow wave gradient (60s)"
+
+  calriven:
+    name: "CalRiven"
+    emoji: "💻"
+    class: dinghy
+    tier: free
+    colors:
+      primary: "#2196f3"
+      background: "#f5f9ff"
+      text: "#0d47a1"
+    personality: "technical, precise, data-driven"
+    tone: "professional and analytical"
+    animation: "tech pulse gradient (45s)"
+
+  deathtodata:
+    name: "DeathToData"
+    emoji: "🔒"
+    class: dinghy
+    tier: free
+    colors:
+      primary: "#9c27b0"
+      background: "#f8f5fa"
+      text: "#4a148c"
+    personality: "private, secure, encrypted"
+    tone: "protective and vigilant"
+    animation: "privacy shift gradient (50s)"
+
+  theauditor:
+    name: "TheAuditor"
+    emoji: "✓"
+    class: dinghy
+    tier: free
+    colors:
+      primary: "#ff9800"
+      background: "#fff8f0"
+      text: "#e65100"
+    personality: "validating, testing, verifying"
+    tone: "thorough and trustworthy"
+    animation: "validation pulse gradient (40s)"
+
+  soulfra:
+    name: "Soulfra"
+    emoji: "🌱"
+    class: dinghy
+    tier: free
+    colors:
+      primary: "#4caf50"
+      background: "#f1f8f4"
+      text: "#1b5e20"
+    personality: "balanced, secure, trustworthy"
+    tone: "neutral and professional"
+    animation: "growth flow gradient (55s)"
+
+  default:
+    name: "Default"
+    emoji: "📄"
+    class: dinghy
+    tier: free
+    colors:
+      primary: "#333"
+      background: "#fff"
+      text: "#333"
+    personality: "clean, minimal, platform"
+    tone: "neutral and accessible"
+    animation: null
+
+  # === SCHOONER CLASS (Enhanced) ===
+
+  ocean-dreams-schooner:
+    name: "Ocean Dreams Schooner"
+    emoji: "🌊⛵"
+    class: schooner
+    tier: free
+    extends: ocean-dreams
+    colors:
+      primary: "#0066cc"
+      background: "#e6f3ff"
+      text: "#003366"
+    features:
+      - "Typography scale (h1-h3)"
+      - "Spacing system"
+      - "Component styling (cards, buttons)"
+      - "Smooth transitions"
+    lines: 81
+
+  # === FRIGATE CLASS (Advanced) ===
+
+  ocean-dreams-frigate:
+    name: "Ocean Dreams Frigate"
+    emoji: "🌊⚓"
+    class: frigate
+    tier: premium
+    extends: ocean-dreams-schooner
+    colors:
+      primary: "#0066cc"
+      background: "#e6f3ff"
+      text: "#003366"
+    features:
+      - "Full component library"
+      - "Advanced animations"
+      - "Form styling"
+      - "Badges, blockquotes, code blocks"
+      - "Water ripple overlay effect"
+    lines: 180
+
+  # === GALLEON CLASS (Complete) ===
+  # To be created...
+
+metadata:
+  version: "1.0.0"
+  updated: "2025-12-22"
+  shipyard: "soulfra-simple"
+  total_themes: 8
+  total_classes: 4
+  dinghy_count: 6
+  schooner_count: 1
+  frigate_count: 1
+  galleon_count: 0

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscribers - Soulfra Admin</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .subscriber-stats {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .subscriber-count {
+      font-size: 48px;
+      font-weight: bold;
+      color: #000;
+    }
+    .subscriber-label {
+      color: #666;
+      margin-top: 5px;
+      font-size: 18px;
+    }
+    .subscriber-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .subscriber-table thead {
+      background: #000;
+      color: #fff;
+    }
+    .subscriber-table th {
+      padding: 15px;
+      text-align: left;
+      font-weight: bold;
+    }
+    .subscriber-table td {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    .subscriber-table tr:last-child td {
+      border-bottom: none;
+    }
+    .subscriber-table tbody tr:hover {
+      background: #f9f9f9;
+    }
+    .subscriber-email {
+      font-family: monospace;
+      color: #000;
+    }
+    .subscriber-date {
+      color: #666;
+      font-size: 14px;
+    }
+    .subscriber-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .status-active {
+      background: #efe;
+      color: #060;
+    }
+    .status-inactive {
+      background: #fee;
+      color: #c00;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+    .empty-state h2 {
+      margin-bottom: 10px;
+    }
+    .export-btn {
+      background: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .export-btn:hover {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <h2>Soulfra Admin</h2>
+    <nav class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/automation">Automation</a>
+      <a href="/admin/subscribers">Subscribers</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    <h1>📧 Newsletter Subscribers</h1>
+
+    <div style="margin-bottom: 20px;">
+      <a href="/admin/subscribers/export" class="export-btn">📥 Export to CSV</a>
+      <a href="/admin/subscribers/import" class="export-btn" style="margin-left: 10px;">📤 Import from CSV</a>
+    </div>
+
+    <div class="subscriber-stats">
+      <div class="subscriber-count">{{subscriber_count}}</div>
+      <div class="subscriber-label">Total Subscribers</div>
+    </div>
+
+    {% if subscribers %}
+    <table class="subscriber-table">
+      <thead>
+        <tr>
+          <th>Email Address</th>
+          <th>Subscribed Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in subscribers %}
+        <tr>
+          <td class="subscriber-email">{{sub.email}}</td>
+          <td class="subscriber-date">{{sub.subscribed_at}}</td>
+          <td>
+            {% if sub.active %}
+            <span class="subscriber-status status-active">✓ Active</span>
+            {% else %}
+            <span class="subscriber-status status-inactive">✗ Unsubscribed</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <h2>No subscribers yet</h2>
+      <p>When people subscribe to your newsletter, they'll appear here.</p>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

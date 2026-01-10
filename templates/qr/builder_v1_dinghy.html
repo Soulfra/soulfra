@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Builder - Create Branded QR Codes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            color: {{ theme_primary }};
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: {{ theme_primary }};
+        }
+
+        .style-picker {
+            display: flex;
+            gap: 10px;
+        }
+
+        .style-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .style-option:hover {
+            border-color: {{ theme_primary }};
+        }
+
+        .style-option.active {
+            border-color: {{ theme_primary }};
+            background: #f8f9fa;
+        }
+
+        .style-option .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .style-option .name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        input[type="color"] {
+            width: 0;
+            height: 0;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .color-hex {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            text-transform: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: {{ theme_primary }};
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .preview-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .qr-preview {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            border: 2px dashed #d1d5db;
+        }
+
+        .qr-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .vanity-url {
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            color: {{ theme_primary }};
+            margin: 15px 0;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ QR Code Builder</h1>
+            <p>Create beautiful, branded QR codes</p>
+        </div>
+
+        <form id="qr-form">
+            <!-- Brand Selection -->
+            <div class="form-group">
+                <label>Brand</label>
+                <select id="brand" required>
+                    <option value="soulfra">Soulfra</option>
+                    <option value="cringeproof">Cringeproof</option>
+                    <option value="howtocookathome">How To Cook At Home</option>
+                </select>
+            </div>
+
+            <!-- URL Input -->
+            <div class="form-group">
+                <label>Destination URL</label>
+                <input type="url" id="url" placeholder="https://example.com" required>
+            </div>
+
+            <!-- Style Selection -->
+            <div class="form-group">
+                <label>QR Code Style</label>
+                <div class="style-picker">
+                    <div class="style-option active" data-style="minimal">
+                        <div class="icon">◼</div>
+                        <div class="name">Minimal</div>
+                    </div>
+                    <div class="style-option" data-style="rounded">
+                        <div class="icon">●</div>
+                        <div class="name">Rounded</div>
+                    </div>
+                    <div class="style-option" data-style="circles">
+                        <div class="icon">⬤</div>
+                        <div class="name">Circles</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Primary Color -->
+            <div class="form-group">
+                <label>Primary Color</label>
+                <div class="color-input-wrapper">
+                    <div class="color-preview" id="primary-preview" style="background: #8B5CF6" onclick="document.getElementById('primary-color').click()"></div>
+                    <input type="color" id="primary-color" value="#8B5CF6">
+                    <input type="text" class="color-hex" id="primary-hex" value="#8B5CF6">
+                </div>
+            </div>
+
+            <!-- Gradient Feature -->
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="enable-gradient">
+                    <label for="enable-gradient">Enable Gradient (Pro Feature)</label>
+                </div>
+                <div id="gradient-controls" class="hidden" style="margin-top: 10px;">
+                    <div class="color-input-wrapper">
+                        <div class="color-preview" id="secondary-preview" style="background: #3B82F6" onclick="document.getElementById('secondary-color').click()"></div>
+                        <input type="color" id="secondary-color" value="#3B82F6">
+                        <input type="text" class="color-hex" id="secondary-hex" value="#3B82F6">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Animated Feature -->
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="enable-animated">
+                    <label for="enable-animated">Animated QR (Pro Feature)</label>
+                </div>
+                <p style="font-size: 12px; color: #666; margin-top: 5px; padding-left: 30px;">
+                    Creates a pulsing animated GIF
+                </p>
+            </div>
+
+            <!-- Label -->
+            <div class="form-group">
+                <label>Label (Optional)</label>
+                <input type="text" id="label" placeholder="SCAN ME" maxlength="30">
+            </div>
+
+            <!-- Generate Button -->
+            <button type="submit" class="btn btn-primary" id="generate-btn">
+                Generate QR Code
+            </button>
+        </form>
+
+        <!-- Preview Section -->
+        <div class="preview-section hidden" id="preview-section">
+            <div class="qr-preview" id="qr-preview">
+                <p style="color: #9ca3af;">QR code will appear here</p>
+            </div>
+            <div class="vanity-url hidden" id="vanity-url"></div>
+            <button class="btn btn-primary" id="download-btn">
+                Download QR Code
+            </button>
+            <button class="btn btn-secondary" id="reset-btn">
+                Create Another
+            </button>
+        </div>
+
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        const BRAND_COLORS = {
+            'soulfra': '#8B5CF6',
+            'cringeproof': '#2D3748',
+            'howtocookathome': '#F97316'
+        };
+
+        const BRAND_STYLES = {
+            'soulfra': 'rounded',
+            'cringeproof': 'minimal',
+            'howtocookathome': 'circles'
+        };
+
+        let currentStyle = 'minimal';
+        let currentQRData = null;
+
+        // Brand change handler
+        document.getElementById('brand').addEventListener('change', (e) => {
+            const brand = e.target.value;
+            const color = BRAND_COLORS[brand];
+            const style = BRAND_STYLES[brand];
+
+            // Update color
+            document.getElementById('primary-color').value = color;
+            document.getElementById('primary-hex').value = color;
+            document.getElementById('primary-preview').style.background = color;
+
+            // Update style
+            document.querySelectorAll('.style-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.dataset.style === style) {
+                    opt.classList.add('active');
+                    currentStyle = style;
+                }
+            });
+        });
+
+        // Color picker handlers
+        document.getElementById('primary-color').addEventListener('input', (e) => {
+            const color = e.target.value;
+            document.getElementById('primary-hex').value = color;
+            document.getElementById('primary-preview').style.background = color;
+        });
+
+        document.getElementById('primary-hex').addEventListener('input', (e) => {
+            const color = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('primary-color').value = color;
+                document.getElementById('primary-preview').style.background = color;
+            }
+        });
+
+        // Gradient toggle
+        document.getElementById('enable-gradient').addEventListener('change', (e) => {
+            const controls = document.getElementById('gradient-controls');
+            controls.classList.toggle('hidden', !e.target.checked);
+        });
+
+        // Secondary color picker handlers
+        document.getElementById('secondary-color').addEventListener('input', (e) => {
+            const color = e.target.value;
+            document.getElementById('secondary-hex').value = color;
+            document.getElementById('secondary-preview').style.background = color;
+        });
+
+        document.getElementById('secondary-hex').addEventListener('input', (e) => {
+            const color = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('secondary-color').value = color;
+                document.getElementById('secondary-preview').style.background = color;
+            }
+        });
+
+        // Style selection
+        document.querySelectorAll('.style-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                currentStyle = option.dataset.style;
+            });
+        });
+
+        // Form submission
+        document.getElementById('qr-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const brand = document.getElementById('brand').value;
+            const url = document.getElementById('url').value;
+            const label = document.getElementById('label').value;
+
+            // Advanced features
+            const primaryColor = document.getElementById('primary-color').value;
+            const enableGradient = document.getElementById('enable-gradient').checked;
+            const secondaryColor = enableGradient ? document.getElementById('secondary-color').value : null;
+            const enableAnimated = document.getElementById('enable-animated').checked;
+
+            // Show loading
+            document.getElementById('generate-btn').disabled = true;
+            document.getElementById('status').textContent = enableAnimated ? 'Generating animated QR code...' : 'Generating QR code...';
+
+            try {
+                // Build request body
+                const requestBody = {
+                    url: url,
+                    brand: brand,
+                    label: label || brand.toUpperCase(),
+                    style: currentStyle,
+                    primary_color: primaryColor
+                };
+
+                // Add advanced features if enabled
+                if (secondaryColor) {
+                    requestBody.secondary_color = secondaryColor;
+                }
+                if (enableAnimated) {
+                    requestBody.animated = true;
+                }
+
+                // Call API to create QR code
+                const response = await fetch('/api/qr/create', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || `API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                currentQRData = data;
+
+                // Display QR code (PNG or GIF)
+                const mimeType = data.mimetype || 'image/png';
+                document.getElementById('qr-preview').innerHTML = `
+                    <img src="data:${mimeType};base64,${data.qr_image_base64}" alt="QR Code">
+                `;
+
+                // Show vanity URL
+                document.getElementById('vanity-url').textContent = data.vanity_url;
+                document.getElementById('vanity-url').classList.remove('hidden');
+
+                // Show preview section
+                document.getElementById('preview-section').classList.remove('hidden');
+
+                document.getElementById('status').textContent = '✅ QR code generated successfully!';
+
+            } catch (error) {
+                console.error('Error generating QR:', error);
+                document.getElementById('status').textContent = '❌ Error: ' + error.message;
+            } finally {
+                document.getElementById('generate-btn').disabled = false;
+            }
+        });
+
+        // Download handler
+        document.getElementById('download-btn').addEventListener('click', () => {
+            if (currentQRData) {
+                window.location.href = currentQRData.qr_download_url;
+            }
+        });
+
+        // Reset handler
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            document.getElementById('qr-form').reset();
+            document.getElementById('qr-preview').innerHTML = '<p style="color: #9ca3af;">QR code will appear here</p>';
+            document.getElementById('vanity-url').classList.add('hidden');
+            document.getElementById('preview-section').classList.add('hidden');
+            document.getElementById('gradient-controls').classList.add('hidden');
+            document.getElementById('status').textContent = '';
+            currentQRData = null;
+
+            // Reset to default brand
+            document.getElementById('brand').value = 'soulfra';
+            document.getElementById('brand').dispatchEvent(new Event('change'));
+        });
+    </script>
+</body>
+</html>

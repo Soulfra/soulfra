@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra - Network Game Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .network-info {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .network-info h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .network-info code {
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: white;
+            color: #667eea;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .features {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .features h3 {
+            margin-bottom: 1rem;
+        }
+
+        .features ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .copy-link {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        @media (max-width: 600px) {
+            .buttons {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Soulfra</h1>
+        <p class="tagline">Voice Chat Games & AI Tools</p>
+
+        <div class="network-info">
+            <h3>📡 Network Access</h3>
+            <p>Share this link with friends:</p>
+            <code id="share-link">{{ base_url }}</code>
+            <div class="copy-link" onclick="copyLink()">
+                📋 Click to Copy Link
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="/feed" class="btn btn-primary">
+                🎬 CringeProof Feed
+            </a>
+
+            <a href="/shortcuts" class="btn">
+                📱 Siri Shortcuts
+            </a>
+
+            <a href="/voice-dev" class="btn">
+                🎙️ Voice to Code
+            </a>
+
+            <a href="/voice-content" class="btn">
+                📝 Voice to Content
+            </a>
+
+            <a href="http://{{ node_host }}:3000/cringeproof.html" class="btn">
+                🎲 CringeProof Game
+            </a>
+
+            <a href="/build/composer" class="btn">
+                🎨 Pixel Composer
+            </a>
+
+            <a href="/voice-studio" class="btn">
+                📊 Voice Studio
+            </a>
+
+            <a href="/chat" class="btn">
+                💬 Soulfra Chat
+            </a>
+        </div>
+
+        <div class="features">
+            <h3>🎬 Decentralized Content Platform</h3>
+            <ul>
+                <li>🎬 <strong>CringeProof Feed:</strong> TikTok-style vertical scroll, but you own it (Git-based)</li>
+                <li>💻 <strong>Voice to Code:</strong> "Hey Siri, code this" → Working Python in clipboard</li>
+                <li>📝 <strong>Voice to Content:</strong> Talk 5 min → Blog/tweets/video/docs generated</li>
+                <li>🎨 <strong>Pixel Renderer:</strong> Videos rendered real-time from layers (no storage)</li>
+                <li>📱 <strong>Siri Shortcuts:</strong> Code with AirPods, no typing needed</li>
+                <li>🌐 <strong>Git Federation:</strong> Follow repos like RSS, decentralized by design</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function copyLink() {
+            const link = document.getElementById('share-link').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                const copyDiv = document.querySelector('.copy-link');
+                const originalText = copyDiv.textContent;
+                copyDiv.textContent = '✅ Link Copied!';
+                setTimeout(() => {
+                    copyDiv.textContent = originalText;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

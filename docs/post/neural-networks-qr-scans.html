@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Networks: Learning From QR Scans - Soulfra Platform</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="../docs/index.html">Docs</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main>
+        <article class="post">
+            <h1>Neural Networks: Learning From QR Scans</h1>
+            <p class="date">2025-12-10</p>
+            <div class="content">
+                # Neural Networks: Learning From QR Scans
+
+Soulfra's ML infrastructure learns from everything you do - especially QR code scans.
+
+## The Training Loop
+
+1. **Generate QR Code**
+   - Brand creates QR code linking to `/brand/<slug>`
+   - QR code tracks: brand_id, scan_location, utm params
+
+2. **User Scans**
+   - Phone camera scans QR → redirects to brand page
+   - Scan logged in `qr_scans` table
+   - Session cookie tracks user journey
+
+3. **Neural Network Learns**
+   - Which brands get most scans?
+   - Which locations convert best?
+   - Which UTM params drive engagement?
+   - Which users share QR codes most?
+
+4. **Recommendations**
+   - Suggest brands to promote
+   - Optimize QR placement
+   - Predict successful campaigns
+
+## Session Tracking
+
+Cookies act as "compiler checkpoints" for the ML transformer:
+- Entry point (QR scan, link, search)
+- Pages visited
+- Time spent
+- Actions taken (signup, discussion, game)
+
+## Future: Transformer Training
+
+Neural networks will:
+- Predict which content you'll like
+- Suggest ideal collaboration partners
+- Match you with compatible brands
+- Optimize your brand's reach
+
+All from simple QR code scans!
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <p><a href="../index.html">← Back to posts</a></p>
+    </footer>
+</body>
+</html>

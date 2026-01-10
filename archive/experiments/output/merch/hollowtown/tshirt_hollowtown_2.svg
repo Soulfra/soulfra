@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="500" fill="#8B4513"/>
+
+  <!-- Brand name at top -->
+  <text x="200" y="50" font-family="Arial, sans-serif" font-size="24"
+        font-weight="bold" fill="white" text-anchor="middle">
+    HollowTown
+  </text>
+
+  <!-- Slogan (multi-line if needed) -->
+  <text x="200" y="200" font-family="Arial, sans-serif"
+        font-size="18" fill="white" text-anchor="middle">Oss in glorious 8-bit.</text>
+
+  <!-- Accent bar -->
+  <rect x="0" y="460" width="400" height="40" fill="#A0522D"/>
+</svg>

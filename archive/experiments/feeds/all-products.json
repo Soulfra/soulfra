@@ -1,0 +1,131 @@
+{
+  "generated_at": "2025-12-22T04:39:08.070289Z",
+  "product_count": 5,
+  "products": [
+    {
+      "id": 4,
+      "sku": "SOULFRA-API-BEB19A",
+      "upc": "200186253232",
+      "name": "Privacy Score API",
+      "description": "Privacy risk scoring endpoint",
+      "type": "api",
+      "price": 29.0,
+      "stock_quantity": 0,
+      "ad_tier": 1,
+      "brand": {
+        "id": 1,
+        "name": "Soulfra",
+        "slug": "soulfra",
+        "tagline": "Your keys. Your identity. Period.",
+        "category": "Identity & Security",
+        "color": "#3498db"
+      },
+      "urls": {
+        "product": "https://soulfra.com/products/soulfra-api-beb19a",
+        "image": "https://soulfra.com/images/products/soulfra-api-beb19a.png",
+        "api_endpoint": null
+      },
+      "created_at": "2025-12-22 04:34:16"
+    },
+    {
+      "id": 5,
+      "sku": "SOULFRA-API-B2AB85",
+      "upc": "200180814736",
+      "name": "Encryption Recommender API",
+      "description": "Encryption algorithm recommendations",
+      "type": "api",
+      "price": 29.0,
+      "stock_quantity": 0,
+      "ad_tier": 1,
+      "brand": {
+        "id": 1,
+        "name": "Soulfra",
+        "slug": "soulfra",
+        "tagline": "Your keys. Your identity. Period.",
+        "category": "Identity & Security",
+        "color": "#3498db"
+      },
+      "urls": {
+        "product": "https://soulfra.com/products/soulfra-api-b2ab85",
+        "image": "https://soulfra.com/images/products/soulfra-api-b2ab85.png",
+        "api_endpoint": null
+      },
+      "created_at": "2025-12-22 04:34:16"
+    },
+    {
+      "id": 1,
+      "sku": "SOULFRA-MERCH-A8E0A6",
+      "upc": "100176385489",
+      "name": "Soulfra T-Shirt",
+      "description": "Privacy-focused t-shirt",
+      "type": "merch",
+      "price": 25.0,
+      "stock_quantity": 0,
+      "ad_tier": 2,
+      "brand": {
+        "id": 1,
+        "name": "Soulfra",
+        "slug": "soulfra",
+        "tagline": "Your keys. Your identity. Period.",
+        "category": "Identity & Security",
+        "color": "#3498db"
+      },
+      "urls": {
+        "product": "https://soulfra.com/products/soulfra-merch-a8e0a6",
+        "image": "https://soulfra.com/images/products/soulfra-merch-a8e0a6.png",
+        "api_endpoint": null
+      },
+      "created_at": "2025-12-22 04:34:16"
+    },
+    {
+      "id": 3,
+      "sku": "SOULFRA-MERCH-04F248",
+      "upc": "100122373317",
+      "name": "Privacy Manifesto Poster",
+      "description": "Privacy principles poster",
+      "type": "merch",
+      "price": 15.0,
+      "stock_quantity": 0,
+      "ad_tier": 2,
+      "brand": {
+        "id": 1,
+        "name": "Soulfra",
+        "slug": "soulfra",
+        "tagline": "Your keys. Your identity. Period.",
+        "category": "Identity & Security",
+        "color": "#3498db"
+      },
+      "urls": {
+        "product": "https://soulfra.com/products/soulfra-merch-04f248",
+        "image": "https://soulfra.com/images/products/soulfra-merch-04f248.png",
+        "api_endpoint": null
+      },
+      "created_at": "2025-12-22 04:34:16"
+    },
+    {
+      "id": 2,
+      "sku": "SOULFRA-MERCH-0CF229",
+      "upc": "100158556180",
+      "name": "Soulfra Sticker",
+      "description": "Logo sticker (blue/green)",
+      "type": "merch",
+      "price": 5.0,
+      "stock_quantity": 0,
+      "ad_tier": 3,
+      "brand": {
+        "id": 1,
+        "name": "Soulfra",
+        "slug": "soulfra",
+        "tagline": "Your keys. Your identity. Period.",
+        "category": "Identity & Security",
+        "color": "#3498db"
+      },
+      "urls": {
+        "product": "https://soulfra.com/products/soulfra-merch-0cf229",
+        "image": "https://soulfra.com/images/products/soulfra-merch-0cf229.png",
+        "api_endpoint": null
+      },
+      "created_at": "2025-12-22 04:34:16"
+    }
+  ]
+}

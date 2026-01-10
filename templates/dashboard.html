@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - CringeProof</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      opacity: 0.8;
+      font-size: 16px;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .stat:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .stat-value {
+      font-weight: bold;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .api-key {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      word-break: break-all;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .copy-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .copy-btn:hover {
+      background: #5568d3;
+    }
+
+    .activity-item {
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-left: 4px solid #667eea;
+    }
+
+    .activity-time {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 5px;
+    }
+
+    .activity-text {
+      color: #333;
+      font-size: 14px;
+    }
+
+    .admin-banner {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-banner h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .admin-banner p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .admin-link {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 12px 24px;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .admin-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    .star-cta {
+      background: #ffd700;
+      color: #333;
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .star-cta a {
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .star-cta a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>Welcome, {{ username }}!</h1>
+        <p>Your CringeProof Dashboard</p>
+      </div>
+      <a href="/github/logout?redirect_to=/" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Admin Banner (if admin) -->
+    {% if is_admin %}
+    <div class="admin-banner">
+      <div>
+        <h3>🔑 Admin Access Enabled</h3>
+        <p>You have full platform access</p>
+      </div>
+      <a href="/admin" class="admin-link">Open Admin Panel →</a>
+    </div>
+    {% endif %}
+
+    <!-- Grid -->
+    <div class="grid">
+      <!-- Profile Card -->
+      <div class="card">
+        <h2>Your Profile</h2>
+        <div class="tier-badge" style="background-color: {{ tier_info.color }};">
+          Tier {{ tier }} - {{ tier_info.name }}
+        </div>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">{{ tier_info.desc }}</p>
+
+        <div class="stat">
+          <span class="stat-label">GitHub Username</span>
+          <span class="stat-value">{{ username }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Email</span>
+          <span class="stat-value">{{ email or 'Not provided' }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Access Level</span>
+          <span class="stat-value">{% if is_admin %}Admin{% else %}User{% endif %}</span>
+        </div>
+      </div>
+
+      <!-- GitHub Stats Card -->
+      <div class="card">
+        <h2>GitHub Stats</h2>
+        <div class="stat">
+          <span class="stat-label">Public Repos</span>
+          <span class="stat-value">{{ stats.repos or 0 }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Total Commits</span>
+          <span class="stat-value">{{ stats.commits or 0 }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Followers</span>
+          <span class="stat-value">{{ stats.followers or 0 }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Starred CringeProof</span>
+          <span class="stat-value">{% if has_starred %}✅ Yes{% else %}⭐ Not yet{% endif %}</span>
+        </div>
+
+        {% if not has_starred %}
+        <div class="star-cta">
+          ⭐ <a href="https://github.com/Soulfra/voice-archive" target="_blank">Star the repo</a> to unlock features!
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- API Key Card (Full Width) -->
+    <div class="card" style="margin-bottom: 30px;">
+      <h2>Your API Key</h2>
+      <p style="color: #666; font-size: 14px; margin-bottom: 10px;">Use this key for programmatic access to CringeProof APIs</p>
+      <div class="api-key" id="apiKey">{{ api_key }}</div>
+      <button class="copy-btn" onclick="copyApiKey()">📋 Copy API Key</button>
+    </div>
+
+    <!-- Recent Activity Card (Full Width) -->
+    <div class="card">
+      <h2>Recent Activity</h2>
+      {% if recent_memos %}
+        {% for memo in recent_memos %}
+        <div class="activity-item">
+          <div class="activity-time">{{ memo.created_at }}</div>
+          <div class="activity-text">
+            <strong>{{ memo.domain }}</strong> - {{ memo.transcript[:100] }}{% if memo.transcript|length > 100 %}...{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <p>No activity yet</p>
+          <p style="font-size: 14px; margin-top: 10px;">Record your first voice memo on the <a href="/wall.html" style="color: #667eea;">wall</a>!</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    function copyApiKey() {
+      const apiKey = document.getElementById('apiKey').textContent;
+      navigator.clipboard.writeText(apiKey).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => {
+          btn.textContent = '📋 Copy API Key';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

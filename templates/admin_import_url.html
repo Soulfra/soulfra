@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import URL - Soulfra Admin</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .post-form {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .post-form h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    .post-form label {
+      display: block;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .post-form input[type="text"],
+    .post-form input[type="url"],
+    .post-form select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    .post-form input:focus,
+    .post-form select:focus {
+      outline: none;
+      border-color: #000;
+    }
+    .help-text {
+      font-size: 13px;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .button-group {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .btn-publish {
+      background: #000;
+      color: #fff;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-publish:hover {
+      background: #333;
+    }
+    .btn-cancel {
+      color: #666;
+      text-decoration: none;
+      padding: 15px 20px;
+    }
+    .btn-cancel:hover {
+      color: #000;
+    }
+    .flash-messages {
+      margin-bottom: 20px;
+    }
+    .flash {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .flash.error {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c00;
+    }
+    .flash.success {
+      background: #efe;
+      border: 1px solid #cfc;
+      color: #060;
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-header">
+  <div>
+    <strong>Soulfra Admin</strong>
+  </div>
+  <nav class="admin-nav">
+    <a href="/">← Home</a>
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/logout">Logout</a>
+  </nav>
+</div>
+
+<div class="admin-container">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="post-form">
+    <h2>🚀 Import URL as Blog Post</h2>
+    <p style="color: #666; margin-bottom: 25px;">
+      Paste any URL and we'll automatically scrape it, generate procedural images, and create a complete blog post.
+    </p>
+
+    <form method="POST">
+      <label for="url">URL *</label>
+      <input
+        type="url"
+        id="url"
+        name="url"
+        required
+        placeholder="https://example.com/article"
+        value="{{ url or '' }}"
+        autofocus
+      >
+      <div class="help-text">Any web page - article, recipe, tutorial, etc.</div>
+
+      <label for="brand_slug">Brand *</label>
+      <select id="brand_slug" name="brand_slug" required>
+        <option value="">Select a brand...</option>
+        {% if brands %}
+          {% for brand in brands %}
+            <option value="{{ brand['slug'] }}" {% if brand_slug == brand['slug'] %}selected{% endif %}>
+              {{ brand['name'] }} ({{ brand['slug'] }})
+            </option>
+          {% endfor %}
+        {% else %}
+          <option value="howtocookathome">HowToCookAtHome</option>
+          <option value="soulfra">Soulfra</option>
+          <option value="deathtodata">DeathToData</option>
+          <option value="calriven">Calriven</option>
+        {% endif %}
+      </select>
+      <div class="help-text">Which brand site should this post belong to?</div>
+
+      <div class="button-group">
+        <button type="submit" class="btn-publish">🎨 Import & Generate</button>
+        <a href="/admin" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <div style="margin-top: 40px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+    <h3 style="margin-top: 0;">✨ The Magic Happens Automatically</h3>
+    <ol style="line-height: 1.8;">
+      <li><strong>Scrape:</strong> Extract title, content, images, and metadata from the URL</li>
+      <li><strong>Generate Images:</strong> Create procedural hero and section images using Python + Pillow</li>
+      <li><strong>Enrich Content:</strong> Insert generated images into the content as markdown</li>
+      <li><strong>Save to Database:</strong> Create blog post with all images stored as BLOBs</li>
+      <li><strong>Export to Static Site:</strong> Generate complete HTML site with working images</li>
+    </ol>
+    <p style="color: #666; font-size: 14px; margin-top: 15px;">
+      <strong>Result:</strong> A complete blog post with procedurally generated images, ready to deploy to GitHub Pages!
+    </p>
+    <p style="color: #666; font-size: 14px; margin-top: 10px;">
+      <strong>Zero external dependencies</strong> - all images are generated locally using deterministic algorithms.
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>

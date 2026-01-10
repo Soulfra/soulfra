@@ -1,0 +1,67 @@
+/**
+ * DeathToData Brand Theme
+ *
+ * Personality: Rebellious, defiant, privacy-focused
+ * Tagline: "Search without surveillance. Deal with it, Google."
+ * Colors: Red, dark red, orange
+ */
+
+:root {
+  /* Brand colors from database */
+  --brand-primary: #e74c3c;      /* Red */
+  --brand-secondary: #c0392b;    /* Dark red */
+  --brand-accent: #f39c12;       /* Orange */
+
+  /* Dark mode variants (slightly brighter for visibility) */
+  --brand-primary-dark: #ff6b5a;
+  --brand-secondary-dark: #e74c3c;
+  --brand-accent-dark: #ffb347;
+
+  /* Apply to theme */
+  --color-primary: var(--brand-primary);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
+}
+
+/* Brand-specific overrides */
+[data-theme="dark"] {
+  --color-primary: var(--brand-primary-dark);
+  --color-secondary: var(--brand-secondary-dark);
+  --color-accent: var(--brand-accent-dark);
+}
+
+/* DeathToData-specific styling */
+.brand-deathtodata {
+  /* Edgy, confrontational tone */
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.brand-deathtodata .header {
+  background: var(--gradient-primary);
+  border-bottom: 3px solid var(--brand-accent);
+}
+
+.brand-deathtodata .post-title {
+  color: var(--brand-primary);
+  font-weight: bold;
+}
+
+.brand-deathtodata .cta-button {
+  background: var(--brand-primary);
+  color: white;
+  border: 2px solid var(--brand-secondary);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.brand-deathtodata .cta-button:hover {
+  background: var(--brand-secondary);
+  border-color: var(--brand-accent);
+}
+
+/* Privacy-focused aesthetics */
+.brand-deathtodata code {
+  background: #2c3e50;
+  color: #e74c3c;
+  border: 1px solid var(--brand-accent);
+}

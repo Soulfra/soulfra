@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Quick Start Guide - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-quick-start-guide">Soulfra Quick Start Guide</h1>
+
+<p><strong>Get your AI-powered ghost writing platform running in 5 minutes</strong></p>
+
+<hr />
+
+<h2 id="what-is-soulfra">What is Soulfra?</h2>
+
+<p>Soulfra is an <strong>AI-powered ghost writing platform</strong> for blogs, businesses, and personal brands. It combines:</p>
+
+<ul>
+<li>🤖 <strong>AI Content Generation</strong> - Auto-generate posts with Claude API or local Ollama</li>
+<li>🧠 <strong>Neural Networks</strong> - Topic classification and content recommendations</li>
+<li>📊 <strong>Batch Import</strong> - Upload 1000 posts from Excel/CSV in one command</li>
+<li>🔐 <strong>License System</strong> - API keys and rate limiting for agents/customers</li>
+<li>🌐 <strong>Multi-Brand</strong> - Manage multiple blogs with different personalities</li>
+<li>📧 <strong>Email Newsletters</strong> - Automated subscriber management</li>
+</ul>
+
+<hr />
+
+<h2 id="option-1-docker-recommended">Option 1: Docker (Recommended)</h2>
+
+<p><strong>Fastest way to get started - One command deployment</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Clone repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/calriven/soulfra
+<span class="nb">cd</span><span class="w"> </span>soulfra
+
+<span class="c1"># 2. Create .env file (optional - has sensible defaults)</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>.env<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s">BASE_URL=http://localhost:5001</span>
+<span class="s">SECRET_KEY=$(python3 -c &quot;import secrets; print(secrets.token_urlsafe(32))&quot;)</span>
+<span class="s">EOF</span>
+
+<span class="c1"># 3. Start with Docker Compose</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># 4. Visit your blog</span>
+open<span class="w"> </span>http://localhost:5001
+</code></pre>
+</div>
+
+<p><strong>Done!</strong> Your ghost writing platform is running.</p>
+
+<h3 id="what-docker-compose-includes">What Docker Compose Includes</h3>
+
+<ul>
+<li>✅ Soulfra web app (port 5001)</li>
+<li>✅ Ollama AI (port 11434)</li>
+<li>✅ SQLite database</li>
+<li>✅ Persistent storage for content</li>
+<li>✅ Auto-restart on failure</li>
+</ul>
+
+<hr />
+
+<h2 id="option-2-manual-installation">Option 2: Manual Installation</h2>
+
+<p><strong>For development or custom deployments</strong></p>
+
+<h3 id="step-1-install">Step 1: Install</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Clone repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/calriven/soulfra
+<span class="nb">cd</span><span class="w"> </span>soulfra
+
+<span class="c1"># Run installation wizard</span>
+python3<span class="w"> </span>install.py
+
+<span class="c1"># Follow the prompts:</span>
+<span class="c1">#   📧 Email: admin@myblog.com</span>
+<span class="c1">#   🌐 Domain: (optional) myblog.com</span>
+<span class="c1">#   💳 Tier: Pro ($15/year) or Free</span>
+</code></pre>
+</div>
+
+<p>The wizard will:
+1. ✅ Install Python dependencies
+2. ✅ Initialize database
+3. ✅ Create admin account
+4. ✅ Generate license &amp; API keys
+5. ✅ Create <code>.env</code> configuration</p>
+
+<h3 id="step-2-start-server">Step 2: Start Server</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Development mode</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># Production mode (with gunicorn)</span>
+pip<span class="w"> </span>install<span class="w"> </span>gunicorn
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>-b<span class="w"> </span><span class="m">0</span>.0.0.0:5001<span class="w"> </span>app:app
+</code></pre>
+</div>
+
+<h3 id="step-3-visit-your-blog">Step 3: Visit Your Blog</h3>
+
+<pre><code>http://localhost:5001
+</code></pre>
+
+<hr />
+
+<h2 id="quick-tasks">Quick Tasks</h2>
+
+<h3 id="import-existing-posts-from-csv">Import Existing Posts from CSV</h3>
+
+<p>Have 100 posts in an Excel sheet? Import them all at once:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Create CSV file:</span>
+<span class="c1"># title, content, brand_slug, tags, published_date</span>
+<span class="c1"># &quot;Privacy 101&quot;, &quot;Your guide to...&quot;, &quot;mybrand&quot;, &quot;privacy,encryption&quot;, &quot;2025-01-15&quot;</span>
+
+<span class="c1"># Preview before importing</span>
+python3<span class="w"> </span>batch_import_posts.py<span class="w"> </span>--file<span class="w"> </span>posts.csv<span class="w"> </span>--preview
+
+<span class="c1"># Import all posts</span>
+python3<span class="w"> </span>batch_import_posts.py<span class="w"> </span>--file<span class="w"> </span>posts.csv<span class="w"> </span>--import<span class="w"> </span>--brand<span class="w"> </span>mybrand
+</code></pre>
+</div>
+
+<h3 id="auto-generate-posts-with-ai">Auto-Generate Posts with AI</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Generate post about a topic</span>
+python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>mybrand<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;neural networks&quot;</span><span class="w"> </span>--save
+
+<span class="c1"># Bulk generate 10 posts</span>
+<span class="k">for</span><span class="w"> </span>topic<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;AI&quot;</span><span class="w"> </span><span class="s2">&quot;ML&quot;</span><span class="w"> </span><span class="s2">&quot;Python&quot;</span><span class="w"> </span><span class="s2">&quot;Data&quot;</span><span class="w"> </span><span class="s2">&quot;Privacy&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span>python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>mybrand<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$topic</span><span class="s2">&quot;</span><span class="w"> </span>--save
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<h3 id="set-up-custom-domain">Set Up Custom Domain</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Generate DNS records</span>
+python3<span class="w"> </span>dns_setup_guide.py<span class="w"> </span>--domain<span class="w"> </span>myblog.com<span class="w"> </span>--ip<span class="w"> </span><span class="m">123</span>.45.67.89
+
+<span class="c1"># 2. Add records to your domain registrar (Namecheap, GoDaddy, etc.)</span>
+
+<span class="c1"># 3. Generate nginx config</span>
+python3<span class="w"> </span>dns_setup_guide.py<span class="w"> </span>--domain<span class="w"> </span>myblog.com<span class="w"> </span>--nginx-config
+
+<span class="c1"># 4. Set up SSL</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>--nginx<span class="w"> </span>-d<span class="w"> </span>myblog.com<span class="w"> </span>-d<span class="w"> </span>www.myblog.com
+</code></pre>
+</div>
+
+<h3 id="generate-api-key-for-automation">Generate API Key for Automation</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Generate license (or use existing from install.py)</span>
+python3<span class="w"> </span>license_manager.py<span class="w"> </span>--generate-license<span class="w"> </span>--email<span class="w"> </span>you@example.com<span class="w"> </span>--tier<span class="w"> </span>pro
+
+<span class="c1"># 2. Generate API key</span>
+python3<span class="w"> </span>license_manager.py<span class="w"> </span>--generate-api-key<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--license<span class="w"> </span>YOUR-LICENSE-UUID<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;Production API&quot;</span>
+
+<span class="c1"># 3. Use API key in requests</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:5001/api/v1/mybrand/generate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-API-Key: sk-abc123...&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;topic&quot;: &quot;blockchain&quot;, &quot;auto_publish&quot;: true}&#39;</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="common-use-cases">Common Use Cases</h2>
+
+<h3 id="use-case-1-personal-blog">Use Case 1: Personal Blog</h3>
+
+<p><strong>Scenario</strong>: You want to start a blog about AI/ML</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Install</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># 2. Create your brand</span>
+<span class="c1"># Visit http://localhost:5001/admin</span>
+<span class="c1"># Create brand: &quot;Tech Insights&quot; with slug &quot;techinsights&quot;</span>
+
+<span class="c1"># 3. Import old posts</span>
+python3<span class="w"> </span>batch_import_posts.py<span class="w"> </span>--file<span class="w"> </span>old_posts.csv<span class="w"> </span>--import<span class="w"> </span>--brand<span class="w"> </span>techinsights
+
+<span class="c1"># 4. Auto-generate new posts</span>
+python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>techinsights<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;transformers&quot;</span><span class="w"> </span>--save
+python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>techinsights<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;GPT-4&quot;</span><span class="w"> </span>--save
+
+<span class="c1"># 5. Train neural network on your content</span>
+python3<span class="w"> </span>train_topic_networks.py<span class="w"> </span>--topics<span class="w"> </span>AI,ML,transformers<span class="w"> </span>--train
+
+<span class="c1"># 6. Set up custom domain</span>
+python3<span class="w"> </span>dns_setup_guide.py<span class="w"> </span>--domain<span class="w"> </span>techinsights.com<span class="w"> </span>--ip<span class="w"> </span>YOUR_IP
+</code></pre>
+</div>
+
+<h3 id="use-case-2-multi-client-ghost-writing-agency">Use Case 2: Multi-Client Ghost Writing Agency</h3>
+
+<p><strong>Scenario</strong>: You manage blogs for 5 different clients</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Create brands for each client</span>
+<span class="c1"># Client A: Healthcare blog</span>
+<span class="c1"># Client B: Finance blog</span>
+<span class="c1"># Client C: Tech blog</span>
+<span class="c1"># ... etc</span>
+
+<span class="c1"># 2. Import their existing content</span>
+python3<span class="w"> </span>batch_import_posts.py<span class="w"> </span>--file<span class="w"> </span>client_a_posts.csv<span class="w"> </span>--import<span class="w"> </span>--brand<span class="w"> </span>healthcare
+python3<span class="w"> </span>batch_import_posts.py<span class="w"> </span>--file<span class="w"> </span>client_b_posts.csv<span class="w"> </span>--import<span class="w"> </span>--brand<span class="w"> </span>finance
+
+<span class="c1"># 3. Generate API keys for each client</span>
+python3<span class="w"> </span>license_manager.py<span class="w"> </span>--generate-license<span class="w"> </span>--email<span class="w"> </span>clienta@example.com<span class="w"> </span>--tier<span class="w"> </span>pro
+python3<span class="w"> </span>license_manager.py<span class="w"> </span>--generate-api-key<span class="w"> </span>--license<span class="w"> </span>UUID-A<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Client A&quot;</span>
+
+<span class="c1"># 4. Train brand-specific neural networks</span>
+python3<span class="w"> </span>train_context_networks.py
+
+<span class="c1"># 5. Auto-generate weekly posts for all clients</span>
+python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>healthcare<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;telemedicine trends&quot;</span><span class="w"> </span>--save
+python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>finance<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;crypto regulations&quot;</span><span class="w"> </span>--save
+</code></pre>
+</div>
+
+<h3 id="use-case-3-business-documentation-platform">Use Case 3: Business Documentation Platform</h3>
+
+<p><strong>Scenario</strong>: Internal knowledge base + external blog for a company</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Create two brands:</span>
+<span class="c1">#    - &quot;internal&quot; (employee docs)</span>
+<span class="c1">#    - &quot;external&quot; (public blog)</span>
+
+<span class="c1"># 2. Import company docs from Excel</span>
+python3<span class="w"> </span>batch_import_posts.py<span class="w"> </span>--file<span class="w"> </span>company_docs.xlsx<span class="w"> </span>--import<span class="w"> </span>--brand<span class="w"> </span>internal
+
+<span class="c1"># 3. Auto-generate weekly blog posts</span>
+crontab<span class="w"> </span>-e
+<span class="c1"># Add: 0 9 * * 1 cd /path/to/soulfra &amp;&amp; python3 force_claude_write.py --brand external --topic &quot;industry news&quot; --save</span>
+
+<span class="c1"># 4. Set up email newsletters</span>
+<span class="c1"># Configure SMTP in .env</span>
+<span class="c1"># Subscribers will get weekly emails automatically</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                         SOULFRA                             │
+│                                                             │
+│  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │   Flask     │  │   SQLite     │  │   Ollama     │      │
+│  │   Web App   │──│   Database   │──│   AI Engine  │      │
+│  │  (Port 5001)│  │ (soulfra.db) │  │ (Port 11434) │      │
+│  └─────────────┘  └──────────────┘  └──────────────┘      │
+│         │                                                   │
+│         ├── Templates (Jinja2 HTML)                        │
+│         ├── Static Files (CSS/JS)                          │
+│         ├── Neural Networks (scikit-learn)                 │
+│         └── Brands (Multi-tenant content)                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+           │                    │                    │
+           ▼                    ▼                    ▼
+     Web Browser         API Clients         Batch Imports
+     (localhost:5001)    (Python/JS)         (CSV/Excel)
+</code></pre>
+
+<hr />
+
+<h2 id="api-examples">API Examples</h2>
+
+<h3 id="python-client">Python Client</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">&quot;sk-abc123...&quot;</span>
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:5001&quot;</span>
+
+<span class="c1"># Generate post</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/api/v1/mybrand/generate&quot;</span><span class="p">,</span>
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;X-API-Key&quot;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">},</span>
+    <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;neural networks&quot;</span><span class="p">,</span> <span class="s2">&quot;auto_publish&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">post</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created post: </span><span class="si">{</span><span class="n">post</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get all posts</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/api/v1/mybrand/posts&quot;</span><span class="p">,</span>
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;X-API-Key&quot;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">posts</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total posts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">posts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="javascriptnodejs-client">JavaScript/Node.js Client</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;axios&#39;</span><span class="p">);</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;http://localhost:5001/api/v1&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s1">&#39;X-API-Key&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sk-abc123...&#39;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Generate post</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">generatePost</span><span class="p">(</span><span class="nx">brand</span><span class="p">,</span><span class="w"> </span><span class="nx">topic</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="sb">`/</span><span class="si">${</span><span class="nx">brand</span><span class="si">}</span><span class="sb">/generate`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">topic</span><span class="o">:</span><span class="w"> </span><span class="nx">topic</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">auto_publish</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Created: </span><span class="si">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">url</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">generatePost</span><span class="p">(</span><span class="s1">&#39;mybrand&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;blockchain&#39;</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="file-structure">File Structure</h2>
+
+<pre><code>soulfra-simple/
+├── app.py                      # Main Flask application
+├── soulfra.db                  # SQLite database
+├── .env                        # Environment config (secrets)
+│
+├── install.py                  # Installation wizard
+├── license_manager.py          # API keys &amp; licensing
+├── batch_import_posts.py       # CSV/Excel import
+├── dns_setup_guide.py          # Domain setup helper
+│
+├── templates/                  # HTML templates
+│   ├── base.html              # Base template
+│   ├── components/            # Reusable components
+│   │   ├── header.html
+│   │   ├── footer.html
+│   │   └── menu.html
+│   └── ...
+│
+├── static/                     # Static assets
+│   ├── css/                   # Stylesheets
+│   │   ├── theme.css          # Global theme
+│   │   ├── deathtodata.css    # Brand-specific CSS
+│   │   └── ...
+│   ├── qr/                    # Generated QR codes
+│   └── generated/             # AI-generated images
+│
+├── brands/                     # Exported brand data
+│   ├── mybrand/
+│   │   ├── config.json        # Brand config
+│   │   ├── posts/             # Markdown posts
+│   │   └── README.md
+│   └── ...
+│
+├── neural_networks/            # Trained ML models
+│   ├── mybrand_classifier.pkl
+│   └── topic_classifier.pkl
+│
+├── docker-compose.yml          # Docker deployment
+├── Dockerfile                  # Container image
+└── README.md                   # Full documentation
+</code></pre>
+
+<hr />
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="port-5001-already-in-use">Port 5001 already in use</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Find process using port 5001</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># Kill it</span>
+<span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>PID
+
+<span class="c1"># Or use different port</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PORT</span><span class="o">=</span><span class="m">8000</span>
+python3<span class="w"> </span>app.py
+</code></pre>
+</div>
+
+<h3 id="database-locked">Database locked</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Stop all instances</span>
+docker-compose<span class="w"> </span>down
+pkill<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;python3 app.py&quot;</span>
+
+<span class="c1"># Restart</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre>
+</div>
+
+<h3 id="cant-generate-posts-with-claude">Can't generate posts with Claude</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Make sure API key is set</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CLAUDE_API_KEY=sk-ant-api03-...&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+
+<span class="c1"># Test it</span>
+python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>mybrand<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="w"> </span>--print
+</code></pre>
+</div>
+
+<h3 id="dns-not-working">DNS not working</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Test DNS propagation</span>
+python3<span class="w"> </span>dns_setup_guide.py<span class="w"> </span>--domain<span class="w"> </span>myblog.com<span class="w"> </span>--test
+
+<span class="c1"># Wait 5-30 minutes for DNS to propagate</span>
+<span class="c1"># Check with: dig myblog.com</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+<li>✅ <strong>Read ARCHITECTURE_EXPLAINED.md</strong> - Understand how it all works</li>
+<li>✅ <strong>Read DEPLOYMENT.md</strong> - Production deployment guide</li>
+<li>✅ <strong>Read PITCH_DECK.md</strong> - Business model &amp; roadmap</li>
+<li>✅ <strong>Join Discord</strong> - https://discord.gg/soulfra</li>
+<li>✅ <strong>Star on GitHub</strong> - https://github.com/calriven/soulfra</li>
+</ol>
+
+<hr />
+
+<h2 id="getting-help">Getting Help</h2>
+
+<ul>
+<li><strong>Documentation</strong>: https://docs.soulfra.com</li>
+<li><strong>Issues</strong>: https://github.com/calriven/soulfra/issues</li>
+<li><strong>Email</strong>: support@soulfra.com</li>
+<li><strong>Discord</strong>: https://discord.gg/soulfra</li>
+</ul>
+
+<hr />
+
+<h2 id="license">License</h2>
+
+<p>MIT License - See LICENSE.md</p>
+
+<p><strong>Built with</strong>: Python, Flask, SQLite, scikit-learn, Anthropic Claude API</p>
+
+<p><strong>Happy writing!</strong> 🚀</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

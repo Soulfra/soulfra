@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Integrated - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            font-size: 1.1em;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: white;
+        }
+
+        .tab.active {
+            color: white;
+            border-bottom-color: #10b981;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-record {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-record:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .btn-record.recording {
+            background: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        .btn-save {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #2563eb;
+        }
+
+        .btn-clear {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #d97706;
+        }
+
+        .btn-gist {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-gist:hover {
+            background: #7c3aed;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            color: #1f2937;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            min-height: 30px;
+        }
+
+        .status.success {
+            color: #10b981;
+        }
+
+        .status.error {
+            color: #ef4444;
+        }
+
+        .status.recording {
+            color: #fcd34d;
+            font-weight: bold;
+        }
+
+        .memo-list {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .memo-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #10b981;
+        }
+
+        .memo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .memo-date {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+
+        .memo-tokens {
+            background: rgba(16, 185, 129, 0.2);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #10b981;
+        }
+
+        .memo-text {
+            color: white;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .memo-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .memo-actions button {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .info h3 {
+            margin-bottom: 10px;
+        }
+
+        .info kbd {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .token-display {
+            text-align: center;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .token-count {
+            font-size: 3em;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .token-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Voice Integrated</h1>
+        <p class="subtitle">Record → Transcribe → Save → Backup to GitHub</p>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('record')">🎙️ Record</button>
+            <button class="tab" onclick="switchTab('memos')">📝 My Memos</button>
+            <button class="tab" onclick="switchTab('tokens')">🪙 Tokens</button>
+        </div>
+
+        <!-- Tab 1: Record -->
+        <div id="tab-record" class="tab-content active">
+            <div class="controls">
+                <button id="recordBtn" class="btn-record">🎙️ Start Recording</button>
+                <button id="saveBtn" class="btn-save" disabled>💾 Save to Database</button>
+                <button id="gistBtn" class="btn-gist" disabled>📤 Save to Gist</button>
+                <button id="clearBtn" class="btn-clear">🗑️ Clear</button>
+            </div>
+
+            <textarea id="transcript" placeholder="Your speech will appear here... Click 'Start Recording' to begin."></textarea>
+
+            <div class="status" id="status"></div>
+
+            <div class="info">
+                <h3>How It Works:</h3>
+                <p>
+                    <strong>1. Record:</strong> Click the button or press <kbd>Ctrl</kbd>+<kbd>Space</kbd> to start recording audio + real-time transcription<br>
+                    <strong>2. Save:</strong> Stores audio file + transcript in local SQLite database<br>
+                    <strong>3. Gist:</strong> Optionally backup transcript to GitHub Gist (requires token)<br>
+                    <strong>4. Tokens:</strong> Track usage like game credits
+                </p>
+            </div>
+        </div>
+
+        <!-- Tab 2: My Memos -->
+        <div id="tab-memos" class="tab-content">
+            <div class="memo-list" id="memoList">
+                <p style="text-align: center; color: rgba(255,255,255,0.5);">Loading memos...</p>
+            </div>
+        </div>
+
+        <!-- Tab 3: Tokens -->
+        <div id="tab-tokens" class="tab-content">
+            <div class="token-display">
+                <div class="token-count" id="tokenCount">0</div>
+                <div class="token-label">Total Tokens Used</div>
+            </div>
+
+            <div class="info">
+                <h3>Token System:</h3>
+                <p>
+                    Each voice memo uses tokens based on length:<br>
+                    <strong>• 0-30 seconds:</strong> 1 token<br>
+                    <strong>• 30-60 seconds:</strong> 2 tokens<br>
+                    <strong>• 60+ seconds:</strong> 3 tokens<br><br>
+                    Tokens track your usage like game credits. Future features will use this for marketplace, rewards, etc.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="keyboard-shortcuts.js"></script>
+    <script>
+        // Speech Recognition
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let isRecording = false;
+        let finalTranscript = '';
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let audioBlob = null;
+
+        // DOM Elements
+        const recordBtn = document.getElementById('recordBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const gistBtn = document.getElementById('gistBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const transcript = document.getElementById('transcript');
+        const status = document.getElementById('status');
+
+        // Initialize Speech Recognition
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const result = event.results[i];
+                    if (result.isFinal) {
+                        finalTranscript += result[0].transcript + ' ';
+                    } else {
+                        interimTranscript += result[0].transcript;
+                    }
+                }
+                transcript.value = finalTranscript + interimTranscript;
+                transcript.scrollTop = transcript.scrollHeight;
+            };
+
+            recognition.onerror = (event) => {
+                showStatus(`Error: ${event.error}`, 'error');
+                stopRecording();
+            };
+
+            recognition.onend = () => {
+                if (isRecording) {
+                    recognition.start(); // Auto-restart
+                }
+            };
+        }
+
+        // Record Button
+        recordBtn.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        async function startRecording() {
+            if (!recognition) {
+                showStatus('Speech recognition not supported. Use Chrome or Edge.', 'error');
+                return;
+            }
+
+            try {
+                // Get microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                // Start audio recording
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    saveBtn.disabled = false;
+                    gistBtn.disabled = false;
+                };
+
+                mediaRecorder.start();
+
+                // Start speech recognition
+                recognition.start();
+                isRecording = true;
+
+                recordBtn.textContent = '🔴 Stop Recording';
+                recordBtn.classList.add('recording');
+                showStatus('🎙️ Recording...', 'recording');
+            } catch (error) {
+                showStatus(`Microphone access denied: ${error.message}`, 'error');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+
+            if (recognition) {
+                recognition.stop();
+            }
+
+            isRecording = false;
+            recordBtn.textContent = '🎙️ Start Recording';
+            recordBtn.classList.remove('recording');
+            showStatus('✅ Recording stopped', 'success');
+        }
+
+        // Save to Database
+        saveBtn.addEventListener('click', async () => {
+            if (!audioBlob || !finalTranscript) {
+                showStatus('No recording to save', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+            formData.append('transcription', finalTranscript);
+
+            // Calculate tokens (simple: 1 token per 30 seconds)
+            const duration = audioBlob.size / 16000; // Rough estimate
+            const tokens = Math.ceil(duration / 30) || 1;
+            formData.append('tokens', tokens);
+
+            try {
+                showStatus('💾 Saving to database...', '');
+
+                const response = await fetch('http://localhost:5002/api/voice/save', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus(`✅ Saved! ID: ${result.id} (${tokens} tokens)`, 'success');
+                    saveBtn.disabled = true;
+                    loadMemos(); // Refresh memo list
+                } else {
+                    showStatus(`❌ Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Failed to save: ${error.message}`, 'error');
+            }
+        });
+
+        // Save to GitHub Gist
+        gistBtn.addEventListener('click', async () => {
+            if (!finalTranscript) {
+                showStatus('No transcription to save', 'error');
+                return;
+            }
+
+            const githubToken = prompt('Enter your GitHub Personal Access Token (needs gist scope):');
+            if (!githubToken) return;
+
+            try {
+                showStatus('📤 Creating GitHub Gist...', '');
+
+                const gistData = {
+                    description: `Voice memo - ${new Date().toLocaleString()}`,
+                    public: false,
+                    files: {
+                        'voice-memo.txt': {
+                            content: finalTranscript
+                        }
+                    }
+                };
+
+                const response = await fetch('https://api.github.com/gists', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(gistData)
+                });
+
+                const gist = await response.json();
+
+                if (gist.html_url) {
+                    showStatus(`✅ Gist created: <a href="${gist.html_url}" target="_blank" style="color: #10b981;">${gist.html_url}</a>`, 'success');
+
+                    // Update database with gist URL
+                    // (would need API endpoint for this)
+                } else {
+                    showStatus(`❌ Failed to create Gist`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Gist error: ${error.message}`, 'error');
+            }
+        });
+
+        // Clear Button
+        clearBtn.addEventListener('click', () => {
+            transcript.value = '';
+            finalTranscript = '';
+            audioBlob = null;
+            audioChunks = [];
+            saveBtn.disabled = true;
+            gistBtn.disabled = true;
+            showStatus('🗑️ Cleared', 'success');
+        });
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            // Load data if needed
+            if (tabName === 'memos') {
+                loadMemos();
+            } else if (tabName === 'tokens') {
+                loadTokens();
+            }
+        }
+
+        // Load Memos
+        async function loadMemos() {
+            try {
+                const response = await fetch('http://localhost:5002/api/voice/memos');
+                const memos = await response.json();
+
+                const memoList = document.getElementById('memoList');
+
+                if (memos.length === 0) {
+                    memoList.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5);">No memos yet. Record your first one!</p>';
+                    return;
+                }
+
+                memoList.innerHTML = memos.map(memo => `
+                    <div class="memo-item">
+                        <div class="memo-header">
+                            <div class="memo-date">${new Date(memo.created_at).toLocaleString()}</div>
+                            <div class="memo-tokens">🪙 ${memo.tokens_used} tokens</div>
+                        </div>
+                        <div class="memo-text">${memo.transcription}</div>
+                        <div class="memo-actions">
+                            ${memo.github_gist_url ? `<a href="${memo.github_gist_url}" target="_blank" style="color: #10b981;">View Gist</a>` : ''}
+                            ${memo.audio_filename ? `<button onclick="playAudio(${memo.id})">▶️ Play</button>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('memoList').innerHTML = `<p style="text-align: center; color: #ef4444;">Error loading memos: ${error.message}</p>`;
+            }
+        }
+
+        // Load Tokens
+        async function loadTokens() {
+            try {
+                const response = await fetch('http://localhost:5002/api/voice/tokens');
+                const data = await response.json();
+                document.getElementById('tokenCount').textContent = data.total_tokens;
+            } catch (error) {
+                document.getElementById('tokenCount').textContent = '?';
+            }
+        }
+
+        // Helper: Show Status
+        function showStatus(message, type = '') {
+            status.innerHTML = message;
+            status.className = `status ${type}`;
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    status.innerHTML = '';
+                    status.className = 'status';
+                }, 5000);
+            }
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.code === 'Space') {
+                e.preventDefault();
+                recordBtn.click();
+            }
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                if (!saveBtn.disabled) saveBtn.click();
+            }
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                clearBtn.click();
+            }
+        });
+
+        // Focus on load
+        window.addEventListener('load', () => {
+            transcript.focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}Ownership Dashboard: {{ user['display_name'] }} - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+  <!-- Header -->
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+    <h1 style="margin: 0 0 0.5rem 0;">{{ user['display_name'] }}'s Ownership</h1>
+    <p style="margin: 0; opacity: 0.9; font-size: 1.1rem;">Track your brand ownership and contributions</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <!-- Total Tokens -->
+    <div style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; text-align: center;">
+      <div style="font-size: 3rem; font-weight: bold; color: #667eea; margin-bottom: 0.5rem;">
+        {{ "{:,}".format(total_tokens) }}
+      </div>
+      <div style="color: #666; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+        Total Soul Tokens
+      </div>
+    </div>
+
+    <!-- Total Brands -->
+    <div style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; text-align: center;">
+      <div style="font-size: 3rem; font-weight: bold; color: #764ba2; margin-bottom: 0.5rem;">
+        {{ total_brands }}
+      </div>
+      <div style="color: #666; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+        Brands Owned
+      </div>
+    </div>
+
+    <!-- Total Contributions -->
+    <div style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; text-align: center;">
+      <div style="font-size: 3rem; font-weight: bold; color: #f093fb; margin-bottom: 0.5rem;">
+        {{ total_contributions }}
+      </div>
+      <div style="color: #666; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+        Contributions
+      </div>
+    </div>
+
+    <!-- Current Multiplier -->
+    <div style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; text-align: center;">
+      <div style="font-size: 3rem; font-weight: bold; color: #f6d365; margin-bottom: 0.5rem;">
+        {{ "{:.2f}".format(multiplier) }}x
+      </div>
+      <div style="color: #666; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+        Reward Multiplier
+      </div>
+    </div>
+  </div>
+
+  {% if ownership %}
+    <!-- Brand Ownership Section -->
+    <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+      <h2 style="margin: 0 0 1.5rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
+        🏢 Brand Ownership
+      </h2>
+
+      {% for brand in ownership %}
+        <div style="border: 1px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; background: #fafafa;">
+          <!-- Brand Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+              <h3 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">
+                <a href="/brand/{{ brand['brand_slug'] }}" style="color: #667eea; text-decoration: none;">
+                  {{ brand['brand_name'] }}
+                </a>
+              </h3>
+              <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                Rank #{{ brand['rank'] }} of {{ brand['total_contributors'] }} contributors
+              </p>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 2rem; font-weight: bold; color: #667eea;">
+                {{ "{:,}".format(brand['soul_tokens']) }}
+              </div>
+              <div style="font-size: 0.85rem; color: #666;">tokens</div>
+            </div>
+          </div>
+
+          <!-- Ownership Bar -->
+          <div style="margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 600; color: #333;">Ownership %</span>
+              <span style="font-weight: bold; color: #667eea;">{{ "{:.2f}".format(brand['ownership_pct']) }}%</span>
+            </div>
+            <div style="background: #e0e0e0; height: 20px; border-radius: 10px; overflow: hidden;">
+              <div style="background: linear-gradient(90deg, #667eea, #764ba2); width: {{ brand['ownership_pct'] }}%; height: 100%;"></div>
+            </div>
+          </div>
+
+          <!-- Brand Stats Grid -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+            <div style="background: white; padding: 1rem; border-radius: 6px; text-align: center;">
+              <div style="font-size: 1.5rem; font-weight: bold; color: #764ba2;">
+                {{ brand['contribution_count'] }}
+              </div>
+              <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Contributions</div>
+            </div>
+
+            <div style="background: white; padding: 1rem; border-radius: 6px; text-align: center;">
+              <div style="font-size: 1.5rem; font-weight: bold; color: #f093fb;">
+                {{ "{:,}".format(brand['total_brand_tokens']) }}
+              </div>
+              <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Total Tokens</div>
+            </div>
+
+            <div style="background: white; padding: 1rem; border-radius: 6px; text-align: center;">
+              <div style="font-size: 1.5rem; font-weight: bold; color: #f6d365;">
+                {{ "{:.1f}".format(brand['steering_power']) }}
+              </div>
+              <div style="font-size: 0.75rem; color: #666; text-transform: uppercase;">Steering Power</div>
+            </div>
+          </div>
+
+          <!-- Last Contribution -->
+          {% if brand['last_contribution_at'] %}
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.85rem; color: #666;">
+              Last contribution: {{ brand['last_contribution_at'][:10] }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </section>
+
+    <!-- Contribution History -->
+    {% if contribution_history %}
+      <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+        <h2 style="margin: 0 0 1.5rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
+          📊 Recent Contributions
+        </h2>
+
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8f9fa;">
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Date</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Brand</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Action</th>
+                <th style="padding: 1rem; text-align: right; border-bottom: 2px solid #ddd;">Tokens Earned</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for contribution in contribution_history %}
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 0.75rem; white-space: nowrap;">{{ contribution['created_at'][:10] }}</td>
+                  <td style="padding: 0.75rem;">
+                    {% if contribution['brand_name'] %}
+                      <a href="/brand/{{ contribution['brand_slug'] }}" style="color: #667eea; text-decoration: none;">
+                        {{ contribution['brand_name'] }}
+                      </a>
+                    {% else %}
+                      <span style="color: #999;">-</span>
+                    {% endif %}
+                  </td>
+                  <td style="padding: 0.75rem;">
+                    {{ contribution['description'] or contribution['action_type'] }}
+                  </td>
+                  <td style="padding: 0.75rem; text-align: right; font-weight: bold; color: #667eea;">
+                    +{{ contribution['tokens_earned'] }}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    {% endif %}
+
+  {% else %}
+    <!-- No Ownership Yet -->
+    <div style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 3rem; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+      <h2 style="color: #333; margin-bottom: 1rem;">No Brand Ownership Yet</h2>
+      <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">
+        Start contributing to brands to earn soul tokens and build your ownership stake!
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="/brands" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2rem; border-radius: 6px; text-decoration: none; font-weight: bold;">
+          Browse Brands
+        </a>
+        <a href="/submit-idea" style="background: #f0f0f0; color: #333; padding: 1rem 2rem; border-radius: 6px; text-decoration: none; font-weight: bold;">
+          Submit an Idea
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- How to Earn Tokens -->
+  <section style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); border-radius: 8px; padding: 2rem; color: white;">
+    <h2 style="margin: 0 0 1.5rem 0; border-bottom: 2px solid rgba(255,255,255,0.5); padding-bottom: 0.5rem;">
+      💰 How to Earn Soul Tokens
+    </h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+      <div style="background: rgba(255,255,255,0.2); padding: 1.5rem; border-radius: 8px;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📱</div>
+        <h3 style="margin: 0 0 0.5rem 0;">Scan QR Codes</h3>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">
+          +10 tokens × your multiplier
+        </p>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.2); padding: 1.5rem; border-radius: 8px;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💡</div>
+        <h3 style="margin: 0 0 0.5rem 0;">Submit Ideas</h3>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">
+          +50 tokens when submitted<br>
+          +200 bonus when accepted
+        </p>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.2); padding: 1.5rem; border-radius: 8px;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">✍️</div>
+        <h3 style="margin: 0 0 0.5rem 0;">Write Posts</h3>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">
+          +100 tokens per post
+        </p>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.2); padding: 1.5rem; border-radius: 8px;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
+        <h3 style="margin: 0 0 0.5rem 0;">Comment & Engage</h3>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">
+          +5 tokens per comment
+        </p>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid rgba(255,255,255,0.3);">
+      <p style="margin: 0; font-size: 0.95rem; opacity: 0.9;">
+        <strong>Multiplier Bonus:</strong> Earn +0.1x multiplier for every 10 contributions!
+        Your current multiplier: <strong>{{ "{:.2f}".format(multiplier) }}x</strong>
+      </p>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

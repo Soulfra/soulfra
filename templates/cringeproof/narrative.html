@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ brand_name }} - Narrative Experience</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: {{ brand_bg_color|default('#0a0a0a') }};
+            color: {{ brand_text_color|default('#e0e0e0') }};
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .narrative-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .narrative-header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg,
+                {{ brand_primary_color|default('#667eea') }}22 0%,
+                transparent 100%);
+            border-bottom: 1px solid {{ brand_primary_color|default('#667eea') }}44;
+            margin-bottom: 40px;
+        }
+
+        .brand-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg,
+                {{ brand_primary_color|default('#667eea') }},
+                {{ brand_secondary_color|default('#764ba2') }});
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-subtitle {
+            font-size: 1.1em;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #222;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                {{ brand_primary_color|default('#667eea') }},
+                {{ brand_secondary_color|default('#764ba2') }});
+            transition: width 0.5s ease;
+        }
+
+        /* AI Host Section */
+        .ai-host-section {
+            background: #111;
+            border: 1px solid {{ brand_primary_color|default('#667eea') }}44;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .ai-host-label {
+            font-size: 0.9em;
+            color: {{ brand_primary_color|default('#667eea') }};
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-host-icon {
+            width: 8px;
+            height: 8px;
+            background: {{ brand_primary_color|default('#667eea') }};
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .ai-host-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            font-style: italic;
+            color: #ccc;
+        }
+
+        /* Story Content */
+        .story-section {
+            background: #0d0d0d;
+            border-left: 3px solid {{ brand_primary_color|default('#667eea') }};
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+        }
+
+        .chapter-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: {{ brand_primary_color|default('#667eea') }};
+        }
+
+        .story-content {
+            font-size: 1.1em;
+            line-height: 1.9;
+            color: #ddd;
+        }
+
+        .story-content p {
+            margin-bottom: 1.5em;
+        }
+
+        .story-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Questions Section */
+        .questions-section {
+            margin-top: 50px;
+        }
+
+        .question-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: {{ brand_primary_color|default('#667eea') }}66;
+            box-shadow: 0 4px 20px {{ brand_primary_color|default('#667eea') }}22;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .question-category {
+            display: inline-block;
+            padding: 6px 12px;
+            background: {{ brand_primary_color|default('#667eea') }}22;
+            color: {{ brand_primary_color|default('#667eea') }};
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 20px;
+        }
+
+        /* Rating Slider */
+        .rating-container {
+            margin-top: 25px;
+        }
+
+        .rating-slider {
+            width: 100%;
+            height: 8px;
+            background: #222;
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .rating-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: {{ brand_primary_color|default('#667eea') }};
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px {{ brand_primary_color|default('#667eea') }}66;
+        }
+
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .rating-value {
+            text-align: center;
+            font-size: 2em;
+            color: {{ brand_primary_color|default('#667eea') }};
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg,
+                {{ brand_primary_color|default('#667eea') }},
+                {{ brand_secondary_color|default('#764ba2') }});
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px {{ brand_primary_color|default('#667eea') }}44;
+        }
+
+        .btn-secondary {
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        .btn-secondary:hover {
+            background: #333;
+            border-color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            display: none;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .completion-screen.active {
+            display: block;
+        }
+
+        .completion-title {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg,
+                {{ brand_primary_color|default('#667eea') }},
+                {{ brand_secondary_color|default('#764ba2') }});
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .completion-message {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #222;
+            border-top-color: {{ brand_primary_color|default('#667eea') }};
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .brand-title {
+                font-size: 2em;
+            }
+
+            .chapter-title {
+                font-size: 1.5em;
+            }
+
+            .story-section,
+            .ai-host-section {
+                padding: 25px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="narrative-container">
+        <!-- Header -->
+        <div class="narrative-header">
+            <h1 class="brand-title">{{ brand_name }}</h1>
+            <p class="brand-subtitle">{{ brand_personality }}</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading your narrative experience...</p>
+        </div>
+
+        <!-- Game Content (hidden initially) -->
+        <div id="gameContent" style="display: none;">
+            <!-- AI Host Narration -->
+            <div class="ai-host-section">
+                <div class="ai-host-label">
+                    <div class="ai-host-icon"></div>
+                    {{ ai_host_name|default('The Observer') }}
+                </div>
+                <div class="ai-host-text" id="aiHostText">
+                    <!-- Narration loaded via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Story Content -->
+            <div class="story-section">
+                <h2 class="chapter-title" id="chapterTitle"></h2>
+                <div class="story-content" id="storyContent"></div>
+            </div>
+
+            <!-- Questions -->
+            <div class="questions-section" id="questionsSection">
+                <!-- Questions loaded via JavaScript -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="prevBtn" style="display: none;">
+                    ← Previous Chapter
+                </button>
+                <button class="btn btn-primary" id="nextBtn">
+                    Next Chapter →
+                </button>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="completion-screen" id="completionScreen">
+            <h2 class="completion-title">Experience Complete</h2>
+            <div class="completion-message" id="completionMessage">
+                <!-- Completion narration loaded via JavaScript -->
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="location.href='/cringeproof'">
+                    Play Another Story
+                </button>
+                <button class="btn btn-secondary" onclick="location.href='/brands'">
+                    Explore Brands
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            sessionId: null,
+            brandSlug: '{{ brand_slug }}',
+            currentChapter: 1,
+            totalChapters: 0,
+            chapters: [],
+            answers: {}
+        };
+
+        // Initialize game
+        async function initGame() {
+            try {
+                // Start new session
+                const response = await fetch('/api/narrative/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ brand_slug: gameState.brandSlug })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    gameState.sessionId = data.session_id;
+                    gameState.chapters = data.chapters;
+                    gameState.totalChapters = data.total_chapters;
+                    gameState.currentChapter = data.current_chapter;
+
+                    // Load first chapter
+                    loadChapter(gameState.currentChapter);
+
+                    // Show game content
+                    document.getElementById('loadingState').style.display = 'none';
+                    document.getElementById('gameContent').style.display = 'block';
+                } else {
+                    alert('Error starting game: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Init error:', error);
+                alert('Failed to start game. Please try again.');
+            }
+        }
+
+        // Load chapter
+        function loadChapter(chapterNum) {
+            const chapter = gameState.chapters[chapterNum - 1];
+
+            if (!chapter) {
+                console.error('Chapter not found:', chapterNum);
+                return;
+            }
+
+            // Update UI
+            document.getElementById('chapterTitle').textContent =
+                `Chapter ${chapter.chapter_number}: ${chapter.title}`;
+
+            // Format story content: Convert newlines to paragraphs while preserving formatting
+            const formattedContent = chapter.content
+                .split('\n\n')  // Split on double newlines (paragraphs)
+                .map(para => para.trim())
+                .filter(para => para.length > 0)
+                .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)  // Single newlines become <br>
+                .join('');
+            document.getElementById('storyContent').innerHTML = formattedContent;
+
+            document.getElementById('aiHostText').textContent =
+                chapter.ai_host_narration || 'The journey continues...';
+
+            // Load questions
+            loadQuestions(chapter.questions || []);
+
+            // Update progress
+            updateProgress();
+
+            // Update buttons
+            document.getElementById('prevBtn').style.display =
+                chapterNum > 1 ? 'block' : 'none';
+            document.getElementById('nextBtn').textContent =
+                chapterNum >= gameState.totalChapters ? 'Complete Experience' : 'Next Chapter →';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Load questions
+        function loadQuestions(questions) {
+            const container = document.getElementById('questionsSection');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="question-category">${q.category || 'Reflection'}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="rating-container">
+                        <input type="range" min="1" max="5" value="3"
+                               class="rating-slider"
+                               id="rating-${index}"
+                               oninput="updateRatingDisplay(${index})">
+                        <div class="rating-value" id="rating-value-${index}">3</div>
+                        <div class="rating-labels">
+                            <span>Strongly Disagree</span>
+                            <span>Neutral</span>
+                            <span>Strongly Agree</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+
+                // Store answer
+                gameState.answers[index] = 3;
+            });
+        }
+
+        // Update rating display
+        function updateRatingDisplay(index) {
+            const slider = document.getElementById(`rating-${index}`);
+            const display = document.getElementById(`rating-value-${index}`);
+            display.textContent = slider.value;
+            gameState.answers[index] = parseInt(slider.value);
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = (gameState.currentChapter / gameState.totalChapters) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Next chapter
+        document.getElementById('nextBtn').addEventListener('click', async () => {
+            // Save answers
+            await saveAnswers();
+
+            // Check if game complete
+            if (gameState.currentChapter >= gameState.totalChapters) {
+                showCompletion();
+                return;
+            }
+
+            // Advance chapter
+            const response = await fetch('/api/narrative/advance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_id: gameState.sessionId })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                gameState.currentChapter = data.next_chapter;
+                loadChapter(gameState.currentChapter);
+            }
+        });
+
+        // Previous chapter
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (gameState.currentChapter > 1) {
+                gameState.currentChapter--;
+                loadChapter(gameState.currentChapter);
+            }
+        });
+
+        // Save answers
+        async function saveAnswers() {
+            const answers = Object.entries(gameState.answers).map(([qId, rating]) => ({
+                question_id: parseInt(qId),
+                rating: rating
+            }));
+
+            await fetch('/api/narrative/answer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: gameState.sessionId,
+                    answers: answers
+                })
+            });
+        }
+
+        // Show completion
+        async function showCompletion() {
+            // Redirect to completion page
+            // The event hook will build the profile automatically
+            window.location.href = `/quiz-complete/${gameState.sessionId}`;
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>

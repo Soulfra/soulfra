@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+.docs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.docs-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.docs-header h1 {
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.docs-header p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.search-box {
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: 2px solid #ddd;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+}
+
+.category-section {
+  margin-bottom: 3rem;
+}
+
+.category-title {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #667eea;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.endpoint-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.endpoint-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.endpoint-card.expanded {
+  border-color: #667eea;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+}
+
+.endpoint-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.method-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  min-width: 60px;
+  text-align: center;
+}
+
+.method-badge.GET {
+  background: #4caf50;
+  color: #fff;
+}
+
+.method-badge.POST {
+  background: #2196f3;
+  color: #fff;
+}
+
+.method-badge.PUT {
+  background: #ff9800;
+  color: #fff;
+}
+
+.method-badge.DELETE {
+  background: #f44336;
+  color: #fff;
+}
+
+.endpoint-path {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.endpoint-desc {
+  color: #666;
+  margin-left: 76px;
+  font-size: 0.95rem;
+}
+
+.endpoint-details {
+  display: none;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.endpoint-details.visible {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section h4 {
+  font-size: 0.9rem;
+  color: #667eea;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.code-block {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.try-button {
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.try-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: #fff;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.quick-links {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.quick-links h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.quick-links a {
+  display: inline-block;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  color: #667eea;
+  text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid #667eea;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.quick-links a:hover {
+  background: #667eea;
+  color: #fff;
+}
+
+.hidden {
+  display: none !important;
+}
+</style>
+
+<div class="docs-container">
+  <div class="docs-header">
+    <h1>📚 API Documentation</h1>
+    <p>Complete reference for all Soulfra API endpoints</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-number" id="totalEndpoints">0</span>
+      <span class="stat-label">Total Endpoints</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">{{ api_routes | length }}</span>
+      <span class="stat-label">Categories</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">100%</span>
+      <span class="stat-label">Coverage</span>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 Search endpoints..." onkeyup="searchEndpoints()">
+  </div>
+
+  <div class="quick-links">
+    <h3>🚀 Quick Actions</h3>
+    <a href="/playground">Try in Playground</a>
+    <a href="/api/health" target="_blank">Test Health Endpoint</a>
+    <a href="/sitemap">View All Routes</a>
+    <a href="/reasoning">AI Reasoning</a>
+  </div>
+
+  {% for category, endpoints in api_routes.items() %}
+  <div class="category-section" data-category="{{ category }}">
+    <h2 class="category-title">
+      <span>{{ category }}</span>
+      <span style="font-size: 0.8rem; color: #999; font-weight: normal;">({{ endpoints | length }} endpoints)</span>
+    </h2>
+
+    {% for endpoint in endpoints %}
+    <div class="endpoint-card" data-path="{{ endpoint['path'] }}" data-method="{{ endpoint['method'] }}" onclick="toggleEndpoint(this)">
+      <div class="endpoint-header">
+        <span class="method-badge {{ endpoint['method'] }}">{{ endpoint['method'] }}</span>
+        <span class="endpoint-path">{{ endpoint['path'] }}</span>
+      </div>
+      <div class="endpoint-desc">{{ endpoint['desc'] }}</div>
+
+      <div class="endpoint-details">
+        {% if endpoint.get('example_body') %}
+        <div class="detail-section">
+          <h4>Request Body</h4>
+          <div class="code-block">{{ endpoint['example_body'] }}</div>
+        </div>
+        {% endif %}
+
+        {% if endpoint.get('example_response') %}
+        <div class="detail-section">
+          <h4>Example Response</h4>
+          <div class="code-block">{{ endpoint['example_response'] }}</div>
+        </div>
+        {% endif %}
+
+        <div class="detail-section">
+          <h4>Try It Out</h4>
+          <button class="try-button" onclick="event.stopPropagation(); tryEndpoint('{{ endpoint['method'] }}', '{{ endpoint['path'] }}')">
+            🚀 Test in Playground
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+// Count total endpoints
+document.addEventListener('DOMContentLoaded', function() {
+  const totalEndpoints = document.querySelectorAll('.endpoint-card').length;
+  document.getElementById('totalEndpoints').textContent = totalEndpoints;
+});
+
+// Toggle endpoint details
+function toggleEndpoint(card) {
+  const details = card.querySelector('.endpoint-details');
+  const isExpanded = card.classList.contains('expanded');
+
+  // Close all other expanded cards
+  document.querySelectorAll('.endpoint-card.expanded').forEach(c => {
+    c.classList.remove('expanded');
+    c.querySelector('.endpoint-details').classList.remove('visible');
+  });
+
+  if (!isExpanded) {
+    card.classList.add('expanded');
+    details.classList.add('visible');
+  }
+}
+
+// Search functionality
+function searchEndpoints() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const cards = document.querySelectorAll('.endpoint-card');
+  const categories = document.querySelectorAll('.category-section');
+
+  cards.forEach(card => {
+    const path = card.dataset.path.toLowerCase();
+    const method = card.dataset.method.toLowerCase();
+    const desc = card.querySelector('.endpoint-desc').textContent.toLowerCase();
+
+    const matches = path.includes(searchTerm) ||
+                   method.includes(searchTerm) ||
+                   desc.includes(searchTerm);
+
+    card.classList.toggle('hidden', !matches);
+  });
+
+  // Hide categories with no visible endpoints
+  categories.forEach(category => {
+    const visibleCards = category.querySelectorAll('.endpoint-card:not(.hidden)');
+    category.classList.toggle('hidden', visibleCards.length === 0);
+  });
+}
+
+// Try endpoint in playground
+function tryEndpoint(method, path) {
+  // Store endpoint details in sessionStorage
+  sessionStorage.setItem('playground_method', method);
+  sessionStorage.setItem('playground_path', path);
+
+  // Navigate to playground
+  window.location.href = '/playground#api';
+}
+</script>
+
+{% endblock %}

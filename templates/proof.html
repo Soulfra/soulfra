@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptographic Proof - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        .proof-meta {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-label {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+            color: #667eea;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .tier-section {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .tier-title {
+            font-size: 1.3rem;
+            color: #667eea;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-verified {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .status-failed {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .tier-content {
+            padding: 1rem 0;
+        }
+
+        .tier-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dotted #333;
+        }
+
+        .tier-stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #888;
+        }
+
+        .stat-value {
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .collapsible:hover {
+            color: #764ba2;
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.active {
+            max-height: 2000px;
+        }
+
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .hash {
+            font-family: 'SF Mono', monospace;
+            color: #667eea;
+            word-break: break-all;
+        }
+
+        .signature-section {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid #764ba2;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .signature-title {
+            font-size: 1.5rem;
+            color: #764ba2;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .deps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .dep-item {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .dep-external {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .nav {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .summary-title {
+            font-size: 2rem;
+            color: #4caf50;
+            margin-bottom: 1rem;
+        }
+
+        .summary-checks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .check-item {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .check-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Cryptographic Proof</h1>
+            <p class="subtitle">Self-Verifying Tier System Demonstration</p>
+        </div>
+
+        {% if proof_exists %}
+        <!-- Proof Metadata -->
+        <div class="proof-meta">
+            <div class="meta-item">
+                <div class="meta-label">Version</div>
+                <div class="meta-value">{{ proof.version }}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Generated</div>
+                <div class="meta-value">{{ proof_age }}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Platform</div>
+                <div class="meta-value">{{ proof.system.platform }}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Python</div>
+                <div class="meta-value">{{ proof.system.python_version }}</div>
+            </div>
+        </div>
+
+        <!-- Summary Box -->
+        {% if proof.summary.all_tiers_verified %}
+        <div class="summary-box">
+            <div class="summary-title">✅ ALL VERIFICATIONS PASSED</div>
+            <p style="color: #888; margin-bottom: 1rem;">This proof cryptographically verifies that the tier system works correctly</p>
+
+            <div class="summary-checks">
+                <div class="check-item">
+                    <div class="check-icon">{% if proof.summary.all_tiers_verified %}✅{% else %}❌{% endif %}</div>
+                    <div>All Tiers Verified</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">{% if proof.summary.cryptographically_signed %}✅{% else %}❌{% endif %}</div>
+                    <div>Cryptographically Signed</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon">{% if proof.summary.reproducible %}✅{% else %}❌{% endif %}</div>
+                    <div>Reproducible</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- TIER 1: SQL -->
+        <div class="tier-section">
+            <div class="tier-header">
+                <div class="tier-title">📊 TIER 1: SQL Data Layer</div>
+                <span class="status-badge status-verified">✅ Verified</span>
+            </div>
+            <div class="tier-content">
+                <div class="tier-stat">
+                    <span class="stat-label">Total Tables:</span>
+                    <span class="stat-value">{{ proof.tier1_sql.total_tables }}</span>
+                </div>
+                <div class="tier-stat">
+                    <span class="stat-label">Total Rows:</span>
+                    <span class="stat-value">{{ proof.tier1_sql.total_rows }}</span>
+                </div>
+                <div class="tier-stat collapsible" onclick="toggleCollapsible(this)">
+                    <span class="stat-label">▶ View Tables ({{ proof.tier1_sql.tables | length }})</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block">
+                        {% for table_name, table_data in proof.tier1_sql.tables.items() %}
+                        {{ table_name }}: {{ table_data.row_count }} rows
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER 2: Python -->
+        <div class="tier-section">
+            <div class="tier-header">
+                <div class="tier-title">🐍 TIER 2: Python Transformation</div>
+                <span class="status-badge status-verified">✅ Verified</span>
+            </div>
+            <div class="tier-content">
+                <div class="tier-stat">
+                    <span class="stat-label">Example:</span>
+                    <span class="stat-value">{{ proof.tier2_python.example }}</span>
+                </div>
+                <div class="tier-stat">
+                    <span class="stat-label">Sample Transformations:</span>
+                    <span class="stat-value">{{ proof.tier2_python.sample_transformations | length }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER 3: Binary Encoding -->
+        <div class="tier-section">
+            <div class="tier-header">
+                <div class="tier-title">🔢 TIER 3: Binary Encoding</div>
+                <span class="status-badge status-verified">✅ Verified</span>
+            </div>
+            <div class="tier-content">
+                <div class="tier-stat">
+                    <span class="stat-label">Encoding Examples:</span>
+                    <span class="stat-value">{{ proof.tier3_binary.examples | length }}</span>
+                </div>
+                {% for example in proof.tier3_binary.examples %}
+                <div class="tier-stat">
+                    <span class="stat-label">{{ example.type }}:</span>
+                    <span class="stat-value">{{ example.output_size }} bytes</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- TIER 4: Output Formats -->
+        <div class="tier-section">
+            <div class="tier-header">
+                <div class="tier-title">📄 TIER 4: Output Formats</div>
+                <span class="status-badge status-verified">✅ Verified</span>
+            </div>
+            <div class="tier-content">
+                <div class="tier-stat">
+                    <span class="stat-label">Total Formats:</span>
+                    <span class="stat-value">{{ proof.tier4_formats.total_formats }}</span>
+                </div>
+                {% for format in proof.tier4_formats.formats %}
+                <div class="tier-stat">
+                    <span class="stat-label">{{ format.format }}:</span>
+                    <span class="stat-value">{{ format.description }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Dependencies -->
+        <div class="tier-section">
+            <div class="tier-header">
+                <div class="tier-title">📦 Dependencies</div>
+                {% if proof.dependencies.only_stdlib %}
+                <span class="status-badge status-verified">✅ Only Stdlib</span>
+                {% else %}
+                <span class="status-badge status-failed">⚠️ Has External</span>
+                {% endif %}
+            </div>
+            <div class="tier-content">
+                <div class="tier-stat">
+                    <span class="stat-label">Files Scanned:</span>
+                    <span class="stat-value">{{ proof.dependencies.total_files_scanned }}</span>
+                </div>
+                <div class="tier-stat">
+                    <span class="stat-label">Total Imports:</span>
+                    <span class="stat-value">{{ proof.dependencies.total_imports }}</span>
+                </div>
+                <div class="tier-stat">
+                    <span class="stat-label">Stdlib Imports:</span>
+                    <span class="stat-value">{{ proof.dependencies.stdlib_imports | length }}</span>
+                </div>
+                <div class="tier-stat">
+                    <span class="stat-label">External Imports:</span>
+                    <span class="stat-value">{{ proof.dependencies.external_imports | length }}</span>
+                </div>
+
+                {% if proof.dependencies.external_imports %}
+                <div class="tier-stat collapsible" onclick="toggleCollapsible(this)">
+                    <span class="stat-label">▶ View External Dependencies</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="deps-grid">
+                        {% for dep in proof.dependencies.external_imports %}
+                        <div class="dep-item dep-external">{{ dep }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- System Hash -->
+        <div class="tier-section">
+            <div class="tier-header">
+                <div class="tier-title">🔐 System Hash</div>
+                <span class="status-badge status-verified">✅ {{ proof.system_hash.hash_algorithm }}</span>
+            </div>
+            <div class="tier-content">
+                <div class="tier-stat">
+                    <span class="stat-label">Files Hashed:</span>
+                    <span class="stat-value">{{ proof.system_hash.files_included }}</span>
+                </div>
+                <div class="tier-stat collapsible" onclick="toggleCollapsible(this)">
+                    <span class="stat-label">▶ View System Hash</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block">
+                        <div class="hash">{{ proof.system_hash.system_hash }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cryptographic Signature -->
+        <div class="signature-section">
+            <div class="signature-title">🔏 Cryptographic Signature</div>
+
+            <div class="tier-stat">
+                <span class="stat-label">Algorithm:</span>
+                <span class="stat-value">{{ proof.signature.algorithm }}</span>
+            </div>
+            <div class="tier-stat">
+                <span class="stat-label">Timestamp:</span>
+                <span class="stat-value">{{ proof.signature.timestamp }}</span>
+            </div>
+
+            <div class="tier-stat collapsible" onclick="toggleCollapsible(this)">
+                <span class="stat-label">▶ View HMAC Signature</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="code-block">
+                    <div class="hash">{{ proof.signature.signature }}</div>
+                </div>
+            </div>
+
+            <div class="tier-stat collapsible" onclick="toggleCollapsible(this)">
+                <span class="stat-label">▶ View Content Hash</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="code-block">
+                    <div class="hash">{{ proof.signature.content_hash }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Instructions -->
+        <div class="tier-section">
+            <div class="tier-header">
+                <div class="tier-title">🔍 Verify This Proof</div>
+            </div>
+            <div class="tier-content">
+                <div class="code-block">
+# Download and verify the proof
+python3 verify_proof.py proof.json --verbose
+
+# Or regenerate (should produce same hash)
+python3 generate_proof.py --verbose
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="tier-section">
+            <p>❌ Proof file not found. Generate it by running:</p>
+            <div class="code-block">python3 generate_proof.py</div>
+        </div>
+        {% endif %}
+
+        <div class="nav">
+            <a href="/">← Back to Home</a>
+            <a href="/tiers">View Tier System</a>
+            <a href="/legitimacy">Why This Works</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleCollapsible(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('active');
+
+            // Update arrow
+            const label = element.querySelector('.stat-label');
+            if (content.classList.contains('active')) {
+                label.textContent = label.textContent.replace('▶', '▼');
+            } else {
+                label.textContent = label.textContent.replace('▼', '▶');
+            }
+        }
+    </script>
+</body>
+</html>

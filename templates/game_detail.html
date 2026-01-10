@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.session_name }} - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+
+  <!-- Header -->
+  <div style="margin-bottom: 2rem;">
+    <a href="{{ url_for('games_gallery') }}" style="color: #667eea; text-decoration: none; font-weight: 500;">
+      ← Back to Games
+    </a>
+  </div>
+
+  <header style="margin-bottom: 3rem;">
+    <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">{{ game.session_name }}</h1>
+    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <span style="background: #e8f0fe; color: #1967d2; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500;">
+        {{ game.game_type }}
+      </span>
+      {% if game.status == 'active' %}
+        <span style="color: #10b981; font-weight: 500;">● Active</span>
+      {% elif game.status == 'paused' %}
+        <span style="color: #f59e0b; font-weight: 500;">⏸ Paused</span>
+      {% else %}
+        <span style="color: #6b7280; font-weight: 500;">✓ Completed</span>
+      {% endif %}
+      <span style="color: #666;">Turn {{ game.current_turn }}</span>
+      <span style="color: #666;">Created by {{ game.creator_username }}</span>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+
+    <!-- Current State -->
+    <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
+        🎯 Current State
+      </h2>
+
+      {% if current_state.get('error') %}
+        <p style="color: #999; font-style: italic;">{{ current_state.error }}</p>
+      {% else %}
+        <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <div style="font-family: monospace; font-size: 0.9rem;">
+            <strong>Turn:</strong> {{ current_state.turn_number }}<br>
+            <strong>State Hash:</strong> <span style="color: #667eea;">{{ current_state.state_hash[:32] }}...</span>
+          </div>
+        </div>
+
+        {% if current_state.board_state %}
+          <details style="margin-top: 1rem;">
+            <summary style="cursor: pointer; font-weight: 600; margin-bottom: 0.5rem;">Board State (JSON)</summary>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.875rem;">{{ current_state.board_state }}</pre>
+          </details>
+        {% endif %}
+
+        {% if current_state.player_positions %}
+          <details style="margin-top: 1rem;">
+            <summary style="cursor: pointer; font-weight: 600; margin-bottom: 0.5rem;">Player Positions</summary>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.875rem;">{{ current_state.player_positions }}</pre>
+          </details>
+        {% endif %}
+
+        {% if current_state.active_effects %}
+          <details style="margin-top: 1rem;">
+            <summary style="cursor: pointer; font-weight: 600; margin-bottom: 0.5rem;">Active Effects</summary>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.875rem;">{{ current_state.active_effects }}</pre>
+          </details>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- Players -->
+    <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
+        👥 Players
+      </h2>
+
+      {% if players %}
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          {% for player in players %}
+            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                {{ player.username or player.display_name }}
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; font-size: 0.875rem;">
+                {% if player.roblox_active %}
+                  <span style="background: #ff6b6b; color: white; padding: 0.25rem 0.5rem; border-radius: 4px;">Roblox</span>
+                {% endif %}
+                {% if player.minecraft_active %}
+                  <span style="background: #51cf66; color: white; padding: 0.25rem 0.5rem; border-radius: 4px;">Minecraft</span>
+                {% endif %}
+                {% if player.mobile_active %}
+                  <span style="background: #339af0; color: white; padding: 0.25rem 0.5rem; border-radius: 4px;">Mobile</span>
+                {% endif %}
+              </div>
+              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #666;">
+                Role: {{ player.player_role }}
+              </div>
+              {% if player.is_online %}
+                <div style="color: #10b981; font-size: 0.875rem; margin-top: 0.25rem;">● Online</div>
+              {% else %}
+                <div style="color: #999; font-size: 0.875rem; margin-top: 0.25rem;">○ Offline</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color: #999; font-style: italic;">No players yet</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Action History -->
+  <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
+      📜 Action History
+    </h2>
+
+    {% if actions %}
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for action in actions %}
+          <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+              <div>
+                <span style="background: #f0f0f0; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; font-weight: 500; margin-right: 0.5rem;">
+                  Turn {{ action.turn_number }}
+                </span>
+                <span style="font-weight: 600;">{{ action.username }}</span>
+                <span style="color: #666; margin-left: 0.5rem;">on {{ action.player_platform }}</span>
+              </div>
+              <div style="text-align: right; font-size: 0.875rem; color: #999;">
+                {{ action.submitted_at }}
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <strong>Action:</strong> <span style="color: #667eea;">{{ action.action_type }}</span>
+            </div>
+
+            {% if action.ai_verdict %}
+              <div style="background: {% if action.ai_verdict == 'success' %}#e6f7ed{% elif action.ai_verdict == 'failure' %}#ffe6e6{% else %}#fff8e1{% endif %}; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                  AI Verdict:
+                  {% if action.ai_verdict == 'success' %}
+                    <span style="color: #10b981;">✅ Success</span>
+                  {% elif action.ai_verdict == 'failure' %}
+                    <span style="color: #ef4444;">❌ Failure</span>
+                  {% else %}
+                    <span style="color: #f59e0b;">⚡ Partial</span>
+                  {% endif %}
+                  {% if action.ai_confidence %}
+                    <span style="color: #666; font-size: 0.875rem;">({{ (action.ai_confidence * 100)|round|int }}% confidence)</span>
+                  {% endif %}
+                </div>
+                {% if action.ai_reasoning %}
+                  <div style="font-size: 0.95rem; color: #444;">{{ action.ai_reasoning }}</div>
+                {% endif %}
+                {% if action.judged_by_ai %}
+                  <div style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;">Judged by: {{ action.judged_by_ai }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <details style="margin-top: 1rem;">
+              <summary style="cursor: pointer; font-weight: 500; font-size: 0.875rem; color: #667eea;">View Details</summary>
+              <div style="margin-top: 0.5rem; background: #f9f9f9; padding: 1rem; border-radius: 6px;">
+                <div style="font-family: monospace; font-size: 0.875rem;">
+                  <strong>Action ID:</strong> {{ action.action_id }}<br>
+                  <strong>Action Hash:</strong> {{ action.action_hash[:32] }}...<br>
+                  <strong>State Before:</strong> {{ action.state_before_hash[:32] }}...<br>
+                  <strong>State After:</strong> {{ action.state_after_hash[:32] }}...<br>
+                  {% if action.verified %}
+                    <strong style="color: #10b981;">✅ Verified</strong>
+                  {% else %}
+                    <strong style="color: #999;">⏳ Pending Verification</strong>
+                  {% endif %}
+                </div>
+              </div>
+            </details>
+
+            <!-- Admin: Flag Action -->
+            {% if session.get('is_admin') %}
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                <button onclick="flagAction({{ action.action_id }}, true)"
+                        style="background: #10b981; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-right: 0.5rem;">
+                  ✓ Mark Correct
+                </button>
+                <button onclick="flagAction({{ action.action_id }}, false)"
+                        style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                  ✗ Mark Incorrect
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color: #999; font-style: italic;">No actions yet</p>
+    {% endif %}
+  </div>
+
+  <!-- Proofs -->
+  {% if proofs %}
+    <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">
+        🔐 Verified Proofs
+      </h2>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for proof in proofs %}
+          <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 600;">Proof #{{ proof.proof_id }}</span>
+              {% if proof.is_valid %}
+                <span style="color: #10b981;">✅ Valid</span>
+              {% else %}
+                <span style="color: #ef4444;">❌ Invalid</span>
+              {% endif %}
+            </div>
+            <div style="font-size: 0.875rem; color: #666;">
+              Network: {{ proof.network_name }}<br>
+              Type: {{ proof.proof_type }}<br>
+              Confidence: {{ (proof.confidence_score * 100)|round|int }}%
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+<script>
+  function flagAction(actionId, isCorrect) {
+    const reason = prompt(`Why is this action ${isCorrect ? 'correct' : 'incorrect'}?`);
+    if (!reason) return;
+
+    fetch('/api/games/flag-action', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        action_id: actionId,
+        is_correct: isCorrect,
+        reason: reason
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        alert('Action flagged successfully!');
+        location.reload();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    });
+  }
+</script>
+
+{% endblock %}

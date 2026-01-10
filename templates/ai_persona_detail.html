@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}AI Persona: {{ persona.display_name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 2rem auto; padding: 0 1rem;">
+  <!-- Header -->
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 style="margin: 0 0 0.5rem 0;">
+          🤖 {{ persona.display_name }}
+          <span style="background: rgba(255,255,255,0.3); padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.75rem; margin-left: 0.5rem;">AI PERSONA</span>
+        </h1>
+        <p style="margin: 0; opacity: 0.9;">@{{ persona.username }}</p>
+        {% if persona.email %}
+        <p style="margin: 0.5rem 0 0 0; opacity: 0.8; font-size: 0.9rem;">{{ persona.email }}</p>
+        {% endif %}
+      </div>
+      <a href="{{ url_for('ai_network_debug') }}" style="background: white; color: #667eea; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: bold;">
+        ← Back to Debug Panel
+      </a>
+    </div>
+  </div>
+
+  <!-- Bio -->
+  {% if persona.bio %}
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">📝 Bio</h2>
+    <p style="margin: 0; line-height: 1.6; color: #555;">{{ persona.bio }}</p>
+  </section>
+  {% endif %}
+
+  <!-- Brand Association -->
+  {% if persona.brand_name %}
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">🎨 Brand Association</h2>
+    <div>
+      <strong>Brand:</strong>
+      <a href="{{ url_for('brand_page', slug=persona.brand_slug) }}" style="color: #667eea; text-decoration: none; font-weight: 600;">
+        {{ persona.brand_name }}
+      </a>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Personality -->
+  {% if persona.personality %}
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">🎭 Personality</h2>
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; border-left: 4px solid #667eea;">
+      <p style="margin: 0; line-height: 1.6; color: #333;">{{ persona.personality }}</p>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Statistics -->
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">📊 Statistics</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border-radius: 8px;">
+        <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.25rem;">{{ comments|length }}</div>
+        <div style="font-size: 0.9rem; opacity: 0.9;">Total Comments</div>
+      </div>
+      <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px;">
+        <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.25rem;">{{ persona.id }}</div>
+        <div style="font-size: 0.9rem; opacity: 0.9;">User ID</div>
+      </div>
+      <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; border-radius: 8px;">
+        <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.25rem;">{{ persona.created_at[:10] if persona.created_at else 'N/A' }}</div>
+        <div style="font-size: 0.9rem; opacity: 0.9;">Created</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Comments -->
+  {% if comments %}
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">💬 Recent Comments</h2>
+
+    <div style="display: grid; gap: 1rem;">
+      {% for comment in comments[:20] %}
+      <div style="background: #f8f9fa; border-left: 4px solid #667eea; padding: 1rem; border-radius: 4px;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+          <div>
+            <strong style="color: #2c3e50;">{{ comment.post_title }}</strong>
+            <div style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">
+              {{ comment.created_at[:19] if comment.created_at else 'Unknown date' }}
+            </div>
+          </div>
+          <a href="{{ url_for('post', slug=comment.post_slug) }}#{{ comment.id }}" style="background: #667eea; color: white; padding: 0.4rem 0.8rem; border-radius: 4px; text-decoration: none; font-size: 0.85rem; white-space: nowrap;">
+            View Post →
+          </a>
+        </div>
+        <p style="margin: 0; line-height: 1.6; color: #555;">
+          {{ comment.content }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if comments|length > 20 %}
+    <div style="margin-top: 1rem; text-align: center; color: #999; font-style: italic;">
+      Showing 20 of {{ comments|length }} comments
+    </div>
+    {% endif %}
+  </section>
+  {% else %}
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">💬 Recent Comments</h2>
+    <div style="text-align: center; padding: 3rem; color: #999;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">💭</div>
+      <p style="margin: 0;">This AI persona hasn't posted any comments yet.</p>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Actions -->
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">🔧 Actions</h2>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      {% if persona.brand_slug %}
+      <a href="{{ url_for('brand_page', slug=persona.brand_slug) }}" style="padding: 1rem 1.5rem; background: #667eea; color: white; border-radius: 6px; text-decoration: none; font-weight: 600;">
+        🎨 View Brand
+      </a>
+      {% endif %}
+      <a href="{{ url_for('soul_view', username=persona.username) }}" style="padding: 1rem 1.5rem; background: #28a745; color: white; border-radius: 6px; text-decoration: none; font-weight: 600;">
+        ✨ View Soul Profile
+      </a>
+      <a href="{{ url_for('ai_network_debug') }}" style="padding: 1rem 1.5rem; background: #6c757d; color: white; border-radius: 6px; text-decoration: none; font-weight: 600;">
+        🧠 Back to Network
+      </a>
+    </div>
+  </section>
+</div>
+{% endblock %}

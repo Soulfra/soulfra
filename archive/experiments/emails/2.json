@@ -1,0 +1,12 @@
+{
+  "id": 2,
+  "from": "noreply@soulfra.local",
+  "to": [
+    "new-test@example.com"
+  ],
+  "subject": "\ud83c\udf89 Welcome to Soulfra API - Your API Key Inside!",
+  "body": "Hi NewUser!\n\nWelcome to the Soulfra Freelancer API program! \ud83d\ude80\n\nYour API key is ready:\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nSK-NcCwIQO0p4J8Oo6lYqP8am_b\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n\ud83d\udcca Your Plan Details:\n\u2022 Tier: Free\n\u2022 Brand Access: CALRIVEN\n\u2022 Rate Limit: 100 calls/day\n\u2022 Endpoints: Comment Generation, Text Classification\n\n\ud83d\udcda API Documentation:\n\n1. Generate AI Comment:\n   curl -H \"X-API-Key: SK-NcCwIQO0p4J8Oo6lYqP8am_b\" \\\n     \"http://localhost:5001/api/v1/calriven/comment?post_id=1\"\n\n2. Classify Text:\n   curl -H \"X-API-Key: SK-NcCwIQO0p4J8Oo6lYqP8am_b\" \\\n     \"http://localhost:5001/api/v1/calriven/classify?text=Your+text+here\"\n\n3. Check Your Usage:\n   View your API stats at: http://localhost:5001/api/stats?key=SK-NcCwIQO0p4J8Oo6lYqP8am_b\n\n\ud83d\udca1 Pro Tips:\n\u2022 Include X-API-Key header in all requests\n\u2022 Rate limit resets daily at midnight UTC\n\u2022 Reply to newsletter emails to auto-comment on posts!\n\u2022 Upgrade to Pro for multi-brand access (1000 calls/day)\n\n\ud83d\udd17 Resources:\n\u2022 API Docs: http://localhost:5001/api/docs\n\u2022 Brand Personas: http://localhost:5001/brands\n\u2022 Community: http://localhost:5001/community\n\nNeed help? Reply to this email!\n\n---\nSoulfra Platform\nBuilding AI-powered conversation tools",
+  "html_body": null,
+  "created_at": "2025-12-24T21:40:36.002926",
+  "status": "queued"
+}

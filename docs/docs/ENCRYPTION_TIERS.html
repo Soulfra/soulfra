@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption Tiers - How Security Composes - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="encryption-tiers-how-security-composes">Encryption Tiers - How Security Composes</h1>
+
+<p><strong>Understanding how each port/tier adds layers of encryption and security</strong></p>
+
+<hr />
+
+<h2 id="the-key-insight">The Key Insight</h2>
+
+<p><strong>Different ports don't just run different services - they compose different security tiers!</strong></p>
+
+<p>Like Russian nesting dolls, each tier wraps the previous one with more security:</p>
+
+<pre><code>TIER 1: localhost         (no encryption - learning)
+  ↓ wraps in
+TIER 2: LAN               (network isolation)
+  ↓ wraps in
+TIER 3: nginx + HTTPS     (TLS encryption)
+  ↓ wraps in
+TIER 4: QR Auth + Session (identity + device)
+  ↓ wraps in
+TIER 5: End-to-End        (coming: encrypted content)
+</code></pre>
+
+<p><strong>Each tier is OSS</strong> (open source), <strong>each adds security</strong>, <strong>all compose together</strong>.</p>
+
+<hr />
+
+<h2 id="tier-1-localhost-only-port-5001">TIER 1: Localhost Only (Port 5001)</h2>
+
+<h3 id="what-it-is">What It Is</h3>
+
+<p>Running Soulfra on <code>localhost:5001</code> - accessible only from your computer.</p>
+
+<h3 id="configuration">Configuration</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+        <span class="c1">#    ^^^^^^^^^^^</span>
+        <span class="c1">#    localhost only</span>
+</code></pre>
+</div>
+
+<h3 id="encryption">Encryption</h3>
+
+<p><strong>NONE</strong> - All traffic is unencrypted HTTP.</p>
+
+<h3 id="security">Security</h3>
+
+<ul>
+<li><strong>Process isolation</strong>: OS keeps Soulfra separate from other programs</li>
+<li><strong>No network exposure</strong>: Not accessible from other devices</li>
+<li><strong>File system permissions</strong>: SQLite database protected by OS</li>
+</ul>
+
+<h3 id="when-to-use">When to Use</h3>
+
+<ul>
+<li>✓ <strong>Learning &amp; Development</strong>: Safe to experiment</li>
+<li>✓ <strong>Writing private posts</strong>: No one else can access</li>
+<li>✓ <strong>Testing new features</strong>: Break things safely</li>
+</ul>
+
+<h3 id="threat-model">Threat Model</h3>
+
+<p><strong>Protected against</strong>:
+- ✓ Other users on network (can't access)
+- ✓ Internet attackers (not exposed)</p>
+
+<p><strong>NOT protected against</strong>:
+- ✗ Malware on your computer
+- ✗ Physical access to your machine
+- ✗ Root/admin user on same computer</p>
+
+<h3 id="example">Example</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start server</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># Access</span>
+curl<span class="w"> </span>http://localhost:5001/
+
+<span class="c1"># From other device - FAILS</span>
+curl<span class="w"> </span>http://192.168.1.100:5001/
+<span class="c1"># Connection refused</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="tier-2-lan-access-port-5001-on-0000">TIER 2: LAN Access (Port 5001 on 0.0.0.0)</h2>
+
+<h3 id="what-it-is-2">What It Is</h3>
+
+<p>Binding to all network interfaces - accessible from devices on your home/office network.</p>
+
+<h3 id="configuration-2">Configuration</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+        <span class="c1">#    ^^^^^^^^^</span>
+        <span class="c1">#    all interfaces</span>
+</code></pre>
+</div>
+
+<h3 id="encryption-2">Encryption</h3>
+
+<p><strong>STILL NONE</strong> - HTTP traffic is unencrypted.</p>
+
+<p><strong>But</strong>: Traffic stays on local network (behind router's NAT).</p>
+
+<h3 id="security-2">Security</h3>
+
+<ul>
+<li><strong>Network isolation</strong>: Router blocks external access by default</li>
+<li><strong>Same network required</strong>: Devices must be on same WiFi/Ethernet</li>
+<li><strong>OS firewalls</strong>: macOS/Linux firewall can block connections</li>
+</ul>
+
+<h3 id="additional-protection">Additional Protection</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># macOS firewall</span>
+sudo<span class="w"> </span>/usr/libexec/ApplicationFirewall/socketfilterfw<span class="w"> </span>--add<span class="w"> </span>python3
+sudo<span class="w"> </span>/usr/libexec/ApplicationFirewall/socketfilterfw<span class="w"> </span>--unblock<span class="w"> </span>python3
+
+<span class="c1"># Linux (ufw)</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span>from<span class="w"> </span><span class="m">192</span>.168.1.0/24<span class="w"> </span>to<span class="w"> </span>any<span class="w"> </span>port<span class="w"> </span><span class="m">5001</span>
+<span class="c1"># Only allow from local network</span>
+</code></pre>
+</div>
+
+<h3 id="when-to-use-2">When to Use</h3>
+
+<ul>
+<li>✓ <strong>Testing on phone/tablet</strong>: Same WiFi network</li>
+<li>✓ <strong>Team development</strong>: Share with local team</li>
+<li>✓ <strong>Home server</strong>: Family/roommates access</li>
+</ul>
+
+<h3 id="threat-model-2">Threat Model</h3>
+
+<p><strong>Protected against</strong>:
+- ✓ Internet attackers (behind NAT)
+- ✓ Unauthorized local devices (can add MAC filtering)</p>
+
+<p><strong>NOT protected against</strong>:
+- ✗ Anyone on your WiFi (can sniff traffic)
+- ✗ MITM attacks on local network
+- ✗ Malicious apps on same network</p>
+
+<h3 id="example-2">Example</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start server</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># Access from phone (on same WiFi)</span>
+curl<span class="w"> </span>http://192.168.1.100:5001/
+
+<span class="c1"># Sniff traffic (unencrypted!)</span>
+tcpdump<span class="w"> </span>-i<span class="w"> </span>en0<span class="w"> </span>-A<span class="w"> </span><span class="s1">&#39;port 5001&#39;</span>
+<span class="c1"># Can see all HTTP requests/responses in plain text</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="tier-3-public-with-https-port-443-via-nginx">TIER 3: Public with HTTPS (Port 443 via nginx)</h2>
+
+<h3 id="what-it-is-3">What It Is</h3>
+
+<p>Production deployment with nginx reverse proxy and SSL/TLS certificate.</p>
+
+<h3 id="configuration-3">Configuration</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># /etc/nginx/sites-enabled/soulfra</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">soulfra.com</span><span class="p">;</span>
+<span class="w">    </span><span class="c1"># Redirect to HTTPS</span>
+<span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$server_name$request_uri</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="w"> </span><span class="s">http2</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># SSL Certificate (Let&#39;s Encrypt)</span>
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/soulfra.com/fullchain.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/soulfra.com/privkey.pem</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># TLS Settings</span>
+<span class="w">    </span><span class="kn">ssl_protocols</span><span class="w"> </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_ciphers</span><span class="w"> </span><span class="s">&#39;ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Proxy to Flask</span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://localhost:5001</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="encryption-3">Encryption</h3>
+
+<p><strong>TLS 1.3</strong> - Military-grade encryption:
+- <strong>ECDHE key exchange</strong>: Perfect forward secrecy
+- <strong>AES-128-GCM</strong>: Authenticated encryption
+- <strong>SHA-256 hash</strong>: Integrity verification</p>
+
+<p><strong>What This Means</strong>:
+- Browser ↔ nginx: <strong>Encrypted</strong>
+- nginx ↔ Flask (localhost): <strong>Unencrypted</strong> (same machine)</p>
+
+<h3 id="security-headers">Security Headers</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Security headers</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">Strict-Transport-Security</span><span class="w"> </span><span class="s">&quot;max-age=31536000</span><span class="p">;</span><span class="w"> </span><span class="k">includeSubDomains&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">X-Frame-Options</span><span class="w"> </span><span class="s">&quot;SAMEORIGIN&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">X-Content-Type-Options</span><span class="w"> </span><span class="s">&quot;nosniff&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">X-XSS-Protection</span><span class="w"> </span><span class="s">&quot;1</span><span class="p">;</span><span class="w"> </span><span class="k">mode=block&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">Content-Security-Policy</span><span class="w"> </span><span class="s">&quot;default-src</span><span class="w"> </span><span class="s">&#39;self&#39;</span><span class="p">;</span><span class="k">&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<h3 id="when-to-use-3">When to Use</h3>
+
+<ul>
+<li>✓ <strong>Production websites</strong>: Public-facing</li>
+<li>✓ <strong>Client projects</strong>: Professional deployment</li>
+<li>✓ <strong>Sensitive data</strong>: Login credentials, private posts</li>
+</ul>
+
+<h3 id="threat-model-3">Threat Model</h3>
+
+<p><strong>Protected against</strong>:
+- ✓ MITM attacks (TLS encryption)
+- ✓ Packet sniffing (encrypted in transit)
+- ✓ Session hijacking (secure cookies)
+- ✓ XSS attacks (security headers)</p>
+
+<p><strong>NOT protected against</strong>:
+- ✗ Compromised server (attacker has root)
+- ✗ Stolen certificates
+- ✗ DNS hijacking (need DNSSEC)</p>
+
+<h3 id="how-to-enable">How to Enable</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Get SSL certificate</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>--nginx<span class="w"> </span>-d<span class="w"> </span>soulfra.com<span class="w"> </span>-d<span class="w"> </span>www.soulfra.com
+
+<span class="c1"># Auto-renew (Let&#39;s Encrypt expires every 90 days)</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
+</code></pre>
+</div>
+
+<h3 id="verification">Verification</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check SSL configuration</span>
+curl<span class="w"> </span>-I<span class="w"> </span>https://soulfra.com
+
+<span class="c1"># Should show:</span>
+<span class="c1"># HTTP/2 200</span>
+<span class="c1"># strict-transport-security: max-age=31536000</span>
+
+<span class="c1"># Test with SSL Labs</span>
+<span class="c1"># https://www.ssllabs.com/ssltest/analyze.html?d=soulfra.com</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="tier-4-qr-auth-session-encryption">TIER 4: QR Auth + Session Encryption</h2>
+
+<h3 id="what-it-is-4">What It Is</h3>
+
+<p>Passwordless authentication via QR codes with device fingerprinting and encrypted sessions.</p>
+
+<h3 id="how-it-works">How It Works</h3>
+
+<pre><code>1. User visits website
+    ↓
+2. Clicks "Login with QR"
+    ↓
+3. Server generates auth token:
+   {
+     "type": "auth",
+     "token": "random_uuid_v4",
+     "expires": timestamp + 5_minutes,
+     "fingerprint": device_hash
+   }
+    ↓
+4. Encode as QR code
+    ↓
+5. User scans with phone
+    ↓
+6. Phone opens: /qr/faucet/&lt;base64_encoded_payload&gt;
+    ↓
+7. Server verifies:
+   - Token not expired
+   - Token not already used
+   - Device fingerprint matches (optional)
+    ↓
+8. Create session:
+   - Generate session_id (32 bytes random)
+   - Set httponly, secure, samesite cookie
+   - Store in database with user_id
+    ↓
+9. Phone authenticated!
+</code></pre>
+
+<h3 id="encryption-4">Encryption</h3>
+
+<p><strong>Session Cookies</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Session cookie settings</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SESSION_COOKIE_HTTPONLY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>   <span class="c1"># JS can&#39;t access</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SESSION_COOKIE_SECURE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>     <span class="c1"># HTTPS only</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SESSION_COOKIE_SAMESITE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Lax&#39;</span>  <span class="c1"># CSRF protection</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;PERMANENT_SESSION_LIFETIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3600</span>  <span class="c1"># 1 hour</span>
+</code></pre>
+</div>
+
+<p><strong>Device Fingerprinting</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">fingerprint</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span>
+    <span class="n">user_agent</span> <span class="o">+</span>
+    <span class="n">ip_address</span> <span class="o">+</span>
+    <span class="n">accept_language</span> <span class="o">+</span>
+    <span class="n">screen_resolution</span>
+<span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<h3 id="security-features">Security Features</h3>
+
+<ol>
+<li><strong>Short-lived tokens</strong>: QR codes expire in 5 minutes</li>
+<li><strong>One-time use</strong>: Token consumed after first scan</li>
+<li><strong>Device binding</strong>: Optional fingerprint matching</li>
+<li><strong>Secure cookies</strong>: httponly, secure, samesite flags</li>
+<li><strong>Session expiry</strong>: Auto-logout after inactivity</li>
+</ol>
+
+<h3 id="when-to-use-4">When to Use</h3>
+
+<ul>
+<li>✓ <strong>Mobile-first apps</strong>: Phone is primary device</li>
+<li>✓ <strong>Passwordless systems</strong>: No password to forget</li>
+<li>✓ <strong>Public kiosks</strong>: Scan QR, use, close browser = logout</li>
+<li>✓ <strong>Privacy-focused</strong>: No username/password stored on device</li>
+</ul>
+
+<h3 id="threat-model-4">Threat Model</h3>
+
+<p><strong>Protected against</strong>:
+- ✓ Password theft (no passwords!)
+- ✓ Phishing (QR codes unique per session)
+- ✓ Session hijacking (device fingerprint)
+- ✓ CSRF attacks (samesite cookies)</p>
+
+<p><strong>NOT protected against</strong>:
+- ✗ QR code screenshot (could be shared)
+- ✗ Stolen phone (if unlocked)
+- ✗ Shoulder surfing (someone sees you scan)</p>
+
+<h3 id="implementation">Implementation</h3>
+
+<p>See <code>qr_auth.py</code> for complete implementation.</p>
+
+<hr />
+
+<h2 id="tier-5-end-to-end-encryption-future">TIER 5: End-to-End Encryption (Future)</h2>
+
+<h3 id="what-it-is-5">What It Is</h3>
+
+<p>Content encrypted on client, decrypted on client - server never sees plaintext.</p>
+
+<h3 id="how-it-would-work">How It Would Work</h3>
+
+<pre><code>User writes post in browser
+    ↓
+JavaScript generates AES-256 key
+    ↓
+Encrypts post content
+    ↓
+Sends encrypted blob to server
+    ↓
+Server stores encrypted blob
+    ↓
+Other user requests post
+    ↓
+Server sends encrypted blob
+    ↓
+Browser decrypts with key
+    ↓
+User sees plaintext
+</code></pre>
+
+<p><strong>Key sharing</strong>: Via QR codes, or asymmetric encryption (RSA/ECDH).</p>
+
+<h3 id="when-to-use-5">When to Use</h3>
+
+<ul>
+<li>Future feature for maximum privacy</li>
+<li>Server admin can't read content</li>
+<li>Like Signal/WhatsApp but for blog posts</li>
+</ul>
+
+<hr />
+
+<h2 id="comparison-table">Comparison Table</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Tier</th>
+  <th>Encryption</th>
+  <th>Port(s)</th>
+  <th>Use Case</th>
+  <th>Threat Protection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>1: Localhost</strong></td>
+  <td>None</td>
+  <td>5001</td>
+  <td>Development</td>
+  <td>OS isolation only</td>
+</tr>
+<tr>
+  <td><strong>2: LAN</strong></td>
+  <td>None</td>
+  <td>5001</td>
+  <td>Home network</td>
+  <td>NAT firewall</td>
+</tr>
+<tr>
+  <td><strong>3: HTTPS</strong></td>
+  <td>TLS 1.3</td>
+  <td>80, 443</td>
+  <td>Production</td>
+  <td>MITM, sniffing</td>
+</tr>
+<tr>
+  <td><strong>4: QR Auth</strong></td>
+  <td>Session cookies</td>
+  <td>Any</td>
+  <td>Passwordless</td>
+  <td>Phishing, hijacking</td>
+</tr>
+<tr>
+  <td><strong>5: E2E</strong></td>
+  <td>AES-256</td>
+  <td>Any</td>
+  <td>Max privacy</td>
+  <td>Server compromise</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="how-they-compose-all-oss">How They Compose (All OSS!)</h2>
+
+<p><strong>Development</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Just Flask</span>
+python3<span class="w"> </span>app.py
+<span class="c1"># Tier 1: localhost only</span>
+</code></pre>
+</div>
+
+<p><strong>Home Server</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Flask + router firewall</span>
+python3<span class="w"> </span>app.py<span class="w">  </span><span class="c1"># host=&#39;0.0.0.0&#39;</span>
+<span class="c1"># Tier 2: LAN access</span>
+</code></pre>
+</div>
+
+<p><strong>Production (HTTP)</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Flask + nginx</span>
+gunicorn<span class="w"> </span>-b<span class="w"> </span>localhost:5001<span class="w"> </span>app:app
+nginx<span class="w"> </span>-c<span class="w"> </span>/etc/nginx/nginx.conf
+<span class="c1"># Tier 3: HTTPS encryption</span>
+</code></pre>
+</div>
+
+<p><strong>Mobile-first</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Flask + nginx + QR auth</span>
+<span class="c1"># (above + qr_auth.py)</span>
+<span class="c1"># Tier 4: Passwordless + device binding</span>
+</code></pre>
+</div>
+
+<p><strong>Maximum Privacy</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># (all above + E2E encryption)</span>
+<span class="c1"># Tier 5: Server can&#39;t read content</span>
+</code></pre>
+</div>
+
+<p><strong>Each tier adds to the previous!</strong></p>
+
+<hr />
+
+<h2 id="testing-each-tier">Testing Each Tier</h2>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Tier 1: Localhost</span>
+curl<span class="w"> </span>http://localhost:5001/
+<span class="c1"># Works</span>
+
+<span class="c1"># Tier 2: LAN</span>
+curl<span class="w"> </span>http://192.168.1.100:5001/
+<span class="c1"># Works if host=&#39;0.0.0.0&#39;</span>
+
+<span class="c1"># Tier 3: HTTPS</span>
+curl<span class="w"> </span>https://soulfra.com/
+<span class="c1"># Shows TLS encryption</span>
+
+<span class="c1"># Tier 4: QR Auth</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from qr_auth import generate_login_qr; generate_login_qr()&quot;</span>
+<span class="c1"># Generates QR, scan, verify session created</span>
+
+<span class="c1"># Automated testing</span>
+python3<span class="w"> </span>test_hello_world.py<span class="w">  </span><span class="c1"># Tests Tier 1, 2</span>
+python3<span class="w"> </span>test_network_stack.py<span class="w">  </span><span class="c1"># Tests Tier 1, 2, 3</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="real-world-example-restaurant-menu">Real-World Example: Restaurant Menu</h2>
+
+<p>Imagine a restaurant with tiered security:</p>
+
+<p><strong>Tier 1</strong>: Kitchen (private, staff only) = localhost
+<strong>Tier 2</strong>: Dining room (customers on-site) = LAN
+<strong>Tier 3</strong>: Delivery (encrypted bag) = HTTPS
+<strong>Tier 4</strong>: QR code menu (scan to order) = QR Auth
+<strong>Tier 5</strong>: Secret recipes (encrypted even from chef) = E2E</p>
+
+<p><strong>Each tier adds access!</strong> Soulfra works the same way.</p>
+
+<hr />
+
+<h2 id="port-reference">Port Reference</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Port</th>
+  <th>Tier</th>
+  <th>Service</th>
+  <th>Encryption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>5001</td>
+  <td>1, 2</td>
+  <td>Flask</td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>11434</td>
+  <td>-</td>
+  <td>Ollama</td>
+  <td>localhost only</td>
+</tr>
+<tr>
+  <td>80</td>
+  <td>3</td>
+  <td>nginx</td>
+  <td>None (redirects to 443)</td>
+</tr>
+<tr>
+  <td>443</td>
+  <td>3</td>
+  <td>nginx</td>
+  <td>TLS 1.3</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>All are OSS!</strong> All ports run open-source software (Flask, nginx, Ollama).</p>
+
+<hr />
+
+<h2 id="summary">Summary</h2>
+
+<p><strong>Ports aren't just numbers - they're security tiers that compose!</strong></p>
+
+<ul>
+<li><strong>Port 5001 alone</strong> = Tier 1 (localhost)</li>
+<li><strong>Port 5001 on 0.0.0.0</strong> = Tier 2 (LAN)</li>
+<li><strong>Port 5001 + nginx 443</strong> = Tier 3 (HTTPS)</li>
+<li><strong>Port 5001 + nginx + QR</strong> = Tier 4 (Passwordless)</li>
+</ul>
+
+<p><strong>Each tier wraps the previous with more security, all OSS, all composable.</strong></p>
+
+<p>Like Unix pipes: <code>cat | grep | sort | uniq</code>
+Like Docker layers: <code>FROM → RUN → COPY → CMD</code>
+Like Soulfra tiers: <code>localhost → LAN → HTTPS → QR Auth</code></p>
+
+<p><strong>It all composes!</strong> 🎉</p>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+<li><strong>Current tier</strong>: Run <code>python3 test_network_stack.py</code> to see which tier you're at</li>
+<li><strong>Upgrade</strong>: Follow <code>deployment_ladder.py</code> to climb tiers</li>
+<li><strong>Verify</strong>: Check encryption with browser DevTools (🔒 icon)</li>
+<li><strong>Document</strong>: See <code>PORT_GUIDE.md</code> for port details</li>
+</ol>
+
+<p><strong>Now you understand how ports = security tiers, all OSS, all composable!</strong></p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

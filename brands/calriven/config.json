@@ -1,0 +1,20 @@
+{
+  "name": "Calriven",
+  "slug": "calriven",
+  "tagline": "Best AI for the job. Every time.",
+  "emoji": null,
+  "colors": {
+    "primary": "#667eea",
+    "secondary": "#764ba2",
+    "accent": "#61dafb"
+  },
+  "personality": {
+    "tone": "Intelligent, efficient",
+    "traits": null,
+    "ai_style": "technical, helpful, focuses on best solutions"
+  },
+  "category": "AI Platform",
+  "tier": "foundation",
+  "domain": null,
+  "exported_at": "2025-12-26T10:17:58.908852"
+}

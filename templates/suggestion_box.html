@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Suggestion Box - Not Horrendous Questionnaires</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .recorder-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .recorder-box h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .voice-recorder {
+            text-align: center;
+        }
+
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .record-button:hover {
+            transform: scale(1.05);
+        }
+
+        .record-button.recording {
+            background: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .status-text {
+            margin: 15px 0;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .timer {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .suggestions-list {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .suggestions-list h2 {
+            margin-bottom: 25px;
+            color: #667eea;
+        }
+
+        .suggestion-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+
+        .suggestion-card:hover {
+            transform: translateX(5px);
+        }
+
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-id {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .suggestion-hash {
+            font-family: monospace;
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        .suggestion-ideas {
+            margin: 15px 0;
+        }
+
+        .idea-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+
+        .idea-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .idea-score {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+
+        .idea-text {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .response-count {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+
+        .no-questionnaires {
+            background: #f0f7ff;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .no-questionnaires p {
+            margin: 5px 0;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📬 Voice Suggestion Box</h1>
+            <p>Not Horrendous Questionnaires - Just 30 Sec Voice Memos</p>
+        </header>
+
+        <div class="recorder-box">
+            <h2>Submit Your Suggestion</h2>
+
+            <div class="no-questionnaires">
+                <p><strong>✨ No forms. No questionnaires. No typing.</strong></p>
+                <p>Just record a 30-second voice memo and AI extracts your ideas.</p>
+            </div>
+
+            <div class="voice-recorder">
+                <button id="recordButton" class="record-button">🎤 Record</button>
+                <div class="status-text" id="statusText">Press to record (30 sec max)</div>
+                <div class="timer" id="timer">00:00</div>
+            </div>
+
+            <div id="resultBox" style="display: none; margin-top: 20px;">
+                <h3>✅ Ideas Extracted:</h3>
+                <div id="extractedIdeas"></div>
+                <p style="margin-top: 10px; color: #999;">
+                    <small>SHA256: <span id="sha256Hash"></span></small>
+                </p>
+            </div>
+        </div>
+
+        <div class="suggestions-list">
+            <h2>Recent Suggestions <span class="brand-badge">@{{ brand_slug }}</span></h2>
+
+            {% if suggestions %}
+                {% for suggestion in suggestions %}
+                <div class="suggestion-card">
+                    <div class="suggestion-header">
+                        <span class="suggestion-id">#{{ suggestion.id }}</span>
+                        <span class="suggestion-hash">{{ suggestion.sha256_hash[:16] }}...</span>
+                    </div>
+
+                    <div class="suggestion-ideas">
+                        {% for idea in suggestion.ideas[:3] %}
+                        <div class="idea-item">
+                            <div class="idea-title">
+                                {{ idea.title }}
+                                <span class="idea-score">{{ idea.score }}</span>
+                            </div>
+                            <div class="idea-text">{{ idea.text }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="response-count">
+                        💬 {{ suggestion.response_count }} voice responses
+                        •
+                        <a href="/suggestion/{{ suggestion.id }}">View Thread</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No suggestions yet</h3>
+                    <p>Be the first to submit a voice suggestion!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordingTime = 0;
+        let timerInterval;
+        const MAX_RECORDING_TIME = 30;
+
+        const recordButton = document.getElementById('recordButton');
+        const statusText = document.getElementById('statusText');
+        const timerDisplay = document.getElementById('timer');
+        const resultBox = document.getElementById('resultBox');
+        const extractedIdeas = document.getElementById('extractedIdeas');
+        const sha256Hash = document.getElementById('sha256Hash');
+
+        recordButton.addEventListener('click', toggleRecording);
+
+        async function toggleRecording() {
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+                await startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+
+                audioChunks = [];
+                recordingTime = 0;
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = submitVoiceSuggestion;
+
+                mediaRecorder.start();
+                recordButton.classList.add('recording');
+                recordButton.textContent = '⏸️ Stop';
+                statusText.textContent = 'Recording... (tap to stop)';
+
+                // Start timer
+                timerInterval = setInterval(() => {
+                    recordingTime++;
+                    updateTimer();
+
+                    if (recordingTime >= MAX_RECORDING_TIME) {
+                        stopRecording();
+                    }
+                }, 1000);
+
+            } catch (error) {
+                console.error('Mic access error:', error);
+                statusText.textContent = '❌ Could not access microphone';
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+
+                recordButton.classList.remove('recording');
+                recordButton.textContent = '🎤 Record';
+                statusText.textContent = 'Processing...';
+
+                clearInterval(timerInterval);
+            }
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(recordingTime / 60);
+            const seconds = recordingTime % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        async function submitVoiceSuggestion() {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'suggestion.webm');
+            formData.append('brand_slug', '{{ brand_slug }}');
+
+            try {
+                const response = await fetch('/api/suggest-voice', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showResults(data);
+                } else {
+                    statusText.textContent = '❌ ' + data.error;
+                }
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                statusText.textContent = '❌ Failed to submit suggestion';
+            }
+
+            // Reset timer
+            recordingTime = 0;
+            timerDisplay.textContent = '00:00';
+        }
+
+        function showResults(data) {
+            statusText.textContent = '✅ Suggestion submitted!';
+
+            // Show extracted ideas
+            extractedIdeas.innerHTML = '';
+
+            data.ideas.forEach(idea => {
+                const ideaDiv = document.createElement('div');
+                ideaDiv.className = 'idea-item';
+                ideaDiv.innerHTML = `
+                    <div class="idea-title">
+                        ${idea.title}
+                        <span class="idea-score">${idea.score}</span>
+                    </div>
+                    <div class="idea-text">${idea.text}</div>
+                `;
+                extractedIdeas.appendChild(ideaDiv);
+            });
+
+            sha256Hash.textContent = data.sha256_hash.substring(0, 16) + '...';
+            resultBox.style.display = 'block';
+
+            // Reload page after 3 seconds to show new suggestion
+            setTimeout(() => {
+                location.reload();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

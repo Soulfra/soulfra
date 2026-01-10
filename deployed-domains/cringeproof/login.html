@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CringeProof</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(45deg, transparent 40%, #ff006e 40%, #ff006e 60%, transparent 60%),
+                linear-gradient(-45deg, transparent 40%, #00ffcc 40%, #00ffcc 60%, transparent 60%);
+            background-size: 100px 100px;
+            animation: slide 20s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 0;
+            box-shadow: 
+                10px 10px 0 #ff006e,
+                -10px -10px 0 #00ffcc;
+            padding: 50px;
+            max-width: 450px;
+            width: 100%;
+            border: 5px solid #000;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 3rem;
+            color: #ff006e;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 #000;
+            transform: rotate(-2deg);
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 5px solid #000;
+            border-radius: 0;
+            font-size: 1rem;
+            transition: all 0.2s;
+            box-shadow: 5px 5px 0 rgba(255, 0, 110, 0.3);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 rgba(255, 0, 110, 0.5);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: 5px solid #000;
+            border-radius: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-primary {
+            background: #ff006e;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translate(0, 0);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 3px;
+            background: #000;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .oauth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-oauth {
+            background: white;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            border: 5px solid #000;
+            box-shadow: 5px 5px 0 rgba(0, 255, 204, 0.3);
+        }
+
+        .btn-oauth:hover {
+            background: #f0f0f0;
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 rgba(0, 255, 204, 0.5);
+        }
+
+        .footer-links {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .footer-links a {
+            color: #ff006e;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 5px solid #ff006e;
+            border-radius: 0;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #ff006e;
+            font-weight: 700;
+            display: none;
+        }
+
+        .success-message {
+            background: #efe;
+            border: 5px solid #00ffcc;
+            border-radius: 0;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #00ffcc;
+            font-weight: 700;
+            display: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-primary.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>⚡ CringeProof</h1>
+            <p>Gaming & Community</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="loginButton">
+                Login
+            </button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <div class="oauth-buttons">
+            <button class="btn btn-oauth" onclick="loginWithGoogle()">
+                <span>📧</span>
+                <span>Google</span>
+            </button>
+
+            <button class="btn btn-oauth" onclick="loginWithGitHub()">
+                <span>🐙</span>
+                <span>GitHub</span>
+            </button>
+
+            <button class="btn btn-oauth" onclick="loginWithApple()">
+                <span>🍎</span>
+                <span>Apple</span>
+            </button>
+        </div>
+
+        <div class="footer-links">
+            No account? <a href="cringeproof-signup.html">Sign up</a>
+        </div>
+    </div>
+
+    <script src="./config.js"></script>
+    <script>
+        // Use Soulfra unified backend (port 5001), not isolated cringeproof API (port 5002)
+        const API_URL = window.CRINGEPROOF_CONFIG?.API_BACKEND_URL || 'http://localhost:5001';
+
+        // CringeProof is a domain within Soulfra ecosystem
+        const DOMAIN = 'cringeproof';
+
+        console.log('[CringeProof] Using Soulfra unified backend:', API_URL);
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginButton = document.getElementById('loginButton');
+
+            loginButton.classList.add('loading');
+            loginButton.innerHTML = '<span class="spinner"></span> Logging in...';
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        domain: DOMAIN
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showSuccess('Login successful! Redirecting...');
+                    localStorage.setItem('user', JSON.stringify(data));
+                    setTimeout(() => {
+                        window.location.href = 'cringeproof-dashboard.html';
+                    }, 1000);
+                } else {
+                    showError(data.error || 'Login failed. Please try again.');
+                    loginButton.classList.remove('loading');
+                    loginButton.innerHTML = 'Login';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Network error. Please check your connection.');
+                loginButton.classList.remove('loading');
+                loginButton.innerHTML = 'Login';
+            }
+        });
+
+        function loginWithGoogle() {
+            window.location.href = `${API_URL}/auth/google`;
+        }
+
+        function loginWithGitHub() {
+            window.location.href = `${API_URL}/github/login`;
+        }
+
+        function loginWithApple() {
+            showError('Apple Sign In coming soon! Use Google or GitHub for now.');
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('login') === 'success') {
+            showSuccess('Login successful! Redirecting...');
+            setTimeout(() => {
+                window.location.href = 'cringeproof-dashboard.html';
+            }, 1000);
+        } else if (urlParams.get('error')) {
+            showError(decodeURIComponent(urlParams.get('error')));
+        }
+    </script>
+</body>
+</html>

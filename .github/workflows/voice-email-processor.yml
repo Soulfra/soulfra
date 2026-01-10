@@ -1,0 +1,86 @@
+name: Process Voice Email
+
+# Trigger on repository dispatch (webhook from email forwarding service)
+on:
+  repository_dispatch:
+    types: [voice-email-received]
+  workflow_dispatch:  # Manual trigger for testing
+
+jobs:
+  process-voice-memo:
+    name: Extract Audio & Publish to Archive
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout soulfra-simple repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai-whisper
+          pip install -r requirements.txt
+
+      - name: Download email attachment
+        run: |
+          # Email webhook payload should include:
+          # - attachment_url: Direct link to audio file
+          # - from_email: Sender email
+          # - subject: Email subject (used as prediction text)
+          echo "${{ github.event.client_payload.attachment_url }}" > audio_url.txt
+          curl -L -o voice-memo.webm "${{ github.event.client_payload.attachment_url }}"
+
+      - name: Transcribe with Whisper
+        run: |
+          python3 -c "
+          from whisper_transcriber import WhisperTranscriber
+          transcriber = WhisperTranscriber()
+          result = transcriber.transcribe('voice-memo.webm')
+          print(f'Transcription: {result[\"text\"]}')
+          with open('transcription.txt', 'w') as f:
+              f.write(result['text'])
+          "
+
+      - name: Export to content-addressed archive
+        run: |
+          # Create mock database entry for export
+          # In production, this would save to soulfra.db first
+          python3 content_addressed_archive.py --export-pairing 1
+
+      - name: Checkout voice-archive repo
+        uses: actions/checkout@v4
+        with:
+          repository: Soulfra/voice-archive
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: voice-archive-repo
+
+      - name: Copy new prediction to voice-archive
+        run: |
+          # Copy exported prediction to voice-archive repo
+          CONTENT_HASH=$(ls -t voice-archive/ | head -1)
+          cp -r voice-archive/$CONTENT_HASH/ voice-archive-repo/
+
+      - name: Regenerate gallery
+        run: |
+          python3 content_addressed_archive.py --generate-gallery
+          cp voice-archive/index.html voice-archive-repo/index.html
+
+      - name: Commit and push to voice-archive
+        run: |
+          cd voice-archive-repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "New voice prediction from email: ${{ github.event.client_payload.subject }}"
+          git push
+
+      - name: Send notification
+        if: success()
+        run: |
+          echo "✅ Voice memo published to https://soulfra.github.io/voice-archive/"
+          echo "Content hash: $(ls -t voice-archive/ | head -1)"

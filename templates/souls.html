@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Soul Browser - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 3rem 2rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
+    <h1 style="margin: 0 0 1rem 0; font-size: 2.5rem;">Soul Browser</h1>
+    <p style="margin: 0; font-size: 1.2rem; opacity: 0.9;">Explore the essence of every user on Soulfra</p>
+  </div>
+
+  <p style="text-align: center; color: #666; margin-bottom: 2rem;">
+    Each soul is compiled from posts, comments, and interactions - revealing interests, values, and expertise.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+    {% for soul in souls %}
+      <div style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; transition: all 0.2s;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+          <div>
+            <h3 style="margin: 0 0 0.5rem 0;">
+              <a href="{{ url_for('soul_view', username=soul.user['username']) }}" style="color: #667eea; text-decoration: none;">
+                {{ soul.user['display_name'] }}
+              </a>
+            </h3>
+            <p style="color: #999; margin: 0; font-size: 0.9rem;">@{{ soul.user['username'] }}</p>
+          </div>
+          {% if soul.user['is_ai_persona'] %}
+            <span style="background: #667eea; color: white; padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.75rem; font-weight: bold;">AI</span>
+          {% endif %}
+        </div>
+
+        <div style="margin: 1rem 0;">
+          <strong style="color: #333; display: block; margin-bottom: 0.5rem;">Interests:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            {% for interest in soul.interests[:5] %}
+              <span style="background: #f0f0f0; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; color: #555;">{{ interest }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        {% if soul.soul_values %}
+          <div style="margin: 1rem 0;">
+            <strong style="color: #333; display: block; margin-bottom: 0.5rem;">Values:</strong>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              {% for value in soul.soul_values[:3] %}
+                <span style="background: #e8f5e9; color: #2e7d32; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">{{ value }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #666; font-size: 0.85rem;">
+            Activity: <strong>{{ soul.activity }}</strong>
+          </span>
+          <a href="{{ url_for('soul_similar', username=soul.user['username']) }}" style="color: #667eea; text-decoration: none; font-size: 0.85rem; font-weight: bold;">
+            Find Similar →
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if not souls %}
+    <p style="text-align: center; color: #999; padding: 4rem;">No souls compiled yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

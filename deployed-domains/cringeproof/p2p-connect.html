@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2P Voice Network - CringeProof</title>
+<meta name="description" content="Decentralized peer-to-peer voice recording network">
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.p2p-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2rem;
+}
+
+.connection-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    animation: pulse 2s infinite;
+}
+
+.status-online {
+    background: #10b981;
+}
+
+.status-offline {
+    background: #ef4444;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.qr-code {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.connection-url {
+    background: rgba(0,0,0,0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+    margin: 1rem 0;
+}
+
+.copy-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.copy-btn:hover {
+    transform: scale(1.05);
+}
+
+.ipfs-section {
+    background: rgba(0,0,0,0.2);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    padding: 0.5rem 0;
+    padding-left: 2rem;
+    position: relative;
+}
+
+.feature-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    font-weight: 900;
+    color: #10b981;
+}
+
+.warning-box {
+    background: rgba(255, 165, 0, 0.2);
+    border: 2px solid orange;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+</style>
+</head>
+<body>
+<div class="p2p-container">
+    <h1>🌐 P2P Voice Network</h1>
+    <p style="font-size: 1.2rem; opacity: 0.9;">Decentralized. No Cloudflare. No Bullshit.</p>
+
+    <!-- Server Status -->
+    <div class="connection-card">
+        <h2><span class="status-indicator status-online" id="statusIndicator"></span> Server Status</h2>
+        <p>Your Flask server is running on your laptop at:</p>
+
+        <div class="connection-url" id="serverUrl">
+            https://192.168.1.87:5001
+        </div>
+
+        <button class="copy-btn" onclick="copyUrl()">📋 Copy URL</button>
+
+        <div class="warning-box" style="margin-top: 1rem;">
+            <strong>⚠️ LAN Only:</strong> This URL only works on the same WiFi network. Your friend needs to be on YOUR WiFi or you need to hotspot.
+        </div>
+    </div>
+
+    <!-- How to Connect -->
+    <div class="connection-card">
+        <h2>👥 How Your Friend Connects</h2>
+        <ul class="feature-list">
+            <li>Connect to your WiFi (or you create hotspot)</li>
+            <li>Open browser (works on phone)</li>
+            <li>Visit: <code style="background: rgba(0,0,0,0.3); padding: 0.2rem 0.5rem; border-radius: 4px;">https://192.168.1.87:5001/record-simple.html</code></li>
+            <li>Accept security warning (self-signed cert)</li>
+            <li>Record audio - it saves to YOUR database</li>
+            <li>View recordings at: <code style="background: rgba(0,0,0,0.3); padding: 0.2rem 0.5rem; border-radius: 4px;">/recordings</code></li>
+        </ul>
+    </div>
+
+    <!-- IPFS Integration -->
+    <div class="connection-card">
+        <h2>🌍 IPFS - Decentralized Storage</h2>
+        <p>IPFS daemon is running. Recordings can be published to the decentralized web.</p>
+
+        <div class="ipfs-section">
+            <strong>IPFS Status:</strong>
+            <ul class="feature-list" style="margin-top: 1rem;">
+                <li>Daemon: Running on port 5001 (API)</li>
+                <li>Gateway: http://localhost:8080</li>
+                <li>PeerID: <span id="peerId">Loading...</span></li>
+                <li>Swarm: Connected to IPFS network</li>
+            </ul>
+        </div>
+
+        <p style="margin-top: 1rem;">When you publish audio to IPFS:</p>
+        <ul class="feature-list">
+            <li>Gets permanent IPFS hash (like <code>QmXXX...</code>)</li>
+            <li>Cryptographically signed (Ed25519)</li>
+            <li>Accessible from anywhere</li>
+            <li>No centralized server needed</li>
+            <li>Cannot be censored or taken down</li>
+        </ul>
+    </div>
+
+    <!-- Bitcoin-Style Signing -->
+    <div class="connection-card">
+        <h2>🔐 Cryptographic Signatures</h2>
+        <p>Every audio file can be signed like a Bitcoin transaction:</p>
+
+        <ul class="feature-list">
+            <li><strong>SHA-256</strong> hash of audio content</li>
+            <li><strong>Ed25519</strong> cryptographic signature</li>
+            <li><strong>Timestamp</strong> when signed</li>
+            <li><strong>Public key</strong> proves authorship</li>
+            <li><strong>Verifiable</strong> without trusting anyone</li>
+        </ul>
+
+        <p style="margin-top: 1rem; opacity: 0.9;">
+            Just like Bitcoin: anyone can verify the signature is valid, but only you could have created it.
+        </p>
+    </div>
+
+    <!-- QR Code Section -->
+    <div class="connection-card">
+        <h2>📱 QR Code (Coming Soon)</h2>
+        <p>Scan to connect automatically - no typing URLs</p>
+
+        <div class="qr-code" id="qrSection">
+            <div style="font-size: 3rem;">📷</div>
+            <p style="color: #333; margin-top: 1rem;">QR code will appear here</p>
+        </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="connection-card">
+        <h2>🚀 What's Next</h2>
+        <ul class="feature-list">
+            <li><strong>WebRTC P2P:</strong> Direct browser-to-browser audio streaming</li>
+            <li><strong>mDNS Discovery:</strong> Auto-find devices on LAN (like AirDrop)</li>
+            <li><strong>Mesh Network:</strong> Devices auto-connect and sync</li>
+            <li><strong>DocuSign-style:</strong> Sign transcripts with crypto signatures</li>
+            <li><strong>Bitcoin Integration:</strong> Timestamp signatures on blockchain</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+// Get server URL dynamically
+async function updateServerInfo() {
+    const serverUrl = `https://${window.location.hostname}:5001`;
+    document.getElementById('serverUrl').textContent = serverUrl;
+
+    // Try to fetch IPFS peer ID
+    try {
+        const ipfsResponse = await fetch('http://localhost:5001/webui/api/v0/id', {
+            method: 'POST'
+        });
+        const ipfsData = await ipfsResponse.json();
+        document.getElementById('peerId').textContent = ipfsData.ID || 'Unknown';
+    } catch (e) {
+        document.getElementById('peerId').textContent = '(API not accessible from this page)';
+    }
+}
+
+function copyUrl() {
+    const url = document.getElementById('serverUrl').textContent;
+    navigator.clipboard.writeText(url).then(() => {
+        alert('URL copied to clipboard!');
+    });
+}
+
+// Check if server is accessible
+async function checkServerStatus() {
+    try {
+        const response = await fetch(window.location.origin + '/recordings');
+        if (response.ok) {
+            document.getElementById('statusIndicator').className = 'status-indicator status-online';
+        } else {
+            document.getElementById('statusIndicator').className = 'status-indicator status-offline';
+        }
+    } catch {
+        document.getElementById('statusIndicator').className = 'status-indicator status-offline';
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    updateServerInfo();
+    checkServerStatus();
+    setInterval(checkServerStatus, 5000); // Check every 5 seconds
+});
+</script>
+</body>
+</html>

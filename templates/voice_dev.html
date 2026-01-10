@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Dev - Code Without Typing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .record-btn {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4081 0%, #ff6b9d 100%);
+            border: none;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(255,64,129,0.4);
+        }
+
+        .record-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255,64,129,0.6);
+        }
+
+        .record-btn.recording {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .status {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+
+        .transcription {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 150px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .code-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .code-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .explanation {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .record-btn {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎤 Voice Dev Studio</h1>
+            <p class="tagline">Code Without Typing - Just Speak Your Code</p>
+        </header>
+
+        <div class="workspace">
+            <!-- Left Panel: Voice Input -->
+            <div class="panel">
+                <h2>1. Speak Your Code</h2>
+
+                <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+                    🎙️
+                </button>
+
+                <div class="status" id="status">
+                    Click mic to start recording
+                </div>
+
+                <div class="transcription" id="transcription">
+                    Your voice will appear here...
+                </div>
+
+                <div class="actions">
+                    <button onclick="generateCode()" id="generateBtn" disabled>
+                        ✨ Generate Code
+                    </button>
+                    <button onclick="clearAll()">
+                        🗑️ Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Code Output -->
+            <div class="panel">
+                <h2>2. Your Code</h2>
+
+                <div class="explanation" id="explanation" style="display: none;">
+                    <!-- AI explanation will appear here -->
+                </div>
+
+                <div class="code-output" id="codeOutput">
+                    <pre>// Your code will appear here...</pre>
+                </div>
+
+                <div class="actions" style="margin-top: 20px;">
+                    <button onclick="copyCode()" id="copyBtn" disabled>
+                        📋 Copy Code
+                    </button>
+                    <button onclick="downloadCode()" id="downloadBtn" disabled>
+                        💾 Download
+                    </button>
+                    <button onclick="executeCode()" id="executeBtn" disabled>
+                        ▶️ Run Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Full Width: Instructions -->
+            <div class="panel full-width">
+                <h2>💡 How It Works</h2>
+                <ol style="font-size: 1.1rem; line-height: 1.8; padding-left: 20px;">
+                    <li><strong>Click the mic</strong> and speak your code idea</li>
+                    <li><strong>Example:</strong> "Build me a Flask route that handles user authentication with JWT tokens"</li>
+                    <li><strong>Click Generate Code</strong> - AI writes the code for you</li>
+                    <li><strong>Copy, download, or run</strong> - Use it in your project</li>
+                    <li><strong>Iterate:</strong> Keep recording to refine the code</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let currentTranscription = '';
+        let currentCode = '';
+
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    transcribeAudio(audioBlob);
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                document.getElementById('recordBtn').classList.add('recording');
+                document.getElementById('status').textContent = '🔴 Recording... (click to stop)';
+            } catch (error) {
+                alert('Microphone access denied. Please enable microphone in browser settings.');
+                console.error('Error accessing microphone:', error);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+
+                // Stop all tracks
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+
+                document.getElementById('recordBtn').classList.remove('recording');
+                document.getElementById('status').textContent = '⏳ Processing...';
+            }
+        }
+
+        async function transcribeAudio(audioBlob) {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+
+            try {
+                const response = await fetch('/api/voice/transcribe', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentTranscription = data.transcription;
+                    document.getElementById('transcription').textContent = currentTranscription;
+                    document.getElementById('status').textContent = '✅ Ready to generate code';
+                    document.getElementById('generateBtn').disabled = false;
+                } else {
+                    document.getElementById('status').textContent = '❌ Transcription failed';
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = '❌ Error';
+                alert('Error transcribing audio: ' + error);
+                console.error('Transcription error:', error);
+            }
+        }
+
+        async function generateCode() {
+            document.getElementById('status').textContent = '⏳ Generating code...';
+            document.getElementById('generateBtn').disabled = true;
+
+            try {
+                const response = await fetch('/api/voice/code-gen', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        transcription: currentTranscription,
+                        language: 'python',
+                        context: 'Flask web application'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentCode = data.code;
+                    document.getElementById('codeOutput').innerHTML = `<pre>${escapeHtml(currentCode)}</pre>`;
+                    document.getElementById('explanation').innerHTML = `<strong>What this code does:</strong><br>${data.explanation}`;
+                    document.getElementById('explanation').style.display = 'block';
+                    document.getElementById('status').textContent = '✅ Code generated!';
+
+                    // Enable action buttons
+                    document.getElementById('copyBtn').disabled = false;
+                    document.getElementById('downloadBtn').disabled = false;
+                    document.getElementById('executeBtn').disabled = false;
+                } else {
+                    document.getElementById('status').textContent = '❌ Generation failed';
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = '❌ Error';
+                alert('Error generating code: ' + error);
+                console.error('Code generation error:', error);
+            }
+
+            document.getElementById('generateBtn').disabled = false;
+        }
+
+        function copyCode() {
+            navigator.clipboard.writeText(currentCode).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function downloadCode() {
+            const blob = new Blob([currentCode], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `voice_code_${Date.now()}.py`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function executeCode() {
+            alert('Code execution coming soon! For now, copy and run manually.');
+            // TODO: Add code execution sandbox
+        }
+
+        function clearAll() {
+            currentTranscription = '';
+            currentCode = '';
+            document.getElementById('transcription').textContent = 'Your voice will appear here...';
+            document.getElementById('codeOutput').innerHTML = '<pre>// Your code will appear here...</pre>';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('status').textContent = 'Click mic to start recording';
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('copyBtn').disabled = true;
+            document.getElementById('downloadBtn').disabled = true;
+            document.getElementById('executeBtn').disabled = true;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Soul: {{ user['display_name'] }} - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 2rem auto; padding: 0 1rem;">
+  <!-- Header -->
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 style="margin: 0 0 0.5rem 0;">{{ user['display_name'] }}'s Soul
+          {% if user['is_ai_persona'] %}
+            <span style="background: rgba(255,255,255,0.3); padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.75rem; margin-left: 0.5rem;">AI</span>
+          {% endif %}
+        </h1>
+        <p style="margin: 0; opacity: 0.9;">@{{ user['username'] }}</p>
+      </div>
+      <a href="{{ url_for('soul_similar', username=user['username']) }}" style="background: white; color: #667eea; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: bold;">
+        Find Similar Souls
+      </a>
+    </div>
+  </div>
+
+  <!-- Identity -->
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">🎭 Identity</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+      <div>
+        <strong>User ID:</strong> {{ pack.identity.user_id }}
+      </div>
+      <div>
+        <strong>Username:</strong> {{ pack.identity.username }}
+      </div>
+      <div>
+        <strong>Type:</strong> {{ "AI Persona" if pack.identity.is_ai_persona else "Human" }}
+      </div>
+      <div>
+        <strong>Joined:</strong> {{ pack.identity.created_at[:10] }}
+      </div>
+    </div>
+  </section>
+
+  <!-- Essence -->
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">✨ Essence</h2>
+
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #555;">Interests</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        {% for interest in pack.essence.interests %}
+          <span style="background: #f0f0f0; padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem; color: #333;">{{ interest }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if pack['essence']['values'] %}
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #555;">Values</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+          {% for value in pack['essence']['values'] %}
+            <span style="background: #e8f5e9; color: #2e7d32; padding: 0.4rem 1rem; border-radius: 16px; font-size: 0.9rem; font-weight: 500;">{{ value }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if pack.essence.expertise %}
+      <div>
+        <h3 style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #555;">Expertise</h3>
+        {% for skill, score in (pack.essence.expertise.items() | list)[:10] %}
+          <div style="margin-bottom: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+              <span style="font-size: 0.85rem;">{{ skill }}</span>
+              <span style="font-size: 0.85rem; color: #667eea; font-weight: bold;">{{ (score * 100)|int }}%</span>
+            </div>
+            <div style="background: #f0f0f0; height: 6px; border-radius: 3px; overflow: hidden;">
+              <div style="background: linear-gradient(90deg, #667eea, #764ba2); width: {{ (score * 100)|int }}%; height: 100%;"></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Expression -->
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">💬 Expression</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+      <div>
+        <strong>Posts:</strong> {{ pack.expression.post_count }}
+      </div>
+      <div>
+        <strong>Comments:</strong> {{ pack.expression.comment_count }}
+      </div>
+      <div>
+        <strong>Avg Post Length:</strong> {{ pack.expression.avg_post_length|int }} chars
+      </div>
+      <div>
+        <strong>Has Code:</strong> {{ "Yes" if pack.expression.has_code else "No" }}
+      </div>
+    </div>
+
+    {% if pack.expression.recent_topics %}
+      <div>
+        <h3 style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #555;">Recent Topics</h3>
+        <ul style="margin: 0; padding-left: 1.5rem;">
+          {% for topic in pack.expression.recent_topics %}
+            <li style="margin-bottom: 0.5rem; color: #666;">{{ topic }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Connections -->
+  {% if pack.connections %}
+    <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+      <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">🔗 Connections</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+        {% for connection in pack.connections %}
+          <a href="{{ url_for('soul_view', username=connection.username) }}" style="background: #f9f9f9; border: 1px solid #ddd; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; color: #667eea; font-weight: 500;">
+            @{{ connection.username }}
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Evolution -->
+  {% if pack.evolution.first_post %}
+    <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+      <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">📈 Evolution</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+        <div>
+          <h3 style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #999;">First Post</h3>
+          <p style="margin: 0 0 0.5rem 0; font-weight: 500;">{{ pack.evolution.first_post }}</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+            {% for kw in pack.evolution.first_keywords %}
+              <span style="background: #fff3cd; color: #856404; padding: 0.2rem 0.5rem; border-radius: 8px; font-size: 0.75rem;">{{ kw }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div>
+          <h3 style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #999;">Latest Post</h3>
+          <p style="margin: 0 0 0.5rem 0; font-weight: 500;">{{ pack.evolution.latest_post }}</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+            {% for kw in pack.evolution.latest_keywords %}
+              <span style="background: #d1ecf1; color: #0c5460; padding: 0.2rem 0.5rem; border-radius: 8px; font-size: 0.75rem;">{{ kw }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <p style="margin: 1rem 0 0 0; text-align: center; color: #666;">
+        <strong>{{ pack.evolution.total_posts }}</strong> total posts
+      </p>
+    </section>
+  {% endif %}
+
+  <!-- Fingerprint -->
+  <section style="background: white; border: 2px solid #eee; border-radius: 8px; padding: 1.5rem;">
+    <h2 style="margin: 0 0 1rem 0; color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">🔍 Fingerprint</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+      <div>
+        <strong>Activity Level:</strong> {{ pack.fingerprint.activity_level }}
+      </div>
+      <div>
+        <strong>Expression Style:</strong> {{ pack.fingerprint.expression_style }}
+      </div>
+    </div>
+  </section>
+
+  <!-- Actions -->
+  <div style="margin-top: 2rem; text-align: center;">
+    <a href="{{ url_for('souls_index') }}" style="color: #667eea; text-decoration: none; margin-right: 2rem;">← Back to Soul Browser</a>
+    <a href="{{ url_for('user_profile', username=user['username']) }}" style="color: #667eea; text-decoration: none;">View User Profile →</a>
+  </div>
+</div>
+{% endblock %}

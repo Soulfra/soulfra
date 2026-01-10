@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+
+{% block title %}Sitemap - All Routes{% endblock %}
+
+{% block content %}
+<div class="sitemap-header">
+    <h1>🗺️ Site Map</h1>
+    <p class="sitemap-subtitle">
+        Complete route reference - All {{ routes.values()|map('length')|sum }} Flask endpoints organized by category
+    </p>
+</div>
+
+<!-- System Health Dashboard -->
+{% if health or plugins or db_stats %}
+<div class="health-dashboard">
+    <h2 class="health-title">System Health Overview</h2>
+
+    <div class="health-grid">
+        <!-- Template Health -->
+        {% if health %}
+        <div class="health-card {% if health.missing_templates > 0 %}health-warning{% else %}health-ok{% endif %}">
+            <div class="health-icon">📄</div>
+            <div class="health-stats">
+                <div class="health-value">{{ health.total_templates }}</div>
+                <div class="health-label">Templates</div>
+                <div class="health-details">
+                    {{ health.used_templates }} used · {{ health.unused_templates }} unused
+                    {% if health.missing_templates > 0 %}
+                    <span class="health-alert">{{ health.missing_templates }} missing!</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Plugin Health -->
+        {% if plugins %}
+        <div class="health-card health-ok">
+            <div class="health-icon">🔌</div>
+            <div class="health-stats">
+                <div class="health-value">{{ plugins|length }}</div>
+                <div class="health-label">Loaded Plugins</div>
+                <div class="health-details">
+                    <a href="/features">View plugin dashboard →</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Database Stats -->
+        {% if db_stats %}
+        <div class="health-card health-info">
+            <div class="health-icon">💾</div>
+            <div class="health-stats">
+                <div class="health-value">{{ db_stats.get('total_users', 0) }}</div>
+                <div class="health-label">Users</div>
+                <div class="health-details">
+                    {{ db_stats.get('ai_personas', 0) }} AI personas · {{ db_stats.get('total_posts', 0) }} posts
+                </div>
+            </div>
+        </div>
+
+        <div class="health-card health-info">
+            <div class="health-icon">💬</div>
+            <div class="health-stats">
+                <div class="health-value">{{ db_stats.get('total_comments', 0) }}</div>
+                <div class="health-label">Comments (30d)</div>
+                <div class="health-details">
+                    {{ db_stats.get('api_calls', 0) }} API calls
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Missing Templates Warning -->
+    {% if health and health.missing_templates > 0 %}
+    <div class="health-warning-banner">
+        <strong>⚠️ Warning:</strong> {{ health.missing_templates }} template(s) are referenced in code but don't exist:
+        <ul>
+            {% for template in health.missing %}
+            <li><code>{{ template }}</code></li>
+            {% endfor %}
+        </ul>
+        <p>Run <code>python3 check_templates.py</code> for details</p>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% for category, route_list in routes.items() %}
+<section class="route-category">
+    <h2>{{ category }}</h2>
+    <div class="route-list">
+        {% for route in route_list %}
+        {% if route.clickable %}
+        <a href="{{ route.url }}" class="route-card route-clickable">
+            <div class="route-header">
+                <code class="route-path">{{ route.path }}</code>
+                <span class="route-name">{{ route.name }} →</span>
+                {% if route.get('health') == 'ok' %}
+                <span class="health-badge health-ok" title="Route is healthy">✓</span>
+                {% elif route.get('health') == 'api' %}
+                <span class="health-badge health-api" title="API endpoint">API</span>
+                {% elif route.get('health') == 'warning' %}
+                <span class="health-badge health-warning" title="Warning: May have issues">⚠</span>
+                {% elif route.get('health') == 'error' %}
+                <span class="health-badge health-error" title="Error: Missing template">✗</span>
+                {% endif %}
+            </div>
+            <p class="route-desc">{{ route.desc }}</p>
+            {% if route.path != route.url %}
+            <p class="route-example">Example: <code>{{ route.url }}</code></p>
+            {% endif %}
+        </a>
+        {% else %}
+        <div class="route-card route-post-only">
+            <div class="route-header">
+                <code class="route-path">{{ route.path }}</code>
+                <span class="route-name">{{ route.name }}</span>
+                <span class="badge-post">POST</span>
+            </div>
+            <p class="route-desc">{{ route.desc }}</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+
+<style>
+.sitemap-header {
+    text-align: center;
+    margin: 3em 0;
+}
+
+.sitemap-subtitle {
+    font-size: 1.1em;
+    color: #666;
+    margin-top: 1em;
+}
+
+/* Health Dashboard Styles */
+.health-dashboard {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 30px;
+    margin: 2em 0 3em 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.health-title {
+    color: white;
+    font-size: 24px;
+    margin: 0 0 20px 0;
+    text-align: center;
+}
+
+.health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.health-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.health-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.health-card.health-ok {
+    border-left: 4px solid #48bb78;
+}
+
+.health-card.health-warning {
+    border-left: 4px solid #ed8936;
+}
+
+.health-card.health-info {
+    border-left: 4px solid #4299e1;
+}
+
+.health-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.health-stats {
+    flex: 1;
+}
+
+.health-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+    line-height: 1;
+}
+
+.health-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 5px 0;
+}
+
+.health-details {
+    font-size: 13px;
+    color: #888;
+}
+
+.health-details a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.health-details a:hover {
+    text-decoration: underline;
+}
+
+.health-alert {
+    display: inline-block;
+    background: #fed7d7;
+    color: #c53030;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+.health-warning-banner {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #ed8936;
+    border-radius: 8px;
+    padding: 20px;
+    color: #333;
+}
+
+.health-warning-banner strong {
+    color: #c05621;
+}
+
+.health-warning-banner ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.health-warning-banner code {
+    background: #feebc8;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.health-warning-banner p {
+    margin: 10px 0 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Route Styles */
+.route-category {
+    margin: 3em 0;
+}
+
+.route-category h2 {
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5em;
+}
+
+.route-list {
+    display: grid;
+    gap: 1em;
+}
+
+.route-card {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-left: 4px solid #0066cc;
+    padding: 1em 1.5em;
+    border-radius: 4px;
+    transition: all 200ms ease;
+    display: block;
+    text-decoration: none;
+}
+
+.route-card.route-clickable {
+    cursor: pointer;
+    border-left-color: #48bb78;
+}
+
+.route-card.route-clickable:hover {
+    background: #f0fff4;
+    border-left-color: #38a169;
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(72, 187, 120, 0.2);
+}
+
+.route-card.route-post-only {
+    border-left-color: #ed8936;
+    opacity: 0.7;
+}
+
+.route-card.route-post-only:hover {
+    background: #fffaf0;
+    border-left-color: #dd6b20;
+}
+
+.route-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5em;
+    gap: 1em;
+    flex-wrap: wrap;
+}
+
+.route-path {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #0066cc;
+    background: white;
+    padding: 0.25em 0.75em;
+    border-radius: 3px;
+    border: 1px solid #cce7ff;
+}
+
+.route-name {
+    font-weight: 600;
+    color: #333;
+    flex-shrink: 0;
+}
+
+.route-desc {
+    color: #666;
+    font-size: 0.9em;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.route-example {
+    margin: 0.5em 0 0 0;
+    font-size: 0.85em;
+    color: #888;
+}
+
+.route-example code {
+    background: #e6fffa;
+    color: #2c7a7b;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.badge-post {
+    display: inline-block;
+    background: #ed8936;
+    color: white;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Health Status Badges */
+.health-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.health-badge.health-ok {
+    background: #48bb78;
+    color: white;
+}
+
+.health-badge.health-api {
+    background: #4299e1;
+    color: white;
+}
+
+.health-badge.health-warning {
+    background: #ed8936;
+    color: white;
+}
+
+.health-badge.health-error {
+    background: #f56565;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .route-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5em;
+    }
+
+    .health-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+{% endblock %}

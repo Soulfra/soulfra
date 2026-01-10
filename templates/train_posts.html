@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block title %}4-Agent Debate - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+.debate-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+
+.mode-switcher {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.mode-switcher a {
+    padding: 0.75rem 2rem;
+    background: #f0f0f0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.mode-switcher a.active {
+    background: #007bff;
+    color: white;
+}
+
+.post-preview {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.post-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.post-content {
+    color: #666;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+}
+
+.agents-debate {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.agent-card {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.agent-card:hover {
+    transform: scale(1.02);
+}
+
+.agent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.agent-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.agent-calriven .agent-name { color: #ff5722; }
+.agent-theauditor .agent-name { color: #2196f3; }
+.agent-deathtodata .agent-name { color: #4caf50; }
+.agent-soulfra .agent-name { color: #9c27b0; }
+
+.agent-verdict {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: #f0f0f0;
+}
+
+.verdict-positive { background: #c8e6c9; color: #2e7d32; }
+.verdict-negative { background: #ffcdd2; color: #c62828; }
+
+.confidence-bar {
+    margin-top: 1rem;
+}
+
+.confidence-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.bar-container {
+    background: #e0e0e0;
+    height: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar-fill {
+    height: 100%;
+    transition: width 0.5s;
+}
+
+.agent-calriven .bar-fill { background: linear-gradient(90deg, #ff5722, #ff9800); }
+.agent-theauditor .bar-fill { background: linear-gradient(90deg, #2196f3, #03a9f4); }
+.agent-deathtodata .bar-fill { background: linear-gradient(90deg, #4caf50, #8bc34a); }
+.agent-soulfra .bar-fill { background: linear-gradient(90deg, #9c27b0, #ba68c8); }
+
+.bar-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #333;
+}
+
+.judge-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.judge-card .agent-verdict {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.judge-card .confidence-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.judge-card .bar-container {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.agent-context {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+.reload-button {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1rem 2rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.reload-button:hover {
+    background: #0056b3;
+}
+
+.reasoning-toggle {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.reasoning-toggle:hover {
+    background: #e9ecef;
+}
+
+.reasoning-details {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-left: 3px solid #007bff;
+    border-radius: 4px;
+    display: none;
+}
+
+.reasoning-details.active {
+    display: block;
+}
+
+.feature-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.feature-item:last-child {
+    border-bottom: none;
+}
+
+.feature-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.feature-value {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.feature-details {
+    color: #007bff;
+    font-size: 0.8rem;
+    font-family: monospace;
+    margin-top: 0.25rem;
+}
+</style>
+
+<div class="debate-container">
+    <h1 style="text-align: center;">🧠 4-Agent Debate System</h1>
+    <p style="text-align: center; color: #666; margin-bottom: 2rem;">
+        Watch 4 AI agents with different "contexts" (like Reddit subreddits) debate on real content
+    </p>
+
+    <div class="mode-switcher">
+        <a href="/train?mode=colors">🎨 Color Training</a>
+        <a href="/train?mode=posts" class="active">📝 Post Debate</a>
+    </div>
+
+    <!-- Post Preview -->
+    <div class="post-preview">
+        <div class="post-title">{{ post.title }}</div>
+        <div class="post-content">
+            {% if post.excerpt %}
+                {{ post.excerpt }}
+            {% else %}
+                {{ post.content[:200]|striptags }}...
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Agent Predictions -->
+    <div class="agents-debate">
+        <!-- CalRiven: Technical -->
+        <div class="agent-card agent-calriven">
+            <div class="agent-header">
+                <div>
+                    <div class="agent-name">🔧 CalRiven</div>
+                    <div class="agent-context">Technical Content Specialist</div>
+                </div>
+                <div class="agent-verdict {% if predictions.calriven.label == 'TECHNICAL' %}verdict-positive{% else %}verdict-negative{% endif %}">
+                    {{ predictions.calriven.label }}
+                </div>
+            </div>
+            <div class="confidence-bar">
+                <div class="confidence-label">Confidence:</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: {{ '%.1f'|format(predictions.calriven.score * 100) }}%"></div>
+                    <div class="bar-text">{{ "%.1f"|format(predictions.calriven.score * 100) }}%</div>
+                </div>
+            </div>
+
+            <div class="reasoning-toggle" onclick="toggleReasoning('calriven')">
+                🔍 Show Reasoning
+            </div>
+            <div class="reasoning-details" id="reasoning-calriven">
+                <div style="font-weight: 600; margin-bottom: 0.75rem; color: #ff5722;">Feature Extraction:</div>
+                {% for key, value in predictions.calriven.features.items() %}
+                <div class="feature-item">
+                    <div class="feature-label">{{ key.replace('_', ' ').title() }}:</div>
+                    <div class="feature-value">{{ value.text }}</div>
+                    {% if value.details %}
+                    <div class="feature-details">→ {{ value.details|join(', ') }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- TheAuditor: Validation -->
+        <div class="agent-card agent-theauditor">
+            <div class="agent-header">
+                <div>
+                    <div class="agent-name">🔍 TheAuditor</div>
+                    <div class="agent-context">Validation & Proof Specialist</div>
+                </div>
+                <div class="agent-verdict {% if predictions.auditor.label == 'VALIDATED' %}verdict-positive{% else %}verdict-negative{% endif %}">
+                    {{ predictions.auditor.label }}
+                </div>
+            </div>
+            <div class="confidence-bar">
+                <div class="confidence-label">Confidence:</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: {{ '%.1f'|format(predictions.auditor.score * 100) }}%"></div>
+                    <div class="bar-text">{{ "%.1f"|format(predictions.auditor.score * 100) }}%</div>
+                </div>
+            </div>
+
+            <div class="reasoning-toggle" onclick="toggleReasoning('auditor')">
+                🔍 Show Reasoning
+            </div>
+            <div class="reasoning-details" id="reasoning-auditor">
+                <div style="font-weight: 600; margin-bottom: 0.75rem; color: #2196f3;">Feature Extraction:</div>
+                {% for key, value in predictions.auditor.features.items() %}
+                <div class="feature-item">
+                    <div class="feature-label">{{ key.replace('_', ' ').title() }}:</div>
+                    <div class="feature-value">{{ value.text }}</div>
+                    {% if value.details %}
+                    <div class="feature-details">→ {{ value.details|join(', ') }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- DeathToData: Privacy -->
+        <div class="agent-card agent-deathtodata">
+            <div class="agent-header">
+                <div>
+                    <div class="agent-name">🔒 DeathToData</div>
+                    <div class="agent-context">Privacy & Decentralization Specialist</div>
+                </div>
+                <div class="agent-verdict {% if predictions.deathtodata.label == 'PRIVACY-FRIENDLY' %}verdict-positive{% else %}verdict-negative{% endif %}">
+                    {{ predictions.deathtodata.label }}
+                </div>
+            </div>
+            <div class="confidence-bar">
+                <div class="confidence-label">Confidence:</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: {{ '%.1f'|format(predictions.deathtodata.score * 100) }}%"></div>
+                    <div class="bar-text">{{ "%.1f"|format(predictions.deathtodata.score * 100) }}%</div>
+                </div>
+            </div>
+
+            <div class="reasoning-toggle" onclick="toggleReasoning('deathtodata')">
+                🔍 Show Reasoning
+            </div>
+            <div class="reasoning-details" id="reasoning-deathtodata">
+                <div style="font-weight: 600; margin-bottom: 0.75rem; color: #4caf50;">Feature Extraction:</div>
+                {% for key, value in predictions.deathtodata.features.items() %}
+                <div class="feature-item">
+                    <div class="feature-label">{{ key.replace('_', ' ').title() }}:</div>
+                    <div class="feature-value">{{ value.text }}</div>
+                    {% if value.details %}
+                    <div class="feature-details">→ {{ value.details|join(', ') }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Soulfra: Judge -->
+        <div class="agent-card agent-soulfra judge-card">
+            <div class="agent-header">
+                <div>
+                    <div class="agent-name" style="color: white;">⚖️ Soulfra</div>
+                    <div class="agent-context" style="color: rgba(255, 255, 255, 0.9);">Meta-Judge (weighs the other 3)</div>
+                </div>
+                <div class="agent-verdict">
+                    {{ predictions.soulfra.label }}
+                </div>
+            </div>
+            <div class="confidence-bar">
+                <div class="confidence-label">Final Judgment Confidence:</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: {{ '%.1f'|format(predictions.soulfra.score * 100) }}%"></div>
+                    <div class="bar-text" style="color: white;">{{ "%.1f"|format(predictions.soulfra.score * 100) }}%</div>
+                </div>
+            </div>
+
+            <div class="reasoning-toggle" onclick="toggleReasoning('soulfra')" style="background: rgba(255, 255, 255, 0.2); color: white;">
+                🔍 Show Reasoning
+            </div>
+            <div class="reasoning-details" id="reasoning-soulfra" style="background: rgba(255, 255, 255, 0.1); border-left-color: #ba68c8;">
+                <div style="font-weight: 600; margin-bottom: 0.75rem; color: white;">Inputs from Other Networks:</div>
+                <div class="feature-item" style="border-bottom-color: rgba(255, 255, 255, 0.2);">
+                    <div class="feature-label" style="color: rgba(255, 255, 255, 0.9);">🔧 CalRiven Score:</div>
+                    <div class="feature-value" style="color: rgba(255, 255, 255, 0.8);">{{ "%.1f"|format(predictions.soulfra.inputs.calriven * 100) }}% ({{ 'Technical' if predictions.soulfra.inputs.calriven > 0.5 else 'Not Technical' }})</div>
+                </div>
+                <div class="feature-item" style="border-bottom-color: rgba(255, 255, 255, 0.2);">
+                    <div class="feature-label" style="color: rgba(255, 255, 255, 0.9);">🔍 TheAuditor Score:</div>
+                    <div class="feature-value" style="color: rgba(255, 255, 255, 0.8);">{{ "%.1f"|format(predictions.soulfra.inputs.auditor * 100) }}% ({{ 'Validated' if predictions.soulfra.inputs.auditor > 0.5 else 'Unvalidated' }})</div>
+                </div>
+                <div class="feature-item" style="border-bottom: none;">
+                    <div class="feature-label" style="color: rgba(255, 255, 255, 0.9);">🔒 DeathToData Score:</div>
+                    <div class="feature-value" style="color: rgba(255, 255, 255, 0.8);">{{ "%.1f"|format(predictions.soulfra.inputs.deathtodata * 100) }}% ({{ 'Privacy-Friendly' if predictions.soulfra.inputs.deathtodata > 0.5 else 'Privacy-Hostile' }})</div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.2); color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">
+                    <strong>Decision Logic:</strong> {% if predictions.soulfra.inputs.calriven > 0.5 and predictions.soulfra.inputs.auditor > 0.5 %}2/3 networks agree{% elif predictions.soulfra.inputs.calriven > 0.5 or predictions.soulfra.inputs.auditor > 0.5 %}Mixed signals{% else %}Majority disagree{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reload Button -->
+    <button class="reload-button" onclick="location.reload()">
+        🔄 Next Post (Random)
+    </button>
+
+    <div style="text-align: center; color: #666; font-size: 0.9rem; margin-top: 2rem;">
+        <p><strong>How it works:</strong></p>
+        <p>Each AI agent was trained on different data (like Reddit subreddits):</p>
+        <ul style="list-style: none; padding: 0;">
+            <li>🔧 CalRiven: Prefers code, architecture, technical content</li>
+            <li>🔍 TheAuditor: Prefers tests, data, proof, validation</li>
+            <li>🔒 DeathToData: Prefers privacy, OSS, decentralization</li>
+            <li>⚖️ Soulfra: Meta-judge that weighs all 3 perspectives</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+function toggleReasoning(agentId) {
+    const details = document.getElementById('reasoning-' + agentId);
+    const toggle = details.previousElementSibling;
+
+    if (details.classList.contains('active')) {
+        details.classList.remove('active');
+        toggle.textContent = '🔍 Show Reasoning';
+    } else {
+        details.classList.add('active');
+        toggle.textContent = '🔍 Hide Reasoning';
+    }
+}
+</script>
+
+{% endblock %}

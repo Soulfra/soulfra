@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Manager - Soulfra</title>
+
+    <!-- UNIVERSAL THEME - Brand colors from soulfra-complete.json -->
+    <!-- This overrides the default colors below with brand colors -->
+    <link rel="stylesheet" href="/theme-soulfra.css">
+
+    <style>
+        /* ========================================
+           THEME SYSTEM (Discord-style)
+           CSS Variables for theming
+           NOTE: These are fallback colors - they get overridden by theme-soulfra.css
+        ======================================== */
+        :root {
+            /* Targeting colors - themeable! */
+            --target-0-primary: #48bb78;
+            --target-0-bg: rgba(72, 187, 120, 0.2);
+            --target-0-shadow: rgba(72, 187, 120, 0.4);
+
+            --target-1-primary: #4299e1;
+            --target-1-bg: rgba(66, 153, 225, 0.2);
+            --target-1-shadow: rgba(66, 153, 225, 0.4);
+
+            --target-2-primary: #ed8936;
+            --target-2-bg: rgba(237, 137, 54, 0.2);
+            --target-2-shadow: rgba(237, 137, 54, 0.4);
+
+            --target-3-primary: #9f7aea;
+            --target-3-bg: rgba(159, 122, 234, 0.2);
+            --target-3-shadow: rgba(159, 122, 234, 0.4);
+
+            --target-4-primary: #f6ad55;
+            --target-4-bg: rgba(246, 173, 85, 0.2);
+            --target-4-shadow: rgba(246, 173, 85, 0.4);
+
+            --target-5-primary: #fc8181;
+            --target-5-bg: rgba(252, 129, 129, 0.2);
+            --target-5-shadow: rgba(252, 129, 129, 0.4);
+
+            --target-6-primary: #68d391;
+            --target-6-bg: rgba(104, 211, 145, 0.2);
+            --target-6-shadow: rgba(104, 211, 145, 0.4);
+
+            --target-7-primary: #63b3ed;
+            --target-7-bg: rgba(99, 179, 237, 0.2);
+            --target-7-shadow: rgba(99, 179, 237, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        /* Domain List */
+        .domain-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .domain-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .domain-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+
+        .domain-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .domain-url {
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+
+        .domain-tagline {
+            font-size: 0.85em;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* Add Domain Form */
+        .add-domain-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-domain-form input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+        }
+
+        .add-domain-form input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .add-domain-form button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .add-domain-form button:hover {
+            transform: scale(1.05);
+        }
+
+        #add-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #add-status.success {
+            background: rgba(72, 187, 120, 0.3);
+            display: block;
+        }
+
+        #add-status.error {
+            background: rgba(245, 101, 101, 0.3);
+            display: block;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: rgba(102, 126, 234, 0.3);
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.assistant {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .message-role {
+            font-weight: 600;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        #chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+            resize: none;
+        }
+
+        #chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        #send-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .ai-response-qr {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .ai-response-qr img {
+            max-width: 200px;
+            border-radius: 10px;
+            background: white;
+            padding: 10px;
+        }
+
+        /* Preview Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 1200px;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+            background: #f7fafc;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-btn {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: rgba(72, 187, 120, 0.3);
+            border: 1px solid rgba(72, 187, 120, 0.5);
+            border-radius: 5px;
+            color: white;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preview-btn:hover {
+            background: rgba(72, 187, 120, 0.5);
+        }
+
+        .view-live-btn {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: rgba(66, 153, 225, 0.3);
+            border: 1px solid rgba(66, 153, 225, 0.5);
+            border-radius: 5px;
+            color: white;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-live-btn:hover {
+            background: rgba(66, 153, 225, 0.5);
+        }
+
+        /* Model Selector */
+        .model-selector-container {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .model-label {
+            font-size: 0.85em;
+            font-weight: 600;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .model-selector {
+            flex: 1;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            color: white;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .model-selector:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .model-selector option {
+            background: #2d3748;
+            color: white;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .modal-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-tab.active {
+            border-bottom-color: white;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 10px;
+            color: #2d3748;
+        }
+
+        .info-label {
+            font-weight: 600;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Multi-Domain Targeting (WoW-style) - Extended for N domains */
+        .domain-item {
+            position: relative;
+        }
+
+        /* Target colors - uses CSS variables (Discord-style!) */
+        .domain-item.target-0 { border: 3px solid var(--target-0-primary); background: var(--target-0-bg); box-shadow: 0 0 20px var(--target-0-shadow); }
+        .domain-item.target-1 { border: 3px solid var(--target-1-primary); background: var(--target-1-bg); box-shadow: 0 0 20px var(--target-1-shadow); }
+        .domain-item.target-2 { border: 3px solid var(--target-2-primary); background: var(--target-2-bg); box-shadow: 0 0 20px var(--target-2-shadow); }
+        .domain-item.target-3 { border: 3px solid var(--target-3-primary); background: var(--target-3-bg); box-shadow: 0 0 20px var(--target-3-shadow); }
+        .domain-item.target-4 { border: 3px solid var(--target-4-primary); background: var(--target-4-bg); box-shadow: 0 0 20px var(--target-4-shadow); }
+        .domain-item.target-5 { border: 3px solid var(--target-5-primary); background: var(--target-5-bg); box-shadow: 0 0 20px var(--target-5-shadow); }
+        .domain-item.target-6 { border: 3px solid var(--target-6-primary); background: var(--target-6-bg); box-shadow: 0 0 20px var(--target-6-shadow); }
+        .domain-item.target-7 { border: 3px solid var(--target-7-primary); background: var(--target-7-bg); box-shadow: 0 0 20px var(--target-7-shadow); }
+
+        /* Target badges */
+        .domain-item[data-target-index]::before {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        .domain-item.target-0::before { content: "● TARGET 1"; background: var(--target-0-primary); }
+        .domain-item.target-1::before { content: "⦿ TARGET 2"; background: var(--target-1-primary); }
+        .domain-item.target-2::before { content: "◆ TARGET 3"; background: var(--target-2-primary); }
+        .domain-item.target-3::before { content: "◉ TARGET 4"; background: var(--target-3-primary); }
+        .domain-item.target-4::before { content: "◈ TARGET 5"; background: var(--target-4-primary); }
+        .domain-item.target-5::before { content: "◊ TARGET 6"; background: var(--target-5-primary); }
+        .domain-item.target-6::before { content: "⬟ TARGET 7"; background: var(--target-6-primary); }
+        .domain-item.target-7::before { content: "⬢ TARGET 8"; background: var(--target-7-primary); }
+
+        #compare-targets-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: none;
+        }
+
+        #compare-targets-btn.show {
+            display: block;
+        }
+
+        #compare-targets-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* Code Generation Controls */
+        .code-gen-controls {
+            display: none;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .code-gen-controls.show {
+            display: flex;
+        }
+
+        .code-gen-select {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+
+        .code-gen-select option {
+            background: #2d3748;
+            color: white;
+        }
+
+        #generate-code-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+
+        #generate-code-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .target-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .target-info.show {
+            display: block;
+        }
+
+        .target-info strong {
+            color: #48bb78;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Domain Manager</h1>
+        <p class="subtitle">Manage your domains, chat with Ollama AI, and build multi-brand websites</p>
+
+        <div class="layout">
+            <!-- Left: Domain List + Add -->
+            <div class="card">
+                <h2>Your Domains ({{ brands|length }})</h2>
+
+                <!-- Add Domain Form -->
+                <div class="add-domain-form">
+                    <input type="text" id="new-domain" placeholder="Enter domain (e.g., example.com)" />
+                    <button onclick="addDomain()">Add Domain</button>
+                </div>
+                <div id="add-status"></div>
+
+                <!-- Domain List -->
+                <div class="domain-list">
+                    {% for brand in brands %}
+                    <div class="domain-item"
+                         data-domain="{{ brand.domain }}"
+                         data-name="{{ brand.name }}"
+                         onclick="handleDomainClick(event, '{{ brand.domain }}', '{{ brand.name }}')">
+                        <div class="domain-name">{{ brand.name }}</div>
+                        <div class="domain-url">{{ brand.domain }}</div>
+                        <div class="domain-tagline">{{ brand.tagline or 'No tagline' }}</div>
+
+                        <!-- Model Selector -->
+                        <div class="model-selector-container">
+                            <label class="model-label">🤖 Model:</label>
+                            <select class="model-selector"
+                                    data-domain="{{ brand.domain }}"
+                                    onclick="event.stopPropagation()"
+                                    onchange="handleModelChange(event, '{{ brand.domain }}')">
+                                <option value="llama3.2">llama3.2 (General)</option>
+                                <option value="codellama">codellama (Code)</option>
+                                <option value="mistral">mistral (Fast)</option>
+                                <option value="phi">phi (Small)</option>
+                                <option value="gemma">gemma (Creative)</option>
+                                <option value="llama2">llama2 (Stable)</option>
+                            </select>
+                        </div>
+
+                        <button class="preview-btn" onclick="event.stopPropagation(); previewDomain('{{ brand.domain }}', '{{ brand.name }}')">
+                            👁️ Preview
+                        </button>
+                        <button class="view-live-btn" onclick="event.stopPropagation(); viewLiveDomain('{{ brand.domain }}', '{{ brand.name }}')">
+                            🌐 View Live
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right: Ollama Chat -->
+            <div class="card">
+                <h2>💬 Chat with Ollama</h2>
+
+                <!-- Multi-Domain Targeting Info -->
+                <div id="target-info" class="target-info">
+                    <strong>Targets Selected:</strong>
+                    <div id="target-list"></div>
+                </div>
+
+                <!-- Compare Targets Button -->
+                <button id="compare-targets-btn" onclick="compareTargets()">
+                    🔄 Compare Targets
+                </button>
+
+                <!-- Code Generation Controls -->
+                <div id="code-gen-controls" class="code-gen-controls">
+                    <select id="code-gen-type" class="code-gen-select">
+                        <option value="shared-component">Shared Component</option>
+                        <option value="landing-page">Landing Page</option>
+                        <option value="cross-promo-widget">Cross-Promo Widget</option>
+                        <option value="integration-code">Integration Code</option>
+                        <option value="affiliate-link">Affiliate Link System</option>
+                        <option value="shared-newsletter">Shared Newsletter Template</option>
+                    </select>
+                    <button id="generate-code-btn" onclick="generateCode()">
+                        ⚡ Generate Code
+                    </button>
+                </div>
+
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message assistant">
+                            <div class="message-role">Ollama</div>
+                            <div>Hi! I'm here to help you manage domains, build websites, analyze files, and more. What can I help you with?</div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <textarea id="chat-input" rows="2" placeholder="Ask about domains, sitemaps, deployment, etc..."></textarea>
+                        <button id="send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="preview-title">Preview Domain</h3>
+                <button class="close-modal" onclick="closePreview()">×</button>
+            </div>
+            <div id="modal-tabs" class="modal-tabs" style="display: none;">
+                <button class="modal-tab active" onclick="switchTab('html')">HTML</button>
+                <button class="modal-tab" onclick="switchTab('sitemap')">Sitemap</button>
+                <button class="modal-tab" onclick="switchTab('robots')">Robots.txt</button>
+                <button class="modal-tab" onclick="switchTab('dns')">DNS Info</button>
+            </div>
+            <div class="modal-body">
+                <div id="tab-html" class="tab-content active">
+                    <iframe id="preview-frame" class="preview-iframe"></iframe>
+                </div>
+                <div id="tab-sitemap" class="tab-content">
+                    <pre id="sitemap-content" class="code-block">Loading...</pre>
+                </div>
+                <div id="tab-robots" class="tab-content">
+                    <pre id="robots-content" class="code-block">Loading...</pre>
+                </div>
+                <div id="tab-dns" class="tab-content">
+                    <div id="dns-content" class="info-grid">
+                        <span class="info-label">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chatHistory = [];
+        let selectedDomain = null;
+
+        // Multi-Domain Targeting - Extended to N domains
+        let targets = [];  // Array of {domain, name, index, model}
+        const TARGET_ICONS = ['●', '⦿', '◆', '◉', '◈', '◊', '⬟', '⬢'];
+        let domainModels = {};  // Store model preference per domain {domain: model}
+
+        // Handle model selection change
+        function handleModelChange(event, domain) {
+            const model = event.target.value;
+            domainModels[domain] = model;
+
+            // If this domain is already targeted, update its model
+            const targetIndex = targets.findIndex(t => t.domain === domain);
+            if (targetIndex !== -1) {
+                targets[targetIndex].model = model;
+                updateTargetUI();
+            }
+
+            console.log(`Model for ${domain} set to: ${model}`);
+        }
+
+        function handleDomainClick(event, domain, name) {
+            const domainItem = event.currentTarget;
+
+            // Check if already targeted
+            const existingIndex = targets.findIndex(t => t.domain === domain);
+
+            if (existingIndex !== -1) {
+                // Deselect - remove from targets
+                targets.splice(existingIndex, 1);
+                domainItem.classList.remove(`target-${existingIndex}`);
+                domainItem.removeAttribute('data-target-index');
+            } else {
+                // Select - add to targets
+                const newIndex = targets.length;
+
+                // Get selected model for this domain (default to llama3.2)
+                const modelSelector = document.querySelector(`.model-selector[data-domain="${domain}"]`);
+                const model = modelSelector ? modelSelector.value : 'llama3.2';
+
+                targets.push({domain, name, index: newIndex, model});
+                domainItem.classList.add(`target-${newIndex}`);
+                domainItem.setAttribute('data-target-index', newIndex);
+
+                // For backward compatibility
+                if (newIndex === 0) selectedDomain = {domain, name};
+            }
+
+            // Re-index all targets (in case one was removed from middle)
+            refreshTargetClasses();
+            updateTargetUI();
+        }
+
+        function refreshTargetClasses() {
+            // Remove all target classes
+            document.querySelectorAll('.domain-item').forEach(item => {
+                for (let i = 0; i < 8; i++) {
+                    item.classList.remove(`target-${i}`);
+                }
+                item.removeAttribute('data-target-index');
+            });
+
+            // Re-apply based on current targets array
+            targets.forEach((target, index) => {
+                const item = document.querySelector(`.domain-item[data-domain="${target.domain}"]`);
+                if (item) {
+                    item.classList.add(`target-${index}`);
+                    item.setAttribute('data-target-index', index);
+                    target.index = index;  // Update index
+                }
+            });
+        }
+
+        function updateTargetUI() {
+            const targetInfo = document.getElementById('target-info');
+            const targetList = document.getElementById('target-list');
+            const compareBtn = document.getElementById('compare-targets-btn');
+            const codeGenControls = document.getElementById('code-gen-controls');
+
+            if (targets.length > 0) {
+                const targetStrings = targets.map((t, i) =>
+                    `${TARGET_ICONS[i] || '◉'} Target ${i + 1}: ${t.domain} <span style="opacity: 0.7; font-size: 0.85em;">[${t.model || 'llama3.2'}]</span>`
+                );
+                targetList.innerHTML = targetStrings.join('<br>');
+                targetInfo.classList.add('show');
+
+                // Show compare button if 2+ targets
+                if (targets.length >= 2) {
+                    compareBtn.classList.add('show');
+                    compareBtn.textContent = `🔄 Compare ${targets.length} Domains`;
+                    codeGenControls.classList.add('show');
+                } else {
+                    compareBtn.classList.remove('show');
+                    codeGenControls.classList.remove('show');
+                }
+            } else {
+                targetInfo.classList.remove('show');
+                compareBtn.classList.remove('show');
+                codeGenControls.classList.remove('show');
+            }
+        }
+
+        function compareTargets() {
+            if (targets.length < 2) {
+                addMessageToChat('assistant', 'Please select at least 2 domains (click to select, click again to deselect)');
+                return;
+            }
+
+            // Build detailed list with model specialization
+            const domainDetails = targets.map(t =>
+                `${t.domain} (using ${t.model || 'llama3.2'} - ${getModelPurpose(t.model)})`
+            ).join('\n');
+
+            const message = `Analyze these ${targets.length} domains and their specialized AI models:
+
+${domainDetails}
+
+How can they cross-promote each other? What are the cross-selling opportunities? What content themes overlap?
+
+Consider that each domain may have a different AI model specialization:
+- Code-focused domains might use codellama for technical content
+- Creative domains might use gemma for storytelling
+- General domains might use llama3.2 for broad content
+
+Suggest specific collaboration strategies and shared content ideas that leverage their unique AI capabilities.`;
+
+            document.getElementById('chat-input').value = message;
+            sendMessage();
+        }
+
+        // Helper function to describe model purpose
+        function getModelPurpose(model) {
+            const purposes = {
+                'llama3.2': 'General purpose',
+                'codellama': 'Code generation',
+                'mistral': 'Fast responses',
+                'phi': 'Efficient/lightweight',
+                'gemma': 'Creative content',
+                'llama2': 'Stable/reliable'
+            };
+            return purposes[model] || 'General purpose';
+        }
+
+        // Generate code from domain comparisons
+        function generateCode() {
+            if (targets.length < 2) {
+                addMessageToChat('assistant', 'Please select at least 2 domains first');
+                return;
+            }
+
+            const codeType = document.getElementById('code-gen-type').value;
+            const domainList = targets.map(t => t.domain).join(', ');
+
+            const codeTypeDescriptions = {
+                'shared-component': 'a reusable UI component that can be embedded on all domains',
+                'landing-page': 'a landing page that promotes all selected domains together',
+                'cross-promo-widget': 'a widget showing links/previews to the other domains',
+                'integration-code': 'JavaScript code to integrate and share data between domains',
+                'affiliate-link': 'an affiliate link tracking system for cross-referrals',
+                'shared-newsletter': 'a newsletter template featuring content from all domains'
+            };
+
+            const description = codeTypeDescriptions[codeType] || 'code';
+
+            const message = `Generate production-ready code for ${description}.
+
+Domains involved: ${domainList}
+
+Requirements:
+- Use vanilla HTML, CSS, and JavaScript (no frameworks)
+- Make it responsive and mobile-friendly
+- Include inline styles for easy copy-paste
+- Add clear comments explaining each section
+- Make it visually appealing with modern design
+- Include specific content/links for each domain:
+${targets.map(t => `  * ${t.domain} (${t.name}) - using ${t.model}`).join('\n')}
+
+Please provide complete, working code that I can copy and paste directly.`;
+
+            document.getElementById('chat-input').value = message;
+            sendMessage();
+        }
+
+        // Tab key - cycle through targets
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && targets.length > 1) {
+                e.preventDefault();
+                // Rotate targets array
+                const first = targets.shift();
+                targets.push(first);
+                refreshTargetClasses();
+                updateTargetUI();
+            }
+        });
+
+        function selectDomain(domain, name) {
+            selectedDomain = {domain, name};
+            addMessageToChat('assistant', `Selected domain: ${name} (${domain}). What would you like to know about it?`);
+        }
+
+        async function addDomain() {
+            const input = document.getElementById('new-domain');
+            const domain = input.value.trim();
+            const status = document.getElementById('add-status');
+
+            if (!domain) {
+                status.className = 'error';
+                status.textContent = 'Please enter a domain';
+                return;
+            }
+
+            status.textContent = 'Analyzing with AI...';
+            status.className = '';
+            status.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/domains/create', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({domain})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.className = 'success';
+                    status.innerHTML = `
+                        ✅ Added ${data.name}!<br>
+                        Industry: ${data.ai_analysis.industry}<br>
+                        Region: ${data.ai_analysis.region}<br>
+                        <div class="ai-response-qr">
+                            <img src="${data.qr_code}" alt="QR Code" />
+                            <div>Scan to login</div>
+                        </div>
+                    `;
+                    input.value = '';
+
+                    // Reload page after 3 seconds
+                    setTimeout(() => location.reload(), 3000);
+                } else {
+                    status.className = 'error';
+                    status.textContent = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                status.className = 'error';
+                status.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function addMessageToChat(role, content) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.innerHTML = `
+                <div class="message-role">${role === 'user' ? 'You' : 'Ollama'}</div>
+                <div>${content}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            addMessageToChat('user', message);
+            chatHistory.push({role: 'user', content: message});
+
+            // Clear input and disable button
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Thinking...';
+
+            try {
+                const response = await fetch('/api/domains/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        message,
+                        context: {
+                            domain: selectedDomain?.domain,
+                            targets: targets,  // Include all targeted domains with their models
+                            history: chatHistory.slice(-10)  // Last 10 messages
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    addMessageToChat('assistant', data.response);
+                    chatHistory.push({role: 'assistant', content: data.response});
+                } else {
+                    addMessageToChat('assistant', `Error: ${data.error}`);
+                }
+            } catch (error) {
+                addMessageToChat('assistant', `Error: ${error.message}`);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+            }
+        }
+
+        // Enter to send
+        document.getElementById('chat-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Preview Domain Functions
+        async function previewDomain(domain, name) {
+            const modal = document.getElementById('preview-modal');
+            const title = document.getElementById('preview-title');
+            const iframe = document.getElementById('preview-frame');
+            const tabs = document.getElementById('modal-tabs');
+
+            title.textContent = `Preview: ${name} (${domain}) - Localhost Rendering`;
+            modal.classList.add('active');
+            tabs.style.display = 'none';  // Hide tabs for preview
+
+            // Show only HTML tab
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-html').classList.add('active');
+
+            try {
+                const response = await fetch('/api/domains/preview', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({domain})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Write HTML into iframe
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(data.html);
+                    iframeDoc.close();
+                } else {
+                    iframe.srcdoc = `<div style="padding: 20px; font-family: sans-serif;">
+                        <h2>Error Loading Preview</h2>
+                        <p>${data.error}</p>
+                        <pre>${data.details || ''}</pre>
+                    </div>`;
+                }
+            } catch (error) {
+                iframe.srcdoc = `<div style="padding: 20px; font-family: sans-serif;">
+                    <h2>Error Loading Preview</h2>
+                    <p>${error.message}</p>
+                </div>`;
+            }
+        }
+
+        async function viewLiveDomain(domain, name) {
+            const modal = document.getElementById('preview-modal');
+            const title = document.getElementById('preview-title');
+            const tabs = document.getElementById('modal-tabs');
+            const iframe = document.getElementById('preview-frame');
+
+            title.textContent = `Live Site: ${name} (${domain})`;
+            modal.classList.add('active');
+            tabs.style.display = 'flex';  // Show tabs for live view
+
+            // Reset to HTML tab
+            switchTab('html');
+
+            // Show loading state
+            iframe.srcdoc = '<div style="padding: 20px; font-family: sans-serif; text-align: center;">Loading live site...</div>';
+            document.getElementById('sitemap-content').textContent = 'Loading...';
+            document.getElementById('robots-content').textContent = 'Loading...';
+            document.getElementById('dns-content').innerHTML = '<span class="info-label">Loading...</span>';
+
+            try {
+                const response = await fetch('/api/domains/scrape-live', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({domain})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Load HTML
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(data.html || '<!-- No HTML content -->');
+                    iframeDoc.close();
+
+                    // Load Sitemap
+                    document.getElementById('sitemap-content').textContent = data.sitemap || 'No sitemap.xml found';
+
+                    // Load Robots
+                    document.getElementById('robots-content').textContent = data.robots || 'No robots.txt found';
+
+                    // Load DNS Info
+                    let dnsHtml = '';
+                    dnsHtml += `<span class="info-label">Domain:</span><span>${domain}</span>`;
+                    dnsHtml += `<span class="info-label">Status Code:</span><span>${data.status_code || 'N/A'}</span>`;
+                    dnsHtml += `<span class="info-label">Final URL:</span><span>${data.final_url || 'N/A'}</span>`;
+                    dnsHtml += `<span class="info-label">Hosting:</span><span>${data.hosting || 'Unknown'}</span>`;
+
+                    if (data.dns_ips && data.dns_ips.length > 0) {
+                        dnsHtml += `<span class="info-label">DNS IPs:</span><span>${data.dns_ips.join(', ')}</span>`;
+                    }
+
+                    // Show SSL warning if present
+                    if (data.ssl_warning) {
+                        dnsHtml += `<span class="info-label" style="color: #f6ad55;">⚠️ SSL Warning:</span><span style="color: #f6ad55;">${data.ssl_warning}</span>`;
+                    }
+
+                    // Show fallback info if used
+                    if (data.fallback_used) {
+                        dnsHtml += `<span class="info-label" style="color: #48bb78;">🔀 Fallback:</span><span style="color: #48bb78;">${data.fallback_used}</span>`;
+                    }
+
+                    // Show HTML error if present
+                    if (data.html_error) {
+                        dnsHtml += `<span class="info-label" style="color: #e53e3e;">❌ HTML Error:</span><span style="color: #e53e3e; font-size: 12px; font-family: monospace;">${data.html_error}</span>`;
+                    }
+
+                    document.getElementById('dns-content').innerHTML = dnsHtml;
+
+                } else {
+                    iframe.srcdoc = `<div style="padding: 20px; font-family: sans-serif;">
+                        <h2>Error Loading Live Site</h2>
+                        <p>${data.error}</p>
+                    </div>`;
+                }
+            } catch (error) {
+                iframe.srcdoc = `<div style="padding: 20px; font-family: sans-serif;">
+                    <h2>Error Loading Live Site</h2>
+                    <p>${error.message}</p>
+                </div>`;
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.modal-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        function closePreview() {
+            const modal = document.getElementById('preview-modal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('preview-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'preview-modal') {
+                closePreview();
+            }
+        });
+    </script>
+</body>
+</html>

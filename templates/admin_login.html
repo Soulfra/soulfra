@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Soulfra</title>
+  <link rel="stylesheet" href="static/style.css">
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 40px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+    .login-form input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .login-form button {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .login-form button:hover {
+      background: #333;
+    }
+    .error {
+      color: #d00;
+      padding: 10px;
+      background: #fee;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>🔐 Admin Login</h1>
+    <p style="color: #666; margin-bottom: 20px;">Enter your admin password to access the dashboard.</p>
+    {{error}}
+    <form method="POST" class="login-form">
+      <label for="password" style="display: block; margin-bottom: 5px; font-weight: bold;">Admin Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password (default: soulfra2025)" required autofocus>
+      <button type="submit">🚀 Login to Dashboard</button>
+    </form>
+    <p style="color: #999; font-size: 14px; margin-top: 20px;">
+      💡 Tip: Change the default password by setting <code>ADMIN_PASSWORD</code> environment variable
+    </p>
+  </div>
+</body>
+</html>

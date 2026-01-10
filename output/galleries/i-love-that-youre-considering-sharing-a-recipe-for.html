@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Love That You'Re Considering Sharing A Recipe For Salted Butter With Your Audi - Gallery</title>
+    <meta name="description" content="Interactive gallery for I Love That You'Re Considering Sharing A Recipe For Salted Butter With Your Audi">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #4a90e2;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .brand {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .soul-rating {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .soul-score {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .soul-score .score {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .soul-score .tier {
+            font-size: 1.2rem;
+        }
+
+        .rated-by {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .neural-ratings {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .neural-ratings h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .neural-rating-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: white;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .network-name {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .network-score {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 1.2rem;
+        }
+
+        .image-gallery {
+            margin-bottom: 2rem;
+        }
+
+        .image-gallery h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .chat-interface, .dm-section {
+            background: #2c3e50;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .chat-btn, .dm-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-btn:hover, .dm-btn:hover {
+            opacity: 0.9;
+        }
+
+        .security-note {
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .qr-code-display {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .qr-code-display img {
+            max-width: 250px;
+            margin: 1rem auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .share-note {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            color: #1976d2;
+            font-size: 0.9rem;
+        }
+
+        /* Chat Modal Styles */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .chat-modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chat-modal-header {
+            background: #4a90e2;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close-chat {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+            transition: transform 0.2s;
+        }
+
+        .close-chat:hover {
+            transform: scale(1.2);
+        }
+
+        .chat-modal-body {
+            padding: 2rem;
+        }
+
+        .chat-history {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .user-message {
+            background: #e3f2fd;
+            color: #1976d2;
+            margin-left: 2rem;
+        }
+
+        .ai-message {
+            background: #f1f8e9;
+            color: #558b2f;
+            margin-right: 2rem;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .chat-send-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .chat-send-btn:hover {
+            opacity: 0.9;
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chat-loading {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+
+        .chat-error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>I Love That You'Re Considering Sharing A Recipe For Salted Butter With Your Audi</h1>
+            <div class="brand">Soulfra</div>
+        </div>
+
+        <div class="content">
+            
+        <div class="soul-rating">
+            <h2>⭐ Soul Rating</h2>
+            <div class="soul-score">
+                <span class="score">0.70</span>
+                <span class="tier">Moderate Soul ⚡</span>
+            </div>
+            <p class="rated-by">Rated by 4 neural networks</p>
+        </div>
+        
+            
+        <div class="neural-ratings">
+            <h3>Neural Network Breakdown</h3>
+            <div class="neural-ratings-list">
+                
+            <div class="neural-rating-item">
+                <span class="network-name">Deathtodata Privacy</span>
+                <span class="network-score">0.88</span>
+            </div>
+            
+            <div class="neural-rating-item">
+                <span class="network-name">Soulfra Judge</span>
+                <span class="network-score">0.73</span>
+            </div>
+            
+            <div class="neural-rating-item">
+                <span class="network-name">Theauditor Validation</span>
+                <span class="network-score">0.60</span>
+            </div>
+            
+            <div class="neural-rating-item">
+                <span class="network-name">Calriven Technical</span>
+                <span class="network-score">0.58</span>
+            </div>
+            
+            </div>
+        </div>
+        
+            <div class="image-gallery"><p>No images in this post</p></div>
+            
+    <div class="qr-code-display">
+        <h2>📱 Share This Gallery</h2>
+        <p>Scan this QR code to open this gallery on your phone</p>
+        <img src="/static/qr_codes/galleries/i-love-that-youre-considering-sharing-a-recipe-for.png" alt="QR Code for I Love That You'Re Considering Sharing A Recipe For Salted Butter With Your Audi" />
+        <div class="share-note">
+            💡 When someone scans your shared QR code, we track the lineage!<br>
+            Share link: http://192.168.1.123:5001/gallery/i-love-that-youre-considering-sharing-a-recipe-for
+        </div>
+    </div>
+    
+            
+    <div class="chat-interface">
+        <h2>💬 Chat with AI</h2>
+        <p>Ask questions about this post</p>
+        <button onclick="openChat()" class="chat-btn">Start Chat</button>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="chat-modal">
+        <div class="chat-modal-content">
+            <div class="chat-modal-header">
+                <h2>💬 Chat with AI</h2>
+                <button class="close-chat" onclick="closeChat()">&times;</button>
+            </div>
+            <div class="chat-modal-body">
+                <div id="chatHistory" class="chat-history">
+                    <div class="chat-message ai-message">
+                        <strong>AI Assistant:</strong> Hi! I'm here to help answer questions about this post. What would you like to know?
+                    </div>
+                </div>
+                <div class="chat-input-group">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Ask a question..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button id="chatSendBtn" class="chat-send-btn" onclick="sendMessage()">Send</button>
+                </div>
+                <div id="chatError" class="chat-error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+    
+            
+    <div class="dm-section">
+        <h2>📱 DM Author</h2>
+        <p>Scan QR code in person to message the author</p>
+        <button onclick="showDMQR()" class="dm-btn">Show DM QR Code</button>
+        <div id="dm-qr" style="display: none;">
+            <p class="security-note">⚠️ This QR code expires in 5 minutes and only works when scanned in person</p>
+        </div>
+    </div>
+    
+        </div>
+
+        <div class="footer">
+            <div class="footer-nav">
+                <a href="/">🏠 Home</a>
+                <a href="/post/i-love-that-youre-considering-sharing-a-recipe-for">📖 Read Full Post</a>
+                <a href="/galleries">🖼️ All Galleries</a>
+                <a href="/@docs/">📚 Docs</a>
+            </div>
+            <p>Powered by Soulfra - Multi-tier gallery system with QR lineage tracking</p>
+        </div>
+    </div>
+
+    <script>
+        const GALLERY_SLUG = 'i-love-that-youre-considering-sharing-a-recipe-for';
+
+        function openChat() {
+            const modal = document.getElementById('chatModal');
+            modal.style.display = 'block';
+            document.getElementById('chatInput').focus();
+        }
+
+        function closeChat() {
+            const modal = document.getElementById('chatModal');
+            modal.style.display = 'none';
+            document.getElementById('chatError').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('chatModal');
+            if (event.target === modal) {
+                closeChat();
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            // Disable input while processing
+            const sendBtn = document.getElementById('chatSendBtn');
+            input.disabled = true;
+            sendBtn.disabled = true;
+            document.getElementById('chatError').style.display = 'none';
+
+            // Add user message to history
+            const chatHistory = document.getElementById('chatHistory');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-message user-message';
+            userMsg.innerHTML = `<strong>You:</strong> ${question}`;
+            chatHistory.appendChild(userMsg);
+
+            // Add loading indicator
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'chat-loading';
+            loadingMsg.id = 'loadingIndicator';
+            loadingMsg.textContent = '🤔 Thinking...';
+            chatHistory.appendChild(loadingMsg);
+
+            // Scroll to bottom
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            // Clear input
+            input.value = '';
+
+            try {
+                // Call chat API
+                const response = await fetch('/api/gallery/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        slug: GALLERY_SLUG,
+                        question: question
+                    })
+                });
+
+                const data = await response.json();
+
+                // Remove loading indicator
+                const loading = document.getElementById('loadingIndicator');
+                if (loading) loading.remove();
+
+                if (data.success) {
+                    // Add AI response
+                    const aiMsg = document.createElement('div');
+                    aiMsg.className = 'chat-message ai-message';
+                    aiMsg.innerHTML = `<strong>AI Assistant:</strong> ${data.answer}`;
+                    chatHistory.appendChild(aiMsg);
+                } else {
+                    // Show error
+                    const errorDiv = document.getElementById('chatError');
+                    errorDiv.textContent = data.error || 'Failed to get response';
+                    errorDiv.style.display = 'block';
+
+                    // Also add error to chat
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'chat-message ai-message';
+                    errorMsg.innerHTML = `<strong>Error:</strong> ${data.error || 'Failed to get response'}`;
+                    chatHistory.appendChild(errorMsg);
+                }
+
+                // Scroll to bottom
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            } catch (error) {
+                // Remove loading indicator
+                const loading = document.getElementById('loadingIndicator');
+                if (loading) loading.remove();
+
+                // Show error
+                const errorDiv = document.getElementById('chatError');
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'chat-message ai-message';
+                errorMsg.innerHTML = `<strong>Error:</strong> Could not connect to AI. Make sure Ollama is running.`;
+                chatHistory.appendChild(errorMsg);
+
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            } finally {
+                // Re-enable input
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        async function showDMQR() {
+            const dmQR = document.getElementById('dm-qr');
+            const dmBtn = document.querySelector('.dm-btn');
+
+            // Disable button and show loading
+            dmBtn.disabled = true;
+            dmBtn.textContent = 'Generating...';
+            dmQR.style.display = 'block';
+            dmQR.innerHTML = '<p class="security-note">⏳ Generating DM QR code...</p>';
+
+            try {
+                // Call API to generate DM QR
+                const response = await fetch('/api/dm/generate-qr', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        post_slug: GALLERY_SLUG
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Calculate expiry time
+                    const expiryDate = new Date(data.expiry * 1000);
+                    const now = new Date();
+                    const minutesRemaining = Math.floor((expiryDate - now) / 60000);
+                    const secondsRemaining = Math.floor(((expiryDate - now) % 60000) / 1000);
+
+                    // Display QR code
+                    dmQR.innerHTML = `
+                        <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                            <img src="${data.qr_url}" alt="DM QR Code" style="max-width: 250px; display: block; margin: 0 auto;">
+                            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                                <strong>@${data.username}</strong><br>
+                                ⏰ Expires in ${minutesRemaining}m ${secondsRemaining}s<br>
+                                🔐 Scan in person to send a DM
+                            </p>
+                        </div>
+                        <p class="security-note">
+                            ⚠️ This QR code expires in 5 minutes and only works when scanned in person.<br>
+                            After scanning, the recipient will be able to send you an encrypted DM.
+                        </p>
+                    `;
+
+                    // Start countdown timer
+                    const countdownInterval = setInterval(() => {
+                        const now = new Date();
+                        const remaining = expiryDate - now;
+
+                        if (remaining <= 0) {
+                            clearInterval(countdownInterval);
+                            dmQR.innerHTML = '<p class="security-note">⚠️ QR code expired. Click "Show DM QR Code" to generate a new one.</p>';
+                            dmBtn.disabled = false;
+                            dmBtn.textContent = 'Show DM QR Code';
+                        } else {
+                            const mins = Math.floor(remaining / 60000);
+                            const secs = Math.floor((remaining % 60000) / 1000);
+                            const timeDisplay = dmQR.querySelector('p strong');
+                            if (timeDisplay && timeDisplay.nextSibling) {
+                                timeDisplay.nextSibling.nextSibling.innerHTML = `⏰ Expires in ${mins}m ${secs}s<br>`;
+                            }
+                        }
+                    }, 1000);
+
+                    // Re-enable button
+                    dmBtn.disabled = false;
+                    dmBtn.textContent = 'Generate New QR Code';
+
+                } else {
+                    dmQR.innerHTML = `<p class="security-note">❌ Error: ${data.error}</p>`;
+                    dmBtn.disabled = false;
+                    dmBtn.textContent = 'Show DM QR Code';
+                }
+
+            } catch (error) {
+                dmQR.innerHTML = `<p class="security-note">❌ Network error: ${error.message}</p>`;
+                dmBtn.disabled = false;
+                dmBtn.textContent = 'Show DM QR Code';
+            }
+        }
+    </script>
+</body>
+</html>

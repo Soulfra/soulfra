@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Source Code Browser - Soulfra</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{{ url_for('index') }}" class="logo">Soulfra</a>
+      <div class="nav-links">
+        <a href="{{ url_for('index') }}">Posts</a>
+        <a href="{{ url_for('code_browser') }}" style="font-weight: bold;">Source Code</a>
+        <a href="{{ url_for('about') }}">About</a>
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('logout') }}">Logout ({{ session.get('username') }})</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+          <a href="{{ url_for('signup') }}">Sign Up</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <main style="max-width: 1200px; margin: 2rem auto; padding: 0 2rem;">
+    <h1>📂 Source Code Browser</h1>
+    <p style="color: #666; margin-bottom: 2rem;">
+      <strong>Transparency by design.</strong> All source code is public. See exactly how this platform is built.
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="{{ category }}" style="padding: 1rem; margin: 1rem 0; border-radius: 4px; background: {% if category == 'error' %}#fee{% elif category == 'success' %}#efe{% else %}#eef{% endif %};">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div style="margin: 2rem 0;">
+      {% set categories = files | groupby('category') %}
+
+      {% for category, category_files in categories %}
+        <div style="margin-bottom: 2rem;">
+          <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 0.5rem;">
+            {% if category == 'root' %}
+              🐍 Core Python Files
+            {% elif category == 'templates' %}
+              🎨 HTML Templates
+            {% elif category == 'tests' %}
+              🧪 Test Suite
+            {% elif category == 'docs' %}
+              📝 Documentation
+            {% else %}
+              📁 {{ category }}
+            {% endif %}
+          </h2>
+
+          <ul style="list-style: none; padding: 0;">
+            {% for file in category_files %}
+              <li style="margin: 0.5rem 0;">
+                <a href="{{ url_for('view_code_file', filepath=file['path']) }}"
+                   style="display: inline-block; padding: 0.5rem 1rem; background: #f5f5f5; border-radius: 4px; text-decoration: none; color: #333; font-family: monospace; transition: background 0.2s;">
+                  {% if file['type'] == 'python' %}
+                    🐍
+                  {% elif file['type'] == 'html' %}
+                    📄
+                  {% elif file['type'] == 'markdown' %}
+                    📝
+                  {% else %}
+                    📄
+                  {% endif %}
+                  {{ file['name'] }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div style="margin-top: 3rem; padding: 1.5rem; background: #f9f9f9; border-radius: 4px; border-left: 4px solid #007bff;">
+      <h3>💡 Why Show Source Code?</h3>
+      <p>Soulfra is built on <strong>transparency</strong>. Every line of code that powers this platform is viewable by anyone. This means:</p>
+      <ul>
+        <li>✅ <strong>Trust through verification</strong> - You can see exactly what the code does</li>
+        <li>✅ <strong>Learn by example</strong> - See real implementations, not just documentation</li>
+        <li>✅ <strong>Contribute with context</strong> - Understand the codebase before contributing</li>
+        <li>✅ <strong>Audit security</strong> - Security through transparency, not obscurity</li>
+      </ul>
+      <p style="margin-bottom: 0; color: #666; font-size: 0.9rem;">
+        <strong>Note:</strong> Sensitive data (passwords, API keys) is never committed to the repository. Check <code>.gitignore</code> and environment variables.
+      </p>
+    </div>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: #666; border-top: 1px solid #e0e0e0; margin-top: 3rem;">
+    <p>Soulfra - Transparent Development Platform</p>
+    <p style="font-size: 0.9rem;">
+      <a href="{{ url_for('index') }}" style="color: #007bff; text-decoration: none;">Posts</a> •
+      <a href="{{ url_for('code_browser') }}" style="color: #007bff; text-decoration: none;">Source Code</a> •
+      <a href="{{ url_for('about') }}" style="color: #007bff; text-decoration: none;">About</a>
+    </p>
+  </footer>
+</body>
+</html>

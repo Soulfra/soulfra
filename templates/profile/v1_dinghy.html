@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Profile - {{ domain_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .content { padding: 30px; }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: {{ theme_primary }};
+            border-bottom: 3px solid {{ theme_primary }};
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .plot-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid {{ theme_primary }};
+        }
+        .plot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .plot-name { font-size: 1.4em; font-weight: 600; }
+        .plot-rep {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: {{ theme_primary }};
+        }
+        .plot-qr {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .plot-qr img {
+            max-width: 200px;
+            border: 4px solid {{ theme_primary }};
+            border-radius: 8px;
+        }
+        .qr-code-text {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            word-break: break-all;
+            font-size: 0.85em;
+        }
+        .activity-list {
+            list-style: none;
+        }
+        .activity-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid {{ theme_accent }};
+        }
+        .activity-type {
+            font-weight: 600;
+            color: {{ theme_primary }};
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        .activity-desc { margin: 8px 0; color: #555; }
+        .activity-time {
+            font-size: 0.85em;
+            color: #999;
+        }
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .emoji-reactions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .emoji-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .emoji-btn:hover {
+            transform: scale(1.1);
+            border-color: {{ theme_primary }};
+            background: white;
+        }
+        .emoji-btn.active {
+            background: {{ theme_primary }};
+            color: white;
+            border-color: {{ theme_primary }};
+        }
+        .emoji-btn .count {
+            font-size: 0.7em;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ user.username }}</h1>
+            <p>Member since {{ user.created_at[:10] }}</p>
+        </div>
+
+        <div class="content">
+            <!-- Plots Section -->
+            <div class="section">
+                <h2>🏰 Plots & Territories</h2>
+                {% if plots %}
+                    {% for plot in plots %}
+                    <div class="plot-card">
+                        <div class="plot-header">
+                            <div class="plot-name">{{ plot.town_name }}</div>
+                            <div class="plot-rep">{{ plot.reputation_points }} pts</div>
+                        </div>
+                        
+                        <div class="plot-qr">
+                            <p><strong>Plot QR Code:</strong></p>
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ plot.qr_code }}"
+                                 alt="QR Code for {{ plot.town_name }}">
+                            <div class="qr-code-text">{{ plot.qr_code }}</div>
+                        </div>
+
+                        {% if referral_qr %}
+                        <div class="plot-qr" style="margin-top: 20px;">
+                            <p><strong>Referral QR Code:</strong> Share with friends!</p>
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ referral_qr }}"
+                                 alt="Referral QR for {{ plot.town_name }}">
+                            <div class="qr-code-text" style="font-size: 0.75em;">{{ referral_qr }}</div>
+                            <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                                📢 Get +50 pts when someone joins!
+                            </p>
+                        </div>
+                        {% endif %}
+
+                        {% if plot.metadata %}
+                        <div style="margin-top: 15px; color: #666;">
+                            <strong>Type:</strong> {{ plot.metadata.get('plot_type', 'town') | title }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Emoji Reactions -->
+                        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+                            <div style="font-weight: 600; margin-bottom: 10px; color: #666;">React:</div>
+                            <div class="emoji-reactions">
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="🔥">🔥 <span class="count">0</span></button>
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="💯">💯 <span class="count">0</span></button>
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="😂">😂 <span class="count">0</span></button>
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="👀">👀 <span class="count">0</span></button>
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="❤️">❤️ <span class="count">0</span></button>
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="⭐">⭐ <span class="count">0</span></button>
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="🎯">🎯 <span class="count">0</span></button>
+                                <button class="emoji-btn" data-plot-id="{{ plot.id }}" data-emoji="👏">👏 <span class="count">0</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty">
+                        <p>No plots yet. Join a game to claim your territory!</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="section">
+                <h2>📜 Recent Activities</h2>
+                {% if activities %}
+                    <ul class="activity-list">
+                        {% for activity in activities %}
+                        <li class="activity-item">
+                            <div class="activity-type">{{ activity.activity_type }}</div>
+                            <div class="activity-desc">
+                                {{ activity.description or 'Activity in ' + activity.town_name }}
+                            </div>
+                            <div class="activity-time">
+                                {% if activity.reputation_change %}
+                                    <strong style="color: {% if activity.reputation_change > 0 %}green{% else %}red{% endif %};">
+                                        {{ '+' if activity.reputation_change > 0 else '' }}{{ activity.reputation_change }} pts
+                                    </strong> •
+                                {% endif %}
+                                {{ activity.created_at }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty">
+                        <p>No activities yet. Start building, defending, or visiting plots!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Emoji reaction system
+        document.querySelectorAll('.emoji-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const plotId = this.dataset.plotId;
+                const emoji = this.dataset.emoji;
+
+                try {
+                    const response = await fetch('/api/plot/react', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ plot_id: plotId, emoji: emoji })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Update count
+                        this.querySelector('.count').textContent = data.total_count;
+
+                        // Toggle active state
+                        if (data.user_reacted) {
+                            this.classList.add('active');
+                        } else {
+                            this.classList.remove('active');
+                        }
+                    } else {
+                        alert(data.error || 'Failed to react');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to react. Please try again.');
+                }
+            });
+        });
+
+        // Load initial counts on page load
+        window.addEventListener('DOMContentLoaded', async function() {
+            const plotIds = [...new Set([...document.querySelectorAll('.emoji-btn')].map(btn => btn.dataset.plotId))];
+
+            for (const plotId of plotIds) {
+                try {
+                    const response = await fetch(`/api/plot/reactions?plot_id=${plotId}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Update each emoji count
+                        for (const [emoji, count] of Object.entries(data.reactions)) {
+                            const btn = document.querySelector(`[data-plot-id="${plotId}"][data-emoji="${emoji}"]`);
+                            if (btn) {
+                                btn.querySelector('.count').textContent = count;
+
+                                // Mark as active if user has reacted
+                                if (data.user_reactions && data.user_reactions.includes(emoji)) {
+                                    btn.classList.add('active');
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading reactions:', error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

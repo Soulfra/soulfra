@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CringeProof OG Image Generator</title>
+<style>
+body {
+    margin: 0;
+    padding: 20px;
+    background: #111;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+#canvas {
+    border: 2px solid #333;
+    display: block;
+    margin: 20px auto;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 15px 30px;
+    background: #ff006e;
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #d90060;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="630"></canvas>
+<button onclick="downloadImage()">Download OG Image</button>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// Background gradient
+const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+gradient.addColorStop(0, '#000000');
+gradient.addColorStop(0.5, '#1a1a2e');
+gradient.addColorStop(1, '#ff006e');
+
+ctx.fillStyle = gradient;
+ctx.fillRect(0, 0, 1200, 630);
+
+// Add subtle pattern
+ctx.globalAlpha = 0.1;
+for (let i = 0; i < 50; i++) {
+    const x = Math.random() * 1200;
+    const y = Math.random() * 630;
+    const radius = Math.random() * 100 + 50;
+
+    const circleGradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    circleGradient.addColorStop(0, 'rgba(189, 178, 255, 0.3)');
+    circleGradient.addColorStop(1, 'rgba(189, 178, 255, 0)');
+
+    ctx.fillStyle = circleGradient;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+}
+ctx.globalAlpha = 1;
+
+// Main emoji
+ctx.font = 'bold 200px Arial';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('🚫', 600, 200);
+
+// Title
+ctx.font = 'bold 90px -apple-system, BlinkMacSystemFont, sans-serif';
+ctx.fillStyle = '#ffffff';
+ctx.fillText('CringeProof', 600, 380);
+
+// Subtitle
+ctx.font = '40px -apple-system, BlinkMacSystemFont, sans-serif';
+ctx.fillStyle = '#ffe5ec';
+ctx.fillText('Voice Ideas, Zero Performance Anxiety', 600, 480);
+
+// Bottom badge
+ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, sans-serif';
+ctx.fillStyle = '#ff006e';
+ctx.fillRect(400, 540, 400, 60);
+ctx.fillStyle = '#ffffff';
+ctx.fillText('AI-Powered Voice Archive', 600, 575);
+
+function downloadImage() {
+    const link = document.createElement('a');
+    link.download = 'og-image.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+</script>
+</body>
+</html>

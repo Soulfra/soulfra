@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat: {{ brand.name }} - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: white;
+            padding: 24px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #667eea;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        /* Chat Area */
+        .chat-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 700px;
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .chat-header h2 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            line-height: 1.6;
+            animation: fadeIn 0.3s;
+        }
+
+        .message-user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-assistant {
+            align-self: flex-start;
+            background: #f8f9fa;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            border-left: 4px solid #667eea;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 6px;
+        }
+
+        .message-assistant .suggestion {
+            background: #fff;
+            padding: 10px 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #11998e;
+        }
+
+        .chat-input-area {
+            padding: 20px 24px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Suggestions */
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .suggestion-item {
+            padding: 14px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #11998e;
+        }
+
+        .suggestion-type {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #11998e;
+            color: white;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .suggestion-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-approve {
+            background: #11998e;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-reject {
+            background: #eb3349;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Context */
+        .context-list {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .context-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .context-item:last-child {
+            border-bottom: none;
+        }
+
+        .domain-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* Loading */
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 14px 18px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>💬 Chat with Ollama: {{ brand.name }}</h1>
+                <p class="subtitle">{{ brand.domain or 'No domain yet' }} • Discuss this domain's purpose, audience, and what to build next</p>
+            </div>
+            <a href="/admin/domains" class="btn btn-secondary">← Back</a>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>Conversation</h2>
+            </div>
+
+            <div class="chat-messages" id="messages">
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="message message-{{ msg.role }}">
+                            {{ msg.message }}
+                            <div class="message-time">{{ msg.created_at }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👋</div>
+                        <p>Start the conversation! Tell Ollama about this domain.</p>
+                        <p style="margin-top: 8px; font-size: 13px;">Example: "This is a cooking blog for busy parents"</p>
+                    </div>
+                {% endif %}
+
+                <div class="typing-indicator" id="typing">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input
+                    type="text"
+                    class="chat-input"
+                    id="chatInput"
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                >
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Suggestions -->
+            <div class="card">
+                <div class="card-title">💡 Suggestions</div>
+
+                <div class="suggestions-list" id="suggestions">
+                    {% if suggestions %}
+                        {% for sug in suggestions %}
+                            <div class="suggestion-item">
+                                <span class="suggestion-type">{{ sug.suggestion_type }}</span>
+                                <div class="suggestion-title">{{ sug.title }}</div>
+                                <div class="suggestion-desc">{{ sug.description }}</div>
+                                <div class="suggestion-actions">
+                                    <button class="btn-approve" onclick="approveSuggestion({{ sug.id }})">✓ Approve</button>
+                                    <button class="btn-reject" onclick="rejectSuggestion({{ sug.id }})">✗ Reject</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #999; font-size: 13px;">No suggestions yet. Chat with Ollama to get recommendations!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Other Domains Context -->
+            <div class="card">
+                <div class="card-title">🌐 Other Domains</div>
+
+                <div class="context-list">
+                    {% if other_brands %}
+                        {% for b in other_brands %}
+                            <div class="context-item">
+                                <div class="domain-name">{{ b.name }}</div>
+                                <div style="font-size: 12px; color: #999;">{{ b.domain }}</div>
+                                <div style="font-size: 12px; color: #666;">{{ b.tagline }}</div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #999; font-size: 13px;">No other domains yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const brandId = {{ brand.id }};
+        const messagesContainer = document.getElementById('messages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const typingIndicator = document.getElementById('typing');
+
+        // Send message on Enter
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Disable input
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+
+            // Add user message to UI
+            addMessage('user', message);
+            chatInput.value = '';
+
+            // Show typing indicator
+            typingIndicator.classList.add('active');
+            scrollToBottom();
+
+            try {
+                const response = await fetch(`/api/domains/chat/${brandId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+
+                // Hide typing indicator
+                typingIndicator.classList.remove('active');
+
+                if (data.success) {
+                    // Add assistant response
+                    addMessage('assistant', data.message);
+
+                    // Add suggestions if any
+                    if (data.suggestions && data.suggestions.length > 0) {
+                        updateSuggestions(data.suggestions);
+                    }
+                } else {
+                    addMessage('assistant', `Error: ${data.error}`);
+                }
+            } catch (error) {
+                typingIndicator.classList.remove('active');
+                addMessage('assistant', `Error: ${error.message}`);
+            }
+
+            // Re-enable input
+            chatInput.disabled = false;
+            sendBtn.disabled = false;
+            chatInput.focus();
+            scrollToBottom();
+        }
+
+        function addMessage(role, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${role}`;
+            messageDiv.textContent = text;
+
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleString();
+            messageDiv.appendChild(timeDiv);
+
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function updateSuggestions(newSuggestions) {
+            const suggestionsContainer = document.getElementById('suggestions');
+
+            newSuggestions.forEach(sug => {
+                const sugDiv = document.createElement('div');
+                sugDiv.className = 'suggestion-item';
+                sugDiv.innerHTML = `
+                    <span class="suggestion-type">${sug.type}</span>
+                    <div class="suggestion-title">${sug.title}</div>
+                    <div class="suggestion-desc">${sug.description}</div>
+                    <div class="suggestion-actions">
+                        <button class="btn-approve" onclick="approveSuggestion(${sug.id})">✓ Approve</button>
+                        <button class="btn-reject" onclick="rejectSuggestion(${sug.id})">✗ Reject</button>
+                    </div>
+                `;
+                suggestionsContainer.appendChild(sugDiv);
+            });
+        }
+
+        async function approveSuggestion(id) {
+            try {
+                const response = await fetch(`/api/domains/suggestions/${id}/approve`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                }
+            } catch (error) {
+                alert('Error approving suggestion');
+            }
+        }
+
+        async function rejectSuggestion(id) {
+            try {
+                const response = await fetch(`/api/domains/suggestions/${id}/reject`, {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                    location.reload();
+                }
+            } catch (error) {
+                alert('Error rejecting suggestion');
+            }
+        }
+
+        // Auto-scroll on load
+        window.addEventListener('load', scrollToBottom);
+    </script>
+</body>
+</html>

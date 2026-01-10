@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review {{ share.game_type|title }} - {{ domain_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.95; }
+        .content { padding: 40px 30px; }
+
+        .game-results {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid {{ theme_primary }};
+        }
+        .game-results h3 { margin-bottom: 15px; color: #333; }
+
+        .question-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .question-label {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .question-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: {{ theme_primary }};
+            color: white;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* Rating Input */
+        .rating-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .rating-option input { display: none; }
+        .rating-option input:checked + .rating-label {
+            background: {{ theme_primary }};
+            color: white;
+            transform: scale(1.1);
+        }
+        .rating-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        .rating-label:hover {
+            border-color: {{ theme_primary }};
+            background: #f8f9fa;
+        }
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Text Input */
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: system-ui, sans-serif;
+            font-size: 15px;
+            resize: vertical;
+        }
+        .text-input:focus {
+            outline: none;
+            border-color: {{ theme_primary }};
+        }
+
+        /* Multiple Choice */
+        .choice-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .choice-option:hover {
+            border-color: {{ theme_primary }};
+            background: #f8f9fa;
+        }
+        .choice-option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .choice-option input:checked ~ span {
+            color: {{ theme_primary }};
+            font-weight: 600;
+        }
+
+        /* Star Rating */
+        .overall-rating {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .overall-rating h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .star-rating {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .star-label input { display: none; }
+        .star {
+            font-size: 48px;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .star-label input:checked ~ .star,
+        .star-label:hover .star {
+            color: #FFD700;
+            transform: scale(1.1);
+        }
+
+        .anonymous {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .anonymous label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: {{ theme_primary }};
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover {
+            background: {{ theme_secondary }};
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Review {{ share.game_type|title }}</h1>
+            <p>Help them understand their results better</p>
+        </div>
+
+        <div class="content">
+            <!-- Game Results -->
+            <div class="game-results">
+                <h3>Their {{ share.game_type|title }} Results</h3>
+                <pre style="white-space: pre-wrap;">{{ share.game_data }}</pre>
+            </div>
+
+            <!-- Review Form -->
+            <form method="POST" class="review-form">
+                <!-- Review Questions -->
+                {% for question in review_questions %}
+                <div class="question-card">
+                    <div class="question-label">
+                        <span class="question-number">{{ loop.index }}</span>
+                        {{ question.question_text }}
+                    </div>
+
+                    {% if question.question_type == 'rating' %}
+                        <div class="rating-input">
+                            {% for i in range(1, 6) %}
+                            <label class="rating-option">
+                                <input type="radio" name="question_{{ question.id }}" value="{{ i }}" {% if question.is_required %}required{% endif %}>
+                                <span class="rating-label">{{ i }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <div class="rating-labels">
+                            <span>Not at all</span>
+                            <span>Extremely</span>
+                        </div>
+
+                    {% elif question.question_type == 'text' %}
+                        <textarea name="question_{{ question.id }}"
+                                  class="text-input"
+                                  rows="4"
+                                  placeholder="Share your thoughts..."
+                                  {% if question.is_required %}required{% endif %}></textarea>
+
+                    {% elif question.question_type == 'multiple_choice' %}
+                        {% if question.metadata and question.metadata.options %}
+                            {% for option in question.metadata.options %}
+                            <label class="choice-option">
+                                <input type="radio"
+                                       name="question_{{ question.id }}"
+                                       value="{{ option }}"
+                                       {% if question.is_required %}required{% endif %}>
+                                <span>{{ option }}</span>
+                            </label>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <!-- Overall Rating -->
+                <div class="overall-rating">
+                    <h3>Overall Rating</h3>
+                    <div class="star-rating">
+                        {% for i in range(1, 6) %}
+                        <label class="star-label">
+                            <input type="radio" name="overall_rating" value="{{ i }}" required>
+                            <span class="star">★</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Anonymous Option -->
+                <div class="anonymous">
+                    <label>
+                        <input type="checkbox" name="is_anonymous">
+                        Submit this review anonymously
+                    </label>
+                </div>
+
+                <!-- Hidden fields for reviewer info -->
+                <input type="hidden" name="reviewer_email" value="reviewer@example.com">
+                <input type="hidden" name="reviewer_name" value="Anonymous Reviewer">
+
+                <button type="submit" class="submit-btn">
+                    Submit Review & Get AI Analysis
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Star rating interaction
+        document.querySelectorAll('.star-rating').forEach(container => {
+            const labels = container.querySelectorAll('.star-label');
+            labels.forEach((label, index) => {
+                label.addEventListener('mouseenter', () => {
+                    labels.forEach((l, i) => {
+                        l.querySelector('.star').style.color = i <= index ? '#FFD700' : '#ddd';
+                    });
+                });
+            });
+            container.addEventListener('mouseleave', () => {
+                const checked = container.querySelector('input:checked');
+                if (checked) {
+                    const checkedIndex = Array.from(labels).indexOf(checked.closest('.star-label'));
+                    labels.forEach((l, i) => {
+                        l.querySelector('.star').style.color = i <= checkedIndex ? '#FFD700' : '#ddd';
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+/* Ocean Dreams - Schooner Class 🌊⛵ */
+/* Enhanced: Typography + Spacing + Components */
+
+/* Layer 1: Emoji brand */
+.logo::before { content: "🌊 "; }
+
+/* Layer 2: Background */
+body {
+  background: linear-gradient(120deg, #e6f3ff 0%, #cce7ff 50%, #e6f3ff 100%);
+  background-size: 200% 200%;
+  animation: ocean 60s ease-in-out infinite;
+}
+
+@keyframes ocean {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Layer 3: Typography system */
+body {
+  color: #003366;
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}
+
+h1, h2, h3 {
+  color: #002244;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.75em;
+}
+
+h1 { font-size: 2.5em; letter-spacing: -0.02em; }
+h2 { font-size: 1.75em; letter-spacing: -0.01em; }
+h3 { font-size: 1.25em; }
+
+p { margin-bottom: 1em; }
+
+/* Layer 4: Links & Interaction */
+a {
+  color: #0066cc;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 102, 204, 0.3);
+  transition: all 200ms ease;
+}
+
+a:hover {
+  color: #004080;
+  text-decoration-color: rgba(0, 64, 128, 0.6);
+}
+
+/* Layer 5: Spacing system */
+.hero { margin: 3em 0; }
+.post-card { margin-bottom: 2em; padding: 1.5em; }
+section { margin: 2.5em 0; }
+
+/* Layer 6: Component styling */
+.post-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-left: 4px solid #0066cc;
+  border-radius: 6px;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+}
+
+.cta-button {
+  background: #0066cc;
+  color: white;
+  padding: 0.75em 1.5em;
+  border: 2px solid #004080;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.cta-button:hover {
+  background: #004080;
+  transform: translateY(-1px);
+}

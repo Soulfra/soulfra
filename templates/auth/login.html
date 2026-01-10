@@ -1,0 +1,165 @@
+{% extends "stpetepros/base.html" %}
+
+{% block title %}Login - StPetePros{% endblock %}
+
+{% block description %}Login to StPetePros using your Soulfra account{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-emerald-50 px-4">
+  <div class="max-w-md w-full">
+    <!-- Card -->
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <!-- Logo/Header -->
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-2xl flex items-center justify-center text-4xl text-white font-bold mx-auto mb-4">
+          S
+        </div>
+        <h1 class="text-3xl font-bold text-slate-900 mb-2">Welcome to StPetePros</h1>
+        <p class="text-slate-600">Login with your Soulfra account</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+            placeholder="you@example.com"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+            placeholder="••••••••"
+          >
+        </div>
+
+        <button
+          type="submit"
+          id="loginBtn"
+          class="w-full bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-semibold py-3 rounded-lg hover:from-sky-600 hover:to-emerald-600 transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
+        >
+          Login with Soulfra
+        </button>
+      </form>
+
+      <!-- Error Message -->
+      <div id="errorMessage" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"></div>
+
+      <!-- Divider -->
+      <div class="relative my-8">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-slate-200"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-4 bg-white text-slate-500">Don't have an account?</span>
+        </div>
+      </div>
+
+      <!-- Signup Link -->
+      <a
+        href="/signup-soulfra"
+        class="block w-full text-center px-4 py-3 border-2 border-slate-300 text-slate-700 font-semibold rounded-lg hover:border-sky-500 hover:text-sky-500 transition-colors"
+      >
+        Create Soulfra Account
+      </a>
+
+      <!-- Info Box -->
+      <div class="mt-8 p-4 bg-sky-50 border border-sky-100 rounded-lg">
+        <h3 class="text-sm font-semibold text-sky-900 mb-2">What is Soulfra?</h3>
+        <p class="text-sm text-sky-700 leading-relaxed">
+          Soulfra is your unified identity across all our platforms. One account gives you access to StPetePros, CringeProof, and all other Soulfra Network services.
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer Note -->
+    <p class="text-center text-sm text-slate-500 mt-6">
+      By logging in, you agree to our Terms of Service and Privacy Policy
+    </p>
+  </div>
+</div>
+
+<script>
+const loginForm = document.getElementById('loginForm');
+const loginBtn = document.getElementById('loginBtn');
+const errorMessage = document.getElementById('errorMessage');
+
+loginForm.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  // Get form data
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  // Disable button
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Logging in...';
+  errorMessage.classList.add('hidden');
+
+  try {
+    // Call Soulfra Master Auth API
+    const response = await fetch('/api/master/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        domain: 'stpetepros.com'
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      // Store token in cookie
+      document.cookie = `soulfra_token=${data.token}; path=/; max-age=604800`; // 7 days
+
+      // Set Flask session (required for server-side routes)
+      await fetch('/api/auth/set-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          master_user_id: data.master_user_id,
+          email: data.email,
+          username: data.username
+        })
+      });
+
+      // Success - redirect
+      const urlParams = new URLSearchParams(window.location.search);
+      const next = urlParams.get('next') || '/';
+      window.location.href = next;
+    } else {
+      // Show error
+      errorMessage.textContent = data.error || 'Login failed. Please check your credentials.';
+      errorMessage.classList.remove('hidden');
+
+      // Re-enable button
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Login with Soulfra';
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    errorMessage.textContent = 'Network error. Please try again.';
+    errorMessage.classList.remove('hidden');
+
+    // Re-enable button
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Login with Soulfra';
+  }
+});
+</script>
+{% endblock %}

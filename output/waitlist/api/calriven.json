@@ -1,0 +1,10 @@
+{
+  "domain_name": "calriven",
+  "is_launched": false,
+  "signups": 4,
+  "days_until": 90,
+  "launch_date": "2026-04-09T13:28:16.013477+00:00",
+  "acceleration": 0,
+  "instant_threshold": 900,
+  "progress_pct": 0.4444444444444444
+}

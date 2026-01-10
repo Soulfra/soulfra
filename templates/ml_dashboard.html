@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}ML Dashboard - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 1400px; margin: 0 auto; padding: 2rem;">
+  <h1>🧠 Machine Learning Dashboard</h1>
+
+  <div style="background: #e6f2ff; padding: 1rem; border-radius: 8px; margin: 1.5rem 0;">
+    <strong>Simple ML - Python stdlib only</strong>
+    <br><small style="color: #666;">No numpy, tensorflow, pytorch, or sklearn. Just Python + SQL.</small>
+  </div>
+
+  <!-- Training Data Stats -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #007bff;">{{ posts_count }}</div>
+      <div style="color: #666;">Posts (Training Data)</div>
+    </div>
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #28a745;">{{ comments_count }}</div>
+      <div style="color: #666;">Comments (Training Data)</div>
+    </div>
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #fd7e14;">{{ models|length }}</div>
+      <div style="color: #666;">Trained Models</div>
+    </div>
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #6f42c1;">{{ predictions|length }}</div>
+      <div style="color: #666;">Predictions Made</div>
+    </div>
+  </div>
+
+  <!-- Train New Model -->
+  <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
+    <h2 style="margin: 0 0 1rem 0;">🎓 Train New Model</h2>
+    <p style="color: #666; margin-bottom: 1rem;">
+      Train a Naive Bayes classifier on all {{ posts_count }} posts and {{ comments_count }} comments to predict feature types (ui, api, ai, admin, other).
+    </p>
+    <form method="POST" action="{{ url_for('ml_train') }}">
+      <button type="submit" style="background: #007bff; color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; font-weight: bold;">
+        Train Model Now
+      </button>
+    </form>
+  </div>
+
+  <!-- Trained Models -->
+  <div style="margin-top: 2rem;">
+    <h2>📊 Trained Models</h2>
+
+    {% if models %}
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+          <thead>
+            <tr style="background: #f9f9f9;">
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">ID</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Model Type</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Trained On</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Accuracy</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for model in models %}
+              <tr>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">{{ model.id }}</td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">
+                  <span style="background: #007bff; color: white; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">
+                    {{ model.model_type }}
+                  </span>
+                </td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">{{ model.trained_on }} documents</td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">
+                  {% if model.accuracy %}
+                    {{ "%.1f"|format(model.accuracy * 100) }}%
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">{{ model.created_at[:16] }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div style="background: #fff3cd; padding: 2rem; border-radius: 8px; text-align: center; border-left: 4px solid #ffc107; margin-top: 1rem;">
+        <strong>No models trained yet</strong>
+        <br><small>Click "Train Model Now" above to create your first model</small>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Make Prediction -->
+  {% if models %}
+    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
+      <h2 style="margin: 0 0 1rem 0;">🔮 Make Prediction</h2>
+      <p style="color: #666; margin-bottom: 1rem;">
+        Test the model by predicting what type of feature a piece of text is requesting.
+      </p>
+      <form method="POST" action="{{ url_for('ml_predict') }}">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Select Model:</label>
+          <select name="model_id" required style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+            {% for model in models %}
+              <option value="{{ model.id }}">Model #{{ model.id }} ({{ model.model_type }}) - Trained on {{ model.trained_on }} docs</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Text to Predict:</label>
+          <textarea name="text" required rows="4" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;" placeholder="e.g., 'need new dashboard for viewing analytics'"></textarea>
+        </div>
+        <button type="submit" style="background: #28a745; color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; font-weight: bold;">
+          Predict Feature Type
+        </button>
+      </form>
+    </div>
+  {% endif %}
+
+  <!-- Recent Predictions -->
+  <div style="margin-top: 2rem;">
+    <h2>📈 Recent Predictions</h2>
+
+    {% if predictions %}
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+          <thead>
+            <tr style="background: #f9f9f9;">
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Model</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Input</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Prediction</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Confidence</th>
+              <th style="padding: 0.8rem; text-align: left; border: 1px solid #ddd;">Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pred in predictions %}
+              <tr>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">
+                  <span style="background: #6c757d; color: white; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">
+                    #{{ pred.model_id }}
+                  </span>
+                </td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ pred.input_data }}
+                </td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">
+                  <span style="background: {% if pred.prediction == 'ui' %}#007bff{% elif pred.prediction == 'api' %}#28a745{% elif pred.prediction == 'ai' %}#fd7e14{% elif pred.prediction == 'admin' %}#6f42c1{% else %}#6c757d{% endif %}; color: white; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.85rem;">
+                    {{ pred.prediction }}
+                  </span>
+                </td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">
+                  {% if pred.confidence %}
+                    {{ "%.1f"|format(pred.confidence * 100) }}%
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </td>
+                <td style="padding: 0.8rem; border: 1px solid #ddd;">{{ pred.created_at[:16] }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div style="background: #f9f9f9; padding: 2rem; border-radius: 8px; text-align: center; margin-top: 1rem;">
+        <strong>No predictions yet</strong>
+        <br><small>Train a model and make predictions to see results here</small>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Recent Feedback (For Feature Prediction) -->
+  <div style="margin-top: 2rem;">
+    <h2>💡 Recent Feedback (Potential Features)</h2>
+    <p style="color: #666; margin-bottom: 1rem;">
+      Use the ML model to analyze what types of features users are requesting via feedback.
+    </p>
+
+    {% if recent_feedback %}
+      <div style="display: grid; gap: 1rem;">
+        {% for fb in recent_feedback %}
+          <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; border-left: 4px solid #007bff;">
+            <div style="font-weight: bold; color: #007bff; margin-bottom: 0.5rem;">
+              {{ fb.component }}
+            </div>
+            <div style="color: #333; margin-bottom: 0.5rem;">
+              {{ fb.message[:200] }}{% if fb.message|length > 200 %}...{% endif %}
+            </div>
+            <div style="color: #666; font-size: 0.85rem;">
+              {{ fb.created_at[:16] }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="background: #f9f9f9; padding: 2rem; border-radius: 8px; text-align: center;">
+        <strong>No feedback yet</strong>
+        <br><small>Feedback will appear here for ML analysis</small>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- How It Works -->
+  <details style="margin-top: 3rem;">
+    <summary style="cursor: pointer; font-size: 1.2rem; font-weight: bold; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+      ℹ️ How This ML System Works
+    </summary>
+    <div style="margin-top: 1rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px;">
+      <h3>Philosophy: Simple Beats Complex</h3>
+      <ul style="line-height: 1.8;">
+        <li><strong>No external ML libraries</strong> - Only Python stdlib (math, collections, re, json)</li>
+        <li><strong>SQL as model storage</strong> - Models stored in database, not pickle files</li>
+        <li><strong>Bottom-up approach</strong> - Train on existing posts/comments</li>
+        <li><strong>Transparent</strong> - You can see exactly how predictions are made</li>
+      </ul>
+
+      <h3 style="margin-top: 1.5rem;">Implemented Algorithms</h3>
+      <ul style="line-height: 1.8;">
+        <li><strong>TF-IDF</strong> - Term Frequency-Inverse Document Frequency using Counter + math.log</li>
+        <li><strong>Cosine Similarity</strong> - Dot product + magnitude calculation</li>
+        <li><strong>Naive Bayes</strong> - P(class|text) with Laplace smoothing</li>
+        <li><strong>K-Nearest Neighbors</strong> - Vote of K most similar examples</li>
+        <li><strong>Decision Tree</strong> - Information gain + entropy with stdlib only</li>
+      </ul>
+
+      <h3 style="margin-top: 1.5rem;">Current Use Case</h3>
+      <p>The model classifies feature requests into 5 types:</p>
+      <ul style="line-height: 1.8;">
+        <li><strong style="color: #007bff;">ui</strong> - UI/UX improvements (dashboard, button, page, view)</li>
+        <li><strong style="color: #28a745;">api</strong> - API/backend features (endpoint, json, route)</li>
+        <li><strong style="color: #fd7e14;">ai</strong> - AI/reasoning features (reasoning, calriven, analysis)</li>
+        <li><strong style="color: #6f42c1;">admin</strong> - Admin/automation tools (automation, cron, workflow)</li>
+        <li><strong style="color: #6c757d;">other</strong> - Other requests</li>
+      </ul>
+
+      <h3 style="margin-top: 1.5rem;">Training Process</h3>
+      <ol style="line-height: 1.8;">
+        <li>Extract all {{ posts_count }} posts and {{ comments_count }} comments from database</li>
+        <li>Label each post/comment based on keyword heuristics</li>
+        <li>Tokenize text (lowercase, remove punctuation)</li>
+        <li>Build word frequency vectors with Counter</li>
+        <li>Train Naive Bayes classifier (calculate probabilities)</li>
+        <li>Store model in ml_models table as JSON</li>
+      </ol>
+
+      <h3 style="margin-top: 1.5rem;">Code Location</h3>
+      <p style="font-family: monospace; font-size: 0.9rem;">
+        simple_ml.py - All ML algorithms<br>
+        app.py:1243-1328 - ML routes<br>
+        templates/ml_dashboard.html - This dashboard
+      </p>
+    </div>
+  </details>
+
+  <!-- Quick Links -->
+  <div style="margin: 3rem 0; padding: 1.5rem; background: #e6f2ff; border-radius: 8px;">
+    <h3>🔗 Quick Links</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+      <a href="/" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Home</a>
+      <a href="/status" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Status</a>
+      <a href="/reasoning" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Reasoning</a>
+      <a href="/admin" style="padding: 1rem; background: white; border-radius: 4px; text-decoration: none; color: #007bff; text-align: center; font-weight: bold;">Admin</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

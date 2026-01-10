@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Browser - Formula Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: #2a2a2a;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #4ecca3;
+        }
+
+        header h1 {
+            font-size: 20px;
+            color: #4ecca3;
+        }
+
+        header .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #4ecca3;
+            color: #1a1a1a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #53dbaf;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Main Grid */
+        .main {
+            display: grid;
+            grid-template-columns: 300px 1fr 1fr;
+            gap: 1px;
+            background: #000;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .panel {
+            background: #1a1a1a;
+            overflow-y: auto;
+        }
+
+        .panel h2 {
+            padding: 15px;
+            background: #2a2a2a;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #4ecca3;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Templates List */
+        .template-list {
+            padding: 0;
+        }
+
+        .template-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #2a2a2a;
+            transition: background 0.2s;
+        }
+
+        .template-item:hover {
+            background: #2a2a2a;
+        }
+
+        .template-item.active {
+            background: #333;
+            border-left: 3px solid #4ecca3;
+        }
+
+        .template-item .name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .template-item .meta {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Variable Editor */
+        .variable-editor {
+            padding: 15px;
+        }
+
+        .variable-editor textarea {
+            width: 100%;
+            height: 400px;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+        }
+
+        .quick-vars {
+            margin-top: 15px;
+        }
+
+        .quick-var-btn {
+            display: inline-block;
+            background: #333;
+            padding: 6px 12px;
+            margin: 4px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .quick-var-btn:hover {
+            background: #444;
+        }
+
+        .ollama-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+
+        .ollama-section h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #4ecca3;
+        }
+
+        .ollama-section input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        /* Preview */
+        .preview-panel {
+            padding: 0;
+        }
+
+        .preview-tabs {
+            display: flex;
+            background: #2a2a2a;
+            border-bottom: 1px solid #444;
+        }
+
+        .preview-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .preview-tab.active {
+            border-bottom-color: #4ecca3;
+            color: #4ecca3;
+        }
+
+        .preview-content {
+            height: calc(100% - 50px);
+            overflow: auto;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .preview-code {
+            padding: 15px;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .error {
+            background: #3a1414;
+            border: 1px solid #822;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 6px;
+            color: #faa;
+        }
+
+        .success {
+            background: #1a3a1a;
+            border: 1px solid #282;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 6px;
+            color: #afa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Template Browser - Formula Engine</h1>
+            <div class="actions">
+                <select id="targetDomain" style="padding: 8px 12px; background: #2a2a2a; color: #e0e0e0; border: 1px solid #4ecca3; border-radius: 6px; font-size: 14px; margin-right: 10px;">
+                    <option value="">-- Select Domain --</option>
+                    {% for domain in domains %}
+                    <option value="{{ domain.slug }}" data-name="{{ domain.name }}" data-full-domain="{{ domain.domain }}" data-emoji="{{ domain.emoji }}">{{ domain.emoji }} {{ domain.name }} ({{ domain.domain }})</option>
+                    {% endfor %}
+                </select>
+                <div style="display: inline-block; margin-right: 15px; padding: 8px 12px; background: #2a2a2a; border-radius: 6px; border: 1px solid #4ecca3;">
+                    <label style="margin-right: 12px; cursor: pointer;">
+                        <input type="radio" name="contentType" value="blog" checked style="margin-right: 4px;"> 📝 Blog
+                    </label>
+                    <label style="margin-right: 12px; cursor: pointer;">
+                        <input type="radio" name="contentType" value="email" style="margin-right: 4px;"> ✉️ Email
+                    </label>
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="contentType" value="page" style="margin-right: 4px;"> 📄 Page
+                    </label>
+                </div>
+                <button id="renderBtn">Render Template</button>
+                <button id="saveLocalBtn">💾 Save Locally (Preview Only)</button>
+                <button id="deployOnlineBtn" style="background: #4ecca3; font-weight: bold;">🌍 Deploy Online (GitHub Pages)</button>
+            </div>
+        </header>
+
+        <div class="main">
+            <!-- Left: Template List -->
+            <div class="panel">
+                <h2>📁 Templates</h2>
+                <div id="templateList" class="template-list">
+                    <div class="loading">Loading templates...</div>
+                </div>
+            </div>
+
+            <!-- Middle: Variables & Ollama -->
+            <div class="panel">
+                <h2>⚙️ Variables</h2>
+                <div class="variable-editor">
+                    <textarea id="variablesEditor" placeholder='Enter variables as JSON:
+{
+  "brand": "Soulfra",
+  "emoji": "🎨",
+  "primaryColor": "#4ecca3",
+  "fontSize": 16
+}'>{
+  "brand": "Soulfra",
+  "emoji": "🎨",
+  "primaryColor": "#4ecca3",
+  "fontSize": 16,
+  "spacing": 8,
+  "domain": "soulfra.com",
+  "tagline": "The soul of infrastructure"
+}</textarea>
+
+                    <div class="quick-vars">
+                        <strong style="display: block; margin-bottom: 8px;">Quick Insert:</strong>
+                        <span class="quick-var-btn" onclick="insertEmoji('🎨')">🎨 Art</span>
+                        <span class="quick-var-btn" onclick="insertEmoji('🚀')">🚀 Rocket</span>
+                        <span class="quick-var-btn" onclick="insertEmoji('💡')">💡 Idea</span>
+                        <span class="quick-var-btn" onclick="insertEmoji('⚡')">⚡ Fast</span>
+                        <span class="quick-var-btn" onclick="insertEmoji('✨')">✨ Sparkle</span>
+                        <span class="quick-var-btn" onclick="insertEmoji('🔥')">🔥 Fire</span>
+                    </div>
+
+                    <div class="ollama-section">
+                        <h3>🤖 Generate with Ollama</h3>
+                        <input type="text" id="ollamaPrompt" placeholder="Enter prompt (e.g., 'Write a blog post about AI')">
+                        <select id="ollamaModel" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #444; color: #e0e0e0; border-radius: 6px; margin-bottom: 10px;">
+                            <option value="llama3.2">llama3.2</option>
+                            <option value="mistral">mistral</option>
+                            <option value="phi3">phi3</option>
+                        </select>
+                        <button id="generateBtn" style="width: 100%;">Generate Content</button>
+                        <div id="ollamaStatus"></div>
+                    </div>
+
+                    <div class="generated-content-section" id="generatedContentSection" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; display: none;">
+                        <h3 style="font-size: 14px; margin-bottom: 10px; color: #4ecca3;">✨ Generated Content</h3>
+                        <div id="generatedContentDisplay" style="background: #1a1a1a; padding: 12px; border-radius: 6px; color: #e0e0e0; font-family: 'Courier New', monospace; font-size: 13px; max-height: 200px; overflow-y: auto; white-space: pre-wrap;"></div>
+                        <button onclick="copyGeneratedContent()" style="margin-top: 10px; width: 100%; background: #333; color: #e0e0e0;">📋 Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Preview -->
+            <div class="panel preview-panel">
+                <div class="preview-tabs">
+                    <div class="preview-tab active" data-tab="visual">Visual</div>
+                    <div class="preview-tab" data-tab="code">Code</div>
+                </div>
+                <div class="preview-content">
+                    <iframe id="previewFrame" class="preview-iframe"></iframe>
+                    <pre id="previewCode" class="preview-code" style="display: none;"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTemplate = null;
+        let currentTemplateContent = '';
+        let renderedOutput = '';
+
+        // Load templates on page load
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/api/templates/list');
+                const templates = await response.json();
+
+                const listEl = document.getElementById('templateList');
+                listEl.innerHTML = '';
+
+                if (templates.length === 0) {
+                    listEl.innerHTML = '<div class="loading">No templates found</div>';
+                    return;
+                }
+
+                templates.forEach(template => {
+                    const item = document.createElement('div');
+                    item.className = 'template-item';
+                    item.innerHTML = `
+                        <div class="name">${template.name}</div>
+                        <div class="meta">${template.type} • ${(template.size / 1024).toFixed(1)}KB</div>
+                    `;
+                    item.onclick = () => selectTemplate(template, item);
+                    listEl.appendChild(item);
+                });
+
+                // Auto-select first template
+                if (templates.length > 0) {
+                    listEl.firstChild.click();
+                }
+            } catch (error) {
+                document.getElementById('templateList').innerHTML =
+                    `<div class="error">Error loading templates: ${error.message}</div>`;
+            }
+        }
+
+        async function selectTemplate(template, element) {
+            // Update UI
+            document.querySelectorAll('.template-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            currentTemplate = template;
+
+            // Load template content
+            try {
+                const response = await fetch('/api/templates/read', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({path: template.path})
+                });
+                const data = await response.json();
+                currentTemplateContent = data.content;
+
+                // Auto-render
+                renderTemplate();
+            } catch (error) {
+                showError('Failed to load template: ' + error.message);
+            }
+        }
+
+        async function renderTemplate() {
+            if (!currentTemplate) {
+                showError('No template selected');
+                return;
+            }
+
+            try {
+                const variables = JSON.parse(document.getElementById('variablesEditor').value);
+
+                const response = await fetch('/api/templates/render', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        template: currentTemplateContent,
+                        variables: variables
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    renderedOutput = result.rendered;
+                    updatePreview(result.rendered);
+                } else {
+                    showError('Render error: ' + result.error);
+                }
+            } catch (error) {
+                showError('Failed to render: ' + error.message);
+            }
+        }
+
+        function updatePreview(html) {
+            const iframe = document.getElementById('previewFrame');
+            const code = document.getElementById('previewCode');
+
+            // Check if this is a CSS file
+            const isCSS = currentTemplate && currentTemplate.name.endsWith('.css.tmpl');
+
+            if (isCSS) {
+                // Wrap CSS in HTML with sample elements
+                const cssPreview = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+${html}
+    </style>
+</head>
+<body style="padding: 20px; font-family: system-ui;">
+    <h1 class="text-brand">Brand Heading</h1>
+    <p>This is a paragraph showing normal text.</p>
+    <button class="bg-brand" style="padding: 10px 20px; border: none; cursor: pointer;">Brand Button</button>
+    <div style="margin-top: 20px;">
+        <div style="padding: 15px; border-radius: 8px; background: var(--brand-primary-light, #f0f0f0);">
+            Light brand background
+        </div>
+    </div>
+</body>
+</html>`;
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(cssPreview);
+                doc.close();
+            } else {
+                // Regular HTML rendering
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(html);
+                doc.close();
+            }
+
+            // Update code view (always show original)
+            code.textContent = html;
+        }
+
+        async function generateWithOllama() {
+            const prompt = document.getElementById('ollamaPrompt').value;
+            const model = document.getElementById('ollamaModel').value;
+            const variables = JSON.parse(document.getElementById('variablesEditor').value);
+
+            if (!prompt) {
+                showError('Please enter a prompt');
+                return;
+            }
+
+            const statusEl = document.getElementById('ollamaStatus');
+            statusEl.innerHTML = '<div class="loading">Generating with Ollama...</div>';
+
+            try {
+                const response = await fetch('/api/templates/generate-with-ollama', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        model: model,
+                        template: currentTemplateContent,
+                        variables: variables
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    renderedOutput = result.rendered;
+                    updatePreview(result.rendered);
+                    statusEl.innerHTML = `<div class="success">✅ Generated successfully!</div>`;
+
+                    // Show generated content
+                    const generatedContent = result.generated_content;
+                    document.getElementById('generatedContentDisplay').textContent = generatedContent;
+                    document.getElementById('generatedContentSection').style.display = 'block';
+                } else {
+                    statusEl.innerHTML = `<div class="error">Error: ${result.error}</div>`;
+                }
+            } catch (error) {
+                statusEl.innerHTML = `<div class="error">Failed: ${error.message}</div>`;
+            }
+        }
+
+        async function saveLocally() {
+            if (!renderedOutput) {
+                showError('Please render the template first');
+                return;
+            }
+
+            const domainSlug = document.getElementById('targetDomain').value;
+            if (!domainSlug) {
+                showError('Please select a domain from the dropdown');
+                return;
+            }
+
+            const contentType = document.querySelector('input[name="contentType"]:checked').value;
+            const filename = prompt('Enter filename (e.g., my-page.html):', 'generated-page.html');
+
+            if (!filename) return;
+
+            try {
+                const response = await fetch('/api/templates/deploy', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        domain: domainSlug,
+                        filename: filename,
+                        content: renderedOutput,
+                        type: contentType
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(`💾 Saved locally!\n\nSaved as: ${contentType}\nPreview URL: ${result.url}\n\n⚠️ IMPORTANT: This is LOCAL ONLY!\n• Only accessible at localhost:5001\n• Only while Flask is running\n• NOT accessible from other devices\n• NOT online\n\n🌍 To make it actually online, click "Deploy Online"!`);
+                } else {
+                    showError('Save failed: ' + result.error);
+                }
+            } catch (error) {
+                showError('Save error: ' + error.message);
+            }
+        }
+
+        async function deployOnline() {
+            if (!renderedOutput) {
+                showError('Please render the template first');
+                return;
+            }
+
+            const domainSlug = document.getElementById('targetDomain').value;
+            if (!domainSlug) {
+                showError('Please select a domain from the dropdown');
+                return;
+            }
+
+            const contentType = document.querySelector('input[name="contentType"]:checked').value;
+            const filename = prompt('Enter filename (e.g., my-page.html):', 'generated-page.html');
+
+            if (!filename) return;
+
+            // First save locally
+            try {
+                const saveResponse = await fetch('/api/templates/deploy', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        domain: domainSlug,
+                        filename: filename,
+                        content: renderedOutput,
+                        type: contentType
+                    })
+                });
+
+                const saveResult = await saveResponse.json();
+
+                if (!saveResult.success) {
+                    showError('Failed to save locally: ' + saveResult.error);
+                    return;
+                }
+
+                // Show deployment progress
+                const statusEl = document.getElementById('ollamaStatus');
+                statusEl.innerHTML = '<div style="color: #4ecca3; font-weight: bold;">⏳ Deploying to GitHub Pages...<br>This may take 30-60 seconds...</div>';
+
+                // Deploy to GitHub Pages
+                const deployResponse = await fetch('/api/deploy/github', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        brand: domainSlug,
+                        content: renderedOutput,
+                        filename: filename
+                    })
+                });
+
+                const deployResult = await deployResponse.json();
+
+                if (deployResult.success) {
+                    statusEl.innerHTML = '<div style="color: #4ecca3; font-weight: bold;">✅ Deployed online!</div>';
+                    alert(`✅ Deployed online!\n\nContent type: ${contentType}\nPublic URL: ${deployResult.url}\n\n🌍 IMPORTANT: This is LIVE!\n• Accessible from anywhere in the world\n• Anyone with the URL can view it\n• Has HTTPS (secure)\n• Hosted on GitHub Pages\n\nClick OK to open in new tab.`);
+                    window.open(deployResult.url, '_blank');
+                } else {
+                    statusEl.innerHTML = '<div class="error">❌ Deployment failed</div>';
+                    alert(`❌ GitHub Pages deployment failed!\n\nError: ${deployResult.error}\n\nMake sure:\n1. GitHub CLI is installed (brew install gh)\n2. You're logged in (gh auth login)\n3. deploy_github.py exists\n\nFor now, file is saved locally at: ${saveResult.url}`);
+                }
+            } catch (error) {
+                showError('Deployment error: ' + error.message);
+            }
+        }
+
+        function insertEmoji(emoji) {
+            const editor = document.getElementById('variablesEditor');
+            const variables = JSON.parse(editor.value);
+            variables.emoji = emoji;
+            editor.value = JSON.stringify(variables, null, 2);
+        }
+
+        function showError(message) {
+            console.error(message);
+            const statusEl = document.getElementById('ollamaStatus');
+            statusEl.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        function copyGeneratedContent() {
+            const content = document.getElementById('generatedContentDisplay').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('✅ Content copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('❌ Failed to copy content');
+            });
+        }
+
+        // Tab switching
+        document.querySelectorAll('.preview-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const tabName = tab.dataset.tab;
+                document.getElementById('previewFrame').style.display = tabName === 'visual' ? 'block' : 'none';
+                document.getElementById('previewCode').style.display = tabName === 'code' ? 'block' : 'none';
+            });
+        });
+
+        // Event listeners
+        document.getElementById('renderBtn').addEventListener('click', renderTemplate);
+        document.getElementById('generateBtn').addEventListener('click', generateWithOllama);
+        document.getElementById('saveLocalBtn').addEventListener('click', saveLocally);
+        document.getElementById('deployOnlineBtn').addEventListener('click', deployOnline);
+
+        // Domain dropdown change handler
+        document.getElementById('targetDomain').addEventListener('change', function(e) {
+            const select = e.target;
+            const selectedOption = select.options[select.selectedIndex];
+
+            if (selectedOption.value) {
+                // Get domain data from data attributes
+                const slug = selectedOption.value;
+                const name = selectedOption.getAttribute('data-name');
+                const domain = selectedOption.getAttribute('data-full-domain');
+                const emoji = selectedOption.getAttribute('data-emoji');
+
+                // Update variables JSON
+                const editor = document.getElementById('variablesEditor');
+                const currentVars = JSON.parse(editor.value);
+
+                // Update with domain-specific values
+                currentVars.brand = name;
+                currentVars.domain = domain;
+                if (emoji) currentVars.emoji = emoji;
+
+                editor.value = JSON.stringify(currentVars, null, 2);
+
+                // Visual feedback
+                editor.style.borderColor = '#4ecca3';
+                editor.style.borderWidth = '2px';
+                setTimeout(() => {
+                    editor.style.borderColor = '#444';
+                    editor.style.borderWidth = '1px';
+                }, 1000);
+            }
+        });
+
+        // Load templates on page load
+        loadTemplates();
+    </script>
+</body>
+</html>

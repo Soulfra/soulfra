@@ -1,0 +1,210 @@
+/*
+ * Theme System with Dark/Light Mode
+ *
+ * Usage:
+ * 1. Include this CSS file in templates
+ * 2. Add data-theme attribute to <html> element
+ * 3. Use CSS variables throughout your styles
+ * 4. Include theme-toggle.js for toggle functionality
+ */
+
+/* ==================== LIGHT MODE (DEFAULT) ==================== */
+:root, [data-theme="light"] {
+  /* Primary brand colors (injected from backend) */
+  --color-primary: var(--brand-primary, #667eea);
+  --color-secondary: var(--brand-secondary, #764ba2);
+  --color-accent: var(--brand-accent, #f093fb);
+
+  /* Background colors */
+  --bg-page: #ffffff;
+  --bg-surface: #f8f9fa;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+
+  /* Text colors */
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-tertiary: #adb5bd;
+  --text-inverse: #ffffff;
+
+  /* Border colors */
+  --border-light: #e9ecef;
+  --border-medium: #dee2e6;
+  --border-dark: #ced4da;
+
+  /* Status colors */
+  --success: #28a745;
+  --warning: #ffc107;
+  --error: #dc3545;
+  --info: #17a2b8;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+  /* Gradient backgrounds */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+/* ==================== DARK MODE ==================== */
+[data-theme="dark"] {
+  /* Primary brand colors (slightly desaturated for dark mode) */
+  --color-primary: var(--brand-primary-dark, #8b9efc);
+  --color-secondary: var(--brand-secondary-dark, #9468c4);
+  --color-accent: var(--brand-accent-dark, #f5a7ff);
+
+  /* Background colors */
+  --bg-page: #0d1117;
+  --bg-surface: #161b22;
+  --bg-elevated: #1c2128;
+  --bg-card: #21262d;
+
+  /* Text colors */
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-tertiary: #6e7681;
+  --text-inverse: #0d1117;
+
+  /* Border colors */
+  --border-light: #30363d;
+  --border-medium: #21262d;
+  --border-dark: #161b22;
+
+  /* Status colors (adjusted for dark mode) */
+  --success: #3fb950;
+  --warning: #d29922;
+  --error: #f85149;
+  --info: #58a6ff;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.7);
+
+  /* Gradient backgrounds */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  --gradient-surface: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+}
+
+/* ==================== THEME-AWARE COMPONENTS ==================== */
+
+/* Apply theme colors to body */
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Cards and surfaces */
+.card, .surface, .panel {
+  background: var(--bg-card);
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-md);
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
+  border: none;
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+/* Input fields */
+input, textarea, select {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+}
+
+a:hover {
+  color: var(--color-secondary);
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+/* Code blocks */
+code, pre {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+
+/* ==================== THEME TOGGLE BUTTON ==================== */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  border: 2px solid var(--border-medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 1000;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-xl);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Icons for theme toggle */
+.theme-toggle-icon-light {
+  display: none;
+}
+
+.theme-toggle-icon-dark {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle-icon-light {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle-icon-dark {
+  display: none;
+}
+
+/* ==================== SMOOTH TRANSITIONS ==================== */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+/* Don't animate on page load */
+.preload * {
+  transition: none !important;
+}

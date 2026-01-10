@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Blog</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f6f8fa;
+            color: #24292f;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 2px solid #d0d7de;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: #57606a;
+            font-size: 1.1rem;
+        }
+        .post {
+            background: white;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s;
+        }
+        .post:hover {
+            border-color: #0969da;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        }
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #d0d7de;
+        }
+        .post-author {
+            font-weight: 600;
+            color: #0969da;
+        }
+        .post-date {
+            color: #57606a;
+            font-size: 0.9rem;
+        }
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .post-body {
+            color: #24292f;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .post-meta {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #57606a;
+        }
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-voice {
+            background: #ddf4ff;
+            color: #0969da;
+        }
+        .badge-irc {
+            background: #dafbe1;
+            color: #1a7f37;
+        }
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #57606a;
+            border-top: 1px solid #d0d7de;
+            margin-top: 3rem;
+        }
+        .rss-link {
+            display: inline-block;
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            color: #0969da;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .rss-link:hover {
+            background: #0969da;
+            color: white;
+        }
+        /* Comments Section */
+        .comments-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #d0d7de;
+        }
+        .comments-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .comment {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .comment-author {
+            font-weight: 600;
+            color: #0969da;
+        }
+        .comment-date {
+            color: #57606a;
+        }
+        .comment-body {
+            color: #24292f;
+            line-height: 1.6;
+        }
+        .comment-reply {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+        .comment-form {
+            margin-top: 1.5rem;
+        }
+        .comment-form input,
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+        .comment-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .comment-submit {
+            padding: 0.75rem 1.5rem;
+            background: #238636;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .comment-submit:hover {
+            background: #2ea043;
+        }
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #57606a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Soulfra Blog</h1>
+            <p>Voice-first personal blog powered by IRC/Usenet</p>
+            <a href="feed.xml" class="rss-link">📡 Subscribe via RSS</a>
+        </div>
+
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">matt@soulfra.com</span>
+                <span class="post-date">January 09, 2026 at 07:43 AM</span>
+            </div>
+
+            
+            <h2 class="post-title">Testing IRC/Usenet messaging</h2>
+            
+
+            <div class="post-body">This is a test message from Python! Just like sending to alt.soulfra.dev</div>
+
+            <div class="post-meta">
+                <span class="badge badge-irc">
+                    💬 IRC
+                </span>
+                <span>alt.soulfra.dev</span>
+                <span>ID: 5</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-5">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-5">
+                    <textarea placeholder="Add a comment..." id="comment-5"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 5)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">system</span>
+                <span class="post-date">January 09, 2026 at 07:29 AM</span>
+            </div>
+
+            
+            <h2 class="post-title">Welcome!</h2>
+            
+
+            <div class="post-body">Welcome to the Soulfra messaging system</div>
+
+            <div class="post-meta">
+                <span class="badge badge-irc">
+                    💬 IRC
+                </span>
+                <span>alt.soulfra.general</span>
+                <span>ID: 1</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-1">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-1">
+                    <textarea placeholder="Add a comment..." id="comment-1"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 1)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">anonymous</span>
+                <span class="post-date">January 06, 2026 at 11:51 AM</span>
+            </div>
+
+            
+
+            <div class="post-body">You know what I really hate? The cringe on social media. Everyone's trying so hard to be
+    authentic but it all feels so fake. I want genuine connection, real community, people being
+    vulnerable and honest. That's the only way to build trust and belonging. The whole validation
+    game is broken. We need spaces where people can express their true identity without fear.
+    Social acceptance shouldn't be based on performance. It's about being real, being yourself,
+    finding your truth. That's what authentic social interaction looks like.</div>
+
+            <div class="post-meta">
+                <span class="badge badge-voice">
+                    🎤 Voice
+                </span>
+                <span>alt.soulfra.voice</span>
+                <span>ID: 1</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-1">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-1">
+                    <textarea placeholder="Add a comment..." id="comment-1"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 1)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">anonymous</span>
+                <span class="post-date">January 06, 2026 at 11:51 AM</span>
+            </div>
+
+            
+
+            <div class="post-body">Hello, is it on my phone or my computer?</div>
+
+            <div class="post-meta">
+                <span class="badge badge-voice">
+                    🎤 Voice
+                </span>
+                <span>alt.soulfra.voice</span>
+                <span>ID: 2</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-2">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-2">
+                    <textarea placeholder="Add a comment..." id="comment-2"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 2)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">anonymous</span>
+                <span class="post-date">January 06, 2026 at 11:51 AM</span>
+            </div>
+
+            
+
+            <div class="post-body">Ideas is about cringe proof. It's a game where you talk about news articles and they get scraped from Google and other news feeds that you input.</div>
+
+            <div class="post-meta">
+                <span class="badge badge-voice">
+                    🎤 Voice
+                </span>
+                <span>alt.soulfra.voice</span>
+                <span>ID: 3</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-3">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-3">
+                    <textarea placeholder="Add a comment..." id="comment-3"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 3)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">anonymous</span>
+                <span class="post-date">January 06, 2026 at 11:51 AM</span>
+            </div>
+
+            
+
+            <div class="post-body">Hello? Hello?</div>
+
+            <div class="post-meta">
+                <span class="badge badge-voice">
+                    🎤 Voice
+                </span>
+                <span>alt.soulfra.voice</span>
+                <span>ID: 4</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-4">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-4">
+                    <textarea placeholder="Add a comment..." id="comment-4"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 4)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">anonymous</span>
+                <span class="post-date">January 06, 2026 at 11:51 AM</span>
+            </div>
+
+            
+
+            <div class="post-body">Hello? Is this working or not?</div>
+
+            <div class="post-meta">
+                <span class="badge badge-voice">
+                    🎤 Voice
+                </span>
+                <span>alt.soulfra.voice</span>
+                <span>ID: 5</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-5">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-5">
+                    <textarea placeholder="Add a comment..." id="comment-5"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 5)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+        <article class="post">
+            <div class="post-header">
+                <span class="post-author">anonymous</span>
+                <span class="post-date">January 06, 2026 at 11:51 AM</span>
+            </div>
+
+            
+
+            <div class="post-body">I'm just walking the room.</div>
+
+            <div class="post-meta">
+                <span class="badge badge-voice">
+                    🎤 Voice
+                </span>
+                <span>alt.soulfra.voice</span>
+                <span>ID: 6</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-6">
+                <div class="comments-header">💬 Comments</div>
+                <div class="comments-list">
+                    <div class="loading">Loading comments...</div>
+                </div>
+
+                <!-- Comment Form -->
+                <div class="comment-form">
+                    <input type="text" placeholder="Your name (optional)" id="name-6">
+                    <textarea placeholder="Add a comment..." id="comment-6"></textarea>
+                    <button class="comment-submit" onclick="submitComment('soulfra', 6)">Post Comment</button>
+                </div>
+            </div>
+        </article>
+        
+
+        <div class="footer">
+            <p>Powered by IRC/Usenet messaging system</p>
+            <p>Generated: 2026-01-09 08:54:02</p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://192.168.1.87:5002';
+
+        // Load comments for all posts on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            loadComments('soulfra', 5);
+            
+            loadComments('soulfra', 1);
+            
+            loadComments('soulfra', 1);
+            
+            loadComments('soulfra', 2);
+            
+            loadComments('soulfra', 3);
+            
+            loadComments('soulfra', 4);
+            
+            loadComments('soulfra', 5);
+            
+            loadComments('soulfra', 6);
+            
+        });
+
+        // Load comments for a specific post
+        async function loadComments(domain, postId) {
+            try {
+                const response = await fetch(`${API_URL}/api/messages/${domain}/${postId}/comments`);
+                const data = await response.json();
+
+                const container = document.querySelector(`#comments-${postId} .comments-list`);
+
+                if (data.comments && data.comments.length > 0) {
+                    container.innerHTML = data.comments.map(comment => renderComment(comment)).join('');
+                } else {
+                    container.innerHTML = '<div class="loading">No comments yet. Be the first!</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load comments:', error);
+                document.querySelector(`#comments-${postId} .comments-list`).innerHTML =
+                    '<div class="loading">Comments unavailable (offline mode)</div>';
+            }
+        }
+
+        // Render a single comment (with nested replies)
+        function renderComment(comment) {
+            const date = new Date(comment.created_at).toLocaleString();
+
+            let html = `
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-author">${escapeHtml(comment.from_user)}</span>
+                        <span class="comment-date">${date}</span>
+                    </div>
+                    <div class="comment-body">${escapeHtml(comment.body)}</div>
+            `;
+
+            // Render nested replies
+            if (comment.replies && comment.replies.length > 0) {
+                html += '<div class="comment-reply">';
+                html += comment.replies.map(reply => renderComment(reply)).join('');
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // Submit a new comment
+        async function submitComment(domain, postId) {
+            const nameInput = document.getElementById(`name-${postId}`);
+            const commentInput = document.getElementById(`comment-${postId}`);
+
+            const body = commentInput.value.trim();
+            if (!body) {
+                alert('Please enter a comment');
+                return;
+            }
+
+            const fromUser = nameInput.value.trim() || 'anonymous';
+
+            try {
+                const response = await fetch(`${API_URL}/api/messages/${domain}/${postId}/comments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        body: body,
+                        from_user: fromUser
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Clear form
+                    commentInput.value = '';
+                    // Reload comments
+                    await loadComments(domain, postId);
+                } else {
+                    alert('Failed to post comment: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Failed to post comment:', error);
+                alert('Failed to post comment. Are you online?');
+            }
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

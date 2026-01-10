@@ -1,0 +1,47 @@
+/* Auto-generated theme for CringeProof */
+:root {
+    --color-primary: #ff006e;
+    --color-secondary: #bdb2ff;
+    --color-accent: #000;
+
+    /* Light variants (30% lighter) */
+    --color-primary-light: #ff006e;
+    --color-secondary-light: #bdb2ff;
+    --color-accent-light: #000;
+
+    /* Dark variants (30% darker) */
+    --color-primary-dark: #ff006e;
+    --color-secondary-dark: #bdb2ff;
+    --color-accent-dark: #000;
+}
+
+/* Apply theme to body */
+body {
+    --brand-primary: var(--color-primary);
+    --brand-secondary: var(--color-secondary);
+    --brand-accent: var(--color-accent);
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--color-primary);
+    border-color: var(--color-primary-dark);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-light);
+}
+
+/* Links */
+a {
+    color: var(--color-accent);
+}
+
+a:hover {
+    color: var(--color-accent-dark);
+}
+
+/* Headers */
+h1, h2, h3 {
+    color: var(--color-primary-dark);
+}

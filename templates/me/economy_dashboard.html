@@ -1,0 +1,696 @@
+{% extends "base.html" %}
+
+{% block title %}My Economy - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+  .economy-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .economy-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .economy-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+  }
+
+  .economy-header p {
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .stat-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stat-card .value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
+    margin: 0;
+  }
+
+  .section {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .section h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .wordmap-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  .word-tag {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .word-count {
+    background: rgba(255,255,255,0.3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+
+  .pure-source-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .domain-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .domain-item {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .domain-item:last-child {
+    border-bottom: none;
+  }
+
+  .domain-name {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .ownership-bar {
+    flex: 1;
+    max-width: 300px;
+    height: 24px;
+    background: #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 1rem;
+  }
+
+  .ownership-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  .rewards-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .rewards-table th {
+    background: #f5f5f5;
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .rewards-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .alignment-score {
+    font-weight: bold;
+  }
+
+  .alignment-excellent {
+    color: #4caf50;
+  }
+
+  .alignment-good {
+    color: #ff9800;
+  }
+
+  .alignment-poor {
+    color: #f44336;
+  }
+
+  .quick-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+
+  .action-btn.secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #999;
+  }
+
+  .empty-state h3 {
+    margin: 0 0 1rem 0;
+    color: #666;
+  }
+
+  .ascii-practice-room {
+    background: #1e1e1e;
+    color: #00ff00;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    overflow-x: auto;
+    border: 2px solid #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .ascii-practice-room pre {
+    margin: 0;
+    white-space: pre;
+    color: #00ff00;
+  }
+
+  .practice-room-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+</style>
+
+<div class="economy-container">
+  <div class="economy-header">
+    <h1>{{ economy.user.username }}'s Economy</h1>
+    <p>Your authentic voice, ownership, and rewards</p>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Voice Recordings</h3>
+      <p class="value">{{ economy.stats.total_recordings }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Domains Owned</h3>
+      <p class="value">{{ economy.stats.total_domains }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Total Rewards</h3>
+      <p class="value">{{ "%.2f"|format(economy.stats.total_rewards_earned) }}%</p>
+    </div>
+    <div class="stat-card">
+      <h3>Avg Alignment</h3>
+      <p class="value">{{ "%.0f"|format(economy.stats.avg_alignment * 100) }}%</p>
+    </div>
+  </div>
+
+  <!-- Personal Wordmap -->
+  <div class="section">
+    <h2>Your Personal Wordmap</h2>
+    {% if economy.wordmap and economy.wordmap.is_pure_source %}
+      <div class="pure-source-badge">
+        ✨ Pure Source: {{ economy.wordmap.recording_count }} recordings processed
+      </div>
+    {% endif %}
+
+    {% if economy.wordmap and economy.wordmap.ascii_viz %}
+      <div class="practice-room-label">
+        🎭 Practice Room
+      </div>
+      <div class="ascii-practice-room">
+        <pre>{{ economy.wordmap.ascii_viz }}</pre>
+      </div>
+    {% endif %}
+
+    {% if economy.wordmap and economy.wordmap.words %}
+      <div class="wordmap-container">
+        {% for word, count in economy.wordmap.words[:30] %}
+          <div class="word-tag">
+            {{ word }}
+            <span class="word-count">{{ count }}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <p style="text-align: center; margin-top: 1rem; color: #666;">
+        {{ economy.wordmap.vocabulary_size }} unique words in your voice
+      </p>
+    {% else %}
+      <div class="empty-state">
+        <h3>No wordmap yet</h3>
+        <p>Record your first voice memo to build your authentic wordmap</p>
+        <a href="/voice" class="action-btn">Record Voice Memo</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Owned Domains -->
+  <div class="section">
+    <h2>Domain Ownership</h2>
+    {% if economy.domains %}
+      <ul class="domain-list">
+        {% for domain in economy.domains %}
+          <li class="domain-item">
+            <span class="domain-name">{{ domain.domain_with_emoji if domain.domain_with_emoji else domain.domain }}</span>
+            <div class="ownership-bar">
+              <div class="ownership-fill" style="width: {{ domain.ownership_pct }}%">
+                {{ "%.1f"|format(domain.ownership_pct) }}%
+              </div>
+            </div>
+            <span style="color: #999; font-size: 0.85rem;">
+              Since {{ domain.unlocked_at[:10] if domain.unlocked_at else 'Unknown' }}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty-state">
+        <h3>No domains owned yet</h3>
+        <p>Generate high-quality content to earn domain ownership</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Mesh Network Graph -->
+  <div class="section">
+    <h2>Mesh Network Graph</h2>
+    <div id="mesh-network-viz" style="width: 100%; height: 500px; background: #f9f9f9; border-radius: 8px; position: relative;">
+      <svg id="network-svg" width="100%" height="500"></svg>
+    </div>
+    <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+      <strong>You</strong> at center • Lines show alignment strength • Node size = ownership %
+    </div>
+  </div>
+
+  <!-- Recent Rewards -->
+  <div class="section">
+    <h2>Recent Rewards</h2>
+    {% if economy.rewards %}
+      <table class="rewards-table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Content Type</th>
+            <th>Alignment</th>
+            <th>Reward</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reward in economy.rewards %}
+            <tr>
+              <td>{{ reward.domain }}</td>
+              <td>{{ reward.content_type.replace('_', ' ').title() }}</td>
+              <td>
+                {% set score = reward.alignment_score %}
+                <span class="alignment-score {% if score >= 0.7 %}alignment-excellent{% elif score >= 0.4 %}alignment-good{% else %}alignment-poor{% endif %}">
+                  {{ "%.0f"|format(score * 100) }}%
+                </span>
+              </td>
+              <td>+{{ "%.2f"|format(reward.reward_pct) }}%</td>
+              <td style="color: #999; font-size: 0.85rem;">{{ reward.created_at[:10] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-state">
+        <h3>No rewards yet</h3>
+        <p>Generate content that aligns with domain voice to earn ownership</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section">
+    <h2>Quick Actions</h2>
+    <div class="quick-actions">
+      <button id="propagate-btn" class="action-btn" onclick="propagateMeshNetwork()">
+        🚀 Propagate Now
+      </button>
+      {% for action in economy.quick_actions %}
+        <a href="{{ action.url }}" class="action-btn {% if not action.primary %}secondary{% endif %}">
+          {{ action.label }}
+        </a>
+      {% endfor %}
+    </div>
+
+    <!-- Propagation Status -->
+    <div id="propagate-status" style="display: none; margin-top: 1rem; padding: 1rem; border-radius: 8px; background: #f9f9f9;">
+      <div id="propagate-progress" style="margin-bottom: 0.5rem;">
+        <strong>Status:</strong> <span id="propagate-status-text">Processing...</span>
+      </div>
+      <div id="propagate-results" style="font-size: 0.9rem; color: #666;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Propagate Mesh Network
+async function propagateMeshNetwork() {
+  const btn = document.getElementById('propagate-btn');
+  const statusDiv = document.getElementById('propagate-status');
+  const statusText = document.getElementById('propagate-status-text');
+  const resultsDiv = document.getElementById('propagate-results');
+
+  // Disable button and show status
+  btn.disabled = true;
+  btn.textContent = '⏳ Processing...';
+  statusDiv.style.display = 'block';
+  statusText.textContent = 'Initializing mesh network propagation...';
+  resultsDiv.innerHTML = '';
+
+  try {
+    const response = await fetch('/api/economy/propagate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Success!
+      statusText.textContent = '✅ Propagation Complete!';
+      statusDiv.style.background = '#d4edda';
+      statusDiv.style.borderLeft = '4px solid #28a745';
+
+      // Display results
+      let html = '<div style="margin-top: 1rem;">';
+
+      if (result.wordmap_updated) {
+        html += `<div style="margin: 0.5rem 0;">📝 Wordmap: ${result.words_added || 0} words added</div>`;
+      }
+
+      if (result.domains_matched && result.domains_matched.length > 0) {
+        html += `<div style="margin: 0.5rem 0;">🎯 Matched ${result.domains_matched.length} domains:</div>`;
+        html += '<ul style="margin: 0.5rem 0; padding-left: 2rem;">';
+        result.domains_matched.forEach(domain => {
+          const alignment = ((domain.alignment_score || 0) * 100).toFixed(1);
+          html += `<li><strong>${domain.domain}</strong> - ${alignment}% alignment</li>`;
+        });
+        html += '</ul>';
+      }
+
+      if (result.content_generated && result.content_generated.length > 0) {
+        html += `<div style="margin: 0.5rem 0;">📄 Generated ${result.content_generated.length} content pieces</div>`;
+      }
+
+      if (result.rewards_earned && result.rewards_earned.length > 0) {
+        const totalReward = result.rewards_earned.reduce((sum, r) => sum + (r.reward_pct || 0), 0);
+        html += `<div style="margin: 0.5rem 0; color: #28a745; font-weight: bold;">💎 Earned ${totalReward.toFixed(2)}% ownership!</div>`;
+      }
+
+      html += '</div>';
+      resultsDiv.innerHTML = html;
+
+      // Reload page after 3 seconds to show updated stats
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
+
+    } else {
+      // Error
+      statusText.textContent = '❌ Error: ' + (result.error || 'Unknown error');
+      statusDiv.style.background = '#f8d7da';
+      statusDiv.style.borderLeft = '4px solid #dc3545';
+      btn.disabled = false;
+      btn.textContent = '🚀 Propagate Now';
+    }
+
+  } catch (error) {
+    statusText.textContent = '❌ Network error: ' + error.message;
+    statusDiv.style.background = '#f8d7da';
+    statusDiv.style.borderLeft = '4px solid #dc3545';
+    btn.disabled = false;
+    btn.textContent = '🚀 Propagate Now';
+  }
+}
+
+// Mesh Network Visualization
+(function() {
+  const svg = document.getElementById('network-svg');
+  const width = svg.clientWidth;
+  const height = 500;
+
+  // Data from backend
+  const domains = {{ economy.domains|tojson|safe if economy.domains else '[]'|safe }};
+  const username = "{{ economy.user.username }}";
+
+  if (domains.length === 0) {
+    // Show empty state
+    svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#999" font-size="16">Record voice memos to unlock domains and see your mesh network</text>';
+    return;
+  }
+
+  // Create nodes
+  const centerNode = {
+    id: 'user',
+    label: username,
+    x: width / 2,
+    y: height / 2,
+    radius: 30,
+    type: 'user'
+  };
+
+  const domainNodes = domains.map((d, i) => {
+    const angle = (i / domains.length) * 2 * Math.PI;
+    const distance = 150;
+    return {
+      id: d.domain,
+      label: d.domain.split('.')[0],
+      ownership: d.ownership_pct || 0,
+      alignment: d.alignment_score || 0,
+      x: width / 2 + Math.cos(angle) * distance,
+      y: height / 2 + Math.sin(angle) * distance,
+      radius: 15 + (d.ownership_pct || 0) * 0.5,
+      type: 'domain',
+      tier: d.tier || 'common'
+    };
+  });
+
+  const nodes = [centerNode, ...domainNodes];
+
+  // Create links
+  const links = domainNodes.map(d => ({
+    source: centerNode,
+    target: d,
+    strength: d.alignment
+  }));
+
+  // Clear SVG
+  svg.innerHTML = '';
+
+  // Draw links
+  links.forEach(link => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', link.source.x);
+    line.setAttribute('y1', link.source.y);
+    line.setAttribute('x2', link.target.x);
+    line.setAttribute('y2', link.target.y);
+
+    // Color based on alignment strength
+    const strength = link.strength || 0;
+    const opacity = 0.2 + (strength * 0.8);
+    const color = strength > 0.7 ? '#4caf50' : strength > 0.4 ? '#ff9800' : '#999';
+
+    line.setAttribute('stroke', color);
+    line.setAttribute('stroke-width', 1 + (strength * 4));
+    line.setAttribute('stroke-opacity', opacity);
+    svg.appendChild(line);
+  });
+
+  // Draw nodes
+  nodes.forEach(node => {
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+
+    // Circle
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('r', node.radius);
+
+    if (node.type === 'user') {
+      circle.setAttribute('fill', 'url(#userGradient)');
+      circle.setAttribute('stroke', '#667eea');
+      circle.setAttribute('stroke-width', '3');
+    } else {
+      // Tier colors
+      const tierColors = {
+        legendary: '#f093fb',
+        epic: '#a8edea',
+        rare: '#d299c2',
+        common: '#e0e0e0'
+      };
+      circle.setAttribute('fill', tierColors[node.tier] || '#e0e0e0');
+      circle.setAttribute('stroke', '#667eea');
+      circle.setAttribute('stroke-width', '2');
+    }
+
+    group.appendChild(circle);
+
+    // Label
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('y', node.radius + 20);
+    text.setAttribute('fill', '#333');
+    text.setAttribute('font-size', node.type === 'user' ? '14' : '12');
+    text.setAttribute('font-weight', node.type === 'user' ? 'bold' : 'normal');
+    text.textContent = node.label;
+    group.appendChild(text);
+
+    // Ownership percentage for domain nodes
+    if (node.type === 'domain' && node.ownership > 0) {
+      const ownershipText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      ownershipText.setAttribute('text-anchor', 'middle');
+      ownershipText.setAttribute('y', '5');
+      ownershipText.setAttribute('fill', '#fff');
+      ownershipText.setAttribute('font-size', '10');
+      ownershipText.setAttribute('font-weight', 'bold');
+      ownershipText.textContent = node.ownership.toFixed(1) + '%';
+      group.appendChild(ownershipText);
+    }
+
+    // User icon
+    if (node.type === 'user') {
+      const userText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      userText.setAttribute('text-anchor', 'middle');
+      userText.setAttribute('y', '8');
+      userText.setAttribute('fill', '#fff');
+      userText.setAttribute('font-size', '20');
+      userText.textContent = '👤';
+      group.appendChild(userText);
+    }
+
+    svg.appendChild(group);
+
+    // Hover effect
+    group.style.cursor = 'pointer';
+    group.addEventListener('mouseenter', function() {
+      circle.setAttribute('stroke-width', node.type === 'user' ? '5' : '4');
+      if (node.type === 'domain') {
+        const tooltip = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        tooltip.textContent = `${node.label}\nOwnership: ${node.ownership.toFixed(2)}%\nAlignment: ${((node.alignment || 0) * 100).toFixed(1)}%`;
+        circle.appendChild(tooltip);
+      }
+    });
+    group.addEventListener('mouseleave', function() {
+      circle.setAttribute('stroke-width', node.type === 'user' ? '3' : '2');
+    });
+
+    // Click to navigate
+    if (node.type === 'domain') {
+      group.addEventListener('click', function() {
+        window.location.href = '/' + node.label;
+      });
+    }
+  });
+
+  // Gradient definition for user node
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+  gradient.setAttribute('id', 'userGradient');
+  gradient.setAttribute('x1', '0%');
+  gradient.setAttribute('y1', '0%');
+  gradient.setAttribute('x2', '100%');
+  gradient.setAttribute('y2', '100%');
+
+  const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stop1.setAttribute('offset', '0%');
+  stop1.setAttribute('stop-color', '#667eea');
+
+  const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+  stop2.setAttribute('offset', '100%');
+  stop2.setAttribute('stop-color', '#764ba2');
+
+  gradient.appendChild(stop1);
+  gradient.appendChild(stop2);
+  defs.appendChild(gradient);
+  svg.insertBefore(defs, svg.firstChild);
+})();
+</script>
+{% endblock %}

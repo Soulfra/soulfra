@@ -1,0 +1,394 @@
+{% extends "base.html" %}
+
+{% block title %}Practice Room: {{ room.topic }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- PWA Install Banner -->
+        <div id="pwa-install-banner" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-2xl p-4 mb-6 hidden">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    <div>
+                        <div class="font-bold">Install Practice Rooms</div>
+                        <div class="text-sm text-blue-100">Get quick access and offline support</div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button id="pwa-install-button" class="px-4 py-2 bg-white text-indigo-600 font-bold rounded-lg hover:bg-indigo-50 transition">
+                        Install
+                    </button>
+                    <button id="pwa-dismiss-button" class="px-4 py-2 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:bg-opacity-10 transition">
+                        Later
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Room Header -->
+        <div class="bg-white rounded-xl shadow-2xl p-6 mb-6 border-t-4 border-indigo-500">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ room.topic }}</h1>
+                    <p class="text-gray-600">Room ID: <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{{ room.room_id }}</span></p>
+                </div>
+                <div class="text-right">
+                    <span class="inline-block px-4 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full text-sm font-medium shadow-lg">
+                        <span class="inline-block w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                        Active
+                    </span>
+                </div>
+            </div>
+
+            <!-- Room Info -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="text-sm text-gray-600 mb-1">Participants</div>
+                    <div class="text-2xl font-bold text-gray-900">{{ participant_count }}/{{ room.max_participants }}</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="text-sm text-gray-600 mb-1">Created</div>
+                    <div class="text-lg font-semibold text-gray-900">{{ room.created_at|timeago }}</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="text-sm text-gray-600 mb-1">Expires</div>
+                    <div class="text-lg font-semibold text-gray-900">{{ room.expires_at|timeago }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Room Section -->
+        <div class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl shadow-2xl p-6 mb-6 animate-gradient">
+            <h2 class="text-xl font-bold text-white mb-4">
+                <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                Share this Room
+            </h2>
+
+            <!-- Room URL Display -->
+            <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-4">
+                <p class="text-xs text-white text-opacity-80 mb-2">Room Link:</p>
+                <p id="room-url" class="text-white font-mono text-sm break-all">{{ request.host_url.rstrip('/') }}{{ url_for('practice_room_view', room_id=room.room_id) }}</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button
+                    onclick="copyRoomLink()"
+                    class="bg-white text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-6 rounded-lg transition shadow-md hover:shadow-lg flex items-center justify-center"
+                >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy Link
+                </button>
+
+                <a
+                    href="{{ url_for('practice_room_qr_download', room_id=room.room_id) }}"
+                    download="room_{{ room.room_id }}_qr.png"
+                    class="bg-white text-purple-600 hover:bg-purple-50 font-bold py-3 px-6 rounded-lg transition shadow-md hover:shadow-lg flex items-center justify-center"
+                >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download QR
+                </a>
+            </div>
+
+            <div class="mt-4 text-center">
+                <p class="text-sm text-white text-opacity-90">
+                    📱 Share this link or QR code with friends to invite them!
+                </p>
+            </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- QR Code Section -->
+            <div class="bg-white rounded-xl shadow-2xl p-6 pulse-glow">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 text-center">
+                    <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    Scan to Join
+                </h2>
+
+                {% include 'components/qr_display.html' %}
+
+                <div class="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-l-4 border-indigo-500">
+                    <p class="text-sm text-gray-800">
+                        <strong class="text-indigo-700">Quick Join:</strong> Open your camera app and point at the QR code above!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Voice Recording Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">
+                    <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                    Voice Recording
+                </h2>
+
+                {% if room.voice_enabled %}
+                    {% include 'components/voice_recorder.html' %}
+                {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        Voice recording is disabled for this room.
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Submit Message Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6 lg:col-span-2">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">
+                    <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    Submit Message
+                </h2>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <p class="text-sm text-blue-900">
+                        <strong>📱 Test from your phone!</strong> Submit a message below and watch it appear in real-time.
+                    </p>
+                </div>
+
+                <form method="POST" action="{{ url_for('practice_submit_message', room_id=room.room_id) }}" class="space-y-4">
+                    <!-- Username field -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            Your Name
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your name"
+                            value="{{ session.get('username', '') }}"
+                            class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            required
+                        >
+                    </div>
+
+                    <!-- Message field -->
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                            Your Message
+                        </label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="4"
+                            placeholder="Type your message here..."
+                            class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button
+                        type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition shadow-lg hover:shadow-xl"
+                    >
+                        Submit Message 🚀
+                    </button>
+                </form>
+            </div>
+
+            <!-- Recordings List -->
+            <div class="bg-white rounded-lg shadow-lg p-6 lg:col-span-2">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">
+                    <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                    </svg>
+                    Room Recordings
+                </h2>
+
+                {% if recordings %}
+                    <div class="space-y-3">
+                        {% for recording in recordings %}
+                        <div class="border rounded-lg p-4 hover:bg-gray-50 transition">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <div class="font-medium text-gray-900">{{ recording.filename or 'Recording' }}</div>
+                                    {% if recording.transcription %}
+                                    <div class="text-sm text-gray-600 mt-1">{{ recording.transcription }}</div>
+                                    {% endif %}
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        {{ recording.created_at|timeago }}
+                                        {% if recording.duration_seconds %}
+                                        · {{ recording.duration_seconds }}s
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200">
+                                        Play
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        No recordings yet. Be the first to record!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Participants List -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">
+                <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Participants ({{ participants|length }})
+            </h2>
+
+            {% if participants %}
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {% for participant in participants %}
+                    <div class="flex items-center space-x-2 p-2 bg-gray-50 rounded">
+                        <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white font-medium">
+                            {{ (participant.username or 'G')[0]|upper }}
+                        </div>
+                        <div class="text-sm font-medium text-gray-900">
+                            {{ participant.username or 'Guest' }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8 text-gray-500">
+                    No participants yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Copy room link to clipboard
+function copyRoomLink() {
+    const roomUrl = document.getElementById('room-url').textContent;
+
+    navigator.clipboard.writeText(roomUrl).then(function() {
+        // Show success feedback
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = `
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Copied!
+        `;
+        button.classList.add('bg-green-500', 'text-white');
+        button.classList.remove('bg-white', 'text-indigo-600');
+
+        setTimeout(function() {
+            button.innerHTML = originalText;
+            button.classList.remove('bg-green-500', 'text-white');
+            button.classList.add('bg-white', 'text-indigo-600');
+        }, 2000);
+    }).catch(function(err) {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy link. Please copy manually.');
+    });
+}
+
+// Initialize chat widget
+document.addEventListener('DOMContentLoaded', function() {
+    // Load chat widget for practice room
+    const chatContainer = document.getElementById('practice-room-chat');
+    if (chatContainer) {
+        // Widget initialization will go here
+        console.log('Practice room chat ready');
+    }
+});
+
+// PWA Install Prompt
+let deferredPrompt;
+const installBanner = document.getElementById('pwa-install-banner');
+const installButton = document.getElementById('pwa-install-button');
+const dismissButton = document.getElementById('pwa-dismiss-button');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    // Show the install banner
+    installBanner.classList.remove('hidden');
+    console.log('[PWA] Install prompt available');
+});
+
+installButton.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+        return;
+    }
+    // Show the install prompt
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`[PWA] User response: ${outcome}`);
+    // Clear the deferredPrompt
+    deferredPrompt = null;
+    // Hide the banner
+    installBanner.classList.add('hidden');
+});
+
+dismissButton.addEventListener('click', () => {
+    // Hide the banner
+    installBanner.classList.add('hidden');
+    console.log('[PWA] Install prompt dismissed');
+});
+
+window.addEventListener('appinstalled', () => {
+    // Hide the banner
+    installBanner.classList.add('hidden');
+    console.log('[PWA] App successfully installed');
+    deferredPrompt = null;
+});
+</script>
+
+<style>
+/* Animated gradient background */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
+}
+
+/* Subtle pulse animation for QR code section */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+    }
+}
+
+.pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+</style>
+{% endblock %}

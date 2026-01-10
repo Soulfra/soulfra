@@ -1,0 +1,19 @@
+# Development & Testing Dependencies
+# Install with: pip install -r requirements-dev.txt
+
+# Include base requirements
+-r requirements.txt
+
+# Testing Framework
+pytest>=7.0.0
+pytest-cov>=4.0.0  # Code coverage
+pytest-flask>=1.2.0  # Flask testing utilities
+# Note: We use DIY visual testing (test_visual_diy.py) instead of playwright!
+
+# Code Quality
+black>=23.0.0  # Code formatting
+flake8>=6.0.0  # Linting
+mypy>=1.0.0   # Type checking
+
+# Development Tools
+ipython>=8.0.0  # Better REPL

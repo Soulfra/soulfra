@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join CringeProof - Voice Verified Onboarding</title>
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+.onboard-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.onboard-header {
+    margin-bottom: 3rem;
+}
+
+.onboard-header h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ff006e, #bdb2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.onboard-form {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 2rem;
+    box-shadow: 12px 12px 0 #bdb2ff;
+    text-align: left;
+}
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 3px solid #000;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff006e;
+}
+
+.voice-challenge {
+    background: #ffe5ec;
+    border: 3px solid #000;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.challenge-phrase {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #ff006e;
+    margin: 1rem 0;
+}
+
+.record-btn {
+    background: #ff006e;
+    color: white;
+    border: 4px solid #000;
+    padding: 1.5rem 3rem;
+    font-size: 1.25rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 6px 6px 0 #000;
+    transition: all 0.1s;
+    margin: 1rem;
+}
+
+.record-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 3px 3px 0 #000;
+}
+
+.record-btn.recording {
+    background: #000;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.btn-primary {
+    background: #ff006e;
+    color: white;
+    border: 3px solid #000;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 900;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 6px 6px 0 #000;
+    transition: all 0.1s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 8px 0 #000;
+}
+
+.btn-primary:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.success-message {
+    background: #10b981;
+    color: white;
+    border: 3px solid #000;
+    padding: 2rem;
+    text-align: center;
+    display: none;
+}
+
+.success-message.show {
+    display: block;
+}
+
+.status {
+    text-align: center;
+    font-weight: 700;
+    margin: 1rem 0;
+    min-height: 2rem;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="/" class="soulfra-logo">🚫 CringeProof</a>
+        <div class="soulfra-links">
+            <a href="/">Home</a>
+            <a href="/record-simple.html">Record</a>
+            <a href="/onboard.html" class="active">Join</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="onboard-container">
+        <div class="onboard-header">
+            <h1>🚫 Join CringeProof</h1>
+            <p class="subtitle">Voice-verified onboarding • No bots, just real humans</p>
+        </div>
+
+        <div class="onboard-form">
+            <!-- Step 1: Basic Info -->
+            <div class="form-step active" id="step1">
+                <h2 style="margin-bottom: 1.5rem;">Step 1: Your Info</h2>
+
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="What should we call you?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="you@example.com" required>
+                </div>
+
+                <button class="btn-primary" onclick="nextStep()">Next: Voice Verification</button>
+            </div>
+
+            <!-- Step 2: Welcome Message -->
+            <div class="form-step" id="step2">
+                <h2 style="margin-bottom: 1.5rem;">Step 2: You're In! 🎉</h2>
+
+                <p style="margin-bottom: 1rem;">CringeProof is offline-first. No verification needed.</p>
+
+                <div class="voice-challenge">
+                    <p style="font-size: 1.25rem; font-weight: 700;">Start recording voice ideas right now.</p>
+                    <p style="opacity: 0.7; margin-top: 0.5rem;">Everything saves to your browser. Private by default.</p>
+                </div>
+
+                <a href="/record-simple.html" class="btn-primary" style="text-decoration: none; display: block; text-align: center; padding: 1rem 2rem;">
+                    🎤 Start Recording
+                </a>
+
+                <p style="margin-top: 1.5rem; text-align: center; opacity: 0.7;">
+                    Optional: Visit <a href="/sync.html" style="color: #ff006e; font-weight: 700;">/sync.html</a> to get AI transcriptions
+                </p>
+            </div>
+
+            <!-- Success -->
+            <div class="success-message" id="successMessage">
+                <h2 style="margin-bottom: 1rem;">🎉 Welcome to CringeProof!</h2>
+                <p>Check your email for next steps.</p>
+                <p style="margin-top: 1rem; opacity: 0.9;">You'll receive weekly digests with the latest from the community.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function nextStep() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    if (!name || !email) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    if (!email.includes('@')) {
+        alert('Please enter a valid email');
+        return;
+    }
+
+    // Save to localStorage (optional - for future features)
+    localStorage.setItem('cringeproof_user', JSON.stringify({ name, email }));
+
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+}
+</script>
+</body>
+</html>

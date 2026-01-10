@@ -1,0 +1,32 @@
+# Soulfra OSS - Docker Compose Configuration
+#
+# Quick start:
+#   docker-compose up -d
+#
+# View logs:
+#   docker-compose logs -f
+#
+# Stop:
+#   docker-compose down
+
+version: '3.8'
+
+services:
+  web:
+    build: ..
+    ports:
+      - "5001:5001"
+    volumes:
+      - ../soulfra.db:/app/soulfra.db
+      - ../output:/app/output
+      - ../static:/app/static
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

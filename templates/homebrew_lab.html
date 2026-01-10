@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Homebrew Lab - Multi-AI Testing Environment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav-links {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .nav-links a {
+            display: inline-block;
+            margin-right: 15px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .panel {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .panel h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .perspective-result {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .perspective-result h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .perspective-result .model-name {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .perspective-result .response {
+            color: #333;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-success { background: #28a745; }
+        .status-error { background: #dc3545; }
+        .status-warning { background: #ffc107; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .model-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .model-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .model-card h4 {
+            margin-bottom: 10px;
+        }
+
+        .model-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #28a745;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #dc3545;
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .recording-indicator.active {
+            display: flex;
+        }
+
+        .recording-dot {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧪 Homebrew Lab</h1>
+            <p>Multi-AI Debate Studio & Testing Environment</p>
+            <div class="nav-links">
+                <a href="/master-control">🎛️ Master Control</a>
+                <a href="/templates/browse">📝 Template Browser</a>
+                <a href="/content/manager">📊 Content Manager</a>
+                <a href="/">🏠 Home</a>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('debate')">🎭 Multi-AI Debate</button>
+            <button class="tab" onclick="switchTab('playground')">🎮 Model Playground</button>
+            <button class="tab" onclick="switchTab('mirror')">🔍 Site Mirror</button>
+            <button class="tab" onclick="switchTab('syntax')">⚔️ Syntax Wars</button>
+        </div>
+
+        <!-- Toast notification -->
+        <div id="toast" class="toast"></div>
+
+        <!-- Tab 1: Multi-AI Debate Studio -->
+        <div id="debate-tab" class="tab-content active">
+            <div class="panel">
+                <h2>🎭 Multi-AI Debate Studio</h2>
+                <p style="color: #666; margin-bottom: 25px;">
+                    Submit a topic and get perspectives from multiple AI models simultaneously.
+                    Perfect for civic debates, multi-angle analysis, and comprehensive research.
+                </p>
+
+                <div class="recording-indicator" id="recording-indicator">
+                    <div class="recording-dot"></div>
+                    <span>Recording...</span>
+                </div>
+
+                <form id="debate-form">
+                    <div class="form-group">
+                        <label>Topic / Title</label>
+                        <input type="text" id="debate-topic" placeholder="e.g., Should AI models be open source?" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Input (text or voice)</label>
+                        <textarea id="debate-text" placeholder="Type your thoughts or use the voice button below..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Brand</label>
+                        <select id="debate-brand">
+                            <option value="soulfra">Soulfra</option>
+                            <option value="calriven">Calriven</option>
+                            <option value="deathtodata">DeathToData</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 15px;">
+                        <button type="submit" class="btn">🚀 Generate Multi-AI Debate</button>
+                        <button type="button" class="btn btn-secondary" onclick="startVoiceRecording()">🎤 Record Voice</button>
+                        <button type="button" class="btn btn-secondary" onclick="stopVoiceRecording()" id="stop-recording-btn" style="display: none;">⏹️ Stop Recording</button>
+                    </div>
+                </form>
+
+                <div id="debate-results" class="results" style="display: none;">
+                    <h3>Debate Results</h3>
+                    <div id="debate-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Model Playground -->
+        <div id="playground-tab" class="tab-content">
+            <div class="panel">
+                <h2>🎮 Model Playground</h2>
+                <p style="color: #666; margin-bottom: 25px;">
+                    Test individual AI models and compare their responses. Perfect for understanding
+                    how different models approach the same problem.
+                </p>
+
+                <div class="grid-2">
+                    <div class="model-card" onclick="selectModel('soulfra-model:latest')">
+                        <h4>🔐 Soulfra Model</h4>
+                        <p>Identity & security focused. Trained on cryptographic concepts and digital sovereignty.</p>
+                    </div>
+                    <div class="model-card" onclick="selectModel('deathtodata-model:latest')">
+                        <h4>🛡️ DeathToData Model</h4>
+                        <p>Privacy advocate. Trained on data minimization and anti-surveillance principles.</p>
+                    </div>
+                    <div class="model-card" onclick="selectModel('calos-model:latest')">
+                        <h4>⚙️ Calos Model</h4>
+                        <p>Technical expert. Trained on code architecture and implementation details.</p>
+                    </div>
+                    <div class="model-card" onclick="selectModel('publishing-model:latest')">
+                        <h4>📰 Publishing Model</h4>
+                        <p>Journalistic perspective. Trained on news writing and storytelling.</p>
+                    </div>
+                </div>
+
+                <form id="playground-form" style="margin-top: 30px;">
+                    <div class="form-group">
+                        <label>Selected Model</label>
+                        <input type="text" id="selected-model" readonly placeholder="Click a model card above">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prompt</label>
+                        <textarea id="playground-prompt" placeholder="Enter your prompt..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">🎯 Query Model</button>
+                </form>
+
+                <div id="playground-results" class="results" style="display: none;">
+                    <h3>Model Response</h3>
+                    <div id="playground-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Site Mirror & Comparison -->
+        <div id="mirror-tab" class="tab-content">
+            <div class="panel">
+                <h2>🔍 Site Mirror & Debugging</h2>
+                <p style="color: #666; margin-bottom: 25px;">
+                    Compare your local version with the live site. Perfect for debugging
+                    differences before deployment.
+                </p>
+
+                <form id="mirror-form">
+                    <div class="form-group">
+                        <label>Brand to Mirror</label>
+                        <select id="mirror-brand">
+                            <option value="soulfra">Soulfra</option>
+                            <option value="calriven">Calriven</option>
+                            <option value="deathtodata">DeathToData</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn">🔄 Sync & Compare</button>
+                </form>
+
+                <div id="mirror-results" class="results" style="display: none;">
+                    <h3>Comparison Results</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Local</th>
+                                <th>Live (GitHub Pages)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mirror-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Syntax Wars -->
+        <div id="syntax-tab" class="tab-content">
+            <div class="panel">
+                <h2>⚔️ Syntax Wars - Code Comparison</h2>
+                <p style="color: #666; margin-bottom: 25px;">
+                    Challenge multiple AI models to solve the same coding problem and compare
+                    their approaches, code quality, and reasoning.
+                </p>
+
+                <form id="syntax-form">
+                    <div class="form-group">
+                        <label>Coding Challenge</label>
+                        <textarea id="syntax-challenge" placeholder="e.g., Write a function to check if a string is a palindrome"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Programming Language</label>
+                        <select id="syntax-language">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="go">Go</option>
+                            <option value="rust">Rust</option>
+                            <option value="java">Java</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn">⚔️ Start Syntax War</button>
+                </form>
+
+                <div id="syntax-results" class="results" style="display: none;">
+                    <h3>Battle Results</h3>
+                    <div id="syntax-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Toast notification
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show' + (isError ? ' error' : '');
+
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Voice recording
+        let mediaRecorder;
+        let audioChunks = [];
+
+        async function startVoiceRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    audioChunks = [];
+
+                    // TODO: Add transcription or store for submission
+                    showToast('Recording saved! (Transcription coming soon)');
+                };
+
+                mediaRecorder.start();
+                document.getElementById('recording-indicator').classList.add('active');
+                document.getElementById('stop-recording-btn').style.display = 'inline-block';
+                showToast('Recording started...');
+            } catch (err) {
+                showToast('Microphone access denied: ' + err.message, true);
+            }
+        }
+
+        function stopVoiceRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                document.getElementById('recording-indicator').classList.remove('active');
+                document.getElementById('stop-recording-btn').style.display = 'none';
+            }
+        }
+
+        // Multi-AI Debate Form
+        document.getElementById('debate-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const topic = document.getElementById('debate-topic').value;
+            const text = document.getElementById('debate-text').value;
+            const brand = document.getElementById('debate-brand').value;
+
+            if (!text) {
+                showToast('Please enter your input or record a voice memo', true);
+                return;
+            }
+
+            // Show loading
+            const resultsDiv = document.getElementById('debate-results');
+            const contentDiv = document.getElementById('debate-content');
+            resultsDiv.style.display = 'block';
+            contentDiv.innerHTML = '<div class="loading">Querying multiple AI models</div>';
+
+            try {
+                const formData = new FormData();
+                formData.append('topic', topic);
+                formData.append('text', text);
+                formData.append('brand', brand);
+
+                const response = await fetch('/api/voice-to-debate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    contentDiv.innerHTML = `
+                        <div style="padding: 20px; background: #d4edda; border-radius: 8px; margin-bottom: 20px;">
+                            <h4 style="color: #155724; margin-bottom: 10px;">✅ Debate Article Created!</h4>
+                            <p style="color: #155724;"><strong>Title:</strong> ${data.title}</p>
+                            <p style="color: #155724;"><strong>Post ID:</strong> ${data.post_id}</p>
+                            <p style="color: #155724;"><strong>Models Used:</strong> ${data.models_used} / ${data.models_used + data.models_failed}</p>
+                            <p style="color: #155724;"><strong>Perspectives:</strong> ${data.perspectives.join(', ')}</p>
+                        </div>
+
+                        <h4>Content Preview:</h4>
+                        <div class="code-block" style="background: white; color: #333; border: 2px solid #e0e0e0;">
+                            ${data.content_preview}
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <a href="/content/manager" class="btn">📝 View in Content Manager</a>
+                            <button onclick="exportAndDeploy('${brand}')" class="btn btn-success">🚀 Export & Deploy</button>
+                        </div>
+                    `;
+                    showToast(data.message);
+                } else {
+                    contentDiv.innerHTML = `
+                        <div style="padding: 20px; background: #f8d7da; border-radius: 8px;">
+                            <h4 style="color: #721c24;">❌ Error</h4>
+                            <p style="color: #721c24;">${data.error}</p>
+                        </div>
+                    `;
+                    showToast(data.error, true);
+                }
+            } catch (err) {
+                contentDiv.innerHTML = `
+                    <div style="padding: 20px; background: #f8d7da; border-radius: 8px;">
+                        <h4 style="color: #721c24;">❌ Error</h4>
+                        <p style="color: #721c24;">${err.message}</p>
+                    </div>
+                `;
+                showToast('Failed to generate debate: ' + err.message, true);
+            }
+        });
+
+        // Model Playground
+        let currentModel = '';
+
+        function selectModel(modelName) {
+            currentModel = modelName;
+            document.getElementById('selected-model').value = modelName;
+            showToast('Selected: ' + modelName);
+        }
+
+        document.getElementById('playground-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentModel) {
+                showToast('Please select a model first', true);
+                return;
+            }
+
+            const prompt = document.getElementById('playground-prompt').value;
+
+            const resultsDiv = document.getElementById('playground-results');
+            const contentDiv = document.getElementById('playground-content');
+            resultsDiv.style.display = 'block';
+            contentDiv.innerHTML = '<div class="loading">Querying ' + currentModel + '</div>';
+
+            try {
+                const response = await fetch('http://localhost:11434/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: currentModel,
+                        prompt: prompt,
+                        stream: false
+                    })
+                });
+
+                const data = await response.json();
+
+                contentDiv.innerHTML = `
+                    <div class="perspective-result">
+                        <h4>
+                            <span class="status-indicator status-success"></span>
+                            ${currentModel}
+                        </h4>
+                        <div class="response">${data.response}</div>
+                    </div>
+                `;
+                showToast('Response received!');
+            } catch (err) {
+                contentDiv.innerHTML = `
+                    <div style="padding: 20px; background: #f8d7da; border-radius: 8px;">
+                        <h4 style="color: #721c24;">❌ Error</h4>
+                        <p style="color: #721c24;">${err.message}</p>
+                    </div>
+                `;
+                showToast('Query failed: ' + err.message, true);
+            }
+        });
+
+        // Site Mirror
+        document.getElementById('mirror-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const brand = document.getElementById('mirror-brand').value;
+
+            const resultsDiv = document.getElementById('mirror-results');
+            const tableBody = document.getElementById('mirror-table-body');
+            resultsDiv.style.display = 'block';
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading...</td></tr>';
+
+            try {
+                const response = await fetch('/debug/sync-live', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ brand })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const statusClass = data.diff.in_sync ? 'status-success' : 'status-warning';
+                    const statusText = data.diff.in_sync ? 'In Sync' : `${data.diff.posts_behind} posts behind`;
+
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td>Posts Count</td>
+                            <td>${data.local.count}</td>
+                            <td>${data.live.count}</td>
+                            <td><span class="status-indicator ${statusClass}"></span> ${statusText}</td>
+                        </tr>
+                        <tr>
+                            <td>Last Updated</td>
+                            <td>${data.local.last_updated || 'Never'}</td>
+                            <td>Live on GitHub</td>
+                            <td><span class="status-indicator status-success"></span> OK</td>
+                        </tr>
+                        <tr>
+                            <td>Local URL</td>
+                            <td colspan="2"><a href="/debug/mirror/${brand}" target="_blank">localhost:5001/debug/mirror/${brand}</a></td>
+                            <td><span class="status-indicator status-success"></span> OK</td>
+                        </tr>
+                        <tr>
+                            <td>Live URL</td>
+                            <td colspan="2"><a href="${data.live.url}" target="_blank">${data.live.url}</a></td>
+                            <td><span class="status-indicator status-success"></span> OK</td>
+                        </tr>
+                    `;
+                    showToast('Comparison complete!');
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #dc3545;">Error: ${data.error}</td></tr>`;
+                    showToast('Comparison failed: ' + data.error, true);
+                }
+            } catch (err) {
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #dc3545;">${err.message}</td></tr>`;
+                showToast('Comparison failed: ' + err.message, true);
+            }
+        });
+
+        // Syntax Wars
+        document.getElementById('syntax-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const challenge = document.getElementById('syntax-challenge').value;
+            const language = document.getElementById('syntax-language').value;
+
+            const resultsDiv = document.getElementById('syntax-results');
+            const contentDiv = document.getElementById('syntax-content');
+            resultsDiv.style.display = 'block';
+            contentDiv.innerHTML = '<div class="loading">Multiple AI models are coding</div>';
+
+            try {
+                // Query multiple models with the same coding challenge
+                const models = ['calos-model:latest', 'llama3.2:3b'];
+                const results = [];
+
+                for (const model of models) {
+                    const response = await fetch('http://localhost:11434/api/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            model: model,
+                            prompt: `Write ${language} code to solve this challenge:\n\n${challenge}\n\nProvide clean, well-commented code.`,
+                            stream: false
+                        })
+                    });
+
+                    const data = await response.json();
+                    results.push({ model, code: data.response });
+                }
+
+                // Display side-by-side comparison
+                let html = '<div class="grid-2">';
+                results.forEach(result => {
+                    html += `
+                        <div>
+                            <h4 style="margin-bottom: 10px;">${result.model}</h4>
+                            <div class="code-block">${result.code}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+
+                contentDiv.innerHTML = html;
+                showToast('Syntax war complete!');
+            } catch (err) {
+                contentDiv.innerHTML = `
+                    <div style="padding: 20px; background: #f8d7da; border-radius: 8px;">
+                        <h4 style="color: #721c24;">❌ Error</h4>
+                        <p style="color: #721c24;">${err.message}</p>
+                    </div>
+                `;
+                showToast('Syntax war failed: ' + err.message, true);
+            }
+        });
+
+        // Export and deploy helper
+        async function exportAndDeploy(brand) {
+            showToast('Deploying ' + brand + '...');
+
+            try {
+                const response = await fetch('/api/deploy-brand', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ brand })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('✅ ' + brand + ' deployed successfully!');
+                } else {
+                    showToast('Deployment failed: ' + data.error, true);
+                }
+            } catch (err) {
+                showToast('Deployment error: ' + err.message, true);
+            }
+        }
+    </script>
+</body>
+</html>

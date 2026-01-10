@@ -1,0 +1,10 @@
+{
+  "domain_name": "cringeproof",
+  "is_launched": false,
+  "signups": 1,
+  "days_until": 90,
+  "launch_date": "2026-04-09T13:28:16.014690+00:00",
+  "acceleration": 0,
+  "instant_threshold": 900,
+  "progress_pct": 0.1111111111111111
+}

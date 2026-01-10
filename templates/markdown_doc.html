@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Soulfra{% endblock %}
+
+{% block content %}
+<div class="markdown-doc-container" style="max-width: 900px; margin: 2rem auto; padding: 0 2rem;">
+  <style>
+    .markdown-doc-container {
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .markdown-doc-container h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 0.5rem;
+    }
+
+    .markdown-doc-container h2 {
+      font-size: 2rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: #667eea;
+    }
+
+    .markdown-doc-container h3 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #764ba2;
+    }
+
+    .markdown-doc-container p {
+      margin-bottom: 1rem;
+    }
+
+    .markdown-doc-container ul, .markdown-doc-container ol {
+      margin-bottom: 1rem;
+      padding-left: 2rem;
+    }
+
+    .markdown-doc-container li {
+      margin-bottom: 0.5rem;
+    }
+
+    .markdown-doc-container pre {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+
+    .markdown-doc-container code {
+      background: #f5f5f5;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+
+    .markdown-doc-container pre code {
+      background: none;
+      padding: 0;
+    }
+
+    .markdown-doc-container blockquote {
+      border-left: 4px solid #667eea;
+      padding-left: 1rem;
+      margin-left: 0;
+      margin-bottom: 1rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .markdown-doc-container a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .markdown-doc-container a:hover {
+      text-decoration: underline;
+    }
+
+    .markdown-doc-container table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+
+    .markdown-doc-container th, .markdown-doc-container td {
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    .markdown-doc-container th {
+      background: #667eea;
+      color: white;
+      font-weight: 600;
+    }
+
+    .markdown-doc-container tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .doc-nav {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: #f0f0f0;
+      border-radius: 8px;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .doc-nav a {
+      padding: 0.5rem 1rem;
+      background: white;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .doc-nav a:hover {
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+    }
+
+    .doc-footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
+
+  <div class="doc-nav">
+    <a href="{{ url_for('about') }}">← Back to About</a>
+    <a href="/@docs/HOW_IT_ALL_CONNECTS">How It All Connects</a>
+    <a href="/@docs/WHITEPAPER">Whitepaper</a>
+    <a href="/@docs/BLOG_GENERATOR_GUIDE">Blog Generator Guide</a>
+    <a href="/@docs/READY_TO_USE">Ready to Use</a>
+    <a href="/@docs/WORKING_VS_DOCS">What's Working</a>
+  </div>
+
+  <article class="markdown-content">
+    {{ content|safe }}
+  </article>
+
+  <div class="doc-footer">
+    <p><strong>{{ title }}</strong></p>
+    <p>
+      <a href="{{ url_for('index') }}">Home</a> |
+      <a href="{{ url_for('about') }}">About</a> |
+      <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

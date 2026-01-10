@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Educational Authority Platform</title>
+    <meta name="description" content="Transform your professional expertise into SEO authority. Free to start, scale as you grow.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .roi-banner {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 700px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .roi-banner h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .roi-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .roi-stat {
+            text-align: center;
+        }
+
+        .roi-stat .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .roi-stat .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .pricing-card.popular {
+            border: 3px solid #667eea;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.popular::before {
+            content: "MOST POPULAR";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .plan-description {
+            color: #718096;
+            margin-bottom: 25px;
+            min-height: 48px;
+        }
+
+        .price-container {
+            margin-bottom: 30px;
+        }
+
+        .price {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .price-period {
+            font-size: 1.2rem;
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        .free-tier {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #48bb78;
+        }
+
+        .cta-button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: opacity 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            opacity: 0.9;
+        }
+
+        .cta-button.secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .features-list li {
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            color: #4a5568;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 16px;
+            padding: 60px 40px;
+            margin: 80px 0;
+        }
+
+        .comparison-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 50px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        .comparison-table th {
+            background: #f7fafc;
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+
+        .comparison-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .check-icon {
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .x-icon {
+            color: #cbd5e0;
+            font-weight: bold;
+        }
+
+        .faq-section {
+            background: white;
+            border-radius: 16px;
+            padding: 60px 40px;
+            margin: 40px 0;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 50px;
+        }
+
+        .faq-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .faq-answer {
+            color: #718096;
+            line-height: 1.8;
+        }
+
+        .attribution-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 60px 0;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .attribution-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .attribution-section p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .badge-preview {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            color: #667eea;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge-preview::before {
+            content: "✓";
+            background: #48bb78;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .sponsor-note {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sponsor-note h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .sponsor-note p {
+            opacity: 0.9;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            opacity: 0.9;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Transform Expertise into Authority</h1>
+            <p class="subtitle">Voice → AI → SEO-Optimized Educational Content</p>
+        </header>
+
+        <div class="roi-banner">
+            <h3>Real Results from One Tutorial</h3>
+            <p>Licensed professionals are generating $3,000+/month in leads from a single 10-minute voice recording</p>
+            <div class="roi-stats">
+                <div class="roi-stat">
+                    <span class="number">10min</span>
+                    <span class="label">Voice Recording</span>
+                </div>
+                <div class="roi-stat">
+                    <span class="number">→</span>
+                </div>
+                <div class="roi-stat">
+                    <span class="number">85+</span>
+                    <span class="label">SEO Landing Pages</span>
+                </div>
+                <div class="roi-stat">
+                    <span class="number">→</span>
+                </div>
+                <div class="roi-stat">
+                    <span class="number">$3K+</span>
+                    <span class="label">Monthly Leads</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Free Tier -->
+            <div class="pricing-card">
+                <div class="plan-name">Free</div>
+                <div class="plan-description">Perfect for testing the platform</div>
+                <div class="price-container">
+                    <span class="free-tier">$0</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <a href="/signup" class="cta-button secondary">Get Started Free</a>
+                <ul class="features-list">
+                    <li>5 educational tutorials per month</li>
+                    <li>Basic license verification badge</li>
+                    <li>Profile in professional directory</li>
+                    <li>Standard SEO (1 page per tutorial)</li>
+                    <li>Job site photo verification</li>
+                    <li>Community support</li>
+                    <li>No credit card required</li>
+                </ul>
+            </div>
+
+            <!-- Pro Tier (Most Popular) -->
+            <div class="pricing-card popular">
+                <div class="plan-name">Professional</div>
+                <div class="plan-description">For serious professionals building authority</div>
+                <div class="price-container">
+                    <span class="price">$49</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <a href="/signup?plan=pro" class="cta-button">Start Pro Trial</a>
+                <ul class="features-list">
+                    <li><strong>Unlimited</strong> educational tutorials</li>
+                    <li><strong>Programmatic SEO:</strong> 50+ landing page variations per tutorial</li>
+                    <li>Custom subdomain: yourname.cringeproof.com</li>
+                    <li>Enhanced license verification (state API integration)</li>
+                    <li>Priority ranking in directory</li>
+                    <li>Advanced analytics dashboard</li>
+                    <li>Lead tracking & conversion metrics</li>
+                    <li>Email support (24-hour response)</li>
+                    <li>Mobile app access</li>
+                </ul>
+            </div>
+
+            <!-- Enterprise Tier -->
+            <div class="pricing-card">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-description">For teams, franchises, and municipalities</div>
+                <div class="price-container">
+                    <span class="price">$199</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <a href="/contact?plan=enterprise" class="cta-button secondary">Contact Sales</a>
+                <ul class="features-list">
+                    <li><strong>Everything in Professional</strong></li>
+                    <li>Team accounts (up to 10 professionals)</li>
+                    <li>White-label mobile app</li>
+                    <li>API access for CRM integration</li>
+                    <li>City/municipality partnerships</li>
+                    <li>Custom domain integration</li>
+                    <li>Dedicated account manager</li>
+                    <li>Priority phone support</li>
+                    <li>Custom training sessions</li>
+                    <li>Volume licensing discounts available</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <h2>Feature Comparison</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Free</th>
+                        <th>Professional</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tutorials per month</td>
+                        <td>5</td>
+                        <td>Unlimited</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Programmatic SEO (landing page variations)</td>
+                        <td>1 page</td>
+                        <td>50+ pages per tutorial</td>
+                        <td>50+ pages per tutorial</td>
+                    </tr>
+                    <tr>
+                        <td>Custom subdomain</td>
+                        <td><span class="x-icon">✗</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span> + custom domain</td>
+                    </tr>
+                    <tr>
+                        <td>License verification</td>
+                        <td>Basic</td>
+                        <td>State API integration</td>
+                        <td>State API integration</td>
+                    </tr>
+                    <tr>
+                        <td>Lead tracking analytics</td>
+                        <td><span class="x-icon">✗</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span> + custom reporting</td>
+                    </tr>
+                    <tr>
+                        <td>Team accounts</td>
+                        <td><span class="x-icon">✗</span></td>
+                        <td><span class="x-icon">✗</span></td>
+                        <td><span class="check-icon">✓</span> Up to 10 users</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile app</td>
+                        <td>Standard</td>
+                        <td>Standard</td>
+                        <td>White-label</td>
+                    </tr>
+                    <tr>
+                        <td>API access</td>
+                        <td><span class="x-icon">✗</span></td>
+                        <td><span class="x-icon">✗</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Support</td>
+                        <td>Community</td>
+                        <td>Email (24hr)</td>
+                        <td>Phone + dedicated manager</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How is this different from Yelp or Google Reviews?</div>
+                <div class="faq-answer">Traditional review sites focus on customer opinions ("great service!"). We focus on <strong>educational authority</strong>. You teach through voice recordings, explaining WHY problems happen and how to prevent them. This builds trust, ranks better on Google for problem-solving queries, and generates higher-quality leads.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What is programmatic SEO (pSEO)?</div>
+                <div class="faq-answer">From ONE 10-minute voice tutorial, our AI generates <strong>50+ landing page variations</strong>: city-specific pages, problem variations, solution angles. For example, "why AC makes noise Tampa" + "fix noisy AC St. Petersburg" + 48 more. Each targets different keywords, dramatically increasing your Google visibility.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Do I need to write anything?</div>
+                <div class="faq-answer">No. Just record voice on your phone (10 minutes). Our AI handles: transcription, extracting teaching points, generating blog posts, creating landing pages, SEO optimization, and publishing. You focus on your expertise, we handle the content.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How does license verification work?</div>
+                <div class="faq-answer">We integrate with state licensing boards (FL DBPR, EPA certifications, etc.) to verify your professional license. Your profile shows a verified badge with your license number, building trust with potential customers. Free tier gets basic verification, Pro tier gets real-time API integration.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What's the ROI?</div>
+                <div class="faq-answer">Typical results from ONE tutorial: 500 views/month → 25 leads (5% conversion) → 10 customers (40% close rate) → $3,000/month revenue. At $49/month platform cost, that's <strong>61x ROI</strong>. Most professionals create 5-10 tutorials, multiplying results.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I cancel anytime?</div>
+                <div class="faq-answer">Yes. No contracts. Cancel anytime. Your content remains published (good for SEO), but you can't add new tutorials after canceling. You own your content and can export it anytime.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What trades/professions does this work for?</div>
+                <div class="faq-answer">Any licensed professional who solves problems: plumbers, HVAC techs, electricians, roofers, contractors, locksmiths, appliance repair, auto mechanics, landscapers, pest control, pool service, etc. If you have expertise and a license, this works.</div>
+            </div>
+        </div>
+
+        <div class="attribution-section">
+            <h3>Powered by Badge</h3>
+            <p>When you join, get a "Verified with Soulfra" badge for your website</p>
+            <div class="badge-preview">
+                Verified Professional - License #FL1234567
+            </div>
+            <p style="margin-top: 20px; font-size: 0.95rem;">Shows customers you're licensed, verified, and building authority through education</p>
+        </div>
+
+        <div class="sponsor-note">
+            <h4>Built with Open Source</h4>
+            <p>This platform is built on amazing open-source tools like <strong>Tailwind CSS</strong>, <strong>Flask</strong>, <strong>Ollama</strong>, and <strong>Anthropic's Claude</strong>. As we grow, we're committed to sponsoring these projects and giving back to the community.</p>
+            <p style="margin-top: 15px;"><a href="/contributors" style="color: white; text-decoration: underline;">See all contributors →</a></p>
+        </div>
+
+        <footer>
+            <p><a href="/">Home</a> • <a href="/docs">Documentation</a> • <a href="/compare">Compare to Competitors</a> • <a href="/attribution">Attribution & Badges</a></p>
+            <p style="margin-top: 20px;">© 2026 Soulfra Educational Authority Platform</p>
+        </footer>
+    </div>
+</body>
+</html>

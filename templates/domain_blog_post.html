@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}{{ topic_title }} - {{ domain_with_emoji }}{% endblock %}
+
+{% block content %}
+<style>
+  .post-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .breadcrumb a {
+    color: #667eea;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .post-header h1 {
+    font-size: 2.5rem;
+    margin: 0 0 1rem 0;
+    color: #333;
+    line-height: 1.2;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .meta-tag {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .post-content {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    color: #333;
+  }
+
+  .post-content h2 {
+    margin: 2rem 0 1rem 0;
+    font-size: 1.8rem;
+    color: #333;
+  }
+
+  .post-content h3 {
+    margin: 1.5rem 0 1rem 0;
+    font-size: 1.4rem;
+    color: #444;
+  }
+
+  .post-content p {
+    margin: 1rem 0;
+  }
+
+  .keyword-highlight {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #667eea;
+  }
+
+  .related-section {
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .related-section h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.3rem;
+    color: #333;
+  }
+
+  .related-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .related-word {
+    background: white;
+    border: 2px solid #e0e0e0;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    transition: all 0.2s ease;
+  }
+
+  .related-word:hover {
+    border-color: #667eea;
+    color: #667eea;
+  }
+
+  .cta-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .cta-section h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: white;
+    color: #667eea;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .cta-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+</style>
+
+<div class="post-container">
+  <div class="breadcrumb">
+    <a href="/">Home</a> &gt;
+    <a href="/domains">Domains</a> &gt;
+    <a href="/{{ domain_slug }}">{{ domain_slug }}</a> &gt;
+    <a href="/{{ domain_slug }}/blog">Blog</a> &gt;
+    <strong>{{ topic_title }}</strong>
+  </div>
+
+  <article>
+    <div class="post-header">
+      <h1>{{ topic_title }}</h1>
+    </div>
+
+    <div class="post-meta">
+      {% for keyword in keywords %}
+      <span class="meta-tag">{{ keyword }}</span>
+      {% endfor %}
+      <span class="meta-tag">{{ domain_with_emoji }}</span>
+    </div>
+
+    <div class="post-content">
+      <h2>Understanding {{ topic_title }}</h2>
+      <p>
+        This content is organically generated from the collective voice of the {{ domain.split('.')[0] }} community.
+        The topic <span class="keyword-highlight">{{ topic_title }}</span> emerged from authentic conversations
+        and voice recordings by community contributors.
+      </p>
+
+      <h3>Core Vocabulary</h3>
+      <p>
+        {% for keyword in keywords %}
+        The term <span class="keyword-highlight">{{ keyword }}</span> appears frequently in community discussions,
+        {% endfor %}
+        reflecting the authentic language patterns of people engaged with {{ domain.split('.')[0] }}.
+      </p>
+
+      <h3>Community Insights</h3>
+      <p>
+        This topic represents collective knowledge and perspectives shared through voice recordings.
+        Rather than traditional top-down content, this information structure emerges from the bottom-up:
+        real people, using their authentic vocabulary, contributing their genuine insights.
+      </p>
+
+      <h3>Why This Matters</h3>
+      <p>
+        Traditional SEO content is written to game search algorithms. This content is different.
+        It's generated from <strong>actual human voice</strong> - the words people naturally use when
+        they talk about topics they care about. This creates an information architecture that's both
+        search-friendly and genuinely useful.
+      </p>
+
+      <h3>How This Content Was Created</h3>
+      <p>
+        1. Community members recorded voice memos about {{ domain.split('.')[0] }}<br>
+        2. AI extracted authentic vocabulary patterns (wordmap)<br>
+        3. Topics emerged organically from frequently-used word combinations<br>
+        4. This page was auto-generated to match search intent with community voice
+      </p>
+    </div>
+
+    {% if related_words %}
+    <div class="related-section">
+      <h2>Related Topics</h2>
+      <div class="related-words">
+        {% for word, count in related_words %}
+        <div class="related-word">{{ word }} ({{ count|int }})</div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="cta-section">
+      <h2>Join the {{ domain.split('.')[0] }} Community</h2>
+      <p style="margin: 0 0 1rem 0; opacity: 0.9;">
+        Record your voice to contribute to this living directory. Your authentic vocabulary shapes the content,
+        and you earn ownership in the domain.
+      </p>
+      <a href="/signup" class="cta-btn">Get Started</a>
+      <a href="/{{ domain_slug }}" class="cta-btn" style="background: transparent; border: 2px solid white; color: white;">
+        Explore {{ domain_slug }}
+      </a>
+    </div>
+  </article>
+</div>
+{% endblock %}

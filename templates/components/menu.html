@@ -1,0 +1,41 @@
+<div class="sidebar-menu" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <h3 style="margin-top: 0; color: var(--color-primary, #667eea); font-size: 1.1rem;">Navigation</h3>
+
+  <nav style="display: flex; flex-direction: column; gap: 0.75rem;">
+    <a href="/" style="color: #333; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: background 0.2s;">
+      🏠 Home
+    </a>
+    <a href="/posts" style="color: #333; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: background 0.2s;">
+      📝 All Posts
+    </a>
+    <a href="/about" style="color: #333; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: background 0.2s;">
+      ℹ️ About
+    </a>
+    <a href="/subscribe" style="color: #333; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: background 0.2s;">
+      📬 Subscribe
+    </a>
+
+    {% if brands %}
+      <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid #ddd;">
+      <h4 style="font-size: 0.9rem; color: #666; margin: 0.5rem 0;">Brands</h4>
+      {% for brand in brands %}
+        <a href="/brand/{{ brand.slug }}" style="color: #333; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: background 0.2s;">
+          {% if brand.emoji %}{{ brand.emoji }}{% endif %} {{ brand.name }}
+        </a>
+      {% endfor %}
+    {% endif %}
+
+    {% if session.get('user_id') %}
+      <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid #ddd;">
+      <a href="/admin" style="color: #333; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: background 0.2s;">
+        ⚙️ Admin
+      </a>
+    {% endif %}
+  </nav>
+</div>
+
+<style>
+  .sidebar-menu a:hover {
+    background: rgba(102, 126, 234, 0.1);
+  }
+</style>

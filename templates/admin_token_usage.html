@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Usage - Soulfra Admin</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .stat-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .stat-card .value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+    .brand-usage {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .brand-usage h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border-left: 4px solid #667eea;
+    }
+    .brand-name {
+      font-weight: 600;
+      color: #333;
+      flex: 1;
+    }
+    .brand-stats {
+      display: flex;
+      gap: 30px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .recent-requests {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 12px;
+    }
+    .recent-requests h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      border-collapse: collapse;
+    }
+    thead {
+      background: #667eea;
+      color: white;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+    tbody tr:nth-child(even) {
+      background: #f5f5f5;
+    }
+    tbody tr:hover {
+      background: #e6f2ff;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .badge-llama {
+      background: #e6f2ff;
+      color: #0066cc;
+    }
+    .info-box {
+      background: #e6f2ff;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #007bff;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <h2>Soulfra Admin - Token Usage</h2>
+    <nav class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/automation">Automation</a>
+      <a href="/admin/token-usage">Token Usage</a>
+      <a href="/admin/brand-status">Brand Status</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    <h1>🪙 Token Usage Dashboard</h1>
+
+    <div class="info-box">
+      <strong>How it works:</strong> Ollama automatically tracks tokens for every request.
+      <br>• <strong>tokens_prompt</strong> = Your input size
+      <br>• <strong>tokens_generated</strong> = Response size
+      <br>• <strong>time_ms</strong> = Generation time
+      <br><br>
+      <strong>Note:</strong> Ollama runs locally - tokens are FREE! This tracking is for analytics only.
+    </div>
+
+    <!-- Total Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Requests</h3>
+        <p class="value">{{ total['requests'] or 0 }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Total Tokens</h3>
+        <p class="value">{{ '{:,}'.format(total['total_tokens'] or 0) }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Avg Tokens/Request</h3>
+        <p class="value">
+          {% if total['requests'] and total['requests'] > 0 %}
+            {{ (total['total_tokens'] / total['requests']) | round | int }}
+          {% else %}
+            0
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- Per-Action Usage -->
+    <div class="brand-usage">
+      <h2>📊 Usage by Action</h2>
+      {% if actions %}
+        {% for item in actions %}
+        <div class="brand-row">
+          <div class="brand-name">{{ item['action'] or 'Unknown' }}</div>
+          <div class="brand-stats">
+            <div>
+              <strong>{{ item['requests'] }}</strong> requests
+            </div>
+            <div>
+              <strong>{{ '{:,}'.format(item['tokens']) }}</strong> tokens
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p style="color: #666; padding: 20px; text-align: center;">No token usage recorded yet. Start using automation to see stats!</p>
+      {% endif %}
+    </div>
+
+    <!-- Recent Requests -->
+    <div class="recent-requests">
+      <h2>🕒 Recent Requests (Last 50)</h2>
+      {% if recent %}
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Tokens Spent</th>
+            <th>Metadata</th>
+            <th>Date/Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in recent %}
+          <tr>
+            <td><span class="badge badge-llama">{{ req['action'] or 'N/A' }}</span></td>
+            <td>{{ '{:,}'.format(req['tokens_spent']) }}</td>
+            <td style="font-size: 0.85em; color: #666;">{{ req['metadata'] or '-' }}</td>
+            <td>{{ req['created_at'] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p style="color: #666; padding: 20px; text-align: center;">No requests yet. Token tracking starts when you use Ollama for content generation.</p>
+      {% endif %}
+    </div>
+
+    <div class="info-box" style="margin-top: 30px;">
+      <strong>💡 Pro Tip:</strong> To log token usage, modify your Ollama calls to save to the database:
+      <pre style="background: white; padding: 10px; border-radius: 4px; overflow-x: auto; margin-top: 10px;"><code>from ollama_client import OllamaClient
+from database import get_db
+
+ollama = OllamaClient()
+result = ollama.generate("Your prompt", max_tokens=500)
+
+# Log usage
+db = get_db()
+db.execute('''
+    INSERT INTO token_usage (user_id, tokens_used, model, brand_slug)
+    VALUES (?, ?, ?, ?)
+''', (user_id, result['tokens_generated'], 'llama3.2', 'soulfra'))
+db.commit()</code></pre>
+    </div>
+
+  </div>
+</body>
+</html>

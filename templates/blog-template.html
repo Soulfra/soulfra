@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} - {{ domain }} Blog</title>
+
+  <!-- UNIVERSAL THEME - Auto-generated from brand config -->
+  <link rel="stylesheet" href="/theme-{{ domain }}.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      /* Uses theme gradient instead of hardcoded colors! */
+      background: var(--blog-bg);
+      color: var(--blog-text-primary);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      border-bottom: 2px solid var(--brand-primary);
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    header .meta {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    header .meta span {
+      color: var(--blog-text-secondary);
+      font-size: 14px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      margin-bottom: 40px;
+      padding: 15px 0;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    nav a {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 0 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--blog-text-primary);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+    }
+
+    article {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 40px;
+      border-left: 4px solid var(--blog-accent);
+      margin-bottom: 40px;
+    }
+
+    article h2 {
+      font-size: 28px;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    article p {
+      line-height: 1.8;
+      margin-bottom: 15px;
+      color: var(--blog-text-secondary);
+      font-size: 16px;
+    }
+
+    article ul {
+      margin-left: 30px;
+      margin-bottom: 15px;
+    }
+
+    article li {
+      line-height: 1.8;
+      margin-bottom: 8px;
+      color: var(--blog-text-secondary);
+    }
+
+    article a {
+      color: var(--blog-link);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    article a:hover {
+      color: var(--blog-link-hover);
+      border-bottom-color: var(--blog-link-hover);
+    }
+
+    .perspectives {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 25px;
+      border-radius: 8px;
+      margin: 30px 0;
+      border-left: 3px solid var(--brand-primary);
+    }
+
+    .perspective {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .perspective:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .perspective h3 {
+      color: var(--brand-primary);
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .perspective p {
+      color: var(--blog-text-secondary);
+      font-size: 15px;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: var(--brand-primary-light);
+    }
+
+    pre {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+      border-left: 3px solid var(--brand-primary);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    blockquote {
+      border-left: 4px solid var(--brand-primary);
+      padding-left: 20px;
+      margin: 20px 0;
+      font-style: italic;
+      color: var(--blog-text-secondary);
+    }
+
+    .cta {
+      background: var(--brand-primary);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 8px;
+      text-align: center;
+      margin: 40px 0;
+      font-weight: 600;
+      display: inline-block;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .cta:hover {
+      background: var(--brand-primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(var(--brand-primary-rgb), 0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 60px;
+      color: var(--blog-text-secondary);
+    }
+
+    footer a {
+      color: var(--blog-link);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--blog-link-hover);
+    }
+
+    /* Utility classes using brand colors */
+    .text-brand {
+      color: var(--brand-primary);
+    }
+
+    .bg-brand {
+      background-color: var(--brand-primary);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--badge-primary-bg);
+      color: var(--badge-primary-text);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>{{ title }}</h1>
+      <div class="meta">
+        <span>📅 {{ date }}</span>
+        <span>✍️ {{ author }}</span>
+        {% if category %}
+        <span class="badge">{{ category }}</span>
+        {% endif %}
+      </div>
+    </header>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="/blog" class="active">Blog</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+
+    <article>
+      {{ content }}
+    </article>
+
+    <footer>
+      <p>© 2025 {{ domain }} - Part of the Soulfra Network</p>
+      <p>
+        <a href="/blog">← Back to Blog</a> |
+        <a href="/newsletter">Subscribe</a> |
+        <a href="/about">About Us</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Analytics or other JS can go here
+    console.log('Blog template loaded with universal theme');
+  </script>
+</body>
+</html>

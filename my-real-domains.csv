@@ -1,0 +1,141 @@
+{
+  "generated_at": "2026-01-04T10:39:22.473057",
+  "total_domains": 9,
+  "domains": [
+    {
+      "slug": "soulfra",
+      "name": "Soulfra",
+      "domain": "soulfra.com",
+      "tagline": "Your keys. Your identity. Period.",
+      "category": "Identity & Security",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": "#3498db",
+        "secondary": "#2ecc71",
+        "accent": "#e74c3c"
+      },
+      "network_role": "hub"
+    },
+    {
+      "slug": "deathtodata",
+      "name": "DeathToData",
+      "domain": "deathtodata.com",
+      "tagline": "Search without surveillance. Deal with it, Google.",
+      "category": "Privacy Search",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": "#e74c3c",
+        "secondary": "#c0392b",
+        "accent": "#f39c12"
+      },
+      "network_role": "member"
+    },
+    {
+      "slug": "calriven",
+      "name": "Calriven",
+      "domain": "calriven.com",
+      "tagline": "Best AI for the job. Every time.",
+      "category": "AI Platform",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": "#667eea",
+        "secondary": "#764ba2",
+        "accent": "#61dafb"
+      },
+      "network_role": "member"
+    },
+    {
+      "slug": "howtocookathome",
+      "name": "HowToCookAtHome",
+      "domain": "howtocookathome.com",
+      "tagline": "Simple recipes for home cooks \ud83c\udf73",
+      "category": "cooking",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": "#FF6B35",
+        "secondary": "#F7931E",
+        "accent": "#C1272D"
+      },
+      "network_role": "member"
+    },
+    {
+      "slug": "stpetepros",
+      "name": "Stpetepros",
+      "domain": "stpetepros.com",
+      "tagline": "Tampa Bay Area, Florida: Leverage Local SEO and Online Directories",
+      "category": "Home Services",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": null,
+        "secondary": null,
+        "accent": null
+      },
+      "network_role": "member"
+    },
+    {
+      "slug": "hollowtown",
+      "name": "Hollowtown",
+      "domain": "hollowtown.com",
+      "tagline": "Where gaming mysteries unfold",
+      "category": "gaming",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": "#2c1810",
+        "secondary": "#8b4513",
+        "accent": "#ff6b35"
+      },
+      "network_role": "member"
+    },
+    {
+      "slug": "oofbox",
+      "name": "Oofbox",
+      "domain": "oofbox.com",
+      "tagline": "Where gaming mysteries unfold",
+      "category": "gaming",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": "#2c1810",
+        "secondary": "#8b4513",
+        "accent": "#ff6b35"
+      },
+      "network_role": "member"
+    },
+    {
+      "slug": "niceleak",
+      "name": "Niceleak",
+      "domain": "niceleak.com",
+      "tagline": "Experience the thrill of the unknown, one game at a time",
+      "category": "gaming",
+      "type": "blog",
+      "verified": false,
+      "theme": {
+        "primary": "#1a1d23",
+        "secondary": "#343a40",
+        "accent": "#ff69b4"
+      },
+      "network_role": "member"
+    },
+    {
+      "slug": "cringeproof",
+      "name": "CringeProof",
+      "domain": "cringeproof.com",
+      "tagline": "Zero Performance Anxiety",
+      "category": "social",
+      "type": "community",
+      "verified": false,
+      "theme": {
+        "primary": "#ff006e",
+        "secondary": "#bdb2ff",
+        "accent": "#000"
+      },
+      "network_role": "member"
+    }
+  ]
+}

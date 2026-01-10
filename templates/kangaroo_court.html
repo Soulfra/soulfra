@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦘 Kangaroo Court</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .credits {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 15px 20px;
+            border-radius: 15px;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .credits-amount {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .submission {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #ddd;
+        }
+
+        .submission.guilty {
+            border-left-color: #f5576c;
+            background: #fff5f7;
+        }
+
+        .submission.innocent {
+            border-left-color: #4facfe;
+            background: #f0f9ff;
+        }
+
+        .submission.pending {
+            border-left-color: #ffd93d;
+            background: #fffef0;
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .verdict {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .verdict.guilty {
+            background: #f5576c;
+            color: white;
+        }
+
+        .verdict.innocent {
+            background: #4facfe;
+            color: white;
+        }
+
+        .verdict.pending {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .transcription {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+
+        .judgment {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .punishment, .reward {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .punishment {
+            color: #f5576c;
+        }
+
+        .reward {
+            color: #4facfe;
+        }
+
+        .reasoning {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .submission-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .credits-earned {
+            color: #f093fb;
+            font-weight: bold;
+        }
+
+        .vote-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .vote-btn:active {
+            transform: scale(0.95);
+        }
+
+        .vote-count {
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .leaderboard-rank {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            min-width: 40px;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+            padding: 0 15px;
+        }
+
+        .leaderboard-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .leaderboard-stats {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .leaderboard-credits {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f093fb;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🦘 Kangaroo Court</h1>
+            <p>Submit voice memos • Get judged by AI • Earn credits</p>
+
+            <div class="credits">
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">Your Credits</div>
+                    <div class="credits-amount">{{ user.total_credits }}</div>
+                </div>
+                <div style="text-align: right; font-size: 14px;">
+                    <div>{{ user.submissions_count }} submissions</div>
+                    <div>{{ user.guilty_count }} guilty • {{ user.innocent_count }} innocent</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <a href="/voice/upload" class="submit-btn">
+            🎤 Submit Voice Memo
+        </a>
+
+        <!-- Recent Submissions -->
+        <div class="section">
+            <h2>Recent Judgments</h2>
+
+            {% if submissions %}
+                {% for sub in submissions %}
+                <div class="submission {{ sub.verdict.lower() }}">
+                    <div class="submission-header">
+                        <span class="username">{{ sub.username }}</span>
+                        <span class="verdict {{ sub.verdict.lower() }}">{{ sub.verdict }}</span>
+                    </div>
+
+                    {% if sub.transcription %}
+                    <div class="transcription">
+                        "{{ sub.transcription }}"
+                    </div>
+                    {% endif %}
+
+                    {% if sub.verdict != 'PENDING' and sub.verdict != 'ERROR' %}
+                    <div class="judgment">
+                        {% if sub.punishment %}
+                        <div class="punishment">⚡ {{ sub.punishment }}</div>
+                        {% endif %}
+
+                        {% if sub.reward %}
+                        <div class="reward">🎁 {{ sub.reward }}</div>
+                        {% endif %}
+
+                        {% if sub.reasoning %}
+                        <div class="reasoning">{{ sub.reasoning }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <div class="submission-footer">
+                        <div>
+                            {% if sub.votes > 0 %}
+                            <span class="vote-count">❤️ {{ sub.votes }}</span>
+                            {% endif %}
+                            {% if sub.credits_earned %}
+                            <span class="credits-earned">+{{ sub.credits_earned }} credits</span>
+                            {% endif %}
+                        </div>
+
+                        {% if sub.verdict != 'PENDING' %}
+                        <button class="vote-btn" onclick="vote({{ sub.id }})">
+                            ❤️ Vote
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 48px;">🦘</div>
+                    <p>No submissions yet!</p>
+                    <p style="margin-top: 10px;">Be the first to submit a voice memo.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="section">
+            <h2>🏆 Leaderboard</h2>
+
+            {% if leaderboard %}
+                {% for leader in leaderboard %}
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">{{ loop.index }}</div>
+                    <div class="leaderboard-info">
+                        <div class="leaderboard-name">{{ leader.username }}</div>
+                        <div class="leaderboard-stats">
+                            {{ leader.guilty_count }} guilty • {{ leader.innocent_count }} innocent
+                        </div>
+                    </div>
+                    <div class="leaderboard-credits">{{ leader.total_credits }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No players yet!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function vote(submissionId) {
+            fetch(`/kangaroo-court/vote/${submissionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reload page to show updated vote count
+                    location.reload();
+                } else {
+                    alert('Vote failed: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Vote error:', error);
+                alert('Failed to vote. You may have already voted on this submission.');
+            });
+        }
+
+        // Auto-refresh every 30 seconds to see new judgments
+        setTimeout(() => {
+            location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>

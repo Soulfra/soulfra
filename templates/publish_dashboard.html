@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cal Publishing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+            font-size: 1.2rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .qr-code {
+            text-align: center;
+        }
+
+        .qr-code img {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .qr-instructions {
+            margin-top: 1rem;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .qr-instructions ol {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .qr-instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .recent-posts {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .recent-posts h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #06FFA5;
+        }
+
+        .post-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-meta {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(6, 255, 165, 0.2);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid #06FFA5;
+        }
+
+        .post-link:hover {
+            background: rgba(6, 255, 165, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(6, 255, 165, 0.2);
+            border: 2px solid #06FFA5;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: rgba(6, 255, 165, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(6, 255, 165, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid #06FFA5;
+            display: none;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            opacity: 0.6;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Cal Publishing Dashboard</h1>
+        <p class="subtitle">Voice → Cal → Calriven Blog (Fully Automated)</p>
+
+        <div class="dashboard">
+            <!-- QR Code Section -->
+            <div class="card qr-code">
+                <h2>📱 Scan to Publish</h2>
+                <img src="/cal/qr" alt="QR Code">
+                <div class="qr-instructions">
+                    <strong>How to use:</strong>
+                    <ol>
+                        <li>Scan this QR code with your phone</li>
+                        <li>Record your voice or type text</li>
+                        <li>Submit → Cal writes the blog post</li>
+                        <li>Auto-publishes to soulfra.github.io/calriven</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="card">
+                <h2>📊 Publishing Stats</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-value">{{ total_posts }}</span>
+                        <span class="stat-label">Total Posts</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ posts_this_month }}</span>
+                        <span class="stat-label">This Month</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ posts_today }}</span>
+                        <span class="stat-label">Today</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button onclick="refreshPosts()">🔄 Refresh</button>
+                    <button onclick="window.open('https://soulfra.github.io/calriven/', '_blank')">🌐 View Live Site</button>
+                </div>
+
+                <div id="statusMessage" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- Recent Posts -->
+        <div class="recent-posts">
+            <h2>📚 Recent Posts</h2>
+            {% if recent_posts %}
+                {% for post in recent_posts %}
+                <div class="post-item">
+                    <h3>{{ post.title }}</h3>
+                    <div class="post-meta">
+                        📅 {{ post.published_at }} | ✍️ {{ post.author }}
+                    </div>
+                    <a href="https://soulfra.github.io/calriven/post/{{ post.slug }}.html" target="_blank" class="post-link">View Post →</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No posts yet. Scan the QR code to create your first post!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function refreshPosts() {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = '🔄 Refreshing...';
+            statusEl.classList.add('show');
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
+
+        // Auto-refresh every 30 seconds to show new posts
+        setInterval(() => {
+            window.location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>

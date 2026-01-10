@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Wiki - Knowledge Base{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+    <h1 style="font-size: 2.5em; margin-bottom: 20px;">🌐 Soulfra Wiki</h1>
+    <p style="font-size: 1.2em; color: #666; margin-bottom: 40px;">
+        A knowledge base of concepts, narratives, and interactive experiences
+    </p>
+
+    <!-- Recent Concepts -->
+    <div style="margin-bottom: 60px;">
+        <h2 style="font-size: 2em; margin-bottom: 20px;">📚 Recent Concepts</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+            {% for concept in recent_concepts %}
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; transition: all 0.3s;">
+                <h3 style="margin: 0 0 10px 0;">
+                    <a href="/wiki/concept/{{ concept.slug }}" style="color: #667eea; text-decoration: none;">
+                        {{ concept.title }}
+                    </a>
+                </h3>
+                {% if concept.description %}
+                <p style="color: #666; margin: 0 0 15px 0;">{{ concept.description }}</p>
+                {% endif %}
+
+                <div style="display: flex; gap: 10px; align-items: center; font-size: 0.9em; color: #999;">
+                    {% if concept.category_name %}
+                    <span>📁 {{ concept.category_name }}</span>
+                    {% endif %}
+                    {% if concept.narrative_brand_slug %}
+                    <span>🎮 Has Narrative</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div>
+        <h2 style="font-size: 2em; margin-bottom: 20px;">📂 Categories</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+            {% for category in categories %}
+            {% if category.concept_count > 0 %}
+            <a href="/wiki/category/{{ category.slug }}" style="
+                display: block;
+                padding: 20px;
+                border: 2px solid #eee;
+                border-radius: 8px;
+                text-decoration: none;
+                color: #333;
+                transition: all 0.3s;
+                hover: border-color: #667eea;">
+                <div style="font-weight: 600; font-size: 1.1em; margin-bottom: 5px;">
+                    {{ category.name }}
+                </div>
+                <div style="color: #999; font-size: 0.9em;">
+                    {{ category.concept_count }} concepts
+                </div>
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

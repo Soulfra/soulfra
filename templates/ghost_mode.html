@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👻 Ghost Mode - Live System Monitor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: #1a1a1a;
+            padding: 15px 20px;
+            border-bottom: 2px solid #00ff00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 1.5em;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        .header .status {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+        .status-dot.active { background: #00ff00; }
+        .status-dot.inactive { background: #ff0000; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Main Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: calc(100vh - 60px);
+            gap: 2px;
+            background: #00ff00;
+        }
+
+        .panel {
+            background: #0a0a0a;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .panel h2 {
+            color: #00ff00;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 5px;
+        }
+
+        /* Sprites (Visual representation) */
+        #sprites-canvas {
+            background: #050505;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .sprite-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sprite {
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8em;
+            transition: all 0.3s;
+        }
+        .sprite:hover {
+            background: #2a2a2a;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .sprite .icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        .sprite.qr .icon { color: #00ffff; }
+        .sprite.chat .icon { color: #ffff00; }
+        .sprite.question .icon { color: #ff00ff; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 15px;
+        }
+        .stat-box .label {
+            font-size: 0.8em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .stat-box .value {
+            font-size: 1.8em;
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        /* Live Log */
+        .log-stream {
+            background: #050505;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px;
+            border-left: 3px solid #00ff00;
+            background: #0f0f0f;
+        }
+        .log-entry.qr { border-left-color: #00ffff; }
+        .log-entry.chat { border-left-color: #ffff00; }
+        .log-entry.ollama { border-left-color: #ff00ff; }
+        .log-entry.network { border-left-color: #ff8800; }
+
+        .log-entry .timestamp {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Model Activity */
+        .model-card {
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .model-card.custom {
+            border-color: #ff00ff;
+            box-shadow: 0 0 5px #ff00ff;
+        }
+        .model-card .model-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .model-card .model-info {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        /* Network Topology */
+        .network-viz {
+            background: #050505;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .network-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            margin: 10px;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px #00ff00; }
+            50% { box-shadow: 0 0 20px #00ff00; }
+        }
+
+        .network-node .icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            background: #050505;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            padding: 15px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #1a1a1a;
+            transition: background 0.3s;
+        }
+        .leaderboard-item:hover {
+            background: #1a1a1a;
+        }
+        .leaderboard-item .rank {
+            color: #ffff00;
+            font-weight: bold;
+        }
+        .leaderboard-item .xp {
+            color: #ff00ff;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cc00;
+        }
+
+        /* Tab Navigation */
+        .tab-bar {
+            background: #0f0f0f;
+            border-bottom: 2px solid #00ff00;
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+        }
+        .tab {
+            background: #1a1a1a;
+            border: none;
+            border-right: 1px solid #00ff00;
+            color: #888;
+            padding: 12px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tab:hover {
+            background: #2a2a2a;
+            color: #00ff00;
+        }
+        .tab.active {
+            background: #00ff00;
+            color: #0a0a0a;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>👻 GHOST MODE - LIVE SYSTEM MONITOR</h1>
+        <div class="status">
+            <div>
+                <span class="status-dot active" id="ollama-status"></span>
+                <span id="ollama-text">Ollama: Checking...</span>
+            </div>
+            <div>
+                <span class="status-dot active" id="network-status"></span>
+                <span id="network-text">Network: Active</span>
+            </div>
+            <div>
+                <span>Auto-refresh: <span id="refresh-timer">3</span>s</span>
+            </div>
+            <div>
+                <button id="pause-btn" style="background: #00ff00; color: #0a0a0a; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold;">⏸ PAUSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <button class="tab active" onclick="switchTab('live')">🔴 LIVE</button>
+        <button class="tab" onclick="switchTab('system')">🔧 SYSTEM</button>
+        <button class="tab" onclick="switchTab('database')">📊 DATABASE</button>
+        <button class="tab" onclick="switchTab('routes')">🛣️ ROUTES</button>
+        <button class="tab" onclick="switchTab('challenges')">🎨 CHALLENGES</button>
+        <button class="tab" onclick="switchTab('logs')">📝 LOGS</button>
+        <button class="tab" onclick="switchTab('neural')">🧠 NEURAL</button>
+    </div>
+
+    <!-- Tab: LIVE -->
+    <div id="tab-live" class="tab-content active">
+    <!-- Main Container -->
+    <div class="container" style="height: calc(100vh - 104px);">
+        <!-- LEFT PANEL: Sprites & Objects -->
+        <div class="panel">
+            <h2>🎮 ACTIVE SPRITES (Sessions)</h2>
+            <div class="sprite-list" id="sprite-container">
+                <!-- Sprites populated by JS -->
+            </div>
+
+            <h2>📊 SYSTEM OBJECTS (Resources)</h2>
+            <div class="stats-grid" id="stats-container">
+                <!-- Stats populated by JS -->
+            </div>
+
+            <h2>🧠 MODELS (Ollama)</h2>
+            <div id="models-container">
+                <!-- Models populated by JS -->
+            </div>
+
+            <h2>🌐 NETWORK TOPOLOGY</h2>
+            <div class="network-viz" id="network-viz">
+                <!-- Network visualization -->
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Live Data & Logs -->
+        <div class="panel">
+            <h2>📡 LIVE EVENT STREAM</h2>
+            <div class="log-stream" id="log-stream">
+                <div class="log-entry">
+                    <span class="timestamp">[SYSTEM]</span> Ghost Mode initialized... monitoring started
+                </div>
+            </div>
+
+            <h2>🏆 QUESTION LEADERBOARD</h2>
+            <div class="leaderboard" id="leaderboard">
+                <!-- Leaderboard populated by JS -->
+            </div>
+
+            <h2>❓ RECENT QUESTION ACTIVITY</h2>
+            <div class="log-stream" id="question-activity">
+                <!-- Recent answers populated by JS -->
+            </div>
+
+            <h2>⚙️ DATA PIPELINES (Live)</h2>
+            <div style="background: #050505; border: 1px solid #00ff00; border-radius: 4px; padding: 15px;" id="pipeline-viz">
+                <!-- Pipeline visualization -->
+            </div>
+
+            <h2>📂 DATABASE ACTIVITY (Top 10)</h2>
+            <div class="log-stream" id="table-activity">
+                <!-- Table activity populated by JS -->
+            </div>
+        </div>
+    </div>
+    </div><!-- End Tab: LIVE -->
+
+    <!-- Tab: SYSTEM -->
+    <div id="tab-system" class="tab-content">
+        <div style="padding: 20px; height: calc(100vh - 104px); overflow-y: auto;">
+            <h1 style="color: #00ff00; margin-bottom: 20px;">🔧 SYSTEM DEBUG</h1>
+            <p style="color: #888; margin-bottom: 30px;">Ollama API, AI Models & Testing</p>
+            <div id="system-content">
+                <div style="color: #888;">Loading system debug...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: DATABASE -->
+    <div id="tab-database" class="tab-content">
+        <div style="padding: 20px; height: calc(100vh - 104px); overflow-y: auto;">
+            <h1 style="color: #00ff00; margin-bottom: 20px;">📊 DATABASE INSPECTOR</h1>
+            <div id="database-content">
+                <div style="color: #888;">Loading database stats...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: ROUTES -->
+    <div id="tab-routes" class="tab-content">
+        <div style="padding: 20px; height: calc(100vh - 104px); overflow-y: auto;">
+            <h1 style="color: #00ff00; margin-bottom: 20px;">🛣️ ROUTE INSPECTOR</h1>
+            <p style="color: #888; margin-bottom: 20px;">All Flask routes registered in this application</p>
+            <div id="routes-content">
+                <div style="color: #888;">Loading routes...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: THEMES -->
+    <div id="tab-themes" class="tab-content">
+        <div style="padding: 20px; height: calc(100vh - 104px); overflow-y: auto;">
+            <h1 style="color: #00ff00; margin-bottom: 20px;">🎨 THEME MANAGER</h1>
+            <p style="color: #888; margin-bottom: 20px;">All themes and rotation states across domains</p>
+            <div id="themes-content">
+                <div style="color: #888;">Loading themes...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: CHALLENGES -->
+    <div id="tab-challenges" class="tab-content">
+        <div style="padding: 20px; height: calc(100vh - 104px); overflow-y: auto;">
+            <h1 style="color: #00ff00; margin-bottom: 20px;">🎨 COLOR CHALLENGES</h1>
+            <p style="color: #888; margin-bottom: 20px;">Daily color challenges, submissions & neural analysis</p>
+            <div id="challenges-content">
+                <div style="color: #888;">Loading challenges...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: LOGS -->
+    <div id="tab-logs" class="tab-content">
+        <div style="padding: 20px; height: calc(100vh - 104px); overflow-y: auto;">
+            <h1 style="color: #00ff00; margin-bottom: 20px;">📝 SERVER LOGS</h1>
+            <p style="color: #888; margin-bottom: 20px;">Flask server console output (flask.log)</p>
+            <div id="logs-content" style="background: #0a0a0a; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.9em; line-height: 1.6;">
+                <div style="color: #888;">Loading logs...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: NEURAL -->
+    <div id="tab-neural" class="tab-content">
+        <div style="padding: 20px; height: calc(100vh - 104px); overflow-y: auto;">
+            <h1 style="color: #00ff00; margin-bottom: 20px;">🧠 NEURAL NETWORKS</h1>
+            <p style="color: #888; margin-bottom: 20px;">AI models trained for brand personality classification</p>
+            <div id="neural-content">
+                <div style="color: #888;">Loading neural networks...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let refreshInterval = 3000; // 3 seconds
+        let timerCountdown = 3;
+        let isPaused = false;
+        let lastActivityHash = null;
+        let updateSkipCount = 0;
+
+        // Auto-refresh timer display
+        setInterval(() => {
+            if (!isPaused) {
+                timerCountdown--;
+                if (timerCountdown <= 0) timerCountdown = 3;
+            }
+            document.getElementById('refresh-timer').textContent = timerCountdown;
+        }, 1000);
+
+        // Smart polling: Check activity hash first, only fetch full data if changed
+        async function smartUpdate() {
+            // Skip if paused
+            if (isPaused) {
+                console.log('⏸ Ghost Mode paused - skipping update');
+                return;
+            }
+
+            // Skip if tab is hidden (browser tab visibility API)
+            if (document.hidden) {
+                console.log('👁️ Tab hidden - skipping update');
+                return;
+            }
+
+            try {
+                // Step 1: Check activity hash (lightweight query)
+                const activityCheck = await fetch('/api/ghost/activity').then(r => r.json());
+                const currentHash = activityCheck.hash;
+
+                // Step 2: Compare with last known hash
+                if (currentHash === lastActivityHash) {
+                    updateSkipCount++;
+                    console.log(`✅ No changes detected (hash: ${currentHash.substring(0, 8)}...) - skipped update #${updateSkipCount}`);
+                    return; // Nothing changed, skip expensive full update
+                }
+
+                // Step 3: Hash changed! Fetch full data
+                console.log(`🔄 Activity detected! Hash changed from ${lastActivityHash ? lastActivityHash.substring(0, 8) : 'null'} to ${currentHash.substring(0, 8)} - fetching full data (${updateSkipCount} updates saved)`);
+                updateSkipCount = 0;
+                lastActivityHash = currentHash;
+
+                await updateGhostMode();
+
+            } catch (error) {
+                console.error('Smart update error:', error);
+                addLog('error', 'Update check failed: ' + error.message);
+            }
+        }
+
+        // Fetch and update all data (only called when activity detected)
+        async function updateGhostMode() {
+            try {
+                // Fetch all endpoints in parallel
+                const [sessions, ollama, network, questions, system, tables, pipeline] = await Promise.all([
+                    fetch('/api/ghost/sessions').then(r => r.json()),
+                    fetch('/api/ghost/ollama').then(r => r.json()),
+                    fetch('/api/ghost/network').then(r => r.json()),
+                    fetch('/api/ghost/questions').then(r => r.json()),
+                    fetch('/api/ghost/system').then(r => r.json()),
+                    fetch('/api/ghost/tables').then(r => r.json()),
+                    fetch('/api/ghost/pipeline').then(r => r.json())
+                ]);
+
+                updateSprites(sessions);
+                updateOllama(ollama);
+                updateNetwork(network);
+                updateQuestions(questions);
+                updateStats(system);
+                updateLogs(sessions, ollama, network);
+                updatePipelines(pipeline);
+                updateTableActivity(tables);
+            } catch (error) {
+                console.error('Ghost Mode update error:', error);
+                addLog('error', 'Update failed: ' + error.message);
+            }
+        }
+
+        // Update sprites (active sessions)
+        function updateSprites(data) {
+            const container = document.getElementById('sprite-container');
+            container.innerHTML = '';
+
+            // QR Sessions
+            data.qr_sessions.forEach((session, i) => {
+                const sprite = document.createElement('div');
+                sprite.className = 'sprite qr';
+                sprite.innerHTML = `
+                    <div class="icon">🔑</div>
+                    <div>QR Session ${i + 1}</div>
+                    <div style="font-size: 0.7em; color: #666;">${session.status}</div>
+                `;
+                container.appendChild(sprite);
+            });
+
+            // Chat Sessions
+            data.chat_sessions.forEach((session, i) => {
+                const sprite = document.createElement('div');
+                sprite.className = 'sprite chat';
+                sprite.innerHTML = `
+                    <div class="icon">💬</div>
+                    <div>Chat #${session.id}</div>
+                    <div style="font-size: 0.7em; color: #666;">${session.message_count} msgs</div>
+                `;
+                container.appendChild(sprite);
+            });
+
+            // Question Sessions
+            data.question_sessions.forEach((session, i) => {
+                const sprite = document.createElement('div');
+                sprite.className = 'sprite question';
+                sprite.innerHTML = `
+                    <div class="icon">❓</div>
+                    <div>User ${session.user_id}</div>
+                    <div style="font-size: 0.7em; color: #666;">${session.answers_count} answers</div>
+                `;
+                container.appendChild(sprite);
+            });
+
+            if (data.total_active === 0) {
+                container.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">No active sessions</div>';
+            }
+        }
+
+        // Update Ollama models
+        function updateOllama(data) {
+            const container = document.getElementById('models-container');
+            const statusDot = document.getElementById('ollama-status');
+            const statusText = document.getElementById('ollama-text');
+
+            // Update status
+            if (data.running) {
+                statusDot.className = 'status-dot active';
+                statusText.textContent = `Ollama: ${data.models.length} models`;
+            } else {
+                statusDot.className = 'status-dot inactive';
+                statusText.textContent = 'Ollama: Down';
+            }
+
+            // Update models
+            container.innerHTML = '';
+            data.models.forEach(model => {
+                const card = document.createElement('div');
+                card.className = 'model-card' + (model.custom ? ' custom' : '');
+                const size = (model.size / 1024 / 1024 / 1024).toFixed(1);
+                card.innerHTML = `
+                    <div class="model-name">${model.custom ? '⭐ ' : ''}${model.name}</div>
+                    <div class="model-info">${size} GB ${model.custom ? '(CUSTOM)' : ''}</div>
+                `;
+                container.appendChild(card);
+            });
+
+            if (data.models.length === 0) {
+                container.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">No models loaded</div>';
+            }
+        }
+
+        // Update network visualization
+        function updateNetwork(data) {
+            const container = document.getElementById('network-viz');
+            container.innerHTML = `
+                <div class="network-node">
+                    <div class="icon">🖥️</div>
+                    <div>Host</div>
+                    <div style="font-size: 0.7em;">${data.local_ip}</div>
+                </div>
+                <div style="color: #666; margin: 10px 0;">↕️</div>
+                <div class="network-node">
+                    <div class="icon">🌐</div>
+                    <div>Connections</div>
+                    <div style="font-size: 0.9em;">${data.active_connections}</div>
+                </div>
+                <div style="color: #666; font-size: 0.8em; margin-top: 15px;">
+                    Flask: ${data.port} | Ollama: ${data.ollama_port}
+                </div>
+            `;
+        }
+
+        // Update questions and leaderboard
+        function updateQuestions(data) {
+            // Leaderboard
+            const leaderboard = document.getElementById('leaderboard');
+            leaderboard.innerHTML = '';
+            data.leaderboard.forEach((user, i) => {
+                const item = document.createElement('div');
+                item.className = 'leaderboard-item';
+                item.innerHTML = `
+                    <div><span class="rank">#${i + 1}</span> User ${user.user_id}</div>
+                    <div><span class="xp">${user.total_xp} XP</span> (${user.total_answered} answers)</div>
+                `;
+                leaderboard.appendChild(item);
+            });
+
+            // Recent activity
+            const activity = document.getElementById('question-activity');
+            activity.innerHTML = '';
+            data.recent_answers.slice(0, 10).forEach(answer => {
+                const log = document.createElement('div');
+                log.className = 'log-entry';
+                const time = new Date(answer.answered_at).toLocaleTimeString();
+                log.innerHTML = `
+                    <span class="timestamp">[${time}]</span>
+                    <span style="color: #ff00ff;">${answer.theme}</span>: +${answer.xp_earned} XP
+                `;
+                activity.appendChild(log);
+            });
+        }
+
+        // Update system stats
+        function updateStats(data) {
+            const container = document.getElementById('stats-container');
+            container.innerHTML = '';
+
+            const stats = [
+                { label: 'Users', value: data.users || 0, icon: '👥' },
+                { label: 'Posts', value: data.posts || 0, icon: '📝' },
+                { label: 'Comments', value: data.comments || 0, icon: '💬' },
+                { label: 'Routes', value: data.flask_routes || 0, icon: '🛣️' }
+            ];
+
+            stats.forEach(stat => {
+                const box = document.createElement('div');
+                box.className = 'stat-box';
+                box.innerHTML = `
+                    <div class="label">${stat.icon} ${stat.label}</div>
+                    <div class="value">${stat.value.toLocaleString()}</div>
+                `;
+                container.appendChild(box);
+            });
+        }
+
+        // Add log entry
+        function addLog(type, message) {
+            const stream = document.getElementById('log-stream');
+            const log = document.createElement('div');
+            log.className = 'log-entry ' + type;
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML = `<span class="timestamp">[${time}]</span> ${message}`;
+            stream.insertBefore(log, stream.firstChild);
+
+            // Keep only last 50 logs
+            while (stream.children.length > 50) {
+                stream.removeChild(stream.lastChild);
+            }
+        }
+
+        // Update logs based on data changes
+        function updateLogs(sessions, ollama, network) {
+            // Log new sessions
+            if (sessions.qr_sessions.length > 0) {
+                addLog('qr', `🔑 ${sessions.qr_sessions.length} QR sessions active`);
+            }
+            if (sessions.chat_sessions.length > 0) {
+                addLog('chat', `💬 ${sessions.chat_sessions.length} chat sessions active`);
+            }
+
+            // Log Ollama activity
+            if (ollama.recent_calls && ollama.recent_calls.length > 0) {
+                const latest = ollama.recent_calls[0];
+                addLog('ollama', `🧠 ${latest.ai_name} commented on "${latest.post_title.substring(0, 30)}..."`);
+            }
+
+            // Log network
+            addLog('network', `🌐 Network: ${network.active_connections} connections on ${network.local_ip}:${network.port}`);
+        }
+
+        // Update pipeline visualization
+        function updatePipelines(data) {
+            const container = document.getElementById('pipeline-viz');
+            let html = '';
+
+            // Comments → Loyalty Pipeline
+            const commentsStatus = data.comments_to_loyalty?.status || 'unknown';
+            const commentsColor = commentsStatus === 'active' ? '#00ff00' : '#666';
+            html += `
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 1.1em; color: ${commentsColor}; margin-bottom: 5px;">
+                        💬 Comments → 💎 Loyalty Points
+                        <span style="color: #666; font-size: 0.9em;">[${commentsStatus}]</span>
+                    </div>
+                    <div style="font-size: 0.85em; color: #888; padding-left: 20px;">
+                        ${data.comments_to_loyalty?.recent_comments || 0} comments |
+                        ${data.comments_to_loyalty?.ai_comments || 0} AI |
+                        ${data.comments_to_loyalty?.loyalty_updates || 0} points awarded
+                    </div>
+                </div>
+            `;
+
+            // Chat → QR Transcript Pipeline
+            const qrStatus = data.chat_to_qr?.status || 'unknown';
+            const qrColor = qrStatus === 'active' ? '#00ffff' : '#666';
+            html += `
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 1.1em; color: ${qrColor}; margin-bottom: 5px;">
+                        💬 Chat → 📱 QR Transcripts
+                        <span style="color: #666; font-size: 0.9em;">[${qrStatus}]</span>
+                    </div>
+                    <div style="font-size: 0.85em; color: #888; padding-left: 20px;">
+                        ${data.chat_to_qr?.recent_messages || 0} messages |
+                        ${data.chat_to_qr?.transcripts_saved || 0} transcripts saved
+                    </div>
+                </div>
+            `;
+
+            // Knowledge Extraction Pipeline
+            const knowledgeStatus = data.knowledge_extraction?.status || 'unknown';
+            const knowledgeColor = knowledgeStatus === 'active' ? '#ff00ff' : '#666';
+            html += `
+                <div>
+                    <div style="font-size: 1.1em; color: ${knowledgeColor}; margin-bottom: 5px;">
+                        🧠 Knowledge Extraction (Auto-Learning)
+                        <span style="color: #666; font-size: 0.9em;">[${knowledgeStatus}]</span>
+                    </div>
+                    <div style="font-size: 0.85em; color: #888; padding-left: 20px;">
+                        ${data.knowledge_extraction?.extractions || 0} extractions |
+                        ${data.knowledge_extraction?.entities || 0} entities |
+                        ${data.knowledge_extraction?.topics || 0} topics |
+                        ${data.knowledge_extraction?.relationships || 0} relationships
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Update table activity
+        function updateTableActivity(data) {
+            const container = document.getElementById('table-activity');
+            container.innerHTML = '';
+
+            if (!data.tables || data.tables.length === 0) {
+                container.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">No table activity</div>';
+                return;
+            }
+
+            data.tables.slice(0, 10).forEach((table, i) => {
+                const log = document.createElement('div');
+                log.className = 'log-entry';
+
+                const timeStr = table.last_write
+                    ? new Date(table.last_write).toLocaleTimeString()
+                    : 'never';
+
+                const hasData = table.has_data ? '✓' : '○';
+                const color = table.has_data ? '#00ff00' : '#666';
+
+                log.innerHTML = `
+                    <span style="color: ${color};">${hasData}</span>
+                    <span style="color: #00ffff;">${table.name}</span>
+                    <span style="color: #666;">(${table.row_count} rows)</span>
+                    <span class="timestamp">[${timeStr}]</span>
+                `;
+                container.appendChild(log);
+            });
+
+            // Add total count
+            const total = document.createElement('div');
+            total.style.cssText = 'margin-top: 10px; padding-top: 10px; border-top: 1px solid #1a1a1a; color: #666; font-size: 0.9em;';
+            total.textContent = `Total: ${data.total_tables} tables in database`;
+            container.appendChild(total);
+        }
+
+        // Pause/Resume button handler
+        document.getElementById('pause-btn').addEventListener('click', function() {
+            isPaused = !isPaused;
+            const btn = this;
+
+            if (isPaused) {
+                btn.textContent = '▶ RESUME';
+                btn.style.background = '#ff9900';
+                addLog('system', '⏸ Ghost Mode PAUSED - monitoring stopped');
+                console.log('⏸ Ghost Mode paused by user');
+            } else {
+                btn.textContent = '⏸ PAUSE';
+                btn.style.background = '#00ff00';
+                addLog('system', '▶ Ghost Mode RESUMED - monitoring active');
+                console.log('▶ Ghost Mode resumed by user');
+                timerCountdown = 3; // Reset timer
+                smartUpdate(); // Immediate update on resume
+            }
+        });
+
+        // Tab visibility change handler (auto-pause when tab hidden)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                console.log('👁️ Tab hidden - Ghost Mode will pause updates automatically');
+                addLog('system', '👁️ Tab hidden - auto-pausing updates');
+            } else {
+                console.log('👁️ Tab visible - Ghost Mode resuming updates');
+                addLog('system', '👁️ Tab visible - resuming updates');
+                if (!isPaused) {
+                    smartUpdate(); // Immediate update when tab becomes visible
+                }
+            }
+        });
+
+        // Initial load and auto-refresh with smart polling
+        updateGhostMode(); // Initial full load
+        setInterval(smartUpdate, refreshInterval); // Use smart update for subsequent polls
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            // Activate button
+            event.target.classList.add('active');
+
+            // Load content for the tab
+            loadTabContent(tabName);
+        }
+
+        async function loadTabContent(tabName) {
+            if (tabName === 'live') {
+                // Live tab is already loaded, just resume polling if paused
+                return;
+            }
+
+            if (tabName === 'system') {
+                // Load system debug info
+                const content = document.getElementById('system-content');
+                content.innerHTML = '<div style="color: #888;">Loading...</div>';
+
+                try {
+                    const data = await fetch('/api/ghost/system').then(r => r.json());
+                    let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 30px;">';
+
+                    // System stats boxes
+                    html += `<div style="background: #1a1a1a; border-left: 4px solid #00ff00; padding: 15px; border-radius: 4px;">
+                        <div style="color: #888; font-size: 0.9em;">CPU Usage</div>
+                        <div style="font-size: 1.5em; font-weight: bold;">${data.cpu_percent}%</div>
+                    </div>`;
+
+                    html += `<div style="background: #1a1a1a; border-left: 4px solid #00ff00; padding: 15px; border-radius: 4px;">
+                        <div style="color: #888; font-size: 0.9em;">Memory</div>
+                        <div style="font-size: 1.5em; font-weight: bold;">${data.memory_percent}%</div>
+                    </div>`;
+
+                    html += `<div style="background: #1a1a1a; border-left: 4px solid #00ff00; padding: 15px; border-radius: 4px;">
+                        <div style="color: #888; font-size: 0.9em;">Flask Routes</div>
+                        <div style="font-size: 1.5em; font-weight: bold;">${data.flask_routes}</div>
+                    </div>`;
+
+                    html += '</div>';
+
+                    content.innerHTML = html;
+                } catch (error) {
+                    content.innerHTML = `<div style="color: #ff0000;">Error loading system info: ${error.message}</div>`;
+                }
+            }
+
+            if (tabName === 'database') {
+                // Load database stats
+                const content = document.getElementById('database-content');
+                content.innerHTML = '<div style="color: #888;">Loading...</div>';
+
+                try {
+                    const data = await fetch('/api/ghost/tables').then(r => r.json());
+                    let html = `<div style="margin-bottom: 20px; color: #888;">Total Tables: ${data.count}</div>`;
+                    html += '<div style="max-height: 600px; overflow-y: auto;">';
+
+                    data.tables.forEach(table => {
+                        const color = table.has_data ? '#00ff00' : '#666';
+                        html += `<div style="background: #1a1a1a; padding: 12px; margin-bottom: 8px; border-left: 3px solid ${color};">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="font-weight: bold;">${table.name}</span>
+                                <span style="color: #888;">${table.row_count} rows</span>
+                            </div>
+                            ${table.last_write ? `<div style="font-size: 0.8em; color: #666; margin-top: 5px;">Last write: ${new Date(table.last_write).toLocaleString()}</div>` : ''}
+                        </div>`;
+                    });
+
+                    html += '</div>';
+                    content.innerHTML = html;
+                } catch (error) {
+                    content.innerHTML = `<div style="color: #ff0000;">Error loading database info: ${error.message}</div>`;
+                }
+            }
+
+            if (tabName === 'routes') {
+                // Load routes
+                const content = document.getElementById('routes-content');
+                content.innerHTML = '<div style="color: #888;">Loading...</div>';
+
+                try {
+                    const data = await fetch('/api/ghost/routes').then(r => r.json());
+                    let html = `<div style="margin-bottom: 20px; color: #888;">Total Routes: ${data.count}</div>`;
+                    html += '<input type="text" id="route-search" placeholder="Search routes..." style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #00ff00; color: #00ff00; margin-bottom: 20px; font-family: Courier New, monospace;" onkeyup="filterRoutes()">';
+                    html += '<div id="routes-list" style="max-height: 600px; overflow-y: auto;">';
+
+                    data.routes.forEach(route => {
+                        const methodsStr = route.methods.join(', ');
+                        html += `<div class="route-item" style="background: #1a1a1a; padding: 12px; margin-bottom: 8px; border-left: 3px solid #00ff00;">
+                            <div style="font-weight: bold; color: #00ffff;">${route.path}</div>
+                            <div style="font-size: 0.85em; color: #888; margin-top: 5px;">
+                                <span style="color: #ffff00;">${methodsStr}</span> → ${route.endpoint}
+                            </div>
+                        </div>`;
+                    });
+
+                    html += '</div>';
+                    content.innerHTML = html;
+                } catch (error) {
+                    content.innerHTML = `<div style="color: #ff0000;">Error loading routes: ${error.message}</div>`;
+                }
+            }
+
+            if (tabName === 'themes') {
+                // Load themes and rotation states
+                const content = document.getElementById('themes-content');
+                content.innerHTML = '<div style="color: #888;">Loading...</div>';
+
+                try {
+                    const data = await fetch('/api/ghost/themes').then(r => r.json());
+
+                    // Create rotation state lookup
+                    const rotationStates = {};
+                    data.rotation_states.forEach(state => {
+                        rotationStates[state.domain_slug] = state;
+                    });
+
+                    let html = `<div style="margin-bottom: 20px; color: #888;">Total Themes: ${data.count}</div>`;
+
+                    // Group themes by domain
+                    const themesByDomain = {};
+                    data.themes.forEach(theme => {
+                        if (!themesByDomain[theme.domain_slug]) {
+                            themesByDomain[theme.domain_slug] = [];
+                        }
+                        themesByDomain[theme.domain_slug].push(theme);
+                    });
+
+                    // Display themes grouped by domain
+                    html += '<div style="max-height: 600px; overflow-y: auto;">';
+                    Object.keys(themesByDomain).sort().forEach(domain => {
+                        const domainThemes = themesByDomain[domain];
+                        const rotationState = rotationStates[domain] || {};
+                        const currentIndex = rotationState.current_theme_index || 0;
+
+                        html += `<div style="background: #0a0a0a; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
+                            <div style="font-weight: bold; color: #00ffff; font-size: 1.2em; margin-bottom: 10px;">
+                                🌐 ${domain}
+                            </div>`;
+
+                        // Rotation state info
+                        if (rotationState.rotation_interval_hours) {
+                            html += `<div style="color: #888; font-size: 0.9em; margin-bottom: 10px;">
+                                🔄 Rotates every ${rotationState.rotation_interval_hours}h |
+                                Current index: ${currentIndex} |
+                                Last rotated: ${rotationState.last_rotated_at ? new Date(rotationState.last_rotated_at).toLocaleString() : 'never'}
+                            </div>`;
+                        }
+
+                        // List themes
+                        domainThemes.forEach(theme => {
+                            const isActive = theme.active === 1;
+                            const isCurrent = theme.rotation_order === currentIndex;
+                            const borderColor = isCurrent ? '#00ff00' : (isActive ? '#00ffff' : '#666');
+                            const badge = isCurrent ? '🎯 CURRENT' : (isActive ? '✓ Active' : '○ Inactive');
+
+                            // Parse content (might be JSON or plain text)
+                            let contentDisplay = theme.content;
+                            try {
+                                const parsed = JSON.parse(theme.content);
+                                contentDisplay = parsed.name || parsed.theme || JSON.stringify(parsed).substring(0, 100);
+                            } catch (e) {
+                                // Plain text, use as-is
+                            }
+
+                            // Parse metadata if available
+                            let meta = null;
+                            if (theme.metadata_parsed) {
+                                meta = theme.metadata_parsed;
+                            } else if (theme.metadata) {
+                                try {
+                                    meta = JSON.parse(theme.metadata);
+                                } catch (e) {}
+                            }
+
+                            html += `<div style="background: #1a1a1a; padding: 10px; margin-bottom: 8px; border-left: 3px solid ${borderColor};">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #ffff00;">Order ${theme.rotation_order}</span>
+                                    <span style="color: ${borderColor}; font-size: 0.85em;">${badge}</span>
+                                </div>
+                                <div style="color: #fff; margin-top: 5px; font-weight: bold;">
+                                    ${contentDisplay}
+                                </div>`;
+
+                            // Show brand metadata if available
+                            if (meta) {
+                                if (meta.brand_name) {
+                                    html += `<div style="color: #00ffff; font-size: 0.9em; margin-top: 5px;">
+                                        📦 ${meta.brand_name}
+                                    </div>`;
+                                }
+                                if (meta.brand_tagline) {
+                                    html += `<div style="color: #888; font-size: 0.85em; font-style: italic;">
+                                        "${meta.brand_tagline}"
+                                    </div>`;
+                                }
+                                if (meta.colors && (meta.colors.primary || meta.colors.secondary || meta.colors.accent)) {
+                                    html += `<div style="margin-top: 5px; display: flex; gap: 5px; align-items: center;">
+                                        <span style="color: #666; font-size: 0.8em;">Colors:</span>`;
+                                    if (meta.colors.primary) html += `<span style="background: ${meta.colors.primary}; width: 20px; height: 20px; display: inline-block; border-radius: 3px;" title="${meta.colors.primary}"></span>`;
+                                    if (meta.colors.secondary) html += `<span style="background: ${meta.colors.secondary}; width: 20px; height: 20px; display: inline-block; border-radius: 3px;" title="${meta.colors.secondary}"></span>`;
+                                    if (meta.colors.accent) html += `<span style="background: ${meta.colors.accent}; width: 20px; height: 20px; display: inline-block; border-radius: 3px;" title="${meta.colors.accent}"></span>`;
+                                    html += `</div>`;
+                                }
+                                if (meta.brand_domain) {
+                                    html += `<div style="color: #666; font-size: 0.8em; margin-top: 3px;">
+                                        🌐 ${meta.brand_domain}
+                                    </div>`;
+                                }
+                            }
+
+                            html += `<div style="color: #444; font-size: 0.75em; margin-top: 5px;">
+                                    ID: ${theme.id} | Created: ${new Date(theme.created_at).toLocaleDateString()}
+                                </div>
+                            </div>`;
+                        });
+
+                        html += '</div>';
+                    });
+                    html += '</div>';
+
+                    content.innerHTML = html;
+                } catch (error) {
+                    content.innerHTML = `<div style="color: #ff0000;">Error loading themes: ${error.message}</div>`;
+                }
+            }
+        }
+
+        if (tabName === 'challenges') {
+            // Load color challenges & submissions
+            const content = document.getElementById('challenges-content');
+            content.innerHTML = '<div style="color: #888;">Loading...</div>';
+
+            try {
+                fetch('/api/ghost/challenges').then(r => r.json()).then(data => {
+                    let html = '';
+
+                    // Today's challenge
+                    if (data.today_challenge) {
+                        const c = data.today_challenge;
+                        html += `<div style="background: #1a1a1a; padding: 20px; margin-bottom: 20px; border-left: 4px solid #00ff00;">
+                            <div style="font-size: 1.3em; color: #00ff00; margin-bottom: 10px;">📅 TODAY'S CHALLENGE</div>
+                            <div style="color: #00ffff; font-size: 1.1em; margin: 10px 0;">${c.target_mood.toUpperCase()}</div>
+                            <div style="color: #888; margin: 5px 0;">${c.description}</div>
+                            <div style="color: #666; font-size: 0.9em;">Date: ${c.challenge_date}</div>
+                        </div>`;
+                    }
+
+                    // Recent submissions
+                    html += `<div style="margin-top: 30px;">
+                        <div style="font-size: 1.2em; color: #00ff00; margin-bottom: 15px;">📊 RECENT SUBMISSIONS (Last 20)</div>
+                    </div>`;
+
+                    if (data.submissions && data.submissions.length > 0) {
+                        data.submissions.forEach(sub => {
+                            html += `<div style="background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-left: 3px solid ${sub.color_hex};">
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <div style="width: 50px; height: 50px; background: ${sub.color_hex}; border: 2px solid #fff; border-radius: 8px;"></div>
+                                    <div style="flex: 1;">
+                                        <div style="color: #00ffff; font-weight: bold;">${sub.color_hex}</div>
+                                        <div style="color: #888; font-size: 0.9em;">Score: ${Math.round(sub.score)}% | Rep: +${sub.reputation_earned}</div>
+                                        <div style="color: #666; font-size: 0.85em;">${sub.submitted_at}</div>
+                                    </div>
+                                </div>
+                                ${sub.feedback ? `<div style="color: #aaa; margin-top: 10px; font-style: italic;">${sub.feedback}</div>` : ''}
+                            </div>`;
+                        });
+                    } else {
+                        html += '<div style="color: #666; padding: 20px; text-align: center;">No submissions yet</div>';
+                    }
+
+                    content.innerHTML = html;
+                }).catch(error => {
+                    content.innerHTML = `<div style="color: #ff0000;">Error loading challenges: ${error.message}</div>`;
+                });
+            } catch (error) {
+                content.innerHTML = `<div style="color: #ff0000;">Error: ${error.message}</div>`;
+            }
+        }
+
+        if (tabName === 'logs') {
+            // Load server logs
+            const content = document.getElementById('logs-content');
+            content.innerHTML = '<div style="color: #888;">Loading logs from /api/ghost/server...</div>';
+
+            console.log('[Ghost Mode] Loading LOGS tab - fetching /api/ghost/server');
+
+            try {
+                fetch('/api/ghost/server')
+                    .then(r => {
+                        console.log('[Ghost Mode] Response status:', r.status);
+                        if (!r.ok) {
+                            throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+                        }
+                        return r.json();
+                    })
+                    .then(data => {
+                        console.log('[Ghost Mode] Data received:', data);
+
+                        if (data.success && data.logs && data.logs.length > 0) {
+                            const now = new Date().toLocaleTimeString();
+                            let html = `<div style="margin-bottom: 15px; color: #666; font-size: 0.9em; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    Showing last ${data.showing_lines} lines (Total: ${data.total_lines} lines)
+                                    <span style="color: #00ff00; margin-left: 15px;">📁 ${data.log_file}</span>
+                                </div>
+                                <div style="color: #666;">
+                                    🕐 Updated: ${now}
+                                </div>
+                            </div>`;
+                            html += '<div style="max-height: calc(100vh - 250px); overflow-y: auto; border-left: 2px solid #00ff00; padding-left: 10px;">';
+
+                            data.logs.forEach(line => {
+                                // Color code different log levels
+                                let color = '#aaa';
+                                if (line.includes('ERROR')) color = '#ff3333';
+                                else if (line.includes('WARNING')) color = '#ff9900';
+                                else if (line.includes('INFO')) color = '#00ffff';
+                                else if (line.includes('✅')) color = '#00ff00';
+                                else if (line.includes('⚠️')) color = '#ffaa00';
+                                else if (line.includes('🔴')) color = '#ff0000';
+                                else if (line.includes('Traceback') || line.includes('Exception')) color = '#ff5555';
+
+                                html += `<div style="color: ${color}; margin-bottom: 5px; white-space: pre-wrap;">${line.trim()}</div>`;
+                            });
+
+                            html += '</div>';
+                            content.innerHTML = html;
+
+                            // Auto-scroll to bottom
+                            setTimeout(() => {
+                                const scrollContainer = content.querySelector('div:last-child');
+                                if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
+                            }, 100);
+                        } else {
+                            const error = data.error || 'No logs available yet';
+                            console.warn('[Ghost Mode] No logs or error:', error);
+                            content.innerHTML = `<div style="color: #ff9900;">⚠️  ${error}</div>
+                                <div style="color: #666; margin-top: 10px; font-size: 0.9em;">
+                                    Tip: Do a hard refresh (Cmd+Shift+R or Ctrl+Shift+R) if you just started the server.
+                                </div>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('[Ghost Mode] Error loading logs:', error);
+                        content.innerHTML = `<div style="color: #ff0000;">❌ Error loading logs: ${error.message}</div>
+                            <div style="color: #666; margin-top: 15px; font-size: 0.9em;">
+                                <div>Debug info:</div>
+                                <div>• Endpoint: /api/ghost/server</div>
+                                <div>• Your URL: ${window.location.href}</div>
+                                <div>• Check browser console (F12) for details</div>
+                                <div style="margin-top: 10px;">Try:</div>
+                                <div>• Hard refresh: Cmd+Shift+R (Mac) or Ctrl+Shift+R (Windows)</div>
+                                <div>• Clear cache and reload</div>
+                            </div>`;
+                    });
+            } catch (error) {
+                console.error('[Ghost Mode] Catch error:', error);
+                content.innerHTML = `<div style="color: #ff0000;">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        if (tabName === 'neural') {
+            // Load neural network information
+            const content = document.getElementById('neural-content');
+            content.innerHTML = '<div style="color: #888;">Loading...</div>';
+
+            try {
+                // For now, show static info about loaded neural networks
+                let html = '<div style="margin-bottom: 20px; color: #888;">AI Models for Brand Personality Classification</div>';
+                html += '<div style="max-height: 600px; overflow-y: auto;">';
+
+                // Show neural networks from app startup
+                const networks = [
+                    {name: 'calriven_technical_classifier', purpose: 'Technical content classification'},
+                    {name: 'theauditor_validation_classifier', purpose: 'Validation and audit detection'},
+                    {name: 'deathtodata_privacy_classifier', purpose: 'Privacy-focused classification'},
+                    {name: 'soulfra_judge', purpose: 'General brand judgment'}
+                ];
+
+                networks.forEach(net => {
+                    html += `<div style="background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-left: 3px solid #00ff00;">
+                        <div style="font-weight: bold; color: #00ffff; font-size: 1.1em;">${net.name}</div>
+                        <div style="color: #888; margin-top: 5px;">${net.purpose}</div>
+                        <div style="color: #666; font-size: 0.85em; margin-top: 5px;">Status: Loaded from database</div>
+                    </div>`;
+                });
+
+                html += '</div>';
+                content.innerHTML = html;
+            } catch (error) {
+                content.innerHTML = `<div style="color: #ff0000;">Error loading neural networks: ${error.message}</div>`;
+            }
+        }
+
+        function filterRoutes() {
+            const search = document.getElementById('route-search').value.toLowerCase();
+            const items = document.querySelectorAll('.route-item');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(search) ? 'block' : 'none';
+            });
+        }
+
+        // Welcome message
+        setTimeout(() => {
+            addLog('system', '👻 Ghost Mode activated - You are now invisible to the system');
+            addLog('system', '🎮 Monitoring all sprites, objects, and models in real-time');
+            addLog('system', '⚡ Smart polling enabled - saves bandwidth when idle');
+            addLog('system', '🔖 Use tabs above to switch between different debug views');
+        }, 500);
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1976D2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="800" fill="url(#bg)"/>
+
+  <!-- Accent stripe -->
+  <rect x="0" y="350" width="600" height="100" fill="#FFC107" opacity="0.3"/>
+
+  <!-- Brand name header -->
+  <text x="300" y="100" font-family="Arial, sans-serif" font-size="36"
+        font-weight="bold" fill="white" text-anchor="middle">
+    SaveOrSink
+  </text>
+
+  <!-- Slogan (large, multi-line) -->
+  <text x="300" y="300" font-family="Arial, sans-serif"
+        font-size="24" font-weight="bold" fill="white" text-anchor="middle">Reasoning outage? We got</text>
+  <text x="300" y="360" font-family="Arial, sans-serif"
+        font-size="32" font-weight="bold" fill="white" text-anchor="middle">you.</text>
+</svg>

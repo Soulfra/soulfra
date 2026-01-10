@@ -1,0 +1,257 @@
+#!/usr/bin/env python3
+"""
+Checkout Routes - Stripe Integration for Voice Checkout
+
+Handles:
+- Creating Stripe Payment Links with pre-filled address
+- Processing webhooks from Stripe
+- Apple Pay / Google Pay / Cards all handled by Stripe
+
+It's 2026 - payment processing should be simple!
+"""
+
+from flask import Blueprint, request, jsonify, session, redirect
+from database import get_db
+import os
+import json
+from datetime import datetime
+
+checkout_bp = Blueprint('checkout', __name__)
+
+# Stripe configuration
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'pk_test_placeholder')
+
+# Try to import stripe
+try:
+    import stripe
+    stripe.api_key = STRIPE_SECRET_KEY
+    STRIPE_AVAILABLE = True
+except ImportError:
+    STRIPE_AVAILABLE = False
+    print("⚠️  Stripe not installed. Run: pip install stripe")
+
+
+@checkout_bp.route('/api/checkout/create', methods=['POST'])
+def create_checkout():
+    """
+    Create Stripe Checkout session with voice-dictated address
+
+    POST body: {
+        'street': '123 Main St',
+        'unit': 'Apt 4B',
+        'city': 'New York',
+        'state': 'NY',
+        'zip': '10001',
+        'email': 'user@example.com'
+    }
+
+    Returns: {'checkout_url': 'https://checkout.stripe.com/...'}
+    """
+    if not STRIPE_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'Stripe not configured. Install with: pip install stripe'
+        }), 500
+
+    data = request.get_json()
+
+    # Extract address
+    address = {
+        'line1': data.get('street', ''),
+        'line2': data.get('unit', ''),
+        'city': data.get('city', ''),
+        'state': data.get('state', ''),
+        'postal_code': data.get('zip', ''),
+        'country': 'US'
+    }
+
+    email = data.get('email', session.get('email', ''))
+
+    # Validation
+    if not address['line1'] or not address['city'] or not address['state'] or not address['postal_code']:
+        return jsonify({
+            'success': False,
+            'error': 'Missing required address fields'
+        }), 400
+
+    try:
+        # Create Stripe Checkout Session
+        # This automatically includes Apple Pay and Google Pay
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],  # Stripe auto-enables Apple Pay/Google Pay
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': 'CringeProof Membership',
+                        'description': 'Voice-powered idea capture and AI analysis',
+                    },
+                    'unit_amount': 100,  # $1.00 in cents
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url='https://cringeproof.com/success.html?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url='https://cringeproof.com/checkout.html',
+            customer_email=email if email else None,
+            shipping_address_collection={
+                'allowed_countries': ['US'],
+            },
+            metadata={
+                'source': 'voice_checkout',
+                'domain': session.get('domain', 'cringeproof.com')
+            }
+        )
+
+        # Store checkout session in database
+        db = get_db()
+        db.execute('''
+            INSERT OR IGNORE INTO checkouts (
+                user_id, email, stripe_session_id, amount, currency, status, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ''', (
+            session.get('user_id'),
+            email,
+            checkout_session.id,
+            1.00,
+            'USD',
+            'pending'
+        ))
+        db.commit()
+        db.close()
+
+        print(f"✅ Created Stripe checkout: {checkout_session.id} for {email}")
+
+        return jsonify({
+            'success': True,
+            'checkout_url': checkout_session.url,
+            'session_id': checkout_session.id
+        })
+
+    except stripe.error.StripeError as e:
+        print(f"❌ Stripe error: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@checkout_bp.route('/api/checkout/webhook', methods=['POST'])
+def stripe_webhook():
+    """
+    Handle Stripe webhook events
+
+    Called by Stripe when payment completes/fails
+    """
+    if not STRIPE_AVAILABLE:
+        return jsonify({'error': 'Stripe not available'}), 500
+
+    payload = request.data
+    sig_header = request.headers.get('Stripe-Signature')
+
+    # Webhook secret (get from Stripe dashboard)
+    webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        ) if webhook_secret else json.loads(payload)
+    except ValueError:
+        return jsonify({'error': 'Invalid payload'}), 400
+    except stripe.error.SignatureVerificationError:
+        return jsonify({'error': 'Invalid signature'}), 400
+
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        session_data = event['data']['object']
+
+        # Update checkout status in database
+        db = get_db()
+        db.execute('''
+            UPDATE checkouts
+            SET status = 'completed', completed_at = CURRENT_TIMESTAMP
+            WHERE stripe_session_id = ?
+        ''', (session_data['id'],))
+        db.commit()
+        db.close()
+
+        print(f"✅ Payment completed: {session_data['id']}")
+
+    elif event['type'] == 'checkout.session.expired':
+        session_data = event['data']['object']
+
+        db = get_db()
+        db.execute('''
+            UPDATE checkouts
+            SET status = 'expired'
+            WHERE stripe_session_id = ?
+        ''', (session_data['id'],))
+        db.commit()
+        db.close()
+
+        print(f"⏱️  Payment expired: {session_data['id']}")
+
+    return jsonify({'received': True})
+
+
+@checkout_bp.route('/api/checkout/status/<session_id>', methods=['GET'])
+def get_checkout_status(session_id):
+    """
+    Check status of checkout session
+
+    GET /api/checkout/status/<session_id>
+    Returns: {'status': 'completed' | 'pending' | 'expired'}
+    """
+    db = get_db()
+    checkout = db.execute('''
+        SELECT status, amount, currency, created_at, completed_at
+        FROM checkouts
+        WHERE stripe_session_id = ?
+    ''', (session_id,)).fetchone()
+    db.close()
+
+    if not checkout:
+        return jsonify({'success': False, 'error': 'Checkout not found'}), 404
+
+    return jsonify({
+        'success': True,
+        'status': checkout['status'],
+        'amount': checkout['amount'],
+        'currency': checkout['currency'],
+        'created_at': checkout['created_at'],
+        'completed_at': checkout['completed_at']
+    })
+
+
+def init_checkout_tables():
+    """
+    Create checkouts table if it doesn't exist
+    """
+    db = get_db()
+
+    db.execute('''
+        CREATE TABLE IF NOT EXISTS checkouts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            email TEXT,
+            stripe_session_id TEXT UNIQUE,
+            amount REAL NOT NULL,
+            currency TEXT DEFAULT 'USD',
+            status TEXT DEFAULT 'pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            completed_at TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+
+    db.commit()
+    db.close()
+
+    print("✅ Checkouts table ready")
+
+
+if __name__ == '__main__':
+    print("🔐 Creating checkouts table...")
+    init_checkout_tables()
+    print("✅ Checkout system ready!")

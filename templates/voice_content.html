@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Content - Create Content Without Typing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .workflow {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: rgba(255,255,255,0.2);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .record-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff4081 0%, #ff6b9d 100%);
+            border: none;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(255,64,129,0.4);
+        }
+
+        .record-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .record-btn.recording {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .content-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 250px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .content-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px 5px 5px 0;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            min-height: 25px;
+        }
+
+        @media (max-width: 1024px) {
+            .workflow {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .workflow {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ Voice Content Studio</h1>
+            <p class="tagline">Talk for 5 Minutes → Get 10 Pieces of Content</p>
+        </header>
+
+        <div class="workflow">
+            <!-- Step 1: Record -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">1</span>
+                    Record
+                </h2>
+
+                <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+                    🎙️
+                </button>
+
+                <div class="status" id="status">
+                    Click to record
+                </div>
+
+                <p style="font-size: 0.9rem; opacity: 0.8; text-align: center;">
+                    Just talk about anything - ideas, thoughts, rants. AI will structure it.
+                </p>
+            </div>
+
+            <!-- Step 2: Transcription -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">2</span>
+                    Transcription
+                </h2>
+
+                <div class="content-box" id="transcription">
+                    Your voice will appear here as text...
+                </div>
+
+                <button onclick="generateContent()" id="generateBtn" disabled>
+                    ✨ Generate All Content
+                </button>
+            </div>
+
+            <!-- Step 3: Blog Post -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">3</span>
+                    Blog Post
+                </h2>
+
+                <div class="content-box" id="blogContent">
+                    AI will write a blog post from your voice...
+                </div>
+
+                <button onclick="copyContent('blog')" id="copyBlogBtn" disabled>
+                    📋 Copy
+                </button>
+            </div>
+
+            <!-- Step 4: Tweet Thread -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">4</span>
+                    Tweet Thread
+                </h2>
+
+                <div class="content-box" id="tweetContent">
+                    AI will create a tweet thread...
+                </div>
+
+                <button onclick="copyContent('tweet')" id="copyTweetBtn" disabled>
+                    📋 Copy
+                </button>
+            </div>
+        </div>
+
+        <!-- Row 2: More formats -->
+        <div class="workflow" style="margin-top: 20px;">
+            <!-- Video Script -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">5</span>
+                    Video Script
+                </h2>
+
+                <div class="content-box" id="videoContent">
+                    AI will create a video script...
+                </div>
+
+                <button onclick="copyContent('video')" id="copyVideoBtn" disabled>
+                    📋 Copy
+                </button>
+            </div>
+
+            <!-- Documentation -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">6</span>
+                    Documentation
+                </h2>
+
+                <div class="content-box" id="docsContent">
+                    AI will create technical docs...
+                </div>
+
+                <button onclick="copyContent('docs')" id="copyDocsBtn" disabled>
+                    📋 Copy
+                </button>
+            </div>
+
+            <!-- LinkedIn Post -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">7</span>
+                    LinkedIn Post
+                </h2>
+
+                <div class="content-box" id="linkedinContent">
+                    AI will create a LinkedIn post...
+                </div>
+
+                <button onclick="copyContent('linkedin')" id="copyLinkedinBtn" disabled>
+                    📋 Copy
+                </button>
+            </div>
+
+            <!-- Email Newsletter -->
+            <div class="panel">
+                <h2>
+                    <span class="step-number">8</span>
+                    Email
+                </h2>
+
+                <div class="content-box" id="emailContent">
+                    AI will create an email newsletter...
+                </div>
+
+                <button onclick="copyContent('email')" id="copyEmailBtn" disabled>
+                    📋 Copy
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let currentTranscription = '';
+        let generatedContent = {};
+
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    transcribeAudio(audioBlob);
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                document.getElementById('recordBtn').classList.add('recording');
+                document.getElementById('status').textContent = '🔴 Recording...';
+            } catch (error) {
+                alert('Microphone access denied');
+                console.error('Error:', error);
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                document.getElementById('recordBtn').classList.remove('recording');
+                document.getElementById('status').textContent = '⏳ Processing...';
+            }
+        }
+
+        async function transcribeAudio(audioBlob) {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+
+            try {
+                const response = await fetch('/api/voice/transcribe', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentTranscription = data.transcription;
+                    document.getElementById('transcription').textContent = currentTranscription;
+                    document.getElementById('status').textContent = '✅ Ready';
+                    document.getElementById('generateBtn').disabled = false;
+                } else {
+                    document.getElementById('status').textContent = '❌ Failed';
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = '❌ Error';
+                alert('Error: ' + error);
+            }
+        }
+
+        async function generateContent() {
+            document.getElementById('status').textContent = '⏳ Generating content...';
+            document.getElementById('generateBtn').disabled = true;
+
+            try {
+                const response = await fetch('/api/voice/content-gen', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        transcription: currentTranscription,
+                        format: 'all'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    generatedContent = data.content;
+
+                    // Display all content
+                    document.getElementById('blogContent').innerHTML = formatMarkdown(generatedContent.blog || 'No blog generated');
+                    document.getElementById('tweetContent').innerHTML = formatTweets(generatedContent.tweet_thread || []);
+                    document.getElementById('videoContent').innerHTML = formatMarkdown(generatedContent.video_script || 'No script generated');
+                    document.getElementById('docsContent').innerHTML = formatMarkdown(generatedContent.docs || 'No docs generated');
+
+                    // Generate LinkedIn and Email (TODO: add to backend)
+                    document.getElementById('linkedinContent').textContent = 'LinkedIn post coming soon...';
+                    document.getElementById('emailContent').textContent = 'Email newsletter coming soon...';
+
+                    document.getElementById('status').textContent = '✅ All content generated!';
+
+                    // Enable copy buttons
+                    document.getElementById('copyBlogBtn').disabled = false;
+                    document.getElementById('copyTweetBtn').disabled = false;
+                    document.getElementById('copyVideoBtn').disabled = false;
+                    document.getElementById('copyDocsBtn').disabled = false;
+                } else {
+                    document.getElementById('status').textContent = '❌ Failed';
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = '❌ Error';
+                alert('Error: ' + error);
+            }
+
+            document.getElementById('generateBtn').disabled = false;
+        }
+
+        function formatMarkdown(text) {
+            // Simple markdown to HTML
+            return text
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^# (.*$)/gim, '<h3>$1</h3>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function formatTweets(tweets) {
+            return tweets.map((tweet, i) => `<p><strong>${i + 1}/</strong> ${tweet}</p>`).join('');
+        }
+
+        function copyContent(type) {
+            let text = '';
+            switch(type) {
+                case 'blog':
+                    text = generatedContent.blog || '';
+                    break;
+                case 'tweet':
+                    text = (generatedContent.tweet_thread || []).join('\n\n');
+                    break;
+                case 'video':
+                    text = generatedContent.video_script || '';
+                    break;
+                case 'docs':
+                    text = generatedContent.docs || '';
+                    break;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById(`copy${type.charAt(0).toUpperCase() + type.slice(1)}Btn`);
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

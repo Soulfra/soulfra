@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cringeproof - Self-Awareness Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .question-container {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .question-container:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 1.2em;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rating-label {
+            color: #666;
+            font-size: 0.9em;
+            font-weight: 500;
+            min-width: 100px;
+        }
+
+        .rating-label.left {
+            text-align: left;
+        }
+
+        .rating-label.right {
+            text-align: right;
+        }
+
+        .rating-options {
+            display: flex;
+            gap: 15px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .rating-option {
+            position: relative;
+        }
+
+        .rating-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .rating-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rating-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #999;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .rating-option input[type="radio"]:checked + label .rating-circle {
+            border-color: #FF6B6B;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .rating-option:hover label .rating-circle {
+            border-color: #FFE66D;
+            transform: scale(1.05);
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.3em;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(78, 205, 196, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: #FF6B6B;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .game-card {
+                padding: 25px;
+            }
+
+            .rating-scale {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .rating-label {
+                text-align: center !important;
+                min-width: auto;
+            }
+
+            .rating-circle {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1em;
+            }
+
+            .rating-options {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Cringeproof</h1>
+            <p>How self-aware are you really?</p>
+        </div>
+
+        <div class="game-card">
+            {% if questions and questions[0].generated_from == 'blog_posts' %}
+            <div style="background: linear-gradient(135deg, #FFE66D, #FFAB40); padding: 20px; border-radius: 10px; margin-bottom: 30px; text-align: center;">
+                <div style="font-size: 1.3em; font-weight: 700; color: #333; margin-bottom: 8px;">✨ Personalized Questions</div>
+                <div style="color: #555; font-size: 1em;">These questions were generated from YOUR blog posts!</div>
+            </div>
+            {% endif %}
+
+            <div class="intro">
+                <h2>Answer 7 Questions Honestly</h2>
+                <p>Rate each statement from 1 (Never) to 5 (Always). Get personalized insights about your self-awareness!</p>
+            </div>
+
+            <form id="cringeproof-form" method="POST" action="/cringeproof/submit">
+                {% for question in questions %}
+                <div class="question-container">
+                    <div class="question-header">
+                        <div class="question-number">{{ loop.index }}</div>
+                        <div class="question-text">
+                            {{ question.question }}
+                        </div>
+                    </div>
+                    <div class="rating-scale">
+                        <div class="rating-label left">Never</div>
+                        <div class="rating-options">
+                            <div class="rating-option">
+                                <input type="radio" id="q{{ question.id }}_1" name="q{{ question.id }}" value="1" required>
+                                <label for="q{{ question.id }}_1"><div class="rating-circle">1</div></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="q{{ question.id }}_2" name="q{{ question.id }}" value="2">
+                                <label for="q{{ question.id }}_2"><div class="rating-circle">2</div></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="q{{ question.id }}_3" name="q{{ question.id }}" value="3">
+                                <label for="q{{ question.id }}_3"><div class="rating-circle">3</div></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="q{{ question.id }}_4" name="q{{ question.id }}" value="4">
+                                <label for="q{{ question.id }}_4"><div class="rating-circle">4</div></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="q{{ question.id }}_5" name="q{{ question.id }}" value="5">
+                                <label for="q{{ question.id }}_5"><div class="rating-circle">5</div></label>
+                            </div>
+                        </div>
+                        <div class="rating-label right">Always</div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="submit-container">
+                    <button type="submit" class="submit-btn">Get My Results 🚀</button>
+                    <div id="error-message" class="error-message" style="display: none;"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('cringeproof-form');
+        const errorMessage = document.getElementById('error-message');
+
+        form.addEventListener('submit', function(e) {
+            // Check if all questions are answered
+            const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7'];
+            let allAnswered = true;
+
+            for (let q of questions) {
+                if (!document.querySelector(`input[name="${q}"]:checked`)) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                e.preventDefault();
+                errorMessage.textContent = '⚠️ Please answer all 7 questions before submitting!';
+                errorMessage.style.display = 'block';
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        });
+
+        // Hide error message when user makes a selection
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                errorMessage.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

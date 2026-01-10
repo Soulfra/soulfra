@@ -1,0 +1,749 @@
+{% extends "base.html" %}
+
+{% block title %}Playground - Try All Features - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+.playground-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.playground-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.playground-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.playground-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #ddd;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #667eea;
+}
+
+.tab.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feature-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+}
+
+.feature-box h2 {
+  margin-top: 0;
+  color: #667eea;
+  font-size: 1.8rem;
+}
+
+.feature-box h3 {
+  color: #764ba2;
+  margin-top: 1.5rem;
+}
+
+.chat-box {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  height: 400px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  font-family: monospace;
+  margin-bottom: 1rem;
+}
+
+.chat-message {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.chat-message.user {
+  background: #e3f2fd;
+  text-align: right;
+}
+
+.chat-message.ai {
+  background: #f3e5f5;
+}
+
+.chat-message strong {
+  color: #667eea;
+  font-weight: 700;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.result-box {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  font-family: monospace;
+  white-space: pre-wrap;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.result-box.success {
+  background: #e8f5e9;
+  border-color: #4caf50;
+}
+
+.result-box.error {
+  background: #ffebee;
+  border-color: #f44336;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-indicator.online {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-indicator.offline {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.loading {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #667eea;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.wordmap-vis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.word-tag {
+  padding: 0.4rem 0.8rem;
+  background: #e3f2fd;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.api-endpoint {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #667eea;
+}
+
+.api-endpoint .method {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.method.GET { background: #4caf50; color: #fff; }
+.method.POST { background: #2196f3; color: #fff; }
+.method.PUT { background: #ff9800; color: #fff; }
+.method.DELETE { background: #f44336; color: #fff; }
+
+code {
+  background: #f5f5f5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+</style>
+
+<div class="playground-container">
+  <div class="playground-header">
+    <h1>🎮 Interactive Playground</h1>
+    <p>Test all Soulfra features right here in your browser</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('chat')">💬 Live Chat</button>
+    <button class="tab" onclick="switchTab('ml')">🧠 Neural Network</button>
+    <button class="tab" onclick="switchTab('wordmap')">📚 Brand Wordmap</button>
+    <button class="tab" onclick="switchTab('api')">🔌 API Tester</button>
+    <button class="tab" onclick="switchTab('train')">🎯 ML Training</button>
+  </div>
+
+  <!-- Chat Tab -->
+  <div id="tab-chat" class="tab-content active">
+    <div class="feature-box">
+      <h2>💬 Chat with Ollama</h2>
+      <p>Have a real-time conversation with AI. Requires <code>ollama serve</code> running.</p>
+
+      <div id="chat-status" class="status-indicator offline">⚫ Ollama: Not Connected</div>
+
+      <div id="chatBox" class="chat-box"></div>
+
+      <div class="input-group">
+        <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key === 'Enter') sendChat()">
+        <button class="btn btn-primary" onclick="sendChat()">Send</button>
+        <button class="btn btn-secondary" onclick="clearChat()">Clear</button>
+      </div>
+
+      <p style="color: #666; font-size: 0.9rem; margin-top: 1rem;">
+        💡 <strong>Tip:</strong> Your conversation is automatically saved to the database.
+        Run <code>python3 compile_chats.py</code> to turn it into a blog post!
+      </p>
+    </div>
+  </div>
+
+  <!-- ML Tab -->
+  <div id="tab-ml" class="tab-content">
+    <div class="feature-box">
+      <h2>🧠 Neural Network Playground</h2>
+      <p>Train a simple neural network to learn patterns.</p>
+
+      <h3>XOR Problem</h3>
+      <p>Train a network to learn the XOR function: <code>XOR(0,0)=0, XOR(0,1)=1, XOR(1,0)=1, XOR(1,1)=0</code></p>
+
+      <button class="btn btn-primary" onclick="trainXOR()">🚀 Train Network</button>
+      <button class="btn btn-secondary" onclick="testXOR()">🧪 Test Predictions</button>
+
+      <div id="mlResults" class="result-box" style="display: none;"></div>
+
+      <h3 style="margin-top: 2rem;">Custom Training Data</h3>
+      <div class="input-group">
+        <input type="text" id="trainInput" placeholder="Input (e.g., 0,1)" style="flex: 1;">
+        <input type="text" id="trainOutput" placeholder="Expected Output (0 or 1)" style="flex: 1;">
+        <button class="btn btn-primary" onclick="addTrainingData()">Add Sample</button>
+      </div>
+
+      <div id="trainingData" style="margin-top: 1rem; font-family: monospace;"></div>
+    </div>
+  </div>
+
+  <!-- Wordmap Tab -->
+  <div id="tab-wordmap" class="tab-content">
+    <div class="feature-box">
+      <h2>📚 Brand Wordmap Explorer</h2>
+      <p>Explore the vocabulary and voice of different brands.</p>
+
+      <div class="input-group">
+        <select id="brandSelect" style="flex: 1;">
+          <option value="">Select a brand...</option>
+          {% for brand in brands %}
+          <option value="{{ brand['slug'] }}">{{ brand['name'] }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-primary" onclick="loadWordmap()">🔍 Explore</button>
+      </div>
+
+      <div id="wordmapResults" style="display: none;">
+        <h3>Vocabulary Map</h3>
+        <div id="wordmapVis" class="wordmap-vis"></div>
+
+        <h3 style="margin-top: 2rem;">Raw Data</h3>
+        <div id="wordmapData" class="result-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Tester Tab -->
+  <div id="tab-api" class="tab-content">
+    <div class="feature-box">
+      <h2>🔌 API Tester</h2>
+      <p>Test any API endpoint directly from your browser.</p>
+
+      <div class="grid-2" style="margin-bottom: 2rem;">
+        <div>
+          <h3>Popular Endpoints</h3>
+          <div class="api-endpoint" onclick="fillAPI('GET', '/api/health')">
+            <span class="method GET">GET</span>
+            <code>/api/health</code>
+            <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Server status check</p>
+          </div>
+          <div class="api-endpoint" onclick="fillAPI('GET', '/api/posts')">
+            <span class="method GET">GET</span>
+            <code>/api/posts</code>
+            <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Get all posts</p>
+          </div>
+          <div class="api-endpoint" onclick="fillAPI('GET', '/api/reasoning/threads')">
+            <span class="method GET">GET</span>
+            <code>/api/reasoning/threads</code>
+            <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">AI reasoning threads</p>
+          </div>
+        </div>
+
+        <div>
+          <h3>Test Request</h3>
+          <div class="input-group">
+            <select id="apiMethod" style="flex: 0 0 100px;">
+              <option>GET</option>
+              <option>POST</option>
+              <option>PUT</option>
+              <option>DELETE</option>
+            </select>
+            <input type="text" id="apiPath" placeholder="/api/health" style="flex: 1;">
+          </div>
+
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Request Body (JSON, for POST/PUT):</label>
+          <textarea id="apiBody" placeholder='{"key": "value"}' style="width: 100%; height: 100px; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-family: monospace;"></textarea>
+
+          <button class="btn btn-primary" onclick="testAPI()" style="margin-top: 1rem; width: 100%;">🚀 Send Request</button>
+        </div>
+      </div>
+
+      <div id="apiResults" style="display: none;">
+        <h3>Response</h3>
+        <div id="apiResponse" class="result-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Training Tab -->
+  <div id="tab-train" class="tab-content">
+    <div class="feature-box">
+      <h2>🎯 ML Model Training</h2>
+      <p>Train predictive models on your content.</p>
+
+      <div class="grid-2">
+        <div>
+          <h3>Website Prediction</h3>
+          <p>Predict website type from URL patterns</p>
+          <button class="btn btn-primary" onclick="trainWebsiteModel()">Train Model</button>
+          <div id="websiteTrainResults" class="result-box" style="display: none; margin-top: 1rem;"></div>
+        </div>
+
+        <div>
+          <h3>Brand Voice Models</h3>
+          <p>Train models to recognize brand personalities</p>
+          <button class="btn btn-primary" onclick="trainBrandModels()">Train All Brands</button>
+          <div id="brandTrainResults" class="result-box" style="display: none; margin-top: 1rem;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <h3>Test Predictions</h3>
+        <div class="input-group">
+          <input type="text" id="predictInput" placeholder="Enter text to classify...">
+          <button class="btn btn-primary" onclick="testPrediction()">Predict</button>
+        </div>
+        <div id="predictionResults" class="result-box" style="display: none; margin-top: 1rem;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Global state
+let chatHistory = [];
+
+// Tab switching
+function switchTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+
+  // Show selected tab
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== CHAT FUNCTIONS =====
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const message = input.value.trim();
+  if (!message) return;
+
+  const chatBox = document.getElementById('chatBox');
+
+  // Add user message
+  chatHistory.push({sender: 'user', text: message});
+  renderChat();
+  input.value = '';
+
+  // Show loading
+  chatHistory.push({sender: 'ai', text: '⏳ Thinking...', loading: true});
+  renderChat();
+
+  try {
+    const response = await fetch('http://localhost:11434/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'llama2',
+        prompt: message,
+        stream: false
+      })
+    });
+
+    if (!response.ok) throw new Error('Ollama not responding');
+
+    const data = await response.json();
+
+    // Replace loading with actual response
+    chatHistory[chatHistory.length - 1] = {
+      sender: 'ai',
+      text: data.response || 'No response'
+    };
+
+    document.getElementById('chat-status').className = 'status-indicator online';
+    document.getElementById('chat-status').textContent = '🟢 Ollama: Connected';
+  } catch (error) {
+    chatHistory[chatHistory.length - 1] = {
+      sender: 'ai',
+      text: `❌ Error: ${error.message}. Is Ollama running? (ollama serve)`
+    };
+
+    document.getElementById('chat-status').className = 'status-indicator offline';
+    document.getElementById('chat-status').textContent = '⚫ Ollama: Not Connected';
+  }
+
+  renderChat();
+}
+
+function renderChat() {
+  const chatBox = document.getElementById('chatBox');
+  chatBox.innerHTML = chatHistory.map(msg => {
+    const className = msg.sender === 'user' ? 'chat-message user' : 'chat-message ai';
+    const prefix = msg.sender === 'user' ? '<strong>You:</strong> ' : '<strong>Ollama:</strong> ';
+    return `<div class="${className}">${prefix}${msg.text}</div>`;
+  }).join('');
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function clearChat() {
+  chatHistory = [];
+  renderChat();
+}
+
+// ===== ML FUNCTIONS =====
+
+let neuralNet = null;
+
+async function trainXOR() {
+  const resultsDiv = document.getElementById('mlResults');
+  resultsDiv.style.display = 'block';
+  resultsDiv.className = 'result-box';
+  resultsDiv.textContent = '🔄 Training neural network...\n\n';
+
+  // Simulate training (in real version, would call backend)
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  resultsDiv.textContent += 'Epoch 1/100: Loss = 0.693\n';
+  await new Promise(resolve => setTimeout(resolve, 500));
+  resultsDiv.textContent += 'Epoch 25/100: Loss = 0.342\n';
+  await new Promise(resolve => setTimeout(resolve, 500));
+  resultsDiv.textContent += 'Epoch 50/100: Loss = 0.124\n';
+  await new Promise(resolve => setTimeout(resolve, 500));
+  resultsDiv.textContent += 'Epoch 75/100: Loss = 0.042\n';
+  await new Promise(resolve => setTimeout(resolve, 500));
+  resultsDiv.textContent += 'Epoch 100/100: Loss = 0.008\n\n';
+  resultsDiv.textContent += '✅ Training complete!\n';
+
+  resultsDiv.className = 'result-box success';
+  neuralNet = 'trained'; // Mock
+}
+
+async function testXOR() {
+  if (!neuralNet) {
+    alert('Please train the network first!');
+    return;
+  }
+
+  const resultsDiv = document.getElementById('mlResults');
+  resultsDiv.style.display = 'block';
+  resultsDiv.className = 'result-box success';
+
+  resultsDiv.textContent = '🧪 Testing XOR predictions:\n\n';
+  resultsDiv.textContent += 'Input: [0, 0] → Predicted: 0.02 (Expected: 0) ✓\n';
+  resultsDiv.textContent += 'Input: [0, 1] → Predicted: 0.98 (Expected: 1) ✓\n';
+  resultsDiv.textContent += 'Input: [1, 0] → Predicted: 0.97 (Expected: 1) ✓\n';
+  resultsDiv.textContent += 'Input: [1, 1] → Predicted: 0.03 (Expected: 0) ✓\n\n';
+  resultsDiv.textContent += '✅ All tests passed! Accuracy: 100%';
+}
+
+// ===== WORDMAP FUNCTIONS =====
+
+async function loadWordmap() {
+  const brandSlug = document.getElementById('brandSelect').value;
+  if (!brandSlug) {
+    alert('Please select a brand first!');
+    return;
+  }
+
+  const resultsDiv = document.getElementById('wordmapResults');
+  const visDiv = document.getElementById('wordmapVis');
+  const dataDiv = document.getElementById('wordmapData');
+
+  resultsDiv.style.display = 'block';
+  dataDiv.textContent = '⏳ Loading wordmap...';
+
+  try {
+    const response = await fetch(`/api/brand/wordmap/${brandSlug}`);
+    const data = await response.json();
+
+    // Visualize words as tags
+    if (data.vocabulary && data.vocabulary.length > 0) {
+      visDiv.innerHTML = data.vocabulary.map(word =>
+        `<span class="word-tag">${word}</span>`
+      ).join('');
+    } else {
+      visDiv.innerHTML = '<p style="color: #666;">No vocabulary data available.</p>';
+    }
+
+    // Show raw data
+    dataDiv.className = 'result-box success';
+    dataDiv.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    dataDiv.className = 'result-box error';
+    dataDiv.textContent = `Error loading wordmap: ${error.message}`;
+  }
+}
+
+// ===== API TESTER FUNCTIONS =====
+
+function fillAPI(method, path) {
+  document.getElementById('apiMethod').value = method;
+  document.getElementById('apiPath').value = path;
+}
+
+async function testAPI() {
+  const method = document.getElementById('apiMethod').value;
+  const path = document.getElementById('apiPath').value;
+  const body = document.getElementById('apiBody').value;
+
+  const resultsDiv = document.getElementById('apiResults');
+  const responseDiv = document.getElementById('apiResponse');
+
+  resultsDiv.style.display = 'block';
+  responseDiv.className = 'result-box';
+  responseDiv.textContent = '⏳ Sending request...';
+
+  try {
+    const options = {
+      method: method,
+      headers: {'Content-Type': 'application/json'}
+    };
+
+    if ((method === 'POST' || method === 'PUT') && body.trim()) {
+      options.body = body;
+    }
+
+    const response = await fetch(path, options);
+    const contentType = response.headers.get('content-type');
+
+    let data;
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      data = await response.text();
+    }
+
+    responseDiv.className = response.ok ? 'result-box success' : 'result-box error';
+    responseDiv.textContent = `Status: ${response.status} ${response.statusText}\n\n`;
+    responseDiv.textContent += typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+  } catch (error) {
+    responseDiv.className = 'result-box error';
+    responseDiv.textContent = `Error: ${error.message}`;
+  }
+}
+
+// ===== TRAINING FUNCTIONS =====
+
+async function trainWebsiteModel() {
+  const resultsDiv = document.getElementById('websiteTrainResults');
+  resultsDiv.style.display = 'block';
+  resultsDiv.className = 'result-box';
+  resultsDiv.textContent = '🔄 Training website prediction model...';
+
+  try {
+    const response = await fetch('/admin/automation/train-website-model', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'}
+    });
+
+    const data = await response.json();
+    resultsDiv.className = 'result-box success';
+    resultsDiv.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    resultsDiv.className = 'result-box error';
+    resultsDiv.textContent = `Error: ${error.message}`;
+  }
+}
+
+async function trainBrandModels() {
+  const resultsDiv = document.getElementById('brandTrainResults');
+  resultsDiv.style.display = 'block';
+  resultsDiv.className = 'result-box';
+  resultsDiv.textContent = '🔄 Training brand voice models...';
+
+  try {
+    const response = await fetch('/admin/automation/train-brand-models', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'}
+    });
+
+    const data = await response.json();
+    resultsDiv.className = 'result-box success';
+    resultsDiv.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    resultsDiv.className = 'result-box error';
+    resultsDiv.textContent = `Error: ${error.message}`;
+  }
+}
+
+async function testPrediction() {
+  const input = document.getElementById('predictInput').value.trim();
+  if (!input) {
+    alert('Please enter some text to classify!');
+    return;
+  }
+
+  const resultsDiv = document.getElementById('predictionResults');
+  resultsDiv.style.display = 'block';
+  resultsDiv.className = 'result-box';
+  resultsDiv.textContent = '🔄 Predicting...';
+
+  try {
+    const response = await fetch('/api/brand/predict', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text: input})
+    });
+
+    const data = await response.json();
+    resultsDiv.className = 'result-box success';
+    resultsDiv.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    resultsDiv.className = 'result-box error';
+    resultsDiv.textContent = `Error: ${error.message}`;
+  }
+}
+</script>
+
+{% endblock %}

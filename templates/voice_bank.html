@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}Voice Bank - Your Recordings{% endblock %}
+
+{% block content %}
+<style>
+  .voice-bank-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+  }
+
+  .stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .recording-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .recording-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .recording-id {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .recording-date {
+    color: #999;
+    font-size: 0.9rem;
+  }
+
+  .audio-player {
+    margin: 1rem 0;
+    width: 100%;
+  }
+
+  .transcription-box {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+
+  .no-transcript {
+    color: #999;
+    font-style: italic;
+  }
+
+  .recording-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .wordmap-section {
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .word-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin: 0.25rem;
+    font-size: 0.9rem;
+  }
+
+  .ownership-section {
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .domain-badge {
+    display: inline-block;
+    background: white;
+    border: 2px solid #667eea;
+    color: #667eea;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    margin: 0.5rem;
+    font-weight: 600;
+  }
+
+  .ad-opportunities {
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .ad-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #d1d5db;
+  }
+
+  .ad-revenue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #10b981;
+  }
+
+  .ad-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .ad-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .ad-card-title {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .keyword-pill {
+    display: inline-block;
+    background: #eff6ff;
+    color: #1e40af;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    margin: 0.25rem;
+    font-size: 0.85rem;
+    border: 1px solid #bfdbfe;
+  }
+
+  .sponsor-item {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+  }
+
+  .seo-score {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
+
+<div class="voice-bank-container">
+  <div class="page-header">
+    <h1>🎤 Voice Bank</h1>
+    <p style="margin: 0; opacity: 0.9;">All your voice recordings and data</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">{{ total_recordings }}</div>
+      <div class="stat-label">Total Recordings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ (total_audio_bytes / 1024)|round(1) }} KB</div>
+      <div class="stat-label">Audio Stored (DB BLOBs)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ (total_transcript_chars / 1024)|round(1) }} KB</div>
+      <div class="stat-label">Transcript Text</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ wordmap.total_words or 0 }}</div>
+      <div class="stat-label">Unique Words</div>
+    </div>
+  </div>
+
+  {% if wordmap and wordmap.top_words %}
+  <div class="wordmap-section">
+    <h2>🗺️ Your Wordmap (Top Keywords)</h2>
+    <div style="margin-top: 1rem;">
+      {% for word, count in wordmap.top_words %}
+        <span class="word-tag">{{ word }} ({{ count }})</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if owned_domains %}
+  <div class="ownership-section">
+    <h2>🏆 Domain Ownership</h2>
+    <div style="margin-top: 1rem;">
+      {% for domain in owned_domains %}
+        <span class="domain-badge">{{ domain.domain }}: {{ domain.ownership_percentage|round(2) }}%</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <h2 style="margin: 2rem 0 1rem 0;">📝 All Recordings</h2>
+
+  {% if recordings %}
+    {% for rec in recordings %}
+    <div class="recording-card">
+      <div class="recording-header">
+        <div>
+          <div class="recording-id">Recording #{{ rec.id }}</div>
+          <div style="color: #666; font-size: 0.9rem;">{{ rec.filename }}</div>
+        </div>
+        <div class="recording-date">{{ rec.created_at }}</div>
+      </div>
+
+      <!-- Audio Player -->
+      <div>
+        <strong>Audio:</strong>
+        <audio controls class="audio-player" preload="none">
+          <source src="/voice-bank/{{ rec.id }}/audio" type="audio/webm">
+          Your browser doesn't support audio playback.
+        </audio>
+      </div>
+
+      <!-- Transcription -->
+      <div style="margin-top: 1rem;">
+        <strong>Transcription:</strong>
+        <div class="transcription-box">
+          {% if rec.has_transcript %}
+            {{ rec.transcription }}
+          {% else %}
+            <span class="no-transcript">No transcription available</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Recording Stats -->
+      <div class="recording-stats">
+        <div>📏 {{ rec.transcript_length }} chars</div>
+        <div>📊 {{ rec.word_count }} unique words</div>
+        <div>💾 {{ (rec.file_size / 1024)|round(1) }} KB</div>
+      </div>
+
+      <!-- Advertising Opportunities -->
+      {% if rec.ad_opportunities and 'error' not in rec.ad_opportunities %}
+      <div class="ad-opportunities">
+        <div class="ad-section-header">
+          <div>
+            <strong style="font-size: 1.1rem;">💰 Advertising Opportunities</strong>
+            <div style="color: #6b7280; font-size: 0.85rem; margin-top: 0.25rem;">
+              Monetization Score: <span class="seo-score">{{ rec.ad_opportunities.monetization_score|round|int }}/100</span>
+            </div>
+          </div>
+          <div class="ad-revenue">
+            ${{ rec.ad_opportunities.total_revenue_estimate.min_monthly|round|int }}-{{ rec.ad_opportunities.total_revenue_estimate.max_monthly|round|int }}/mo
+          </div>
+        </div>
+
+        <div class="ad-grid">
+          <!-- Google Ads Keywords -->
+          <div class="ad-card">
+            <div class="ad-card-title">💵 Google Ads (${{ rec.ad_opportunities.google_ads.estimated_monthly_revenue|round|int }}/mo)</div>
+            <div style="max-height: 120px; overflow-y: auto;">
+              {% for kw in rec.ad_opportunities.google_ads.keywords[:5] %}
+                <span class="keyword-pill">{{ kw.keyword }} (${{ kw.cpc }})</span>
+              {% endfor %}
+            </div>
+            <div style="margin-top: 0.5rem; color: #6b7280; font-size: 0.8rem;">
+              {{ rec.ad_opportunities.google_ads.total_keywords }} total keywords
+            </div>
+          </div>
+
+          <!-- Meta Ads Targeting -->
+          <div class="ad-card">
+            <div class="ad-card-title">📘 Meta Ads (${{ rec.ad_opportunities.meta_ads.estimated_monthly_revenue|round|int }}/mo)</div>
+            <div style="max-height: 120px; overflow-y: auto;">
+              {% for interest in rec.ad_opportunities.meta_ads.interests[:5] %}
+                <span class="keyword-pill">{{ interest }}</span>
+              {% endfor %}
+            </div>
+            <div style="margin-top: 0.5rem; color: #6b7280; font-size: 0.8rem;">
+              {{ rec.ad_opportunities.meta_ads.interests|length }} interest targets
+            </div>
+          </div>
+
+          <!-- Affiliate Opportunities -->
+          <div class="ad-card">
+            <div class="ad-card-title">🤝 Affiliate Programs</div>
+            {% if rec.ad_opportunities.affiliate_opportunities %}
+              {% for aff in rec.ad_opportunities.affiliate_opportunities[:3] %}
+                <div class="sponsor-item">
+                  {{ aff.category }}: {{ (aff.commission_rate * 100)|round|int }}% (${{ aff.potential_monthly_revenue|round|int }}/mo)
+                </div>
+              {% endfor %}
+            {% else %}
+              <div style="color: #9ca3af; font-size: 0.85rem;">No affiliates detected</div>
+            {% endif %}
+          </div>
+
+          <!-- Sponsored Content -->
+          <div class="ad-card">
+            <div class="ad-card-title">📝 Sponsored Content</div>
+            {% if rec.ad_opportunities.sponsored_content.potential_sponsors %}
+              <div style="max-height: 120px; overflow-y: auto;">
+                {% for sponsor in rec.ad_opportunities.sponsored_content.potential_sponsors[:5] %}
+                  <span class="keyword-pill">{{ sponsor }}</span>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div style="color: #9ca3af; font-size: 0.85rem;">No sponsors detected</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- SEO Keywords -->
+        {% if rec.seo_analysis and rec.seo_analysis.patterns_detected %}
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #d1d5db;">
+          <div style="font-weight: 600; color: #374151; margin-bottom: 0.5rem; font-size: 0.9rem;">
+            🔍 SEO Keywords (Score: {{ rec.seo_analysis.seo_score|round|int }}/100)
+          </div>
+          <div>
+            {% for kw in rec.seo_analysis.patterns_detected.long_tail_keywords[:10] %}
+              <span class="keyword-pill">{{ kw }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <div style="background: white; padding: 3rem; text-align: center; border-radius: 16px;">
+      <h2>No recordings yet</h2>
+      <p>Record voice memos to see them here</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+<footer style="background: #f5f5f5; padding: 2rem; margin-top: 4rem; border-top: 1px solid #ddd;">
+  <div style="max-width: 1200px; margin: 0 auto; text-align: center; color: #666;">
+    <p style="margin-bottom: 0.5rem;">&copy; 2025 {{ brand_name|default('Soulfra') }}</p>
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="/feed.xml" style="color: #667eea; text-decoration: none;">RSS</a>
+      <span>|</span>
+      <a href="/subscribe" style="color: #667eea; text-decoration: none;">Subscribe</a>
+      <span>|</span>
+      <a href="/admin" style="color: #667eea; text-decoration: none;">Admin</a>
+      {% if brand_slug %}
+        <span>|</span>
+        <a href="/brand/{{ brand_slug }}/export" style="color: #667eea; text-decoration: none;">Export Brand</a>
+      {% endif %}
+    </div>
+    {% if brand_tagline %}
+      <p style="margin-top: 1rem; font-style: italic; color: #999; font-size: 0.9rem;">{{ brand_tagline }}</p>
+    {% endif %}
+  </div>
+</footer>

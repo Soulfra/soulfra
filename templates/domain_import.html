@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Domains - Soulfra Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .step {
+            margin-bottom: 30px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea::placeholder {
+            color: #999;
+        }
+
+        .example {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border-left: 4px solid #667eea;
+        }
+
+        .example code {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            display: block;
+            margin: 4px 0;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #status {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        #status.analyzing {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            display: block;
+        }
+
+        #status.success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            display: block;
+        }
+
+        #status.error {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            display: block;
+        }
+
+        .status-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .status-message {
+            font-size: 16px;
+            color: #333;
+        }
+
+        #preview {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .preview-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 4px solid #667eea;
+        }
+
+        .preview-domain {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .preview-details {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .preview-emoji {
+            font-size: 32px;
+            float: right;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin/domains" class="back-link">← Back to Domains</a>
+
+        <div class="card">
+            <div class="header">
+                <h1>🌐 Import Your Domains</h1>
+                <p>Paste your domain names and let Ollama analyze them</p>
+            </div>
+
+            <div class="content">
+                <!-- Step 1: Enter Domains -->
+                <div class="step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Enter Your Domains
+                    </div>
+                    <div class="step-description">
+                        Paste your domain names below (one per line). No need for http:// or www.
+                    </div>
+
+                    <div class="example">
+                        <strong>Example:</strong>
+                        <code>mycookingblog.com</code>
+                        <code>awesometech.io</code>
+                        <code>my-photography.net</code>
+                    </div>
+
+                    <textarea
+                        id="domainsInput"
+                        placeholder="mynewsite.com&#10;coolblog.net&#10;awesomeapp.io&#10;&#10;(paste as many as you want!)"
+                    ></textarea>
+
+                    <div id="domainCount" style="margin-top: 8px; color: #666; font-size: 14px;"></div>
+                </div>
+
+                <!-- Step 2: Analyze -->
+                <div class="btn-container">
+                    <button id="analyzeBtn" class="btn" onclick="analyzeDomains()">
+                        🤖 Analyze with Ollama
+                    </button>
+                </div>
+
+                <!-- Status -->
+                <div id="status">
+                    <span class="status-icon" id="statusIcon"></span>
+                    <span class="status-message" id="statusMessage"></span>
+                </div>
+
+                <!-- Preview -->
+                <div id="preview">
+                    <div class="step-title" style="margin-bottom: 20px;">
+                        <span class="step-number">2</span>
+                        Review Suggestions
+                    </div>
+                    <div id="previewContent"></div>
+
+                    <div class="btn-container">
+                        <button id="importBtn" class="btn" onclick="importDomains()">
+                            ✅ Import All Domains
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let analyzedDomains = [];
+
+        // Update domain count as user types
+        document.getElementById('domainsInput').addEventListener('input', function(e) {
+            const text = e.target.value.trim();
+            const domains = text.split('\n').filter(line => {
+                line = line.trim();
+                return line && line.includes('.') && !line.startsWith('#');
+            });
+
+            const count = domains.length;
+            const countEl = document.getElementById('domainCount');
+
+            if (count > 0) {
+                countEl.textContent = `${count} domain${count === 1 ? '' : 's'} ready to analyze`;
+                countEl.style.color = '#667eea';
+                countEl.style.fontWeight = '600';
+            } else {
+                countEl.textContent = '';
+            }
+        });
+
+        async function analyzeDomains() {
+            const input = document.getElementById('domainsInput').value.trim();
+            const btn = document.getElementById('analyzeBtn');
+            const status = document.getElementById('status');
+            const preview = document.getElementById('preview');
+
+            // Parse domains
+            const domains = input.split('\n')
+                .map(line => line.trim())
+                .filter(line => line && line.includes('.') && !line.startsWith('#'));
+
+            if (domains.length === 0) {
+                showStatus('error', '⚠️', 'Please enter at least one domain name');
+                return;
+            }
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Analyzing...';
+
+            // Show analyzing status
+            showStatus('analyzing', '🤖', `Analyzing ${domains.length} domain${domains.length === 1 ? '' : 's'} with Ollama... This may take 30-60 seconds per domain.`);
+
+            // Hide preview
+            preview.style.display = 'none';
+
+            try {
+                // Call API
+                const response = await fetch('/api/domains/analyze-batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domains })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    analyzedDomains = result.analyzed;
+                    showPreview(result.analyzed);
+                    showStatus('success', '✅', `Successfully analyzed ${result.analyzed.length} domains! Review the suggestions below.`);
+                } else {
+                    showStatus('error', '❌', result.error || 'Failed to analyze domains');
+                }
+            } catch (error) {
+                showStatus('error', '❌', `Error: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🤖 Analyze with Ollama';
+            }
+        }
+
+        function showStatus(type, icon, message) {
+            const status = document.getElementById('status');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusMessage = document.getElementById('statusMessage');
+
+            status.className = type;
+            statusIcon.textContent = icon;
+            statusMessage.textContent = message;
+        }
+
+        function showPreview(domains) {
+            const preview = document.getElementById('preview');
+            const content = document.getElementById('previewContent');
+
+            content.innerHTML = domains.map((d, i) => `
+                <div class="preview-item">
+                    <span class="preview-emoji">${d.emoji}</span>
+                    <div class="preview-domain">${i + 1}. ${d.name} (${d.domain})</div>
+                    <div class="preview-details">
+                        <strong>Category:</strong> ${d.category}<br>
+                        <strong>Type:</strong> ${d.brand_type}<br>
+                        <strong>Tagline:</strong> ${d.tagline || 'N/A'}<br>
+                        <strong>Audience:</strong> ${d.target_audience || 'N/A'}<br>
+                        <strong>Purpose:</strong> ${d.purpose || 'N/A'}
+                    </div>
+                </div>
+            `).join('');
+
+            preview.style.display = 'block';
+        }
+
+        async function importDomains() {
+            const btn = document.getElementById('importBtn');
+
+            if (analyzedDomains.length === 0) {
+                alert('No domains to import');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Importing...';
+
+            try {
+                const response = await fetch('/api/domains/import-batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domains: analyzedDomains })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus('success', '🎉', `Successfully imported ${result.imported} domain${result.imported === 1 ? '' : 's'}!`);
+
+                    // Redirect to domains page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/admin/domains';
+                    }, 2000);
+                } else {
+                    showStatus('error', '❌', result.error || 'Failed to import domains');
+                    btn.disabled = false;
+                    btn.innerHTML = '✅ Import All Domains';
+                }
+            } catch (error) {
+                showStatus('error', '❌', `Error: ${error.message}`);
+                btn.disabled = false;
+                btn.innerHTML = '✅ Import All Domains';
+            }
+        }
+    </script>
+</body>
+</html>

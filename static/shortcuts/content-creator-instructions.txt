@@ -1,0 +1,194 @@
+# 📝 Voice Content Creator - Siri Shortcut Setup
+
+## What This Does
+Say "Hey Siri, create content" → Talk for 5 minutes → AI creates blog/tweets/video/docs
+
+## Installation Steps
+
+### 1. Open iOS Shortcuts App
+
+### 2. Create New Shortcut
+
+### 3. Add These Actions (in order):
+
+ACTION 1: Record Audio
+- Search for "Record Audio"
+- Set "Stop Recording After" to 300 seconds (5 minutes)
+- (This gives you time to ramble about any topic)
+
+ACTION 2: Get Contents of URL
+- URL: http://192.168.1.87:5001/api/voice/content-gen
+- Method: POST
+- Headers: Content-Type: application/json
+- Request Body: JSON
+    {
+      "transcription": "[Audio from previous action]",
+      "format": "all"
+    }
+
+ACTION 3: Get Dictionary Value
+- Get value for key: content
+- From: Contents of URL
+
+ACTION 4: Get Dictionary Value (nested)
+- Get value for key: blog
+- From: Dictionary Value (from previous action)
+
+ACTION 5: Copy to Clipboard
+- Copy: Dictionary Value (blog post)
+
+ACTION 6: Create Note
+- Search for "Create Note"
+- Note: [Contents of URL] (the full response)
+- Title: "Voice Content - [Current Date]"
+- (This saves ALL formats: blog, tweets, video, docs)
+
+ACTION 7: Show Notification
+- Title: "Content Ready"
+- Body: "Blog post in clipboard, all formats in Notes"
+
+### 4. Name Your Shortcut
+Rename to: "Create Content"
+
+### 5. Add to Siri
+- Record phrase: "Create content"
+
+## Usage
+
+1. Say: "Hey Siri, create content"
+2. Siri starts recording (up to 5 minutes)
+3. Talk about anything:
+   - Frustrations
+   - Ideas
+   - Observations
+   - Technical concepts
+   - Stories
+4. Let Siri finish recording
+5. Wait 20-30 seconds for AI processing
+6. Notification appears
+7. Blog post is in clipboard
+8. All formats saved in Notes app
+
+## What You Get
+
+From 5 minutes of talking:
+- ✅ Blog post (with title, intro, points, conclusion)
+- ✅ Tweet thread (5-7 tweets, numbered)
+- ✅ Video script (with timestamps)
+- ✅ Technical documentation
+- ✅ LinkedIn post
+- ✅ Email newsletter
+
+## Example Session
+
+"Hey Siri, create content"
+
+[Start rambling]
+
+"I'm so sick of typing. I see all these programmers and DJs and
+content creators talking on their AirPods while they're out walking
+or whatever. Why can't we just code that way? Like, I have ideas
+all the time when I'm away from my computer. Voice memos are great
+but then I have to transcribe them and organize them. What if the
+AI just did all that? Built the Flask route from my voice description.
+Wrote the blog post from my rambling. Created the social media posts.
+That's the future..."
+
+[5 minutes later]
+
+"Content Ready - Blog post in clipboard, all formats in Notes"
+
+[Open Notes → See everything formatted beautifully]
+
+## Formats Breakdown
+
+### Blog Post
+- Catchy title
+- Introduction (hook)
+- 3-5 main points
+- Conclusion
+- Markdown formatted
+
+### Tweet Thread
+- 5-7 tweets
+- Numbered (1/, 2/, 3/)
+- Max 280 chars each
+- Engaging hooks
+
+### Video Script
+- [INTRO - 0:00-0:15] Hook
+- [MAIN - 0:15-2:00] Key points
+- [OUTRO - 2:00-2:30] CTA
+
+### Technical Docs
+- Title
+- Overview
+- Usage
+- Examples
+- Markdown formatted
+
+## Tips for Best Results
+
+✅ DO:
+- Speak naturally, don't worry about structure
+- Include examples and stories
+- Express emotions (frustration, excitement)
+- Ramble - AI will organize it
+
+❌ DON'T:
+- Try to be "professional" or formal
+- Worry about grammar
+- Pause for long periods (wastes recording time)
+- Overthink - just talk
+
+## Use Cases
+
+### Morning Walk Content Creation
+- Put in AirPods
+- Go for 30 min walk
+- Record 3 x 5-minute sessions
+- Get home with 3 blog posts + 30 social posts
+
+### Driving Ideas Capture
+- Stuck in traffic
+- Have great idea
+- Voice memo it
+- AI turns it into publishable content
+
+### Podcast Repurposing
+- Record podcast episode
+- Feed 5-min clips to this shortcut
+- Generate social media teasers
+- Create blog post series
+
+## Advanced: Single Format
+
+If you only want one format (e.g., just tweets):
+
+In "Get Contents of URL" action, change:
+  "format": "all"
+To:
+  "format": "tweet"
+
+Options:
+- "blog" - Just blog post
+- "tweet" - Just tweet thread
+- "video" - Just video script
+- "docs" - Just documentation
+
+## Troubleshooting
+
+Q: Recording stops early
+A: Check recording time is set to 300 seconds (5 min)
+
+Q: Content is too short
+A: Talk more! AI needs at least 2 minutes of content
+
+Q: Blog post doesn't match my voice
+A: Add more personality to your rambling. AI mimics your tone.
+
+---
+
+Created: January 2026
+Platform: Voice Dev Studio
+URL: http://192.168.1.87:5001/shortcuts

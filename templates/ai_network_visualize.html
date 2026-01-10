@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+
+{% block title %}AI Network Visualization - {{ model_name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="visualize-panel">
+        <div class="visualize-header">
+            <h1>⚡ Neural Network Visualization</h1>
+            <h2>{{ model_name }}</h2>
+            <p>Interactive weight and bias visualization</p>
+            <a href="{{ url_for('ai_network_debug') }}" class="btn-back">← Back to Debug Panel</a>
+        </div>
+
+        <!-- Network Architecture Overview -->
+        <section class="viz-section">
+            <h2>🏗️ Network Architecture</h2>
+            <div class="architecture-display">
+                <div class="layer-viz">
+                    <div class="layer-box input-layer">
+                        <div class="layer-title">Input Layer</div>
+                        <div class="layer-count">{{ network.input_size }} neurons</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    {% for size in network.hidden_sizes %}
+                    <div class="layer-box hidden-layer">
+                        <div class="layer-title">Hidden Layer {{ loop.index }}</div>
+                        <div class="layer-count">{{ size }} neurons</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    {% endfor %}
+                    <div class="layer-box output-layer">
+                        <div class="layer-title">Output Layer</div>
+                        <div class="layer-count">{{ network.output_size }} neurons</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weight Matrices -->
+        <section class="viz-section">
+            <h2>⚖️ Weight Matrices</h2>
+            <p>Hover over cells to see individual weight values</p>
+
+            {% if weights %}
+            <div class="weights-container">
+                {% for layer_name, weight_matrix in weights.items() %}
+                <div class="weight-matrix-card">
+                    <h3>{{ layer_name }}</h3>
+                    <div class="matrix-info">
+                        Shape: {{ weight_matrix|length }} × {{ weight_matrix[0]|length if weight_matrix else 0 }}
+                    </div>
+                    <div class="weight-matrix">
+                        {% for row in weight_matrix[:20] %}
+                        <div class="matrix-row">
+                            {% for value in row[:20] %}
+                            <div class="weight-cell"
+                                 style="background: {{ 'rgba(102, 126, 234, ' ~ (value|abs * 0.8)|string ~ ')' if value > 0 else 'rgba(220, 53, 69, ' ~ (value|abs * 0.8)|string ~ ')' }}"
+                                 title="{{ '%.4f'|format(value) }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                        {% if weight_matrix|length > 20 %}
+                        <div class="matrix-truncated">... {{ weight_matrix|length - 20 }} more rows</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-data">
+                <p>No weight data available. Train the network first.</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Bias Values -->
+        <section class="viz-section">
+            <h2>⚡ Bias Values</h2>
+            {% if biases %}
+            <div class="biases-container">
+                {% for layer_name, bias_vector in biases.items() %}
+                <div class="bias-card">
+                    <h3>{{ layer_name }}</h3>
+                    <div class="bias-values">
+                        {% for value in bias_vector %}
+                        <div class="bias-item">
+                            <div class="bias-bar" style="width: {{ ((value|abs) * 100)|min(100) }}%; background: {{ '#667eea' if value > 0 else '#dc3545' }}"></div>
+                            <span class="bias-value">{{ '%.4f'|format(value) }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-data">
+                <p>No bias data available.</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Network Metadata -->
+        <section class="viz-section">
+            <h2>📊 Network Metadata</h2>
+            <div class="metadata-grid">
+                <div class="metadata-card">
+                    <div class="metadata-label">Model Name</div>
+                    <div class="metadata-value">{{ model_name }}</div>
+                </div>
+                <div class="metadata-card">
+                    <div class="metadata-label">Total Parameters</div>
+                    <div class="metadata-value">
+                        {{ weights.values()|map('length')|sum + biases.values()|map('length')|sum if weights and biases else 'N/A' }}
+                    </div>
+                </div>
+                <div class="metadata-card">
+                    <div class="metadata-label">Layers</div>
+                    <div class="metadata-value">{{ weights.keys()|list|length if weights else 0 }}</div>
+                </div>
+                <div class="metadata-card">
+                    <div class="metadata-label">Status</div>
+                    <div class="metadata-value">{{ 'Trained' if weights else 'Untrained' }}</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Actions -->
+        <section class="viz-section">
+            <h2>🔧 Actions</h2>
+            <div class="action-buttons">
+                <button onclick="exportWeights()" class="btn-action">💾 Export Weights (JSON)</button>
+                <button onclick="resetNetwork()" class="btn-action btn-danger">🔄 Reset Network</button>
+                <button onclick="window.print()" class="btn-action">🖨️ Print Visualization</button>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+.visualize-panel {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.visualize-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.visualize-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.visualize-header h2 {
+    margin: 0.5rem 0 0 0;
+    font-size: 1.8rem;
+    opacity: 0.9;
+}
+
+.btn-back {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.viz-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.viz-section h2 {
+    margin-top: 0;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 0.5rem;
+}
+
+.architecture-display {
+    margin-top: 2rem;
+}
+
+.layer-viz {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.layer-box {
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 150px;
+}
+
+.input-layer {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.hidden-layer {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.output-layer {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+}
+
+.layer-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.layer-count {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.arrow {
+    font-size: 2rem;
+    color: #999;
+}
+
+.weights-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.weight-matrix-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+}
+
+.weight-matrix-card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.matrix-info {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.weight-matrix {
+    overflow-x: auto;
+}
+
+.matrix-row {
+    display: flex;
+    gap: 2px;
+}
+
+.weight-cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: help;
+    transition: transform 0.2s;
+}
+
+.weight-cell:hover {
+    transform: scale(1.5);
+    z-index: 10;
+    border: 2px solid #333;
+}
+
+.matrix-truncated {
+    margin-top: 0.5rem;
+    color: #999;
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+.biases-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.bias-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+}
+
+.bias-card h3 {
+    margin-top: 0;
+}
+
+.bias-values {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bias-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bias-bar {
+    height: 24px;
+    border-radius: 4px;
+    transition: width 0.3s;
+}
+
+.bias-value {
+    font-family: monospace;
+    font-size: 0.9rem;
+    min-width: 80px;
+}
+
+.metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.metadata-card {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.metadata-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.metadata-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #667eea;
+    color: white;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-danger {
+    background: #dc3545;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.no-data {
+    padding: 3rem;
+    text-align: center;
+    color: #999;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+</style>
+
+<script>
+function exportWeights() {
+    const data = {
+        model_name: "{{ model_name }}",
+        weights: {{ weights|tojson if weights else '{}' }},
+        biases: {{ biases|tojson if biases else '{}' }},
+        network: {{ network|tojson }}
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.model_name}_weights.json`;
+    a.click();
+}
+
+function resetNetwork() {
+    if (confirm('Reset this neural network? All weights and training will be lost.')) {
+        fetch(`/api/ai/reset-network/{{ model_name }}`, {method: 'POST'})
+            .then(r => r.json())
+            .then(data => {
+                alert(data.message || 'Network reset');
+                location.reload();
+            })
+            .catch(err => {
+                alert('Error resetting network: ' + err);
+            });
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Call In - {{ show.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .status-accepting { background: #48bb78; color: white; }
+        .status-closed { background: #f56565; color: white; }
+
+        .article-preview {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .voice-recorder {
+            text-align: center;
+            padding: 30px;
+            background: #f7fafc;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: all 0.3s;
+            font-size: 48px;
+        }
+
+        .record-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .record-button.recording {
+            background: #f56565;
+            border-color: #f56565;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .record-status {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .record-timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            font-family: monospace;
+        }
+
+        .record-timer.recording {
+            color: #f56565;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .success-message h3 {
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .instructions {
+            background: #ebf8ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .instructions h3 {
+            color: #2c5282;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            color: #2d3748;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+        }
+
+        .closed-notice {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>{{ show.title }}</h1>
+            <span class="status-badge status-{{ show.status.replace('_', '-') }}">
+                {{ show.status.replace('_', ' ').upper() }}
+            </span>
+
+            {% if show.status == 'accepting_calls' %}
+                <div class="instructions">
+                    <h3>📱 How to Call In:</h3>
+                    <ol>
+                        <li>Tap the microphone button below</li>
+                        <li>Share your reaction to the article</li>
+                        <li>Tap stop when finished</li>
+                        <li>Submit your call-in!</li>
+                    </ol>
+                </div>
+
+                <div class="article-preview">
+                    <strong>Article:</strong><br><br>
+                    {{ show.article_text[:500] }}...
+                    {% if show.article_url %}
+                        <br><br><a href="{{ show.article_url }}" target="_blank">Read full article →</a>
+                    {% endif %}
+                </div>
+
+                <!-- Voice Recorder -->
+                <div class="voice-recorder">
+                    <button class="record-button" id="recordButton" onclick="toggleRecording()">
+                        🎤
+                    </button>
+                    <div class="record-status" id="recordStatus">Tap to start recording</div>
+                    <div class="record-timer" id="recordTimer">00:00</div>
+                </div>
+
+                <!-- Call-in Form -->
+                <form id="callInForm" onsubmit="submitCallIn(event)">
+                    <div class="form-group">
+                        <label for="callerName">Your Name (Optional)</label>
+                        <input type="text" id="callerName" placeholder="John from Tampa">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reactionType">Reaction Type</label>
+                        <select id="reactionType">
+                            <option value="comment">Comment</option>
+                            <option value="question">Question</option>
+                            <option value="story">Personal Story</option>
+                            <option value="counterpoint">Counterpoint</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitButton" disabled>
+                        📞 Submit Call-In
+                    </button>
+                </form>
+
+                <div id="successMessage" style="display: none;">
+                    <div class="success-message">
+                        <h3>✅ Call-In Received!</h3>
+                        <p>Your reaction has been submitted to the host.</p>
+                        <p>It will be reviewed and may appear in the show.</p>
+                        <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 15px;">
+                            Record Another
+                        </button>
+                    </div>
+                </div>
+
+                <div id="errorMessage" style="display: none;">
+                    <div class="error-message">
+                        <strong>Error:</strong> <span id="errorText"></span>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="closed-notice">
+                    <h3>🔒 This show is no longer accepting call-ins</h3>
+                    <p style="margin-top: 10px;">Thanks for your interest!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const showId = {{ show_id }};
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let recordingStartTime = null;
+        let timerInterval = null;
+        let recordedBlob = null;
+
+        // Toggle recording
+        async function toggleRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        // Start recording
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    document.getElementById('submitButton').disabled = false;
+
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                recordingStartTime = Date.now();
+
+                // Update UI
+                document.getElementById('recordButton').classList.add('recording');
+                document.getElementById('recordButton').textContent = '⏹️';
+                document.getElementById('recordStatus').textContent = 'Recording...';
+
+                // Start timer
+                timerInterval = setInterval(updateTimer, 100);
+
+            } catch (error) {
+                showError('Microphone access denied. Please allow microphone access.');
+                console.error('Error starting recording:', error);
+            }
+        }
+
+        // Stop recording
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+
+                // Update UI
+                document.getElementById('recordButton').classList.remove('recording');
+                document.getElementById('recordButton').textContent = '🎤';
+                document.getElementById('recordStatus').textContent = 'Recording complete!';
+
+                // Stop timer
+                clearInterval(timerInterval);
+            }
+        }
+
+        // Update recording timer
+        function updateTimer() {
+            const elapsed = Date.now() - recordingStartTime;
+            const seconds = Math.floor(elapsed / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+
+            const timerEl = document.getElementById('recordTimer');
+            timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            timerEl.classList.add('recording');
+        }
+
+        // Submit call-in
+        async function submitCallIn(event) {
+            event.preventDefault();
+
+            if (!recordedBlob) {
+                showError('Please record your reaction first');
+                return;
+            }
+
+            const callerName = document.getElementById('callerName').value;
+            const reactionType = document.getElementById('reactionType').value;
+
+            // Upload audio first
+            const formData = new FormData();
+            formData.append('audio', recordedBlob, 'callin.webm');
+
+            try {
+                // Save recording
+                const uploadResponse = await fetch('/api/simple-voice/save', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const uploadData = await uploadResponse.json();
+
+                if (!uploadData.recording_id) {
+                    throw new Error('Failed to upload recording');
+                }
+
+                // Submit call-in
+                const callInResponse = await fetch(`/api/live-show/${showId}/call-in`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        recording_id: uploadData.recording_id,
+                        caller_name: callerName || null,
+                        reaction_type: reactionType
+                    })
+                });
+
+                const callInData = await callInResponse.json();
+
+                if (callInData.success) {
+                    // Show success
+                    document.getElementById('callInForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                } else {
+                    throw new Error(callInData.error || 'Failed to submit call-in');
+                }
+
+            } catch (error) {
+                showError(error.message);
+                console.error('Error submitting call-in:', error);
+            }
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

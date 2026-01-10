@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block title %}My Domains - Mesh Network{% endblock %}
+
+{% block content %}
+<style>
+  .my-domains-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .page-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2.5rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+  }
+
+  .stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .domain-card {
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .domain-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+  }
+
+  .domain-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .domain-name-large {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .ownership-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .domain-description {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .wordmap-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .word-tag {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .unlocked-date {
+    color: #999;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  .storage-info {
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .storage-info h2 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+
+  .storage-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .storage-item:last-child {
+    border-bottom: none;
+  }
+
+  .storage-label {
+    color: #666;
+    font-weight: 600;
+  }
+
+  .storage-value {
+    color: #333;
+    font-family: monospace;
+  }
+
+  .no-domains {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 3rem;
+    text-align: center;
+  }
+
+  .no-domains h2 {
+    color: #333;
+    margin: 0 0 1rem 0;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  .export-btn {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .export-btn:hover {
+    background: #667eea;
+    color: white;
+  }
+</style>
+
+<div class="my-domains-container">
+  <div class="page-header">
+    <h1>🏆 My Domains</h1>
+    <p style="margin: 0; opacity: 0.9;">Domains you own in the mesh network</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">{{ domains|length }}</div>
+      <div class="stat-label">Domains Owned</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ recording_stats.total_recordings or 0 }}</div>
+      <div class="stat-label">Voice Recordings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ ((recording_stats.total_audio_bytes or 0) / 1024)|round(1) }} KB</div>
+      <div class="stat-label">Audio Data Stored</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ ((recording_stats.total_transcript_chars or 0) / 1024)|round(1) }} KB</div>
+      <div class="stat-label">Transcription Data</div>
+    </div>
+  </div>
+
+  <div class="storage-info">
+    <h2>📦 Where Your Data Lives</h2>
+    <div class="storage-item">
+      <span class="storage-label">Voice Recordings (audio)</span>
+      <span class="storage-value">soulfra.db → simple_voice_recordings.audio_data (BLOB)</span>
+    </div>
+    <div class="storage-item">
+      <span class="storage-label">Transcriptions (text)</span>
+      <span class="storage-value">soulfra.db → simple_voice_recordings.transcription (TEXT)</span>
+    </div>
+    <div class="storage-item">
+      <span class="storage-label">Your Wordmap</span>
+      <span class="storage-value">soulfra.db → user_wordmaps.wordmap_json (JSON)</span>
+    </div>
+    <div class="storage-item">
+      <span class="storage-label">Domain Ownership</span>
+      <span class="storage-value">soulfra.db → domain_ownership (ownership %)</span>
+    </div>
+    <div style="margin-top: 1rem; text-align: center;">
+      <a href="/export-voice" class="export-btn">📥 Export Voice Files to PC</a>
+    </div>
+  </div>
+
+  {% if domains %}
+    {% for domain in domains %}
+    <div class="domain-card">
+      <div class="domain-card-header">
+        <div class="domain-name-large">{{ domain.domain_with_emoji }}</div>
+        <div class="ownership-badge">{{ domain.ownership_percentage|round(2) }}% owned</div>
+      </div>
+
+      <div class="domain-description">{{ domain.description }}</div>
+
+      {% if domain.top_words %}
+      <div class="wordmap-preview">
+        {% for word, count in domain.top_words %}
+        <span class="word-tag">{{ word }} ({{ count|int }})</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="unlocked-date">Unlocked: {{ domain.unlocked_at }}</div>
+
+      <div style="margin-top: 1rem;">
+        <a href="/{{ domain.domain.split('.')[0] }}" class="cta-btn">View Domain Page →</a>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-domains">
+      <h2>You don't own any domains yet</h2>
+      <p style="color: #666; margin: 0;">Record voice memos to match with domains and earn ownership</p>
+      <a href="/voice" class="cta-btn">Record Voice Memo</a>
+      <a href="/domains" class="cta-btn" style="margin-left: 1rem;">Browse All Domains</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

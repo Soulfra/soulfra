@@ -1,0 +1,383 @@
+# Form Builder Template Presets
+# Pre-built templates for common use cases
+
+presets:
+  # ==================== GAME SIGNUP ====================
+  game_signup:
+    name: "Game Signup (Cringeproof-style)"
+    description: "Complete game registration system with user accounts, towns, QR codes, and leaderboard"
+    icon: "🎮"
+    generates:
+      - signup_form
+      - user_table
+      - leaderboard_page
+      - news_feed
+      - subdomain_config
+
+    template:
+      name: "{game_name} Signup"
+      route: "/signup"
+      table: "{game_name}_users"
+      subdomain: "{game_name}"
+      features:
+        - user_registration
+        - reputation_tracking
+        - leaderboard
+        - news_feed
+
+      fields:
+        - name: username
+          type: text
+          label: "Username"
+          required: true
+          validation: "unique"
+
+        - name: email
+          type: email
+          label: "Email Address"
+          required: true
+          validation: "unique"
+
+        - name: display_name
+          type: text
+          label: "Display Name"
+          required: false
+
+        - name: town_name
+          type: text
+          label: "Town Name"
+          required: true
+          description: "Which town are you in charge of?"
+
+        - name: roommate_name
+          type: text
+          label: "Roommate Name"
+          required: false
+
+        - name: qr_code_url
+          type: text
+          label: "QR Code URL"
+          required: false
+          description: "Your personal QR code for the game"
+
+      additional_routes:
+        - route: "/rankings"
+          type: leaderboard
+          description: "Show top players by reputation points"
+
+        - route: "/news"
+          type: news_feed
+          description: "Game announcements and updates"
+
+        - route: "/profile/{username}"
+          type: user_profile
+          description: "Individual player profile"
+
+  # ==================== SIMPLE CONTACT FORM ====================
+  contact_form:
+    name: "Contact Form"
+    description: "Basic contact form with name, email, message"
+    icon: "✉️"
+    generates:
+      - contact_form
+      - submissions_table
+
+    template:
+      name: "Contact Us"
+      route: "/contact"
+      table: "contact_submissions"
+
+      fields:
+        - name: full_name
+          type: text
+          label: "Your Name"
+          required: true
+
+        - name: email
+          type: email
+          label: "Email Address"
+          required: true
+
+        - name: subject
+          type: text
+          label: "Subject"
+          required: true
+
+        - name: message
+          type: textarea
+          label: "Message"
+          required: true
+          rows: 6
+
+  # ==================== EVENT REGISTRATION ====================
+  event_registration:
+    name: "Event Registration"
+    description: "Event signup with attendee info and ticket selection"
+    icon: "🎫"
+    generates:
+      - registration_form
+      - attendees_table
+      - confirmation_email
+
+    template:
+      name: "Event Registration"
+      route: "/register"
+      table: "event_attendees"
+
+      fields:
+        - name: attendee_name
+          type: text
+          label: "Full Name"
+          required: true
+
+        - name: email
+          type: email
+          label: "Email"
+          required: true
+
+        - name: phone
+          type: text
+          label: "Phone Number"
+          required: false
+
+        - name: ticket_type
+          type: select
+          label: "Ticket Type"
+          required: true
+          options:
+            - "General Admission"
+            - "VIP"
+            - "Student"
+
+        - name: dietary_restrictions
+          type: textarea
+          label: "Dietary Restrictions"
+          required: false
+
+  # ==================== NEWSLETTER SIGNUP ====================
+  newsletter_signup:
+    name: "Newsletter Signup"
+    description: "Simple email collection for newsletter"
+    icon: "📰"
+    generates:
+      - signup_form
+      - subscribers_table
+
+    template:
+      name: "Subscribe to Newsletter"
+      route: "/subscribe"
+      table: "newsletter_subscribers"
+
+      fields:
+        - name: email
+          type: email
+          label: "Email Address"
+          required: true
+          validation: "unique"
+
+        - name: first_name
+          type: text
+          label: "First Name"
+          required: false
+
+        - name: interests
+          type: select
+          label: "Interests"
+          required: false
+          options:
+            - "Technology"
+            - "Business"
+            - "Design"
+            - "Marketing"
+
+  # ==================== FEEDBACK FORM ====================
+  feedback_form:
+    name: "Feedback/Survey Form"
+    description: "Collect user feedback with ratings and comments"
+    icon: "⭐"
+    generates:
+      - feedback_form
+      - feedback_table
+
+    template:
+      name: "Submit Feedback"
+      route: "/feedback"
+      table: "feedback_submissions"
+
+      fields:
+        - name: rating
+          type: number
+          label: "Overall Rating (1-5)"
+          required: true
+          min: 1
+          max: 5
+
+        - name: experience
+          type: select
+          label: "How was your experience?"
+          required: true
+          options:
+            - "Excellent"
+            - "Good"
+            - "Average"
+            - "Poor"
+            - "Very Poor"
+
+        - name: comments
+          type: textarea
+          label: "Additional Comments"
+          required: false
+          rows: 4
+
+        - name: email
+          type: email
+          label: "Email (optional for follow-up)"
+          required: false
+
+  # ==================== JOB APPLICATION ====================
+  job_application:
+    name: "Job Application Form"
+    description: "Candidate application with resume upload and details"
+    icon: "💼"
+    generates:
+      - application_form
+      - applicants_table
+
+    template:
+      name: "Job Application"
+      route: "/apply"
+      table: "job_applications"
+
+      fields:
+        - name: full_name
+          type: text
+          label: "Full Name"
+          required: true
+
+        - name: email
+          type: email
+          label: "Email"
+          required: true
+
+        - name: phone
+          type: text
+          label: "Phone Number"
+          required: true
+
+        - name: position
+          type: text
+          label: "Position Applying For"
+          required: true
+
+        - name: resume_url
+          type: text
+          label: "Resume URL (Google Drive, Dropbox, etc.)"
+          required: true
+
+        - name: cover_letter
+          type: textarea
+          label: "Cover Letter"
+          required: false
+          rows: 8
+
+        - name: availability
+          type: text
+          label: "Availability Start Date"
+          required: false
+
+  # ==================== WAITLIST ====================
+  waitlist:
+    name: "Waitlist Signup"
+    description: "Early access waitlist with priority queue"
+    icon: "⏰"
+    generates:
+      - waitlist_form
+      - waitlist_table
+      - priority_ranking
+
+    template:
+      name: "Join Waitlist"
+      route: "/waitlist"
+      table: "waitlist_signups"
+
+      fields:
+        - name: email
+          type: email
+          label: "Email Address"
+          required: true
+          validation: "unique"
+
+        - name: full_name
+          type: text
+          label: "Full Name"
+          required: false
+
+        - name: referral_code
+          type: text
+          label: "Referral Code (optional)"
+          required: false
+          description: "Move up in the queue with a referral"
+
+        - name: use_case
+          type: textarea
+          label: "How will you use this?"
+          required: false
+          rows: 3
+
+  # ==================== QR CODE GENERATOR ====================
+  qr_generator:
+    name: "QR Code Generator"
+    description: "Generate and track QR codes for users/items"
+    icon: "📱"
+    generates:
+      - qr_form
+      - qr_codes_table
+      - qr_display_page
+
+    template:
+      name: "Generate QR Code"
+      route: "/qr/generate"
+      table: "qr_codes"
+
+      fields:
+        - name: label
+          type: text
+          label: "QR Code Label"
+          required: true
+          description: "What is this QR code for?"
+
+        - name: target_url
+          type: text
+          label: "Target URL"
+          required: true
+          description: "Where should the QR code link to?"
+
+        - name: owner_name
+          type: text
+          label: "Owner Name"
+          required: false
+
+        - name: notes
+          type: textarea
+          label: "Notes"
+          required: false
+          rows: 3
+
+metadata:
+  version: "1.0"
+  total_presets: 9
+  categories:
+    - game_systems
+    - forms
+    - events
+    - marketing
+    - hr
+
+  notes: |
+    These presets auto-generate:
+    - HTML template (styled with selected brand)
+    - Flask route with database integration
+    - Database schema and migrations
+    - Additional routes (leaderboards, news feeds, etc.)
+    - Integration with reputation system (for game presets)
+    - Subdomain configuration (for multi-domain presets)

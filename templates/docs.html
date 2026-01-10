@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Soulfra</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 40px;
+        }
+
+        .endpoint {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 12px;
+        }
+
+        .method.get { background: #61affe; color: white; }
+        .method.post { background: #49cc90; color: white; }
+        .method.put { background: #fca130; color: white; }
+        .method.delete { background: #f93e3e; color: white; }
+
+        .path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        code {
+            background: #e8e8e8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .nav {
+            background: #667eea;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/">← Home</a>
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/join">Join</a>
+        <a href="https://github.com/Soulfra">GitHub</a>
+    </div>
+
+    <h1>🔗 Soulfra API Documentation</h1>
+    <p><strong>Base URL:</strong> <code>http://localhost:5001</code> (local) or <code>https://api.soulfra.com</code> (production)</p>
+
+    <h2>Authentication</h2>
+    <p>Most endpoints require authentication. Include your API key in the request header:</p>
+    <pre>Authorization: Bearer YOUR_API_KEY</pre>
+
+    <h2>Tribunal Endpoints (3-Domain Verification)</h2>
+
+    <div class="endpoint">
+        <div>
+            <span class="method post">POST</span>
+            <span class="path">/api/tribunal/propose</span>
+        </div>
+        <p>Legislative branch - Propose token purchase</p>
+        <p><strong>Request:</strong></p>
+        <pre>{
+  "package": "pro",
+  "user_id": 1,
+  "session_id": "tribunal_XXX"
+}</pre>
+        <p><strong>Response:</strong></p>
+        <pre>{
+  "status": "approved",
+  "branch": "legislative",
+  "proposal_hash": "33dac90..."
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <div>
+            <span class="method post">POST</span>
+            <span class="path">/api/tribunal/execute</span>
+        </div>
+        <p>Executive branch - Execute token purchase</p>
+        <p><strong>Request:</strong></p>
+        <pre>{
+  "package": "pro",
+  "user_id": 1,
+  "session_id": "tribunal_XXX",
+  "proof_chain": ["hash1", "hash2"]
+}</pre>
+        <p><strong>Response:</strong></p>
+        <pre>{
+  "status": "executed",
+  "branch": "executive",
+  "method": "stripe_checkout"
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <div>
+            <span class="method post">POST</span>
+            <span class="path">/api/tribunal/verify</span>
+        </div>
+        <p>Judicial branch - Verify transaction with AI</p>
+        <p><strong>Request:</strong></p>
+        <pre>{
+  "session_id": "tribunal_XXX",
+  "proof_chain": [{...}, {...}],
+  "package": "pro",
+  "user_id": 1
+}</pre>
+        <p><strong>Response:</strong></p>
+        <pre>{
+  "status": "verified",
+  "branch": "judicial",
+  "ai_verification": "YES - legitimate...",
+  "chain_valid": true
+}</pre>
+    </div>
+
+    <h2>Token Endpoints</h2>
+
+    <div class="endpoint">
+        <div>
+            <span class="method get">GET</span>
+            <span class="path">/api/tokens/balance</span>
+        </div>
+        <p>Get user's token balance</p>
+        <p><strong>Response:</strong></p>
+        <pre>{
+  "balance": 500,
+  "user_id": 1
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <div>
+            <span class="method get">GET</span>
+            <span class="path">/api/tokens/packages</span>
+        </div>
+        <p>Get available token packages</p>
+        <p><strong>Response:</strong></p>
+        <pre>{
+  "packages": {
+    "starter": { "tokens": 100, "price": 10.00 },
+    "pro": { "tokens": 500, "price": 40.00 },
+    "premium": { "tokens": 1000, "price": 70.00 }
+  }
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <div>
+            <span class="method post">POST</span>
+            <span class="path">/api/tokens/purchase</span>
+        </div>
+        <p>Create Stripe Checkout session for token purchase</p>
+        <p><strong>Request:</strong></p>
+        <pre>{
+  "package": "pro"
+}</pre>
+        <p><strong>Response:</strong></p>
+        <pre>{
+  "checkout_url": "https://checkout.stripe.com/...",
+  "session_id": "cs_..."
+}</pre>
+    </div>
+
+    <h2>Domain Management</h2>
+
+    <div class="endpoint">
+        <div>
+            <span class="method get">GET</span>
+            <span class="path">/api/domains</span>
+        </div>
+        <p>List all domains in database</p>
+        <p><strong>Query params:</strong> <code>tier</code>, <code>status</code>, <code>limit</code></p>
+    </div>
+
+    <div class="endpoint">
+        <div>
+            <span class="method post">POST</span>
+            <span class="path">/api/domains/import</span>
+        </div>
+        <p>Import domain from CSV</p>
+        <p><strong>Request:</strong> Multipart form data with CSV file</p>
+    </div>
+
+    <h2>Search</h2>
+
+    <div class="endpoint">
+        <div>
+            <span class="method post">POST</span>
+            <span class="path">/api/search</span>
+        </div>
+        <p>Semantic search with Ollama</p>
+        <p><strong>Request:</strong></p>
+        <pre>{
+  "query": "blockchain consensus",
+  "brand": "soulfra"
+}</pre>
+    </div>
+
+    <h2>QR Faucet</h2>
+
+    <div class="endpoint">
+        <div>
+            <span class="method get">GET</span>
+            <span class="path">/qr-search-gate</span>
+        </div>
+        <p>Generate QR code with embedded JSON payload</p>
+    </div>
+
+    <h2>Rate Limits</h2>
+    <ul>
+        <li><strong>Search:</strong> 60 requests/hour</li>
+        <li><strong>Token purchase:</strong> 10 requests/hour</li>
+        <li><strong>Tribunal:</strong> 30 requests/hour</li>
+    </ul>
+
+    <h2>Error Codes</h2>
+    <ul>
+        <li><code>400</code> - Bad Request (missing parameters)</li>
+        <li><code>401</code> - Unauthorized (invalid API key)</li>
+        <li><code>402</code> - Payment Required (insufficient tokens)</li>
+        <li><code>429</code> - Rate Limit Exceeded</li>
+        <li><code>500</code> - Internal Server Error</li>
+    </ul>
+
+    <h2>SDKs & Libraries</h2>
+    <p>Coming soon:</p>
+    <ul>
+        <li>Python SDK</li>
+        <li>JavaScript/TypeScript SDK</li>
+        <li>Go SDK</li>
+    </ul>
+
+    <h2>Support</h2>
+    <p>Questions? Open an issue on <a href="https://github.com/Soulfra">GitHub</a> or email support@soulfra.com</p>
+</body>
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wall - Anonymous Voice Memos | CringeProof</title>
+<meta name="description" content="Anonymous voice memos competing on a live wordmap. Like 9gag meets Bitcoin.">
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+body {
+    background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.wall-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.wall-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(255, 0, 110, 0.1);
+    border: 3px solid #ff006e;
+    border-radius: 16px;
+}
+
+.wall-header h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ff006e 0%, #bdb2ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.wall-header p {
+    font-size: 1.25rem;
+    color: #ffe5ec;
+    opacity: 0.9;
+}
+
+.wall-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat-badge {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    border: 2px solid #ff006e;
+    font-weight: 700;
+}
+
+.wall-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Left column - Voice memos feed */
+.memos-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.memo-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.memo-card:hover {
+    border-color: #ff006e;
+    background: rgba(255, 0, 110, 0.1);
+    transform: translateX(4px);
+}
+
+.memo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.memo-time {
+    color: #bdb2ff;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.memo-id {
+    background: #ff006e;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 900;
+}
+
+.memo-text {
+    color: #ffe5ec;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+}
+
+.memo-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.memo-words {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.word-tag {
+    background: rgba(189, 178, 255, 0.2);
+    color: #bdb2ff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #bdb2ff;
+}
+
+.play-btn {
+    background: #ff006e;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.play-btn:hover {
+    background: #ff3385;
+    transform: scale(1.05);
+}
+
+/* Right column - Wordmap visualization */
+.wordmap-panel {
+    position: sticky;
+    top: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 3px solid #ff006e;
+    border-radius: 16px;
+    padding: 2rem;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.wordmap-title {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.wordmap-subtitle {
+    text-align: center;
+    color: #bdb2ff;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+.wordmap-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.word-bar {
+    position: relative;
+}
+
+.word-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.word-name {
+    font-weight: 700;
+    color: #ffe5ec;
+}
+
+.word-count {
+    color: #bdb2ff;
+    font-weight: 600;
+}
+
+.bar-container {
+    background: rgba(0, 0, 0, 0.3);
+    height: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff006e 0%, #bdb2ff 100%);
+    border-radius: 12px;
+    transition: width 0.5s ease-out;
+    animation: barGrow 0.5s ease-out;
+}
+
+@keyframes barGrow {
+    from { width: 0; }
+}
+
+.refresh-indicator {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #ff006e;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    border: 3px solid #000;
+    font-weight: 900;
+    box-shadow: 0 4px 12px rgba(255, 0, 110, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(0.95); }
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: #bdb2ff;
+    font-size: 1.25rem;
+}
+
+.record-cta {
+    background: rgba(255, 0, 110, 0.2);
+    border: 3px solid #ff006e;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.record-cta h3 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.record-cta a {
+    display: inline-block;
+    background: #ff006e;
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    border: 3px solid #000;
+    box-shadow: 6px 6px 0 #000;
+}
+
+.record-cta a:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #000;
+}
+
+@media (max-width: 968px) {
+    .wall-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wordmap-panel {
+        position: relative;
+        top: 0;
+        max-height: none;
+    }
+
+    .wall-header h1 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Audio player visualization - smooth rounded corners */
+audio {
+    width: 100%;
+    margin-top: 0.5rem;
+    border-radius: 12px;
+    border: 3px solid #000;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    outline: none;
+}
+
+audio::-webkit-media-controls-panel {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+}
+
+audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-mute-button {
+    background-color: #ff006e;
+    border-radius: 50%;
+}
+
+audio::-webkit-media-controls-timeline {
+    background: rgba(189, 178, 255, 0.3);
+    border-radius: 25px;
+    margin: 0 10px;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="/" class="soulfra-logo">🚫 CringeProof</a>
+        <div class="soulfra-links">
+            <a href="/">🏠 Home</a>
+            <a href="/wall.html" class="active">🎯 Wall</a>
+            <a href="/record-simple.html" class="soulfra-record-btn">🎙️ Record</a>
+        </div>
+    </div>
+</nav>
+
+<div class="wall-container">
+    <header class="wall-header">
+        <h1>🎯 The Wall</h1>
+        <p>Anonymous voice memos competing on a live wordmap</p>
+        <p style="font-size: 0.95rem; opacity: 0.8; margin-top: 0.5rem;">
+            Like 9gag meets Bitcoin - decentralized, anonymous, collective voice emerging in real-time
+        </p>
+
+        <div class="wall-stats">
+            <div class="stat-badge">
+                <span id="memoCount">-</span> Memos
+            </div>
+            <div class="stat-badge">
+                <span id="wordCount">-</span> Words
+            </div>
+            <div class="stat-badge">
+                <span id="contributorCount">-</span> Contributors
+            </div>
+        </div>
+    </header>
+
+    <div class="wall-grid">
+        <!-- Left: Voice memos feed -->
+        <div class="memos-feed">
+            <div id="memosContainer" class="loading">
+                Loading voice memos...
+            </div>
+        </div>
+
+        <!-- Right: Wordmap visualization -->
+        <aside class="wordmap-panel">
+            <h2 class="wordmap-title">📊 Wordmap</h2>
+            <p class="wordmap-subtitle">Collective voice of CringeProof</p>
+
+            <div id="wordmapContainer" class="wordmap-bars">
+                <div class="loading" style="padding: 2rem;">Loading wordmap...</div>
+            </div>
+
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <p style="font-size: 0.85rem; color: #bdb2ff; text-align: center;">
+                    Wordmap updates automatically as new memos arrive
+                </p>
+            </div>
+        </aside>
+    </div>
+
+    <div class="record-cta">
+        <h3>🎙️ Add Your Voice</h3>
+        <p style="margin-bottom: 1.5rem; color: #ffe5ec;">Drop an anonymous memo and watch it appear on the wall</p>
+        <a href="/record-simple.html">Record Now</a>
+    </div>
+</div>
+
+<div class="refresh-indicator" id="refreshIndicator" style="display: none;">
+    ⟳ Updating...
+</div>
+
+<script>
+// Configuration
+const API_BASE = window.location.origin;
+const DOMAIN = 'cringeproof.com';
+const REFRESH_INTERVAL = 30000; // 30 seconds (reduced from 10s to prevent glitchy refreshing)
+let currentAudio = null;
+let isUserInteracting = false; // Pause refresh when user is playing audio
+
+// Fetch and display wall feed
+async function loadWallFeed() {
+    try {
+        const response = await fetch(`${API_BASE}/api/wall/feed?domain=${DOMAIN}&limit=20`);
+        const data = await response.json();
+
+        if (!data.success) {
+            console.error('Failed to load wall feed');
+            return;
+        }
+
+        // Update stats
+        document.getElementById('memoCount').textContent = data.total_memos;
+        document.getElementById('wordCount').textContent = data.wordmap.total_words;
+        document.getElementById('contributorCount').textContent = data.wordmap.contributor_count;
+
+        // Render memos
+        renderMemos(data.memos);
+
+        // Render wordmap
+        renderWordmap(data.wordmap);
+
+    } catch (error) {
+        console.error('Error loading wall feed:', error);
+        document.getElementById('memosContainer').innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: #ff006e;">
+                <p style="font-size: 1.5rem; margin-bottom: 1rem;">⚠️ Error Loading Feed</p>
+                <p>Make sure Flask server is running at ${API_BASE}</p>
+            </div>
+        `;
+    }
+}
+
+function renderMemos(memos) {
+    const container = document.getElementById('memosContainer');
+
+    if (memos.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 3rem; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                <p style="font-size: 2rem; margin-bottom: 1rem;">🎙️</p>
+                <p style="font-size: 1.25rem; margin-bottom: 0.5rem;">No memos yet</p>
+                <p style="color: #bdb2ff;">Be the first to drop a voice memo on the wall</p>
+                <a href="/record-simple.html" style="display: inline-block; margin-top: 1.5rem; background: #ff006e; color: white; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 900;">
+                    🎤 Record First Memo
+                </a>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = memos.map(memo => `
+        <article class="memo-card">
+            <div class="memo-header">
+                <span class="memo-time">${memo.time_ago}</span>
+                <span class="memo-id">#${memo.id}</span>
+            </div>
+
+            <p class="memo-text">${escapeHtml(memo.excerpt)}</p>
+
+            <div class="memo-footer">
+                <div class="memo-words">
+                    ${memo.top_words.map(word => `<span class="word-tag">${escapeHtml(word)}</span>`).join('')}
+                </div>
+                <button class="play-btn" onclick="playMemo(${memo.id}, '${memo.audio_url}')">
+                    ▶ Play
+                </button>
+            </div>
+
+            <audio id="audio-${memo.id}" style="display: none;" controls>
+                <source src="${memo.audio_url}" type="audio/webm">
+            </audio>
+
+            <!-- Comments Section -->
+            <div class="comments-section" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div class="comments-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span style="font-weight: 700; font-size: 0.9rem; color: #bdb2ff;">💬 Comments</span>
+                    <button onclick="toggleCommentBox(${memo.id})" style="background: #ff006e; color: white; border: none; padding: 0.4rem 1rem; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                        Add Comment
+                    </button>
+                </div>
+
+                <!-- Comment Input Box (hidden by default) -->
+                <div id="comment-box-${memo.id}" style="display: none; margin-bottom: 1rem;">
+                    <textarea
+                        id="comment-input-${memo.id}"
+                        placeholder="Share your thoughts... (Phone verification required)"
+                        style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 2px solid #ff006e; background: rgba(0,0,0,0.3); color: white; font-family: inherit; resize: vertical; min-height: 80px;"
+                    ></textarea>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                        <input
+                            type="tel"
+                            id="phone-input-${memo.id}"
+                            placeholder="+1 555 123 4567"
+                            style="flex: 1; padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.3); color: white;"
+                        />
+                        <button onclick="submitComment(${memo.id})" style="background: #ff006e; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                            Post
+                        </button>
+                    </div>
+                    <p style="font-size: 0.75rem; color: #bdb2ff; margin-top: 0.5rem; opacity: 0.8;">
+                        Phone verification unlocks commenting. Rate limits: 📱 10/hr, 💻📱 50/hr, ⭐ 100/hr
+                    </p>
+                </div>
+
+                <!-- Comments List -->
+                <div id="comments-list-${memo.id}" class="comments-list">
+                    Loading comments...
+                </div>
+            </div>
+        </article>
+    `).join('');
+
+    // Load comments for each memo
+    memos.forEach(memo => loadComments(memo.id));
+}
+
+function renderWordmap(wordmap) {
+    const container = document.getElementById('wordmapContainer');
+
+    if (!wordmap.top_words || wordmap.top_words.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: #bdb2ff;">
+                <p>No wordmap data yet</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.8;">Words will appear as memos are recorded</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Find max count for scaling bars
+    const maxCount = wordmap.top_words[0][1];
+
+    container.innerHTML = wordmap.top_words.map(([word, count]) => {
+        const percentage = (count / maxCount) * 100;
+        return `
+            <div class="word-bar">
+                <div class="word-label">
+                    <span class="word-name">${escapeHtml(word)}</span>
+                    <span class="word-count">${count}</span>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: ${percentage}%"></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function playMemo(id, url) {
+    // Stop current audio if playing
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+
+    const audioElement = document.getElementById(`audio-${id}`);
+    audioElement.style.display = 'block';
+    audioElement.play();
+    currentAudio = audioElement;
+
+    // Pause auto-refresh while user is listening
+    isUserInteracting = true;
+
+    // Resume auto-refresh when audio ends
+    audioElement.addEventListener('ended', () => {
+        isUserInteracting = false;
+    });
+    audioElement.addEventListener('pause', () => {
+        isUserInteracting = false;
+    });
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Comment functions
+function toggleCommentBox(recordingId) {
+    const box = document.getElementById(`comment-box-${recordingId}`);
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+async function loadComments(recordingId) {
+    try {
+        const response = await fetch(`${API_BASE}/api/wall/comments/${recordingId}`);
+        const data = await response.json();
+
+        const container = document.getElementById(`comments-list-${recordingId}`);
+
+        if (!data.success || data.comments.length === 0) {
+            container.innerHTML = '<p style="color: #bdb2ff; font-size: 0.85rem; opacity: 0.7;">No comments yet. Be the first!</p>';
+            return;
+        }
+
+        container.innerHTML = data.comments.map(comment => `
+            <div style="background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div>
+                        <span style="font-weight: 700; color: #ffe5ec; font-size: 0.85rem;">${escapeHtml(comment.username)}</span>
+                        <span style="margin-left: 0.5rem; font-size: 1.1rem;">${comment.verification_badge}</span>
+                    </div>
+                    <span style="color: #bdb2ff; font-size: 0.75rem;">${comment.time_ago}</span>
+                </div>
+                <p style="color: #ffe5ec; line-height: 1.5; font-size: 0.9rem;">${escapeHtml(comment.comment_text)}</p>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading comments:', error);
+        document.getElementById(`comments-list-${recordingId}`).innerHTML =
+            '<p style="color: #ff006e; font-size: 0.85rem;">Failed to load comments</p>';
+    }
+}
+
+async function submitComment(recordingId) {
+    const commentText = document.getElementById(`comment-input-${recordingId}`).value.trim();
+    const phone = document.getElementById(`phone-input-${recordingId}`).value.trim();
+
+    if (!commentText) {
+        alert('Please enter a comment');
+        return;
+    }
+
+    if (!phone) {
+        alert('Phone number required for verification');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/wall/comments`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                recording_id: recordingId,
+                comment_text: commentText,
+                phone: phone
+            })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert(data.message || data.error || 'Failed to post comment');
+            return;
+        }
+
+        // Clear inputs
+        document.getElementById(`comment-input-${recordingId}`).value = '';
+        document.getElementById(`phone-input-${recordingId}`).value = '';
+
+        // Hide comment box
+        document.getElementById(`comment-box-${recordingId}`).style.display = 'none';
+
+        // Reload comments
+        await loadComments(recordingId);
+
+        // Show success with tier badge
+        alert(`Comment posted! ${data.verification_badge} (${data.rate_limit_remaining}/${data.rate_limit_total} remaining this hour)`);
+
+    } catch (error) {
+        console.error('Error posting comment:', error);
+        alert('Failed to post comment. Check console for details.');
+    }
+}
+
+// Auto-refresh
+let refreshTimer;
+
+function startAutoRefresh() {
+    refreshTimer = setInterval(async () => {
+        // Don't refresh if user is playing audio or interacting
+        if (isUserInteracting) {
+            console.log('Skipping refresh - user is interacting');
+            return;
+        }
+
+        const indicator = document.getElementById('refreshIndicator');
+        indicator.style.display = 'block';
+
+        await loadWallFeed();
+
+        setTimeout(() => {
+            indicator.style.display = 'none';
+        }, 1000);
+    }, REFRESH_INTERVAL);
+}
+
+// Initial load
+window.addEventListener('DOMContentLoaded', () => {
+    loadWallFeed();
+    startAutoRefresh();
+});
+
+// Clean up on page unload
+window.addEventListener('beforeunload', () => {
+    if (refreshTimer) {
+        clearInterval(refreshTimer);
+    }
+});
+</script>
+</body>
+</html>

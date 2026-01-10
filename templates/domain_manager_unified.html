@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Blog Network Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/markdown/markdown.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 { font-size: 1.5em; }
+        .header-actions { display: flex; gap: 10px; }
+        .header-btn {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+        .header-btn:hover { background: rgba(255,255,255,0.3); }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            height: calc(100vh - 60px);
+        }
+
+        .sidebar {
+            background: #252526;
+            border-right: 1px solid #3e3e42;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .section-header {
+            background: #2d2d30;
+            padding: 10px 15px;
+            font-weight: 600;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .domain-list { flex: 1; overflow-y: auto; }
+
+        .domain-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #3e3e42;
+            transition: background 0.2s;
+        }
+
+        .domain-item:hover { background: #2d2d30; }
+        .domain-item.active { background: #37373d; border-left: 3px solid #667eea; }
+
+        .domain-name { font-weight: 600; margin-bottom: 4px; }
+        .domain-meta { font-size: 0.75em; color: #858585; }
+
+        .workspace {
+            display: grid;
+            grid-template-rows: auto 1fr;
+        }
+
+        .workspace-tabs {
+            background: #2d2d30;
+            padding: 0 15px;
+            display: flex;
+            gap: 5px;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active { color: #d4d4d4; border-bottom-color: #667eea; }
+
+        .workspace-content { position: relative; height: 100%; }
+
+        .tab-pane {
+            display: none;
+            height: 100%;
+            grid-template-columns: 300px 1fr 400px;
+            gap: 0;
+        }
+
+        .tab-pane.active { display: grid; }
+
+        .pane {
+            background: #1e1e1e;
+            border-right: 1px solid #3e3e42;
+            overflow-y: auto;
+        }
+
+        .pane-header {
+            background: #2d2d30;
+            padding: 10px 15px;
+            border-bottom: 1px solid #3e3e42;
+            font-weight: 600;
+            font-size: 0.9em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .CodeMirror { height: calc(100% - 100px) !important; font-size: 14px; }
+
+        .folder-group {
+            padding: 8px 0;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .folder-title {
+            padding: 6px 15px;
+            font-size: 0.75em;
+            color: #858585;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .file-item {
+            padding: 6px 15px 6px 30px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.2s;
+        }
+
+        .file-item:hover { background: #2d2d30; }
+        .file-item.active { background: #37373d; color: #4ec9b0; }
+        .file-item::before { content: "📄 "; margin-right: 6px; }
+        .file-item[data-type="html"]::before { content: "🌐 "; }
+        .file-item[data-type="css"]::before { content: "🎨 "; }
+        .file-item[data-type="js"]::before { content: "📜 "; }
+        .file-item[data-type="md"]::before { content: "📝 "; }
+
+        .editor-toolbar {
+            background: #2d2d30;
+            padding: 10px 15px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            gap: 8px;
+        }
+
+        .toolbar-btn {
+            padding: 6px 12px;
+            background: #667eea;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .toolbar-btn:hover { background: #5568d3; }
+        .toolbar-btn.success { background: #48bb78; }
+
+        .chat-container { display: flex; flex-direction: column; height: 100%; }
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 90%;
+        }
+
+        .chat-message.user {
+            background: rgba(102, 126, 234, 0.2);
+            margin-left: auto;
+        }
+
+        .chat-message.assistant {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-input-area {
+            background: #2d2d30;
+            padding: 15px;
+            border-top: 1px solid #3e3e42;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            color: #d4d4d4;
+            resize: vertical;
+        }
+
+        .chat-send {
+            margin-top: 8px;
+            width: 100%;
+            padding: 8px;
+            background: #48bb78;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .status-bar {
+            background: #007acc;
+            color: white;
+            padding: 4px 15px;
+            font-size: 0.75em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .context-info {
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .context-item {
+            margin-bottom: 8px;
+            font-size: 0.85em;
+        }
+
+        .context-label {
+            color: #858585;
+            margin-right: 8px;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: calc(100% - 45px);
+            border: none;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌐 Unified Blog Network Manager</h1>
+        <div class="header-actions">
+            <button class="header-btn" onclick="window.location.href='/domains/network'">🗺️ Network Map</button>
+            <button class="header-btn" onclick="toggleLayout()">🔄 Toggle Layout</button>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <!-- Sidebar: Domains -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="section-header">Domains ({{ brands|length }})</div>
+                <div class="domain-list">
+                    {% for brand in brands %}
+                    <div class="domain-item" onclick="selectDomain('{{ brand.slug }}', '{{ brand.name }}', '{{ brand.network_role or 'member' }}')"
+                         data-slug="{{ brand.slug }}">
+                        <div class="domain-name">{{ brand.name }}</div>
+                        <div class="domain-meta">
+                            <span>{{ brand.slug }}</span>
+                            {% if brand.network_role %}
+                            <span style="color: #667eea;">• {{ brand.network_role }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Workspace: Tabs + Content -->
+        <div class="workspace">
+            <div class="workspace-tabs">
+                <button class="tab active" onclick="switchWorkspaceTab('editor')">📝 Editor</button>
+                <button class="tab" onclick="switchWorkspaceTab('preview')">👁️ Preview</button>
+                <button class="tab" onclick="switchWorkspaceTab('chat')">💬 AI Chat</button>
+            </div>
+
+            <div class="workspace-content">
+                <!-- Editor Tab -->
+                <div class="tab-pane active" id="editor-pane">
+                    <!-- Files -->
+                    <div class="pane">
+                        <div class="pane-header" id="files-header">Files</div>
+                        <div id="file-tree">
+                            <div style="padding: 40px 20px; text-align: center; color: #858585;">
+                                Select a domain to browse files
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Editor -->
+                    <div class="pane">
+                        <div class="editor-toolbar">
+                            <button class="toolbar-btn success" onclick="saveFile()">💾 Save</button>
+                            <button class="toolbar-btn" onclick="explainFile()">🤔 Explain</button>
+                            <button class="toolbar-btn" onclick="fixErrors()">🔧 Fix Errors</button>
+                        </div>
+                        <textarea id="code-editor"></textarea>
+                    </div>
+
+                    <!-- Context -->
+                    <div class="pane">
+                        <div class="pane-header">Context & Info</div>
+                        <div class="context-info" id="context-info">
+                            <div style="padding: 20px; text-align: center; color: #858585;">
+                                No domain selected
+                            </div>
+                        </div>
+                        <div style="padding: 15px;">
+                            <h3 style="margin-bottom: 10px; font-size: 0.9em;">Quick Actions</h3>
+                            <button class="toolbar-btn" style="width: 100%; margin-bottom: 8px;" onclick="viewNetwork()">🗺️ View in Network Map</button>
+                            <button class="toolbar-btn" style="width: 100%; margin-bottom: 8px;" onclick="deployDomain()">🚀 Deploy Domain</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Tab -->
+                <div class="tab-pane" id="preview-pane">
+                    <div class="pane" style="grid-column: 1 / -1;">
+                        <div class="pane-header">Live Preview</div>
+                        <iframe id="preview-frame" class="preview-frame"></iframe>
+                    </div>
+                </div>
+
+                <!-- Chat Tab -->
+                <div class="tab-pane" id="chat-pane">
+                    <div class="pane" style="grid-column: 1 / -1;">
+                        <div class="chat-container">
+                            <div class="pane-header">Ollama AI Assistant</div>
+                            <div class="chat-messages" id="chat-messages">
+                                <div class="chat-message assistant">
+                                    <strong>Ollama</strong><br>
+                                    Hi! I can help you with:
+                                    <ul style="margin-top: 8px; padding-left: 20px;">
+                                        <li>Explaining code</li>
+                                        <li>Fixing errors</li>
+                                        <li>Generating snippets</li>
+                                        <li>Answering questions about your domains</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <textarea id="chat-input" class="chat-input" rows="3" placeholder="Ask Ollama anything..."></textarea>
+                                <button class="chat-send" onclick="sendChatMessage()">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="status-bar">Ready</div>
+
+    <script>
+        let currentSlug = null;
+        let currentFile = null;
+        let codeEditor = null;
+
+        // Initialize
+        function initEditor() {
+            const textarea = document.getElementById('code-editor');
+            codeEditor = CodeMirror.fromTextArea(textarea, {
+                mode: 'htmlmixed',
+                theme: 'monokai',
+                lineNumbers: true,
+                indentUnit: 2,
+                tabSize: 2,
+                lineWrapping: true
+            });
+
+            codeEditor.setOption("extraKeys", {
+                "Ctrl-S": saveFile,
+                "Cmd-S": saveFile
+            });
+        }
+
+        // Select domain
+        async function selectDomain(slug, name, role) {
+            currentSlug = slug;
+
+            // Update active state
+            document.querySelectorAll('.domain-item').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-slug="${slug}"]`).classList.add('active');
+
+            // Update context
+            document.getElementById('context-info').innerHTML = `
+                <div class="context-item"><span class="context-label">Name:</span>${name}</div>
+                <div class="context-item"><span class="context-label">Slug:</span>${slug}</div>
+                <div class="context-item"><span class="context-label">Role:</span>${role}</div>
+            `;
+
+            // Load files
+            await loadFiles(slug);
+
+            updateStatus(`Selected ${name}`);
+        }
+
+        // Load files
+        async function loadFiles(slug) {
+            const fileTree = document.getElementById('file-tree');
+            fileTree.innerHTML = '<div style="padding: 20px; text-align: center; color: #858585;">Loading...</div>';
+
+            try {
+                const response = await fetch('/api/domains/files/list', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({domain: slug + '.com'})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Group by folder
+                    const groups = {
+                        'blog': [],
+                        'brand': [],
+                        'docs': [],
+                        'root': []
+                    };
+
+                    data.files.forEach(file => {
+                        const dir = file.dir === '.' ? 'root' : file.dir.split('/')[0];
+                        if (!groups[dir]) groups[dir] = [];
+                        groups[dir].push(file);
+                    });
+
+                    // Render
+                    let html = '';
+                    const folderIcons = {
+                        'blog': '📝 Blog Posts',
+                        'brand': '🎨 Branding',
+                        'docs': '📚 Documentation',
+                        'root': '📄 Root Files'
+                    };
+
+                    Object.keys(groups).forEach(folder => {
+                        if (groups[folder].length > 0) {
+                            html += `<div class="folder-group">
+                                <div class="folder-title">${folderIcons[folder] || '📁 ' + folder}</div>`;
+
+                            groups[folder].forEach(file => {
+                                html += `<div class="file-item" data-type="${file.type}"
+                                    onclick="openFile('${file.path}', '${file.type}')">${file.name}</div>`;
+                            });
+
+                            html += '</div>';
+                        }
+                    });
+
+                    fileTree.innerHTML = html || '<div style="padding: 20px; text-align: center; color: #858585;">No files found</div>';
+                } else {
+                    fileTree.innerHTML = `<div style="padding: 20px; text-align: center; color: #e53e3e;">${data.error}</div>`;
+                }
+            } catch (error) {
+                fileTree.innerHTML = `<div style="padding: 20px; text-align: center; color: #e53e3e;">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Open file
+        async function openFile(filePath, fileType) {
+            if (!currentSlug) return;
+
+            currentFile = filePath;
+
+            // Update active state
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Initialize editor if needed
+            if (!codeEditor) {
+                initEditor();
+            }
+
+            updateStatus(`Loading ${filePath}...`);
+
+            try {
+                const response = await fetch('/api/domains/files/read', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        domain: currentSlug + '.com',
+                        file_path: filePath
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const modeMap = {
+                        html: 'htmlmixed',
+                        css: 'css',
+                        js: 'javascript',
+                        md: 'markdown'
+                    };
+                    codeEditor.setOption('mode', modeMap[fileType] || 'htmlmixed');
+                    codeEditor.setValue(data.content);
+
+                    updateStatus(`Editing ${filePath}`);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Save file
+        async function saveFile() {
+            if (!currentSlug || !currentFile || !codeEditor) return;
+
+            const content = codeEditor.getValue();
+            updateStatus(`Saving ${currentFile}...`);
+
+            try {
+                const response = await fetch('/api/domains/files/save', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        domain: currentSlug + '.com',
+                        file_path: currentFile,
+                        content: content
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    updateStatus(`✅ Saved ${currentFile}`);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+
+            return false;
+        }
+
+        // Chat functions
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addChatMessage('user', message);
+            input.value = '';
+
+            // Add file context if editing
+            let contextMessage = message;
+            if (currentFile && codeEditor) {
+                const code = codeEditor.getValue();
+                contextMessage = `File: ${currentFile}\n\n${message}\n\nCurrent code:\n\`\`\`\n${code.substring(0, 500)}...\n\`\`\``;
+            }
+
+            try {
+                const response = await fetch('/api/domains/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        message: contextMessage,
+                        context: {
+                            domain: currentSlug ? currentSlug + '.com' : null,
+                            file: currentFile
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    addChatMessage('assistant', data.response);
+                } else {
+                    addChatMessage('assistant', 'Error: ' + data.error);
+                }
+            } catch (error) {
+                addChatMessage('assistant', 'Error: ' + error.message);
+            }
+        }
+
+        function addChatMessage(role, content) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${role}`;
+            messageDiv.innerHTML = `<strong>${role === 'user' ? 'You' : 'Ollama'}</strong><br>${content}`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Helper functions
+        function explainFile() {
+            if (!currentFile) return;
+            switchWorkspaceTab('chat');
+            document.getElementById('chat-input').value = `Explain what this file does and how it works`;
+            sendChatMessage();
+        }
+
+        function fixErrors() {
+            switchWorkspaceTab('chat');
+            document.getElementById('chat-input').value = `Check this code for errors and suggest fixes`;
+            sendChatMessage();
+        }
+
+        function switchWorkspaceTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+            const tabMap = {
+                'editor': 0,
+                'preview': 1,
+                'chat': 2
+            };
+
+            document.querySelectorAll('.tab')[tabMap[tabName]].classList.add('active');
+            document.getElementById(tabName + '-pane').classList.add('active');
+        }
+
+        function updateStatus(msg) {
+            document.getElementById('status-bar').textContent = msg;
+        }
+
+        function viewNetwork() {
+            window.location.href = '/domains/network';
+        }
+
+        function deployDomain() {
+            alert('Deploy functionality coming soon!');
+        }
+
+        function toggleLayout() {
+            // TODO: Add layout toggle
+            alert('Layout toggle coming soon!');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveFile();
+            }
+        });
+
+        // Chat enter to send
+        document.getElementById('chat-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+    </script>
+</body>
+</html>

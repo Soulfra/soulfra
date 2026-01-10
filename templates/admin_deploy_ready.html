@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Deployment Readiness - Soulfra Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #66ff66;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 0 10px #66ff66;
+        }
+
+        .status-banner {
+            background: #1a1a1a;
+            border: 3px solid #66ff66;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(102, 255, 102, 0.3);
+        }
+
+        .status-banner.warning {
+            border-color: #ffaa00;
+            color: #ffaa00;
+        }
+
+        .status-banner.error {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .status-text {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .status-details {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+        .checks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .check-card {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .check-card.ok {
+            border-color: #66ff66;
+        }
+
+        .check-card.warning {
+            border-color: #ffaa00;
+        }
+
+        .check-card.error {
+            border-color: #ff4444;
+        }
+
+        .check-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .check-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .check-status.ok {
+            background: #66ff66;
+        }
+
+        .check-status.warning {
+            background: #ffaa00;
+        }
+
+        .check-status.error {
+            background: #ff4444;
+        }
+
+        .check-details {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .qr-section {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .qr-code img {
+            max-width: 300px;
+            height: auto;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4444ff 0%, #6666ff 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(68, 68, 255, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 24px;
+            padding: 50px;
+        }
+
+        /* Line Rider-style animated progress bar */
+        .progress-container {
+            width: 100%;
+            height: 40px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #66ff66, #44ff44, #66ff66);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .error-list {
+            background: #2a1a1a;
+            border-left: 4px solid #ff4444;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .error-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .error-list li {
+            padding: 5px 0;
+            color: #ff4444;
+        }
+
+        .error-list li::before {
+            content: "❌ ";
+            margin-right: 10px;
+        }
+
+        .warning-list {
+            background: #2a2416;
+            border-left: 4px solid #ffaa00;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .warning-list li {
+            padding: 5px 0;
+            color: #ffaa00;
+        }
+
+        .warning-list li::before {
+            content: "⚠️  ";
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Deployment Readiness Check</h1>
+
+        <div id="loading" class="loading">
+            Running pre-deployment verification...
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div id="results" style="display: none;">
+            <!-- Status Banner -->
+            <div id="statusBanner" class="status-banner">
+                <div class="status-text" id="statusText">Loading...</div>
+                <div class="status-details" id="statusDetails"></div>
+            </div>
+
+            <!-- Critical Errors -->
+            <div id="errorsSection" style="display: none;" class="error-list">
+                <h3>🚨 Critical Errors (Must Fix Before Deploy)</h3>
+                <ul id="errorsList"></ul>
+            </div>
+
+            <!-- Warnings -->
+            <div id="warningsSection" style="display: none;" class="warning-list">
+                <h3>⚠️  Warnings (Review Before Deploy)</h3>
+                <ul id="warningsList"></ul>
+            </div>
+
+            <!-- Checks Grid -->
+            <div class="checks-grid" id="checksGrid">
+                <!-- Check cards will be inserted here -->
+            </div>
+
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <h2>📱 Mobile Verification</h2>
+                <p>Scan this QR code from your phone to verify deployment status</p>
+                <div class="qr-code">
+                    <img id="qrCodeImage" src="" alt="QR Code" style="display: none;" />
+                    <div id="qrLoading">Generating QR code...</div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="runFullCheck()">🔄 Re-run All Checks</button>
+                <button class="btn" onclick="runQuickCheck()">⚡ Quick Check</button>
+                <button class="btn" onclick="downloadReport()">📥 Download Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let checkResults = null;
+
+        // Run checks on page load
+        window.addEventListener('load', () => {
+            runQuickCheck();
+            loadQRCode();
+        });
+
+        async function runQuickCheck() {
+            showLoading();
+            animateProgressBar();
+
+            try {
+                const response = await fetch('/api/deploy/check?quick=true');
+                const data = await response.json();
+                checkResults = data;
+                displayResults(data);
+            } catch (error) {
+                console.error('Check failed:', error);
+                document.getElementById('loading').innerHTML = `<p style="color: #ff4444;">❌ Failed to run checks: ${error.message}</p>`;
+            }
+        }
+
+        async function runFullCheck() {
+            showLoading();
+            animateProgressBar();
+
+            try {
+                const response = await fetch('/api/deploy/check?quick=false');
+                const data = await response.json();
+                checkResults = data;
+                displayResults(data);
+            } catch (error) {
+                console.error('Check failed:', error);
+                document.getElementById('loading').innerHTML = `<p style="color: #ff4444;">❌ Failed to run checks: ${error.message}</p>`;
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function animateProgressBar() {
+            const bar = document.getElementById('progressBar');
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 90) {
+                    clearInterval(interval);
+                } else {
+                    width += 10;
+                    bar.style.width = width + '%';
+                }
+            }, 300);
+        }
+
+        function displayResults(data) {
+            // Complete progress bar
+            document.getElementById('progressBar').style.width = '100%';
+
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+
+                // Status banner
+                const statusBanner = document.getElementById('statusBanner');
+                const statusText = document.getElementById('statusText');
+                const statusDetails = document.getElementById('statusDetails');
+
+                statusText.textContent = data.overall_status;
+                statusDetails.textContent = `${data.critical_errors.length} critical errors, ${data.warnings.length} warnings`;
+
+                statusBanner.className = 'status-banner';
+                if (data.critical_errors.length > 0) {
+                    statusBanner.classList.add('error');
+                } else if (data.warnings.length > 0) {
+                    statusBanner.classList.add('warning');
+                }
+
+                // Errors
+                if (data.critical_errors.length > 0) {
+                    document.getElementById('errorsSection').style.display = 'block';
+                    const errorsList = document.getElementById('errorsList');
+                    errorsList.innerHTML = data.critical_errors.map(err => `<li>${err}</li>`).join('');
+                }
+
+                // Warnings
+                if (data.warnings.length > 0) {
+                    document.getElementById('warningsSection').style.display = 'block';
+                    const warningsList = document.getElementById('warningsList');
+                    warningsList.innerHTML = data.warnings.map(warn => `<li>${warn}</li>`).join('');
+                }
+
+                // Checks grid
+                const checksGrid = document.getElementById('checksGrid');
+                checksGrid.innerHTML = '';
+
+                for (const [checkName, checkData] of Object.entries(data.checks)) {
+                    const card = createCheckCard(checkName, checkData);
+                    checksGrid.appendChild(card);
+                }
+            }, 500);
+        }
+
+        function createCheckCard(name, data) {
+            const card = document.createElement('div');
+            card.className = 'check-card';
+
+            let status = 'ok';
+            if (data.status === 'WARNING') status = 'warning';
+            if (data.status === 'CRITICAL' || data.status === 'ERROR') status = 'error';
+
+            card.classList.add(status);
+
+            const title = name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+            let details = '';
+            if (data.message) {
+                details = `<p>${data.message}</p>`;
+            } else {
+                details = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+
+            card.innerHTML = `
+                <div class="check-title">
+                    <span class="check-status ${status}"></span>
+                    ${title}
+                </div>
+                <div class="check-details">${details}</div>
+            `;
+
+            return card;
+        }
+
+        async function loadQRCode() {
+            try {
+                const response = await fetch('/api/deploy/qr');
+                const data = await response.json();
+
+                if (data.success && data.qr_code) {
+                    document.getElementById('qrCodeImage').src = data.qr_code;
+                    document.getElementById('qrCodeImage').style.display = 'block';
+                    document.getElementById('qrLoading').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('QR code loading failed:', error);
+                document.getElementById('qrLoading').textContent = '❌ Failed to generate QR code';
+            }
+        }
+
+        function downloadReport() {
+            if (!checkResults) {
+                alert('No check results available');
+                return;
+            }
+
+            const blob = new Blob([JSON.stringify(checkResults, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `deployment-check-${new Date().toISOString()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

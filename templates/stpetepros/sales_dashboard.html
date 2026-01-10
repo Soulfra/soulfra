@@ -1,0 +1,522 @@
+{% extends "stpetepros/base.html" %}
+
+{% block title %}Sales Dashboard - StPetePros Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+  .dashboard-header {
+    background: linear-gradient(135deg, #0EA5E9 0%, #10B981 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-header h1 {
+    margin: 0 0 0.5rem 0;
+    color: white;
+  }
+
+  .dashboard-header .subtitle {
+    opacity: 0.9;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+  }
+
+  .stat-card .label {
+    color: #64748B;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-card .value {
+    color: #0F172A;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .stat-card .change {
+    color: #10B981;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+
+  .filters {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-group {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .filter-group label {
+    display: block;
+    color: #0F172A;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter-group select, .filter-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #0EA5E9;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #0284C7;
+  }
+
+  .btn-secondary {
+    background: white;
+    color: #0F172A;
+    border: 1px solid #E2E8F0;
+  }
+
+  .btn-secondary:hover {
+    background: #F8FAFC;
+  }
+
+  .btn-success {
+    background: #10B981;
+    color: white;
+  }
+
+  .btn-success:hover {
+    background: #059669;
+  }
+
+  .prospects-table {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    overflow: hidden;
+  }
+
+  .prospects-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .prospects-table thead {
+    background: #F8FAFC;
+    border-bottom: 2px solid #E2E8F0;
+  }
+
+  .prospects-table th {
+    padding: 1rem;
+    text-align: left;
+    color: #0F172A;
+    font-weight: 600;
+  }
+
+  .prospects-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #E2E8F0;
+    color: #64748B;
+  }
+
+  .prospects-table tbody tr:hover {
+    background: #F8FAFC;
+  }
+
+  .score-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .score-high {
+    background: #D1FAE5;
+    color: #065F46;
+  }
+
+  .score-medium {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  .score-low {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+  }
+
+  .status-not-contacted {
+    background: #E2E8F0;
+    color: #475569;
+  }
+
+  .status-dropped-off {
+    background: #DBEAFE;
+    color: #1E40AF;
+  }
+
+  .status-follow-up {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  .status-closed {
+    background: #D1FAE5;
+    color: #065F46;
+  }
+
+  .website-status {
+    font-weight: 600;
+  }
+
+  .no-website {
+    color: #EF4444;
+  }
+
+  .has-website {
+    color: #10B981;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #64748B;
+  }
+
+  .empty-state h3 {
+    color: #0F172A;
+    margin-bottom: 1rem;
+  }
+
+  .route-preview {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    margin-top: 2rem;
+  }
+
+  .route-preview h3 {
+    color: #0F172A;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .filters {
+      flex-direction: column;
+    }
+
+    .prospects-table {
+      overflow-x: auto;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+  <h1>Sales Dashboard</h1>
+  <p class="subtitle">Manage prospects, plan routes, and track conversions</p>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="label">Total Prospects</div>
+    <div class="value">{{ stats['total'] }}</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="label">Not Contacted</div>
+    <div class="value">{{ stats['not_contacted'] }}</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="label">Follow-up Needed</div>
+    <div class="value">{{ stats['follow_up'] }}</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="label">Closed Deals</div>
+    <div class="value">{{ stats['closed'] }}</div>
+    <div class="change">+{{ stats['closed'] }} this month</div>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="filter-group">
+    <label>Category</label>
+    <select id="categoryFilter" onchange="filterProspects()">
+      <option value="">All Categories</option>
+      <option value="plumbing">Plumbing</option>
+      <option value="electrical">Electrical</option>
+      <option value="hvac">HVAC</option>
+      <option value="roofing">Roofing</option>
+      <option value="legal">Legal</option>
+      <option value="landscaping">Landscaping</option>
+      <option value="cleaning">Cleaning</option>
+      <option value="pest-control">Pest Control</option>
+      <option value="painting">Painting</option>
+      <option value="pool-service">Pool Service</option>
+      <option value="real-estate">Real Estate</option>
+      <option value="auto-repair">Auto Repair</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label>Status</label>
+    <select id="statusFilter" onchange="filterProspects()">
+      <option value="">All Statuses</option>
+      <option value="not_contacted" selected>Not Contacted</option>
+      <option value="dropped_off">Dropped Off Flyer</option>
+      <option value="follow_up">Follow-up Needed</option>
+      <option value="closed">Closed</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label>Min Score</label>
+    <select id="scoreFilter" onchange="filterProspects()">
+      <option value="0">All Scores</option>
+      <option value="70">70+ (High Priority)</option>
+      <option value="50">50+ (Medium Priority)</option>
+      <option value="30">30+ (Low Priority)</option>
+    </select>
+  </div>
+
+  <div class="action-buttons">
+    <button class="btn btn-success" onclick="planRoute()">
+      🗺️ Plan Route
+    </button>
+    <button class="btn btn-secondary" onclick="exportToAirtable()">
+      📤 Export to Airtable
+    </button>
+    <button class="btn btn-secondary" onclick="runScraper()">
+      🔄 Run Scraper
+    </button>
+  </div>
+</div>
+
+{% if prospects %}
+  <div class="prospects-table">
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+          </th>
+          <th>Business Name</th>
+          <th>Category</th>
+          <th>Rating</th>
+          <th>Reviews</th>
+          <th>Website</th>
+          <th>Score</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in prospects %}
+        <tr data-category="{{ p.category }}" data-status="{{ p.sales_status }}" data-score="{{ p.score }}">
+          <td>
+            <input type="checkbox" class="prospect-checkbox" value="{{ p.id }}">
+          </td>
+          <td>
+            <strong style="color: #0F172A;">{{ p.business_name }}</strong><br>
+            <small>📍 {{ p.address }}</small>
+          </td>
+          <td>{{ p.category|title }}</td>
+          <td>⭐ {{ p.rating }}</td>
+          <td>{{ p.review_count }}</td>
+          <td class="website-status">
+            {% if p.website %}
+              <span class="has-website">✅ Yes</span>
+            {% else %}
+              <span class="no-website">❌ No</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if p.score >= 70 %}
+              <span class="score-badge score-high">{{ p.score }}</span>
+            {% elif p.score >= 50 %}
+              <span class="score-badge score-medium">{{ p.score }}</span>
+            {% else %}
+              <span class="score-badge score-low">{{ p.score }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <select class="status-badge status-{{ p.sales_status }}"
+                    onchange="updateStatus({{ p.id }}, this.value)">
+              <option value="not_contacted" {% if p.sales_status == 'not_contacted' %}selected{% endif %}>Not Contacted</option>
+              <option value="dropped_off" {% if p.sales_status == 'dropped_off' %}selected{% endif %}>Dropped Off</option>
+              <option value="follow_up" {% if p.sales_status == 'follow_up' %}selected{% endif %}>Follow-up</option>
+              <option value="closed" {% if p.sales_status == 'closed' %}selected{% endif %}>Closed</option>
+            </select>
+          </td>
+          <td>
+            <a href="tel:{{ p.phone }}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">
+              📞 Call
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="empty-state">
+    <h3>No prospects found</h3>
+    <p>Run the scraper to find potential customers</p>
+    <button class="btn btn-primary" onclick="runScraper()">Run Scraper</button>
+  </div>
+{% endif %}
+
+<div class="route-preview" id="routePreview" style="display: none;">
+  <h3>Route Preview</h3>
+  <div id="routeContent"></div>
+</div>
+
+<script>
+function filterProspects() {
+  const category = document.getElementById('categoryFilter').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  const minScore = parseInt(document.getElementById('scoreFilter').value);
+
+  const rows = document.querySelectorAll('.prospects-table tbody tr');
+
+  rows.forEach(row => {
+    const rowCategory = row.dataset.category;
+    const rowStatus = row.dataset.status;
+    const rowScore = parseInt(row.dataset.score);
+
+    const categoryMatch = !category || rowCategory === category;
+    const statusMatch = !status || rowStatus === status;
+    const scoreMatch = rowScore >= minScore;
+
+    if (categoryMatch && statusMatch && scoreMatch) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+function toggleSelectAll() {
+  const checked = document.getElementById('selectAll').checked;
+  const checkboxes = document.querySelectorAll('.prospect-checkbox');
+  checkboxes.forEach(cb => {
+    if (cb.closest('tr').style.display !== 'none') {
+      cb.checked = checked;
+    }
+  });
+}
+
+async function updateStatus(prospectId, newStatus) {
+  try {
+    const response = await fetch(`/stpetepros/admin/update-status/${prospectId}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({status: newStatus})
+    });
+
+    if (response.ok) {
+      console.log('Status updated');
+      // Reload stats
+      location.reload();
+    }
+  } catch (error) {
+    console.error('Error updating status:', error);
+    alert('Failed to update status');
+  }
+}
+
+function planRoute() {
+  const selected = Array.from(document.querySelectorAll('.prospect-checkbox:checked'))
+    .map(cb => cb.value);
+
+  if (selected.length === 0) {
+    alert('Please select at least one prospect');
+    return;
+  }
+
+  const startAddress = prompt('Enter your starting address:', 'Downtown St Petersburg, FL');
+  if (!startAddress) return;
+
+  // Redirect to route planner
+  window.location.href = `/stpetepros/admin/plan-route?start=${encodeURIComponent(startAddress)}&prospects=${selected.join(',')}`;
+}
+
+function exportToAirtable() {
+  if (confirm('Export top 50 prospects to Airtable?')) {
+    fetch('/stpetepros/admin/export-airtable', {method: 'POST'})
+      .then(response => response.json())
+      .then(data => {
+        alert(`Exported ${data.count} prospects to Airtable`);
+      })
+      .catch(error => {
+        alert('Export failed. Check API keys in .env');
+      });
+  }
+}
+
+function runScraper() {
+  if (confirm('Run the business scraper? This will take a few minutes.')) {
+    alert('Scraper would run here. For now, run:\npython3 stpetepros_scraper.py --all-categories');
+  }
+}
+
+// Initialize filters on load
+document.addEventListener('DOMContentLoaded', () => {
+  filterProspects();
+});
+</script>
+{% endblock %}

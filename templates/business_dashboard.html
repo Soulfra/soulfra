@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block title %}Business Dashboard - Soulfra{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto p-6">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl shadow-2xl p-8 mb-6 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl font-bold mb-2">Business Dashboard</h1>
+                <p class="text-blue-100 text-lg">Invoices, Receipts & QR Codes</p>
+                <p class="text-sm text-blue-200 mt-2">Offline-first • 100% Verifiable • Bloomberg-style Security</p>
+            </div>
+            <div class="text-right">
+                <div class="text-5xl mb-2">💼</div>
+                <div class="text-sm opacity-90">{{ total_documents }} documents</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Integration Status -->
+    {% if integrations %}
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <h2 class="text-xl font-bold mb-3 text-gray-800">Payment Integrations</h2>
+        <div class="flex flex-wrap gap-3">
+            {% for integration in integrations %}
+            <div class="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
+                <span class="text-xl">✅</span>
+                <span class="font-medium">{{ integration | title }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Create Invoice -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">💵 Create Invoice</h2>
+            <p class="text-gray-600 mb-4">Generate invoice with embedded QR code</p>
+
+            <div class="space-y-3 mb-4">
+                <input type="text" id="invoice-id" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Invoice ID (INV-2025-001)">
+                <input type="text" id="invoice-customer" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Customer Name">
+                <input type="email" id="invoice-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="customer@example.com">
+                <input type="number" id="invoice-amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Amount" step="0.01">
+                <input type="date" id="invoice-due" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+            </div>
+
+            <button onclick="createInvoice()" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition">
+                Create Invoice
+            </button>
+
+            <div id="invoice-result" class="mt-4 hidden"></div>
+        </div>
+
+        <!-- Create Receipt -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">🧾 Create Receipt</h2>
+            <p class="text-gray-600 mb-4">Generate payment receipt with QR</p>
+
+            <div class="space-y-3 mb-4">
+                <input type="text" id="receipt-id" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Receipt ID (RCP-2025-001)">
+                <input type="text" id="receipt-invoice-id" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Invoice ID (optional)">
+                <input type="number" id="receipt-amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Amount" step="0.01">
+                <input type="text" id="receipt-txn" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Transaction ID">
+                <input type="text" id="receipt-last4" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Card Last 4">
+            </div>
+
+            <button onclick="createReceipt()" class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition">
+                Create Receipt
+            </button>
+
+            <div id="receipt-result" class="mt-4 hidden"></div>
+        </div>
+
+        <!-- Create Purchase Order -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">📦 Purchase Order</h2>
+            <p class="text-gray-600 mb-4">Generate PO with QR code</p>
+
+            <div class="space-y-3 mb-4">
+                <input type="text" id="po-id" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="PO ID (PO-2025-001)">
+                <input type="text" id="po-vendor" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Vendor Name">
+                <input type="number" id="po-amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Total Amount" step="0.01">
+                <input type="date" id="po-delivery" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                <input type="text" id="po-address" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Delivery Address">
+            </div>
+
+            <button onclick="createPurchaseOrder()" class="w-full bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition">
+                Create PO
+            </button>
+
+            <div id="po-result" class="mt-4 hidden"></div>
+        </div>
+    </div>
+
+    <!-- Recent Documents -->
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Recent Business Documents</h2>
+            <div class="flex gap-2">
+                <button onclick="filterDocuments('all')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition">All</button>
+                <button onclick="filterDocuments('invoice')" class="px-4 py-2 bg-blue-100 hover:bg-blue-200 rounded-lg text-sm transition">Invoices</button>
+                <button onclick="filterDocuments('receipt')" class="px-4 py-2 bg-green-100 hover:bg-green-200 rounded-lg text-sm transition">Receipts</button>
+                <button onclick="filterDocuments('purchase_order')" class="px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-lg text-sm transition">POs</button>
+            </div>
+        </div>
+
+        {% if documents %}
+        <div class="space-y-4" id="documents-list">
+            {% for doc in documents %}
+            <div class="border border-gray-200 rounded-lg p-5 hover:border-blue-300 transition" data-type="{{ doc.content_type }}">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">
+                                {% if 'invoice' in doc.content_type %}💵
+                                {% elif 'receipt' in doc.content_type %}🧾
+                                {% elif 'purchase_order' in doc.content_type %}📦
+                                {% else %}📄{% endif %}
+                            </span>
+                            <div>
+                                <h3 class="font-bold text-gray-800">{{ doc.title }}</h3>
+                                <div class="text-sm text-gray-500">
+                                    {{ doc.content_type.replace('business_', '').replace('_', ' ').title() }}
+                                    · {{ doc.created_at }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if doc.metadata_parsed %}
+                        <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                            {% if doc.metadata_parsed.document_type %}
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ doc.metadata_parsed.document_type }}</span>
+                            {% endif %}
+                            {% if doc.metadata_parsed.qr_version %}
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded">QR V{{ doc.metadata_parsed.qr_version }}</span>
+                            {% endif %}
+                            {% if doc.metadata_parsed.data_size %}
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded">{{ doc.metadata_parsed.data_size }} bytes</span>
+                            {% endif %}
+                            {% if doc.metadata_parsed.compressed %}
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Compressed</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-3 text-xs text-gray-600">
+                            <span class="font-medium">Hash:</span> <code class="bg-gray-100 px-2 py-1 rounded">{{ doc.content_hash[:24] }}...</code>
+                        </div>
+                    </div>
+
+                    <div class="ml-4 flex flex-col gap-2">
+                        <a href="{{ url_for('business.view_business_document', unified_id=doc.id) }}" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition text-center">
+                            View
+                        </a>
+                        <a href="{{ url_for('business.download_qr', unified_id=doc.id) }}" class="px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-300 transition text-center">
+                            QR
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16 text-gray-500">
+            <p class="text-lg mb-2">No business documents yet</p>
+            <p class="text-sm">Create your first invoice, receipt, or purchase order above!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Create Invoice
+async function createInvoice() {
+    const invoiceId = document.getElementById('invoice-id').value.trim();
+    const customer = document.getElementById('invoice-customer').value.trim();
+    const email = document.getElementById('invoice-email').value.trim();
+    const amount = parseFloat(document.getElementById('invoice-amount').value);
+    const dueDate = document.getElementById('invoice-due').value;
+    const resultDiv = document.getElementById('invoice-result');
+
+    if (!invoiceId || !customer || !amount || !dueDate) {
+        resultDiv.innerHTML = '<div class="text-red-600 text-sm">Please fill all fields</div>';
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+
+    resultDiv.innerHTML = '<div class="text-blue-600 text-sm">Creating invoice...</div>';
+    resultDiv.classList.remove('hidden');
+
+    try {
+        const response = await fetch('/api/business/invoice', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                invoice_id: invoiceId,
+                from_entity: {
+                    name: "Soulfra LLC",
+                    business_id: "BIZ-SOULFRA",
+                    email: "billing@soulfra.com"
+                },
+                to_entity: {
+                    name: customer,
+                    customer_id: `CUST-${Date.now()}`,
+                    email: email
+                },
+                items: [{
+                    description: "Services",
+                    quantity: 1,
+                    unit_price: amount,
+                    total: amount,
+                    tax_rate: 0
+                }],
+                issued_date: new Date().toISOString().split('T')[0],
+                due_date: dueDate,
+                payment_terms: "Net 30"
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            resultDiv.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm">
+                    <div class="font-bold text-green-800 mb-1">✅ Invoice Created!</div>
+                    <div class="text-gray-700">Total: $${result.total}</div>
+                    <a href="/business/view/${result.unified_id}" class="inline-block mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                        View Invoice
+                    </a>
+                </div>
+            `;
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            resultDiv.innerHTML = `<div class="text-red-600 text-sm">Error: ${result.error}</div>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="text-red-600 text-sm">Error: ${error.message}</div>`;
+    }
+}
+
+// Create Receipt
+async function createReceipt() {
+    const receiptId = document.getElementById('receipt-id').value.trim();
+    const invoiceId = document.getElementById('receipt-invoice-id').value.trim();
+    const amount = parseFloat(document.getElementById('receipt-amount').value);
+    const txnId = document.getElementById('receipt-txn').value.trim();
+    const last4 = document.getElementById('receipt-last4').value.trim();
+    const resultDiv = document.getElementById('receipt-result');
+
+    if (!receiptId || !amount || !txnId) {
+        resultDiv.innerHTML = '<div class="text-red-600 text-sm">Please fill required fields</div>';
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+
+    resultDiv.innerHTML = '<div class="text-green-600 text-sm">Creating receipt...</div>';
+    resultDiv.classList.remove('hidden');
+
+    try {
+        const response = await fetch('/api/business/receipt', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                receipt_id: receiptId,
+                invoice_id: invoiceId || '',
+                from_entity: {
+                    name: "Soulfra LLC",
+                    business_id: "BIZ-SOULFRA"
+                },
+                to_entity: {
+                    name: "Customer",
+                    customer_id: `CUST-${Date.now()}`
+                },
+                payment: {
+                    amount: amount,
+                    currency: "USD",
+                    method: "credit_card",
+                    transaction_id: txnId,
+                    processor: "manual",
+                    last4: last4
+                }
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            resultDiv.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm">
+                    <div class="font-bold text-green-800 mb-1">✅ Receipt Created!</div>
+                    <div class="text-gray-700">Amount: $${result.amount}</div>
+                    <a href="/business/view/${result.unified_id}" class="inline-block mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                        View Receipt
+                    </a>
+                </div>
+            `;
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            resultDiv.innerHTML = `<div class="text-red-600 text-sm">Error: ${result.error}</div>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="text-red-600 text-sm">Error: ${error.message}</div>`;
+    }
+}
+
+// Create Purchase Order
+async function createPurchaseOrder() {
+    const poId = document.getElementById('po-id').value.trim();
+    const vendor = document.getElementById('po-vendor').value.trim();
+    const amount = parseFloat(document.getElementById('po-amount').value);
+    const delivery = document.getElementById('po-delivery').value;
+    const address = document.getElementById('po-address').value.trim();
+    const resultDiv = document.getElementById('po-result');
+
+    if (!poId || !vendor || !amount || !delivery || !address) {
+        resultDiv.innerHTML = '<div class="text-red-600 text-sm">Please fill all fields</div>';
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+
+    resultDiv.innerHTML = '<div class="text-purple-600 text-sm">Creating PO...</div>';
+    resultDiv.classList.remove('hidden');
+
+    try {
+        const response = await fetch('/api/business/purchase-order', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                po_id: poId,
+                from_entity: {
+                    name: "Soulfra LLC",
+                    business_id: "BIZ-SOULFRA"
+                },
+                to_entity: {
+                    name: vendor,
+                    business_id: `VENDOR-${Date.now()}`
+                },
+                items: [{
+                    description: "Items",
+                    quantity: 1,
+                    unit_price: amount,
+                    total: amount
+                }],
+                delivery_date: delivery,
+                delivery_address: address
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            resultDiv.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm">
+                    <div class="font-bold text-green-800 mb-1">✅ PO Created!</div>
+                    <div class="text-gray-700">Total: $${result.total}</div>
+                    <a href="/business/view/${result.unified_id}" class="inline-block mt-2 px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition">
+                        View PO
+                    </a>
+                </div>
+            `;
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            resultDiv.innerHTML = `<div class="text-red-600 text-sm">Error: ${result.error}</div>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="text-red-600 text-sm">Error: ${error.message}</div>`;
+    }
+}
+
+// Filter documents
+function filterDocuments(type) {
+    const docs = document.querySelectorAll('[data-type]');
+
+    docs.forEach(doc => {
+        if (type === 'all') {
+            doc.style.display = '';
+        } else {
+            const docType = doc.getAttribute('data-type');
+            doc.style.display = docType.includes(type) ? '' : 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Widget Carousel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .widget-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .widget-card.fade-out {
+            opacity: 0;
+            transform: scale(0.8) rotate(5deg);
+        }
+
+        .widget-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            transition: background-color 0.3s;
+        }
+
+        .widget-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .widget-district {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        .widget-description {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .widget-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .widget-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: white;
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        .port-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .auto-rotate-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .auto-rotate-toggle:hover {
+            background: white;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel-container">
+        <button class="auto-rotate-toggle" id="toggleBtn">⏸ Pause</button>
+
+        <div class="widget-card" id="widgetCard">
+            <div class="port-badge" id="portBadge">Port: 8888</div>
+            <div class="widget-icon" id="widgetIcon" style="background-color: #8B5CF6;">🌌</div>
+            <h1 class="widget-name" id="widgetName">Soulfra Universe</h1>
+            <div class="widget-district" id="widgetDistrict">Exploration</div>
+            <p class="widget-description" id="widgetDescription">Navigate the multi-dimensional universe</p>
+            <button class="widget-button" id="widgetButton">Launch Experience</button>
+        </div>
+
+        <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <script>
+        // Widget configuration from Flask
+        const widgets = {{ widgets | tojson }};
+        const startWidget = "{{ start_widget }}";
+        const autoRotate = {{ 'true' if auto_rotate else 'false' }};
+        const rotationInterval = {{ rotation_interval }};
+
+        // State
+        let currentIndex = widgets.findIndex(w => w.id === startWidget) || 0;
+        let isAutoRotating = autoRotate;
+        let rotationTimer = null;
+
+        // Widget icons mapping
+        const icons = {
+            'universe': '🌌',
+            'arena': '⚔️',
+            'marketplace': '🏪',
+            'immersion': '🎨'
+        };
+
+        // Initialize dots
+        const dotsContainer = document.getElementById('carouselDots');
+        widgets.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (index === currentIndex ? ' active' : '');
+            dot.addEventListener('click', () => goToWidget(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        // Update widget display
+        function updateWidget(fadeOut = true) {
+            const widget = widgets[currentIndex];
+            const card = document.getElementById('widgetCard');
+
+            if (fadeOut) {
+                card.classList.add('fade-out');
+                setTimeout(() => {
+                    setWidgetContent(widget);
+                    card.classList.remove('fade-out');
+                    logInteraction('view', { widget_id: widget.id });
+                }, 500);
+            } else {
+                setWidgetContent(widget);
+            }
+
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function setWidgetContent(widget) {
+            document.getElementById('widgetIcon').style.backgroundColor = widget.color;
+            document.getElementById('widgetIcon').textContent = icons[widget.id] || '🎮';
+            document.getElementById('widgetName').textContent = widget.name;
+            document.getElementById('widgetDistrict').textContent = widget.district;
+            document.getElementById('widgetDescription').textContent = widget.description;
+            document.getElementById('portBadge').textContent = `Port: ${widget.port}`;
+        }
+
+        function goToWidget(index) {
+            currentIndex = index;
+            updateWidget();
+            resetRotationTimer();
+        }
+
+        function nextWidget() {
+            currentIndex = (currentIndex + 1) % widgets.length;
+            updateWidget();
+        }
+
+        function resetRotationTimer() {
+            if (rotationTimer) clearInterval(rotationTimer);
+            if (isAutoRotating) {
+                rotationTimer = setInterval(nextWidget, rotationInterval);
+            }
+        }
+
+        // Toggle auto-rotation
+        document.getElementById('toggleBtn').addEventListener('click', function() {
+            isAutoRotating = !isAutoRotating;
+            this.textContent = isAutoRotating ? '⏸ Pause' : '▶ Play';
+            resetRotationTimer();
+            logInteraction('toggle_rotation', { auto_rotate: isAutoRotating });
+        });
+
+        // Launch button
+        document.getElementById('widgetButton').addEventListener('click', function() {
+            const widget = widgets[currentIndex];
+            logInteraction('launch', {
+                widget_id: widget.id,
+                port: widget.port
+            });
+
+            // Open widget in iframe or new window
+            window.parent.postMessage({
+                type: 'widget_launch',
+                widget_id: widget.id,
+                port: widget.port,
+                url: `http://localhost:${widget.port}`
+            }, '*');
+        });
+
+        // Log interaction to training_contributions
+        function logInteraction(actionType, actionData) {
+            fetch('/api/widget/log-interaction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    widget_id: widgets[currentIndex].id,
+                    user_id: null,  // Anonymous for now
+                    action_type: actionType,
+                    action_data: actionData
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  console.log('Interaction logged:', data);
+                  if (data.cringe_score) {
+                      console.log('Cringe score:', data.cringe_score);
+                  }
+              })
+              .catch(err => console.error('Failed to log interaction:', err));
+        }
+
+        // Initialize
+        updateWidget(false);
+        resetRotationTimer();
+
+        // Cross-domain messaging support
+        window.addEventListener('message', function(event) {
+            // Handle messages from parent window
+            if (event.data.type === 'change_widget') {
+                const index = widgets.findIndex(w => w.id === event.data.widget_id);
+                if (index !== -1) goToWidget(index);
+            }
+        });
+    </script>
+</body>
+</html>

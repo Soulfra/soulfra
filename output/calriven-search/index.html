@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalRiven - Search & Discover</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            opacity: 0.9;
+            font-size: 1.2em;
+        }
+
+        .search-section {
+            background: white;
+            color: #333;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #1e3c72;
+            border-radius: 25px;
+            font-size: 1.1em;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #2a5298;
+        }
+
+        .search-results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .result-item h3 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .result-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .result-item a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .result-item a:hover {
+            text-decoration: underline;
+        }
+
+        .qr-section {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: #1e3c72;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 CalRiven</h1>
+            <p class="tagline">Technical Philosophy & Ownership</p>
+        </header>
+
+        <div class="search-section">
+            <h2>Search CalRiven Content</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search posts, concepts, philosophy..." autofocus>
+            </div>
+            <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <div class="qr-section">
+            <h3>📱 Access Full Search via QR</h3>
+            <p>Scan with your phone to access AI-powered search</p>
+            <div class="qr-code">
+                <img src="search-qr.png" alt="Search QR Code" style="width: 250px; height: 250px;" onerror="this.style.display='none'">
+            </div>
+            <p style="opacity: 0.8; margin-top: 10px;">
+                Or visit: <strong>192.168.1.87:5001/search?brand=calriven</strong>
+            </p>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>🔍 AI Search</h3>
+                <p>Semantic search across all CalRiven posts and concepts</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>📖 Philosophy</h3>
+                <p>Technical ownership and infrastructure philosophy</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>💾 Own Your Stack</h3>
+                <p>Self-hosted, open-source, privacy-focused</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="https://soulfra.github.io/calriven/" class="btn">View All Posts</a>
+            <a href="http://192.168.1.87:5001/dashboard" class="btn">Unified Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        // Simple client-side search
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        // Sample CalRiven content (in production, load from JSON)
+        const content = [
+            {
+                title: "CalRiven Chapter 1 - The Beginning",
+                excerpt: "The philosophy of ownership starts here...",
+                url: "https://soulfra.github.io/calriven/post/calriven-chapter-1.html"
+            },
+            {
+                title: "CalRiven Chapter 2 - Infrastructure",
+                excerpt: "Building your own infrastructure means true ownership...",
+                url: "https://soulfra.github.io/calriven/post/calriven-chapter-2.html"
+            },
+            {
+                title: "CalRiven Chapter 3 - Privacy",
+                excerpt: "Privacy is not given, it's taken through infrastructure...",
+                url: "https://soulfra.github.io/calriven/post/calriven-chapter-3.html"
+            }
+        ];
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+
+            if (!query) {
+                searchResults.innerHTML = '';
+                return;
+            }
+
+            const results = content.filter(item =>
+                item.title.toLowerCase().includes(query) ||
+                item.excerpt.toLowerCase().includes(query)
+            );
+
+            if (results.length === 0) {
+                searchResults.innerHTML = '<p style="text-align: center; color: #666;">No results found. Try AI search for better results!</p>';
+                return;
+            }
+
+            searchResults.innerHTML = results.map(item => `
+                <div class="result-item">
+                    <h3>${item.title}</h3>
+                    <p>${item.excerpt}</p>
+                    <a href="${item.url}" target="_blank">Read more →</a>
+                </div>
+            `).join('');
+        });
+
+        // Auto-focus search on load
+        window.addEventListener('load', () => {
+            searchInput.focus();
+        });
+    </script>
+</body>
+</html>

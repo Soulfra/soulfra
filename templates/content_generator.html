@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Vanilla JS Content Generator - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #66ff66;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 0 10px #66ff66;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #66ff66, 0 0 20px #66ff66; }
+            50% { text-shadow: 0 0 20px #66ff66, 0 0 40px #66ff66, 0 0 60px #66ff66; }
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 30px;
+            opacity: 0.7;
+        }
+
+        .input-section {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #66ff66;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 15px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #66ff66;
+            box-shadow: 0 0 10px rgba(102, 255, 102, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4444ff 0%, #6666ff 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(68, 68, 255, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, #44ff44 0%, #66ff66 100%);
+            color: #0a0a0a;
+        }
+
+        .btn.warning {
+            background: linear-gradient(135deg, #ff8800 0%, #ffaa00 100%);
+        }
+
+        .output-section {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .output-section.visible {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide {
+            background: #0a0a0a;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-number {
+            color: #ffaa00;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .slide-title {
+            font-size: 24px;
+            color: #66ff66;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px #66ff66;
+        }
+
+        .slide-bullets {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .slide-bullets li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .slide-bullets li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4444ff;
+            font-size: 18px;
+        }
+
+        .wordmap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .word-tag {
+            background: #4444ff;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            opacity: 0;
+            animation: popIn 0.3s ease-out forwards;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            color: #66ff66;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 24px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #333;
+            border-top: 4px solid #66ff66;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        /* Retro line rider style effect */
+        .line-rider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #66ff66, transparent);
+            animation: riderMove 3s linear infinite;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes riderMove {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="line-rider"></div>
+
+    <div class="container">
+        <h1>✨ Vanilla JS Content Generator</h1>
+        <div class="subtitle">Pure JavaScript. No frameworks. Just like the oldschool web.</div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <h3 style="margin-bottom: 15px;">📝 Your Voice Memo or Idea</h3>
+            <textarea id="inputText" placeholder="Paste your voice memo transcript or type your idea here...
+
+Example:
+&quot;I'm building Soulfra, a platform where you can own fractions of domains and create content using AI. We're solving the problem of generic AI content by giving each brand its own voice through wordmaps - vocabulary that defines how the brand speaks. Users record voice memos and we generate pitch decks, blog posts, and social content that actually sounds like them.&quot;
+
+Try it out!"></textarea>
+
+            <div class="controls">
+                <button class="btn success" onclick="generatePitchDeck()">🚀 Generate Pitch Deck</button>
+                <button class="btn" onclick="generateBlog()">📝 Generate Blog Post</button>
+                <button class="btn" onclick="generateSocial()">📱 Generate Social Posts</button>
+                <button class="btn warning" onclick="extractWordmap()">🔍 Extract Wordmap</button>
+                <button class="btn" onclick="clearAll()">🗑️ Clear</button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <div>Generating content...</div>
+        </div>
+
+        <!-- Output Section -->
+        <div id="output" class="output-section">
+            <h3 style="margin-bottom: 20px;">📊 Generated Content</h3>
+            <div id="contentContainer"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Made with ♥ vanilla JavaScript • No React, No Vue, No BS
+    </div>
+
+    <script>
+        // Pure vanilla JavaScript content generator
+
+        function tokenize(text) {
+            // Simple tokenization - lowercase, alphanumeric only
+            const words = text.toLowerCase().match(/\b[a-z]{3,}\b/g) || [];
+            return words;
+        }
+
+        function extractWordmapFromText(text, topN = 30) {
+            const words = tokenize(text);
+
+            // Count frequencies
+            const wordCounts = {};
+            words.forEach(word => {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
+            });
+
+            // Remove stop words
+            const stopWords = new Set([
+                'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+                'of', 'with', 'from', 'by', 'as', 'is', 'was', 'are', 'be', 'been',
+                'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could',
+                'should', 'may', 'might', 'can', 'this', 'that', 'these', 'those',
+                'it', 'its', 'we', 'you', 'they', 'them', 'their', 'i', 'me', 'my',
+                'your', 'our', 'like', 'just', 'really', 'very', 'so', 'yeah', 'know'
+            ]);
+
+            // Filter and sort
+            const filtered = Object.entries(wordCounts)
+                .filter(([word, count]) => !stopWords.has(word) && word.length > 3)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, topN);
+
+            return Object.fromEntries(filtered);
+        }
+
+        function generatePitchDeckFromText(text) {
+            const wordmap = extractWordmapFromText(text);
+            const topWords = Object.keys(wordmap).slice(0, 10);
+
+            // Extract key concepts from text
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 10);
+
+            // Simple pitch deck structure
+            const slides = [
+                {
+                    title: "The Problem",
+                    bullets: [
+                        sentences[0]?.trim() || "Traditional approaches fall short",
+                        "Users need a better solution",
+                        `Focus on: ${topWords.slice(0, 3).join(', ')}`
+                    ]
+                },
+                {
+                    title: "Our Solution",
+                    bullets: [
+                        sentences[1]?.trim() || "We're building something better",
+                        `Leveraging: ${topWords.slice(3, 6).join(', ')}`,
+                        "Simple, powerful, effective"
+                    ]
+                },
+                {
+                    title: "How It Works",
+                    bullets: [
+                        "Step 1: User provides input",
+                        "Step 2: AI processes with brand voice",
+                        "Step 3: Generate authentic content"
+                    ]
+                },
+                {
+                    title: "Market Opportunity",
+                    bullets: [
+                        "Growing demand for authentic content",
+                        "AI market expanding rapidly",
+                        "First-mover advantage in voice-guided AI"
+                    ]
+                },
+                {
+                    title: "Why Now",
+                    bullets: [
+                        "LLMs are accessible and powerful",
+                        "Users crave authenticity in AI era",
+                        `Our unique approach: ${topWords[0]}-focused`
+                    ]
+                },
+                {
+                    title: "The Ask",
+                    bullets: [
+                        "Join us in building the future",
+                        "Investment opportunity available",
+                        "Let's create something amazing together"
+                    ]
+                }
+            ];
+
+            return {
+                title: "Pitch Deck",
+                slides: slides,
+                wordmap: wordmap,
+                totalSlides: slides.length
+            };
+        }
+
+        function renderPitchDeck(pitchData) {
+            const container = document.getElementById('contentContainer');
+
+            let html = `
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${pitchData.totalSlides}</div>
+                        <div class="stat-label">Total Slides</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Object.keys(pitchData.wordmap).length}</div>
+                        <div class="stat-label">Key Words</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Vanilla JS</div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 15px 0;">🗺️ Brand Wordmap</h3>
+                <div class="wordmap">
+            `;
+
+            Object.entries(pitchData.wordmap).slice(0, 15).forEach(([word, count], index) => {
+                html += `<div class="word-tag" style="animation-delay: ${index * 0.05}s">${word} (${count})</div>`;
+            });
+
+            html += '</div><h3 style="margin: 30px 0 15px 0;">🎯 Pitch Deck Slides</h3>';
+
+            pitchData.slides.forEach((slide, index) => {
+                html += `
+                    <div class="slide" style="animation-delay: ${index * 0.1}s">
+                        <div class="slide-number">Slide ${index + 1} of ${pitchData.totalSlides}</div>
+                        <div class="slide-title">${slide.title}</div>
+                        <ul class="slide-bullets">
+                            ${slide.bullets.map(bullet => `<li>${bullet}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function generatePitchDeck() {
+            const text = document.getElementById('inputText').value.trim();
+
+            if (!text) {
+                alert('Please enter some text first!');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('output').classList.remove('visible');
+
+            // Simulate processing time (in real app, this would be Ollama API call)
+            setTimeout(() => {
+                const pitchData = generatePitchDeckFromText(text);
+                renderPitchDeck(pitchData);
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('output').classList.add('visible');
+            }, 1000);
+        }
+
+        function generateBlog() {
+            const text = document.getElementById('inputText').value.trim();
+
+            if (!text) {
+                alert('Please enter some text first!');
+                return;
+            }
+
+            const container = document.getElementById('contentContainer');
+            const wordmap = extractWordmapFromText(text);
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 10);
+
+            container.innerHTML = `
+                <h3>📝 Blog Post</h3>
+                <div class="slide">
+                    <div class="slide-title">${Object.keys(wordmap)[0]?.toUpperCase() || 'Blog Post'} - A New Approach</div>
+                    <p style="line-height: 1.8; margin-top: 15px;">
+                        ${sentences.join('. ')}
+                    </p>
+                    <div style="margin-top: 20px; opacity: 0.7;">
+                        Tags: ${Object.keys(wordmap).slice(0, 5).join(', ')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('output').classList.add('visible');
+        }
+
+        function generateSocial() {
+            const text = document.getElementById('inputText').value.trim();
+
+            if (!text) {
+                alert('Please enter some text first!');
+                return;
+            }
+
+            const container = document.getElementById('contentContainer');
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 10);
+            const firstSentence = sentences[0]?.trim() || text.substring(0, 200);
+
+            container.innerHTML = `
+                <h3>📱 Social Media Posts</h3>
+
+                <div class="slide">
+                    <div class="slide-title">🐦 Twitter</div>
+                    <p style="line-height: 1.8;">${firstSentence.substring(0, 240)}...</p>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-title">💼 LinkedIn</div>
+                    <p style="line-height: 1.8;">${text.substring(0, 500)}...</p>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-title">📸 Instagram</div>
+                    <p style="line-height: 1.8;">${firstSentence}
+
+#tech #innovation #startup</p>
+                </div>
+            `;
+
+            document.getElementById('output').classList.add('visible');
+        }
+
+        function extractWordmap() {
+            const text = document.getElementById('inputText').value.trim();
+
+            if (!text) {
+                alert('Please enter some text first!');
+                return;
+            }
+
+            const wordmap = extractWordmapFromText(text, 50);
+            const container = document.getElementById('contentContainer');
+
+            let html = `
+                <h3>🗺️ Extracted Wordmap (Top 50 Words)</h3>
+                <div class="wordmap" style="margin-top: 20px;">
+            `;
+
+            Object.entries(wordmap).forEach(([word, count], index) => {
+                html += `<div class="word-tag" style="animation-delay: ${index * 0.03}s">${word} (${count})</div>`;
+            });
+
+            html += '</div>';
+
+            container.innerHTML = html;
+            document.getElementById('output').classList.add('visible');
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('output').classList.remove('visible');
+        }
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode = konamiCode.slice(-10);
+
+            if (konamiCode.join(',') === konamiSequence.join(',')) {
+                alert('🎮 Oldschool web vibes activated! Remember when sites had guestbooks and hit counters?');
+            }
+        });
+    </script>
+</body>
+</html>

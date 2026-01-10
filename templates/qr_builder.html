@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Builder - Create Branded QR Codes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .builder {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .left-panel, .right-panel {
+            padding: 40px;
+        }
+
+        .left-panel {
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .right-panel {
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .style-picker {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .style-option {
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .style-option:hover {
+            border-color: #667eea;
+            background: #f3f4f6;
+        }
+
+        .style-option.active {
+            border-color: #667eea;
+            background: #eef2ff;
+        }
+
+        .style-option .icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .style-option .name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+        }
+
+        input[type="color"] {
+            width: 0;
+            height: 0;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .color-hex {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .preview-container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .preview-container h3 {
+            font-size: 18px;
+            color: #374151;
+            margin-bottom: 20px;
+        }
+
+        #qr-preview {
+            width: 300px;
+            height: 300px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border: 2px dashed #d1d5db;
+        }
+
+        #qr-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        .vanity-url {
+            background: #eef2ff;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .loading {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .builder {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .style-picker {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QR Code Builder</h1>
+            <p>Create beautiful, branded QR codes in seconds</p>
+        </div>
+
+        <div class="builder">
+            <div class="left-panel">
+                <form id="qr-form">
+                    <!-- Brand Selection -->
+                    <div class="form-group">
+                        <label>Brand</label>
+                        <select id="brand" required>
+                            <option value="soulfra">Soulfra</option>
+                            <option value="cringeproof">Cringeproof</option>
+                            <option value="howtocookathome">How To Cook At Home</option>
+                        </select>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div class="form-group">
+                        <label>Destination URL</label>
+                        <input type="url" id="url" placeholder="https://example.com" required>
+                    </div>
+
+                    <!-- Style Selection -->
+                    <div class="form-group">
+                        <label>QR Code Style</label>
+                        <div class="style-picker">
+                            <div class="style-option active" data-style="minimal">
+                                <div class="icon">◼</div>
+                                <div class="name">Minimal</div>
+                            </div>
+                            <div class="style-option" data-style="rounded">
+                                <div class="icon">●</div>
+                                <div class="name">Rounded</div>
+                            </div>
+                            <div class="style-option" data-style="circles">
+                                <div class="icon">⬤</div>
+                                <div class="name">Circles</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Customization -->
+                    <div class="form-group">
+                        <label>Primary Color</label>
+                        <div class="color-picker-group">
+                            <div class="color-input-wrapper">
+                                <div class="color-preview" id="primary-preview" style="background: #8B5CF6" onclick="document.getElementById('primary-color').click()"></div>
+                                <input type="color" id="primary-color" value="#8B5CF6">
+                                <input type="text" class="color-hex" id="primary-hex" value="#8B5CF6">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gradient Feature (Advanced) -->
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enable-gradient" style="margin-right: 8px; width: auto;">
+                            Enable Gradient (Pro Feature)
+                        </label>
+                        <div id="gradient-controls" style="display: none; margin-top: 12px;">
+                            <div class="color-picker-group">
+                                <div class="color-input-wrapper">
+                                    <div class="color-preview" id="secondary-preview" style="background: #3B82F6" onclick="document.getElementById('secondary-color').click()"></div>
+                                    <input type="color" id="secondary-color" value="#3B82F6">
+                                    <input type="text" class="color-hex" id="secondary-hex" value="#3B82F6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Animated Feature (Advanced) -->
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enable-animated" style="margin-right: 8px; width: auto;">
+                            Animated QR (Pro Feature)
+                        </label>
+                        <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+                            Creates a pulsing animated GIF
+                        </p>
+                    </div>
+
+                    <!-- Label (Optional) -->
+                    <div class="form-group">
+                        <label>Label (Optional)</label>
+                        <input type="text" id="label" placeholder="SCAN ME" maxlength="30">
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button type="submit" class="btn btn-primary" id="generate-btn">
+                        Generate QR Code
+                    </button>
+                </form>
+            </div>
+
+            <div class="right-panel">
+                <div class="preview-container">
+                    <h3>Preview</h3>
+                    <div id="qr-preview">
+                        <p style="color: #9ca3af;">QR code will appear here</p>
+                    </div>
+                    <div class="vanity-url" id="vanity-url" style="display: none;"></div>
+                    <button class="btn btn-primary" id="download-btn" style="display: none;">
+                        Download QR Code
+                    </button>
+                    <button class="btn btn-secondary" id="reset-btn" style="display: none;">
+                        Create Another
+                    </button>
+                    <div class="loading" id="loading-text" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BRAND_COLORS = {
+            'soulfra': '#8B5CF6',
+            'cringeproof': '#2D3748',
+            'howtocookathome': '#F97316'
+        };
+
+        const BRAND_STYLES = {
+            'soulfra': 'rounded',
+            'cringeproof': 'minimal',
+            'howtocookathome': 'circles'
+        };
+
+        let currentStyle = 'minimal';
+        let currentQRData = null;
+
+        // Brand change handler
+        document.getElementById('brand').addEventListener('change', (e) => {
+            const brand = e.target.value;
+            const color = BRAND_COLORS[brand];
+            const style = BRAND_STYLES[brand];
+
+            // Update color
+            document.getElementById('primary-color').value = color;
+            document.getElementById('primary-hex').value = color;
+            document.getElementById('primary-preview').style.background = color;
+
+            // Update style
+            document.querySelectorAll('.style-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.dataset.style === style) {
+                    opt.classList.add('active');
+                    currentStyle = style;
+                }
+            });
+        });
+
+        // Color picker handlers
+        document.getElementById('primary-color').addEventListener('input', (e) => {
+            const color = e.target.value;
+            document.getElementById('primary-hex').value = color;
+            document.getElementById('primary-preview').style.background = color;
+        });
+
+        document.getElementById('primary-hex').addEventListener('input', (e) => {
+            const color = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('primary-color').value = color;
+                document.getElementById('primary-preview').style.background = color;
+            }
+        });
+
+        // Gradient toggle
+        document.getElementById('enable-gradient').addEventListener('change', (e) => {
+            const controls = document.getElementById('gradient-controls');
+            controls.style.display = e.target.checked ? 'block' : 'none';
+        });
+
+        // Secondary color picker handlers
+        document.getElementById('secondary-color').addEventListener('input', (e) => {
+            const color = e.target.value;
+            document.getElementById('secondary-hex').value = color;
+            document.getElementById('secondary-preview').style.background = color;
+        });
+
+        document.getElementById('secondary-hex').addEventListener('input', (e) => {
+            const color = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                document.getElementById('secondary-color').value = color;
+                document.getElementById('secondary-preview').style.background = color;
+            }
+        });
+
+        // Style selection
+        document.querySelectorAll('.style-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                currentStyle = option.dataset.style;
+            });
+        });
+
+        // Form submission
+        document.getElementById('qr-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const brand = document.getElementById('brand').value;
+            const url = document.getElementById('url').value;
+            const label = document.getElementById('label').value;
+
+            // Advanced features
+            const primaryColor = document.getElementById('primary-color').value;
+            const enableGradient = document.getElementById('enable-gradient').checked;
+            const secondaryColor = enableGradient ? document.getElementById('secondary-color').value : null;
+            const enableAnimated = document.getElementById('enable-animated').checked;
+
+            // Show loading
+            document.getElementById('generate-btn').disabled = true;
+            document.getElementById('loading-text').style.display = 'block';
+            document.getElementById('loading-text').textContent = enableAnimated ? 'Generating animated QR code...' : 'Generating QR code...';
+
+            try {
+                // Build request body
+                const requestBody = {
+                    url: url,
+                    brand: brand,
+                    label: label || brand.toUpperCase(),
+                    style: currentStyle,
+                    primary_color: primaryColor
+                };
+
+                // Add advanced features if enabled
+                if (secondaryColor) {
+                    requestBody.secondary_color = secondaryColor;
+                }
+                if (enableAnimated) {
+                    requestBody.animated = true;
+                }
+
+                // Call API to create QR code
+                const response = await fetch('/api/qr/create', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                currentQRData = data;
+
+                // Display QR code (PNG or GIF)
+                const mimeType = data.mimetype || 'image/png';
+                document.getElementById('qr-preview').innerHTML = `
+                    <img src="data:${mimeType};base64,${data.qr_image_base64}" alt="QR Code">
+                `;
+
+                // Show vanity URL
+                document.getElementById('vanity-url').textContent = data.vanity_url;
+                document.getElementById('vanity-url').style.display = 'block';
+
+                // Show download button
+                document.getElementById('download-btn').style.display = 'block';
+                document.getElementById('reset-btn').style.display = 'block';
+
+                document.getElementById('loading-text').textContent = '✅ QR code generated successfully!';
+
+            } catch (error) {
+                console.error('Error generating QR:', error);
+                document.getElementById('loading-text').textContent = '❌ Error generating QR code. Please try again.';
+            } finally {
+                document.getElementById('generate-btn').disabled = false;
+            }
+        });
+
+        // Download handler
+        document.getElementById('download-btn').addEventListener('click', () => {
+            if (currentQRData) {
+                window.location.href = currentQRData.qr_download_url;
+            }
+        });
+
+        // Reset handler
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            document.getElementById('qr-form').reset();
+            document.getElementById('qr-preview').innerHTML = '<p style="color: #9ca3af;">QR code will appear here</p>';
+            document.getElementById('vanity-url').style.display = 'none';
+            document.getElementById('download-btn').style.display = 'none';
+            document.getElementById('reset-btn').style.display = 'none';
+            document.getElementById('loading-text').style.display = 'none';
+            currentQRData = null;
+
+            // Reset to default brand
+            document.getElementById('brand').value = 'soulfra';
+            document.getElementById('brand').dispatchEvent(new Event('change'));
+        });
+    </script>
+</body>
+</html>

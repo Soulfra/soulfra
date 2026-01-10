@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Complete - Welcome to Soulfra!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .celebration {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .celebration-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .ai-friend-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .ai-friend-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .ai-friend-name {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .ai-friend-description {
+            font-size: 1.1em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .traits-section {
+            margin-bottom: 30px;
+        }
+
+        .traits-section h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .traits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .trait-badge {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+            border: 2px solid #e0e0e0;
+        }
+
+        .next-steps {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+
+        .next-steps h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .next-steps li {
+            padding: 10px 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .next-steps li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .email-notice {
+            text-align: center;
+            color: #999;
+            margin-top: 30px;
+            font-size: 0.95em;
+        }
+
+        .email-notice strong {
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .celebration-icon {
+                font-size: 3em;
+            }
+
+            .ai-friend-icon {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="celebration">
+            <div class="celebration-icon">🎉</div>
+            <h1>Quiz Complete!</h1>
+            <p class="subtitle">You've been matched with your AI companion</p>
+        </div>
+
+        <div class="ai-friend-section">
+            <div class="ai-friend-icon">
+                {% if matched_ai == 'soulfra' %}🌙
+                {% elif matched_ai == 'calriven' %}🏛️
+                {% elif matched_ai == 'deathtodata' %}🔒
+                {% elif matched_ai == 'theauditor' %}⚖️
+                {% endif %}
+            </div>
+            <div class="ai-friend-name">{{ ai_persona.get('name', matched_ai) }}</div>
+            <div class="ai-friend-description">{{ ai_persona.get('description', 'Your AI companion') }}</div>
+        </div>
+
+        {% if profile.get('traits') %}
+        <div class="traits-section">
+            <h2>Your Personality Traits</h2>
+            <div class="traits-grid">
+                {% for trait in profile['traits'] %}
+                <div class="trait-badge">{{ trait }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="next-steps">
+            <h2>What Happens Next?</h2>
+            <ul>
+                <li>We've sent a welcome email to <strong>{{ user['email'] }}</strong></li>
+                <li>Your AI friend is ready to chat anytime</li>
+                <li>Explore your personalized profile</li>
+                <li>Connect with other users and nudge them!</li>
+            </ul>
+
+            <div class="action-buttons">
+                <a href="/profile/{{ user['username'] }}" class="btn btn-primary">View My Profile</a>
+                <a href="/" class="btn btn-secondary">Explore Platform</a>
+            </div>
+        </div>
+
+        <div class="email-notice">
+            <p>📧 Check your email for your welcome message!</p>
+            <p><small>(Or check the console if email isn't configured)</small></p>
+        </div>
+    </div>
+</body>
+</html>

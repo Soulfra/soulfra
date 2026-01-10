@@ -1,0 +1,616 @@
+{% extends "base.html" %}
+
+{% block title %}AI Network Debug Panel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="debug-panel">
+        <div class="debug-header">
+            <h1>🧠 AI Network Debug Panel</h1>
+            <p>Visual inspection of neural network character cast</p>
+        </div>
+
+        <!-- Live Status -->
+        <section class="debug-section">
+            <h2>📡 Live Status</h2>
+            <div class="status-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_personas }}</div>
+                    <div class="stat-label">Total AI Personas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ brand_personas }}</div>
+                    <div class="stat-label">Brand-Specific</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ ai_comments }}</div>
+                    <div class="stat-label">Total Comments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ neural_networks_count }}</div>
+                    <div class="stat-label">Trained Networks</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Personas List -->
+        <section class="debug-section">
+            <h2>🤖 AI Personas</h2>
+            <div class="personas-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Persona</th>
+                            <th>Brand</th>
+                            <th>Personality</th>
+                            <th>Comments</th>
+                            <th>Avg Rating</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for persona in personas %}
+                        <tr class="persona-row">
+                            <td>
+                                <div class="persona-info">
+                                    <span class="persona-emoji">{{ persona.emoji }}</span>
+                                    <div>
+                                        <strong>{{ persona.display_name }}</strong>
+                                        <div class="persona-username">@{{ persona.username }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if persona.brand_name %}
+                                <a href="{{ url_for('brand_page', slug=persona.brand_slug) }}">
+                                    {{ persona.brand_name }}
+                                </a>
+                                {% else %}
+                                <span class="text-muted">System AI</span>
+                                {% endif %}
+                            </td>
+                            <td class="personality-cell">
+                                {% if persona.personality %}
+                                {{ persona.personality[:30] }}{% if persona.personality|length > 30 %}...{% endif %}
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ persona.comment_count }}</td>
+                            <td class="text-center">
+                                {% if persona.avg_rating %}
+                                <span class="rating-badge">{{ "%.1f"|format(persona.avg_rating) }} ⭐</span>
+                                {% else %}
+                                <span class="text-muted">No ratings</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <span class="status-badge {{ 'active' if persona.comment_count > 0 else 'inactive' }}">
+                                    {{ 'Active' if persona.comment_count > 0 else 'Inactive' }}
+                                </span>
+                            </td>
+                            <td class="actions-cell">
+                                <a href="{{ url_for('ai_persona_detail', username=persona.username) }}" class="btn-small">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Relevance Testing -->
+        <section class="debug-section">
+            <h2>🎯 Test Relevance (Dry Run)</h2>
+            <p>See which AIs would comment on a post without actually posting</p>
+
+            <div class="test-form">
+                <label for="test-post">Select Post:</label>
+                <select id="test-post" onchange="testRelevance()">
+                    <option value="">-- Choose a post --</option>
+                    {% for post in recent_posts %}
+                    <option value="{{ post.id }}">{{ post.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="relevance-results" class="relevance-results" style="display: none;">
+                <!-- Populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Neural Network Weights -->
+        {% if neural_networks %}
+        <section class="debug-section">
+            <h2>⚡ Neural Network Weights</h2>
+            <p>Visualize trained neural networks</p>
+
+            <div class="nn-list">
+                {% for nn in neural_networks %}
+                <div class="nn-card">
+                    <h3>{{ nn.model_name }}</h3>
+                    <p class="nn-desc">{{ nn.description }}</p>
+                    <div class="nn-architecture">
+                        <span class="layer">Input: {{ nn.input_size }}</span>
+                        <span class="arrow">→</span>
+                        <span class="layer">Hidden: {{ nn.hidden_sizes }}</span>
+                        <span class="arrow">→</span>
+                        <span class="layer">Output: {{ nn.output_size }}</span>
+                    </div>
+                    <div class="nn-meta">
+                        Trained: {{ nn.trained_at or 'Never' }}
+                    </div>
+                    <button onclick="visualizeNetwork('{{ nn.model_name }}')" class="btn-visualize">
+                        📊 Visualize Weights
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Color Theory Mapping -->
+        <section class="debug-section">
+            <h2>🎨 Color Theory → Personality Mapping</h2>
+            <p>How brand colors map to personality traits</p>
+
+            <div class="color-mapping-grid">
+                {% for brand in brands_with_colors %}
+                <div class="color-mapping-card">
+                    <div class="color-preview" style="background: {{ brand.primary_color }}"></div>
+                    <div class="mapping-info">
+                        <strong>{{ brand.name }}</strong>
+                        <div class="personality-tags">
+                            {% for trait in brand.personality_traits %}
+                            <span class="trait-tag">{{ trait }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="color-features">
+                            <small>
+                                Temp: {{ brand.color_temp }} |
+                                Sat: {{ brand.color_sat }} |
+                                Bright: {{ brand.color_bright }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Training Data -->
+        <section class="debug-section">
+            <h2>📚 Training Data</h2>
+            <p>What posts trained each AI persona</p>
+
+            <div class="training-data-selector">
+                <label for="persona-select">Select AI Persona:</label>
+                <select id="persona-select" onchange="loadTrainingData()">
+                    <option value="">-- Choose persona --</option>
+                    {% for persona in personas %}
+                    <option value="{{ persona.username }}">{{ persona.display_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="training-data-results" class="training-data-results" style="display: none;">
+                <!-- Populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Debug Actions -->
+        <section class="debug-section">
+            <h2>🔧 Debug Actions</h2>
+            <div class="action-grid">
+                <button onclick="regenerateAllPersonas()" class="btn-action">
+                    🔄 Regenerate All AI Personas
+                </button>
+                <button onclick="retrainNetworks()" class="btn-action">
+                    🧠 Retrain All Neural Networks
+                </button>
+                <button onclick="clearAIComments()" class="btn-action btn-danger">
+                    🗑️ Clear All AI Comments
+                </button>
+                <button onclick="exportDebugData()" class="btn-action">
+                    💾 Export Debug Data
+                </button>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+.debug-panel {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.debug-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.debug-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.debug-section h2 {
+    margin-top: 0;
+    border-bottom: 3px solid #2c3e50;
+    padding-bottom: 0.5rem;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.personas-table {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+}
+
+.personas-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.personas-table th {
+    background: #f8f9fa;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.personas-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.persona-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.persona-emoji {
+    font-size: 1.5rem;
+}
+
+.persona-username {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.personality-cell {
+    max-width: 200px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.rating-badge {
+    background: #ffd700;
+    color: #333;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.btn-small {
+    padding: 0.4rem 0.8rem;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.btn-small:hover {
+    background: #5568d3;
+}
+
+.test-form {
+    margin-top: 1.5rem;
+}
+
+.test-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.test-form select {
+    width: 100%;
+    max-width: 500px;
+    padding: 0.75rem;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.relevance-results {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.nn-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.nn-card {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+}
+
+.nn-card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.nn-desc {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+
+.nn-architecture {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 6px;
+}
+
+.layer {
+    padding: 0.5rem 0.75rem;
+    background: #667eea;
+    color: white;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.arrow {
+    color: #999;
+    font-size: 1.2rem;
+}
+
+.nn-meta {
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 1rem;
+}
+
+.btn-visualize {
+    width: 100%;
+    padding: 0.75rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-visualize:hover {
+    background: #218838;
+}
+
+.color-mapping-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.color-mapping-card {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.color-preview {
+    height: 80px;
+    width: 100%;
+}
+
+.mapping-info {
+    padding: 1rem;
+}
+
+.personality-tags {
+    margin: 0.75rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.trait-tag {
+    padding: 0.25rem 0.5rem;
+    background: #e3f2fd;
+    color: #1976d2;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.color-features {
+    margin-top: 0.5rem;
+    color: #666;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-action {
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #667eea;
+    color: white;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-danger {
+    background: #dc3545;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.text-muted {
+    color: #999;
+}
+
+.text-center {
+    text-align: center;
+}
+</style>
+
+<script>
+function testRelevance() {
+    const postId = document.getElementById('test-post').value;
+    if (!postId) return;
+
+    fetch(`/api/ai/test-relevance/${postId}`)
+        .then(r => r.json())
+        .then(data => {
+            const resultsDiv = document.getElementById('relevance-results');
+            resultsDiv.style.display = 'block';
+
+            let html = '<h3>Relevance Scores:</h3><ul>';
+            for (const result of data.results) {
+                const status = result.would_comment ? '✅ WOULD COMMENT' : '❌ SKIP';
+                html += `<li><strong>${result.persona}</strong>: ${result.relevance.toFixed(2)} ${status}</li>`;
+            }
+            html += '</ul>';
+
+            resultsDiv.innerHTML = html;
+        });
+}
+
+function loadTrainingData() {
+    const username = document.getElementById('persona-select').value;
+    if (!username) return;
+
+    fetch(`/api/ai/training-data/${username}`)
+        .then(r => r.json())
+        .then(data => {
+            const resultsDiv = document.getElementById('training-data-results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        });
+}
+
+function visualizeNetwork(modelName) {
+    window.location.href = `/ai-network/visualize/${modelName}`;
+}
+
+function regenerateAllPersonas() {
+    if (confirm('Regenerate all AI personas? This will update system prompts.')) {
+        fetch('/api/ai/regenerate-all', {method: 'POST'})
+            .then(r => r.json())
+            .then(data => {
+                alert(`Regenerated ${data.count} personas`);
+                location.reload();
+            });
+    }
+}
+
+function retrainNetworks() {
+    if (confirm('Retrain all neural networks? This may take a while.')) {
+        fetch('/api/ai/retrain-networks', {method: 'POST'})
+            .then(r => r.json())
+            .then(data => {
+                alert(`Retrained ${data.count} networks`);
+                location.reload();
+            });
+    }
+}
+
+function clearAIComments() {
+    if (confirm('DELETE all AI comments? This cannot be undone!')) {
+        fetch('/api/ai/clear-comments', {method: 'POST'})
+            .then(r => r.json())
+            .then(data => {
+                alert(`Deleted ${data.count} comments`);
+                location.reload();
+            });
+    }
+}
+
+function exportDebugData() {
+    window.location.href = '/api/ai/export-debug-data';
+}
+</script>
+{% endblock %}

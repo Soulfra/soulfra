@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cringeproof Leaderboard - Top Improvers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .leaderboard-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #f0f2f5;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .leaderboard-list {
+            list-style: none;
+        }
+
+        .leaderboard-item {
+            display: grid;
+            grid-template-columns: 60px 1fr auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .leaderboard-item.top-1 {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+        }
+
+        .leaderboard-item.top-2 {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+            color: white;
+        }
+
+        .leaderboard-item.top-3 {
+            background: linear-gradient(135deg, #CD7F32, #B8860B);
+            color: white;
+        }
+
+        .rank {
+            font-size: 2em;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .rank.medal {
+            font-size: 3em;
+        }
+
+        .player-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .player-name {
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .player-archetype {
+            font-size: 0.95em;
+            opacity: 0.85;
+        }
+
+        .leaderboard-item.top-1 .player-archetype,
+        .leaderboard-item.top-2 .player-archetype,
+        .leaderboard-item.top-3 .player-archetype {
+            opacity: 0.95;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .leaderboard-item:not(.top-1):not(.top-2):not(.top-3) .stat {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.85;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .velocity-positive {
+            color: #dc3545;
+        }
+
+        .velocity-negative {
+            color: #28a745;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .empty-state p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link a:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .leaderboard-item {
+                grid-template-columns: 50px 1fr;
+                gap: 15px;
+            }
+
+            .stat {
+                grid-column: 2;
+            }
+
+            .leaderboard-card {
+                padding: 25px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-radius: 10px;
+            }
+
+            .tab.active {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Cringeproof Leaderboard</h1>
+            <p>Celebrating growth, not perfection</p>
+        </div>
+
+        <div class="leaderboard-card">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('improvers')">🚀 Top Improvers</button>
+                <button class="tab" onclick="switchTab('streaks')">🔥 Best Streaks</button>
+                <button class="tab" onclick="switchTab('all-time')">⭐ All-Time</button>
+            </div>
+
+            <!-- Top Improvers Tab -->
+            <div id="improvers-content" class="tab-content">
+                {% if improvers and improvers|length > 0 %}
+                <ul class="leaderboard-list">
+                    {% for player in improvers %}
+                    <li class="leaderboard-item {% if loop.index == 1 %}top-1{% elif loop.index == 2 %}top-2{% elif loop.index == 3 %}top-3{% endif %}">
+                        <div class="rank {% if loop.index <= 3 %}medal{% endif %}">
+                            {% if loop.index == 1 %}🥇
+                            {% elif loop.index == 2 %}🥈
+                            {% elif loop.index == 3 %}🥉
+                            {% else %}{{ loop.index }}
+                            {% endif %}
+                        </div>
+                        <div class="player-info">
+                            <div class="player-name">{{ player.display_name }}</div>
+                            <div class="player-archetype">
+                                {% if player.archetype %}
+                                🎭 {{ player.archetype }}
+                                {% else %}
+                                🎮 Player
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value velocity-{% if player.velocity < 0 %}negative{% else %}positive{% endif %}">
+                                {{ "%.1f"|format(player.velocity|abs) }}
+                            </span>
+                            <span class="stat-label">pts/week {% if player.velocity < 0 %}📉{% else %}📈{% endif %}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">{{ player.latest_score }}%</span>
+                            <span class="stat-label">Latest</span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <h3>No Rankings Yet</h3>
+                    <p>Play at least twice to appear on the leaderboard!</p>
+                    <a href="/cringeproof" class="btn">Play Now 🎮</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Best Streaks Tab (Coming Soon) -->
+            <div id="streaks-content" class="tab-content" style="display: none;">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔥</div>
+                    <h3>Streak Tracking Coming Soon!</h3>
+                    <p>We're building a feature to track consecutive improvement streaks.</p>
+                    <a href="/cringeproof" class="btn">Play Now 🎮</a>
+                </div>
+            </div>
+
+            <!-- All-Time Tab (Coming Soon) -->
+            <div id="all-time-content" class="tab-content" style="display: none;">
+                <div class="empty-state">
+                    <div class="empty-state-icon">⭐</div>
+                    <h3>All-Time Stats Coming Soon!</h3>
+                    <p>We're building a feature to track all-time best performances.</p>
+                    <a href="/cringeproof" class="btn">Play Now 🎮</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="/cringeproof">← Back to Game</a>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(`${tabName}-content`).style.display = 'block';
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

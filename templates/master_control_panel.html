@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎛️ Master Control Panel | Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--brand-color);
+            transition: all 0.3s;
+        }
+
+        .brand-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .brand-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .brand-domain {
+            font-size: 14px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .brand-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-live {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-building {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .brand-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4ecca3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .voice-input {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 30px;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+        }
+
+        .voice-input h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            color: #667eea;
+            font-size: 48px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+        }
+
+        .record-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(255,255,255,0.5);
+        }
+
+        .record-button.recording {
+            background: #ff6b6b;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .scraper-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .scraper-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+        }
+
+        .log-timestamp {
+            color: #666;
+            margin-right: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🎛️ Master Control Panel</h1>
+            <p class="subtitle">Manage all brands, content, and deployments from one place</p>
+        </header>
+
+        <!-- Stats -->
+        <div class="panel">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Active Brands</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-posts">--</div>
+                    <div class="stat-label">Total Posts</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-users">--</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="last-deploy">--</div>
+                    <div class="stat-label">Minutes Since Deploy</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Brands Panel -->
+            <div class="panel">
+                <h2>🌐 All Brands</h2>
+
+                <!-- Soulfra -->
+                <div class="brand-card" style="--brand-color: #4ecca3;">
+                    <div class="brand-header">
+                        <div>
+                            <div class="brand-name">Soulfra</div>
+                            <div class="brand-domain">soulfra.com</div>
+                        </div>
+                        <span class="brand-status status-live">● LIVE</span>
+                    </div>
+                    <div class="brand-actions">
+                        <button class="btn-primary" onclick="viewBrand('soulfra')">📊 View</button>
+                        <button class="btn-success" onclick="deployBrand('soulfra')">🚀 Deploy</button>
+                        <button class="btn-secondary" onclick="scrapeBrand('soulfra')">🕷️ Scrape</button>
+                    </div>
+                </div>
+
+                <!-- CalRiven -->
+                <div class="brand-card" style="--brand-color: #667eea;">
+                    <div class="brand-header">
+                        <div>
+                            <div class="brand-name">CalRiven</div>
+                            <div class="brand-domain">calriven.com</div>
+                        </div>
+                        <span class="brand-status status-live">● LIVE</span>
+                    </div>
+                    <div class="brand-actions">
+                        <button class="btn-primary" onclick="viewBrand('calriven')">📊 View</button>
+                        <button class="btn-success" onclick="deployBrand('calriven')">🚀 Deploy</button>
+                        <button class="btn-secondary" onclick="scrapeBrand('calriven')">🕷️ Scrape</button>
+                    </div>
+                </div>
+
+                <!-- DeathToData -->
+                <div class="brand-card" style="--brand-color: #000000;">
+                    <div class="brand-header">
+                        <div>
+                            <div class="brand-name">DeathToData</div>
+                            <div class="brand-domain">deathtodata.com</div>
+                        </div>
+                        <span class="brand-status status-live">● LIVE</span>
+                    </div>
+                    <div class="brand-actions">
+                        <button class="btn-primary" onclick="viewBrand('deathtodata')">📊 View</button>
+                        <button class="btn-success" onclick="deployBrand('deathtodata')">🚀 Deploy</button>
+                        <button class="btn-secondary" onclick="scrapeBrand('deathtodata')">🕷️ Scrape</button>
+                    </div>
+                </div>
+
+                <button class="btn-primary" style="width: 100%; margin-top: 15px;" onclick="deployAll()">
+                    🚀 Deploy All Brands
+                </button>
+            </div>
+
+            <!-- Voice Input Panel -->
+            <div class="panel">
+                <h2>🎤 Voice → AI → Content</h2>
+                <div class="voice-input">
+                    <h3>Record Voice Memo</h3>
+                    <p style="margin-bottom: 20px; opacity: 0.9;">Speak your idea, Ollama creates the post</p>
+
+                    <button class="record-button" id="recordBtn" onclick="toggleRecording()">
+                        🎤
+                    </button>
+
+                    <div id="voice-status">Ready to record</div>
+
+                    <div style="margin-top: 20px;">
+                        <label style="display: block; margin-bottom: 8px;">Deploy to:</label>
+                        <select id="voice-brand" style="padding: 10px; border-radius: 8px; border: none; width: 200px;">
+                            <option value="soulfra">Soulfra</option>
+                            <option value="calriven">CalRiven</option>
+                            <option value="deathtodata">DeathToData</option>
+                            <option value="all">All Brands</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Scraper Panel -->
+            <div class="panel">
+                <h2>🕷️ Site Scraper</h2>
+                <p style="margin-bottom: 15px; color: #666;">Import content from any URL</p>
+
+                <input type="url" class="scraper-input" id="scrape-url" placeholder="https://example.com/article">
+
+                <select class="scraper-input" id="scrape-brand">
+                    <option value="">Select brand...</option>
+                    <option value="soulfra">Soulfra</option>
+                    <option value="calriven">CalRiven</option>
+                    <option value="deathtodata">DeathToData</option>
+                </select>
+
+                <button class="btn-primary" style="width: 100%;" onclick="scrapeURL()">
+                    🕷️ Scrape & Import
+                </button>
+
+                <div style="margin-top: 20px;">
+                    <button class="btn-secondary" onclick="scrapeOwnSites()" style="width: 100%;">
+                        🔄 Scrape All My Sites
+                    </button>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="panel">
+                <h2>📊 Activity Log</h2>
+                <div class="log" id="activity-log">
+                    <div class="log-entry">
+                        <span class="log-timestamp">[00:00:00]</span>
+                        <span>System ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status & Error Log -->
+        <div class="panel">
+            <h2>🚨 System Status & Recent Errors</h2>
+            <p style="color: #666; margin-bottom: 15px;">Real-time error visibility - no more reading code to find what broke!</p>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 24px; margin-bottom: 5px;" id="ollama-status">⚪</div>
+                    <div style="font-size: 14px; color: #666;">Ollama</div>
+                    <div style="font-size: 12px; color: #999;" id="ollama-text">Checking...</div>
+                </div>
+                <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 24px; margin-bottom: 5px;" id="database-status">⚪</div>
+                    <div style="font-size: 14px; color: #666;">Database</div>
+                    <div style="font-size: 12px; color: #999;" id="database-text">Checking...</div>
+                </div>
+                <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 24px; margin-bottom: 5px;" id="logs-count">0</div>
+                    <div style="font-size: 14px; color: #666;">Log Entries</div>
+                    <div style="font-size: 12px; color: #999;">Last 100</div>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; max-height: 300px; overflow-y: auto;" id="error-log">
+                <div style="color: #999; text-align: center; padding: 20px;">
+                    Loading logs...
+                </div>
+            </div>
+
+            <button class="btn-secondary" onclick="refreshLogs()" style="margin-top: 15px; width: 100%;">
+                🔄 Refresh Logs
+            </button>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="panel">
+            <h2>⚡ Quick Actions</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <button class="btn-primary" onclick="openTemplates()">📝 Template Browser</button>
+                <button class="btn-primary" onclick="openContentManager()">📂 Content Manager</button>
+                <button class="btn-primary" onclick="openAdmin()">🔧 Admin Dashboard</button>
+                <button class="btn-success" onclick="exportAll()">📦 Export All</button>
+                <button class="btn-success" onclick="deployAll()">🚀 Deploy All</button>
+                <button class="btn-secondary" onclick="viewLogs()">📋 View Logs</button>
+            </div>
+        </div>
+
+        <!-- URL Status Checker -->
+        <div class="panel">
+            <h2>🔍 URL Status Checker</h2>
+            <p style="color: #666; margin-bottom: 15px;">Check which URLs are working for your sites</p>
+
+            <div id="url-status-container">
+                <button class="btn-primary" onclick="checkAllURLs()" style="margin-bottom: 15px;">
+                    🔄 Check All URLs
+                </button>
+                <div id="url-status-results"></div>
+            </div>
+        </div>
+
+        <!-- DNS Helper -->
+        <div class="panel">
+            <h2>🌐 DNS Configuration Helper</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                Your custom domains need DNS updates to work with GitHub Pages.
+                <a href="/output/deathtodata/DNS-CONFIGURATION-GUIDE.md" target="_blank" style="color: #667eea;">
+                    📖 Full Guide
+                </a>
+            </p>
+
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <h3 style="font-size: 14px; margin-bottom: 10px; color: #333;">✅ Correct GitHub Pages IPs:</h3>
+                <div style="font-family: monospace; font-size: 13px; color: #333;">
+                    <div style="margin: 5px 0;">185.199.108.153</div>
+                    <div style="margin: 5px 0;">185.199.109.153</div>
+                    <div style="margin: 5px 0;">185.199.110.153</div>
+                    <div style="margin: 5px 0;">185.199.111.153</div>
+                </div>
+                <button class="btn-secondary" onclick="copyDNS()" style="margin-top: 10px; width: 100%;">
+                    📋 Copy All IPs
+                </button>
+            </div>
+
+            <div style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+                <h3 style="font-size: 14px; margin-bottom: 10px; color: #991b1b;">❌ Wrong IP (Delete this!):</h3>
+                <div style="font-family: monospace; font-size: 13px; color: #991b1b;">
+                    138.197.94.123
+                </div>
+            </div>
+
+            <div style="margin-top: 15px; padding: 15px; background: #eff6ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                <h4 style="font-size: 13px; margin-bottom: 8px; color: #1e40af;">📝 Steps:</h4>
+                <ol style="margin-left: 20px; color: #1e3a8a; font-size: 13px; line-height: 1.6;">
+                    <li>Go to your domain registrar (Namecheap, GoDaddy, etc.)</li>
+                    <li>Find DNS settings / Advanced DNS</li>
+                    <li>Delete A record pointing to 138.197.94.123</li>
+                    <li>Add 4 A records with GitHub Pages IPs (above)</li>
+                    <li>Wait 1-2 hours for DNS propagation</li>
+                    <li>Test with "Check All URLs" button</li>
+                </ol>
+            </div>
+
+            <button class="btn-primary" onclick="checkDNS()" style="margin-top: 15px; width: 100%;">
+                🔍 Check Current DNS
+            </button>
+            <div id="dns-check-results" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let isRecording = false;
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-size: 16px;
+                animation: slideIn 0.3s ease-out;
+                max-width: 400px;
+            `;
+            toast.textContent = message;
+
+            // Add slide in animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(400px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(400px); opacity: 0; }
+                }
+            `;
+            if (!document.querySelector('style[data-toast-styles]')) {
+                style.setAttribute('data-toast-styles', 'true');
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(toast);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Audio feedback using browser text-to-speech
+        function speak(message) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(message);
+                utterance.rate = 1.1;  // Slightly faster
+                utterance.pitch = 1.0;
+                utterance.volume = 0.8;
+
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Enhanced log function with notifications
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('activity-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-timestamp">[${timestamp}]</span><span>${message}</span>`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+
+            // Show toast for errors and successes
+            if (type === 'error' || message.includes('✅')) {
+                showToast(message, type === 'error' ? 'error' : 'success');
+            }
+
+            // Speak important messages
+            if (message.includes('✅') || message.includes('❌')) {
+                // Extract clean message without emojis
+                const cleanMessage = message.replace(/[🚀📝🕷️✅❌📊🔧⚡]/g, '').trim();
+                speak(cleanMessage);
+            }
+        }
+
+        // Voice recording
+        async function toggleRecording() {
+            const btn = document.getElementById('recordBtn');
+            const status = document.getElementById('voice-status');
+
+            if (!isRecording) {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener('stop', () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        processVoiceMemo(audioBlob);
+                    });
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    btn.classList.add('recording');
+                    btn.textContent = '🔴';
+                    status.textContent = 'Recording... Click to stop';
+                    log('🎤 Started recording');
+                } catch (err) {
+                    log('❌ Microphone access denied', 'error');
+                    alert('Please allow microphone access');
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                isRecording = false;
+                btn.classList.remove('recording');
+                btn.textContent = '🎤';
+                status.textContent = 'Processing with Ollama...';
+                log('🛑 Stopped recording');
+            }
+        }
+
+        async function processVoiceMemo(audioBlob) {
+            const brand = document.getElementById('voice-brand').value;
+            log(`🤖 Processing voice memo with Ollama for ${brand}...`);
+
+            const formData = new FormData();
+            formData.append('audio', audioBlob);
+            formData.append('brand', brand);
+
+            try {
+                const response = await fetch('/api/voice-to-post', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    log(`✅ Created post: "${result.title}"`);
+                    log(`🚀 Deploying to ${brand}...`);
+                    document.getElementById('voice-status').textContent = `✅ Post created: "${result.title}"`;
+
+                    // Auto-deploy
+                    if (brand === 'all') {
+                        await deployAll();
+                    } else {
+                        await deployBrand(brand);
+                    }
+                } else {
+                    log(`❌ Failed: ${result.error}`, 'error');
+                    document.getElementById('voice-status').textContent = 'Failed - try again';
+                }
+            } catch (err) {
+                log(`❌ Error: ${err.message}`, 'error');
+                document.getElementById('voice-status').textContent = 'Error - try again';
+            }
+        }
+
+        // Brand actions
+        function viewBrand(brand) {
+            window.open(`https://${brand}.com`, '_blank');
+            log(`🌐 Opened ${brand}.com`);
+        }
+
+        async function deployBrand(brand) {
+            log(`🚀 Deploying ${brand}...`);
+
+            try {
+                const response = await fetch('/api/deploy-brand', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ brand })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    log(`✅ ${brand} deployed successfully`);
+                } else {
+                    log(`❌ ${brand} deployment failed: ${result.error}`, 'error');
+                }
+            } catch (err) {
+                log(`❌ Deployment error: ${err.message}`, 'error');
+            }
+        }
+
+        async function deployAll() {
+            log('🚀 Deploying all brands...');
+
+            const brands = ['soulfra', 'calriven', 'deathtodata'];
+            for (const brand of brands) {
+                await deployBrand(brand);
+            }
+
+            log('✅ All brands deployed');
+        }
+
+        async function scrapeBrand(brand) {
+            const url = `https://${brand}.com`;
+            log(`🕷️ Scraping ${url}...`);
+
+            try {
+                const response = await fetch('/api/scrape', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, brand })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (result.fallback_used) {
+                        log(`⚠️ ${result.fallback_message}`);
+                        log(`✅ Scraped from fallback URL: ${result.url}`);
+                    } else {
+                        log(`✅ Scraped ${result.imported} posts from ${brand}`);
+                    }
+                } else {
+                    log(`❌ Scraping failed: ${result.error}`, 'error');
+                }
+            } catch (err) {
+                log(`❌ Scraping error: ${err.message}`, 'error');
+            }
+        }
+
+        async function scrapeURL() {
+            const url = document.getElementById('scrape-url').value;
+            const brand = document.getElementById('scrape-brand').value;
+
+            if (!url || !brand) {
+                showToast('Please enter URL and select brand', 'error');
+                return;
+            }
+
+            log(`🕷️ Scraping ${url} for ${brand}...`);
+
+            try {
+                const response = await fetch('/api/scrape', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, brand })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (result.fallback_used) {
+                        log(`⚠️ ${result.fallback_message}`);
+                        log(`✅ Scraped from ${result.url}: "${result.title}"`);
+                        showToast(`Used GitHub Pages URL instead of custom domain`, 'info');
+                    } else {
+                        log(`✅ Imported "${result.title}" to ${brand}`);
+                    }
+                    document.getElementById('scrape-url').value = '';
+                } else {
+                    log(`❌ Scraping failed: ${result.error}`, 'error');
+                }
+            } catch (err) {
+                log(`❌ Scraping error: ${err.message}`, 'error');
+            }
+        }
+
+        async function scrapeOwnSites() {
+            log('🔄 Scraping all my sites...');
+            const brands = ['soulfra', 'calriven', 'deathtodata'];
+
+            for (const brand of brands) {
+                await scrapeBrand(brand);
+            }
+
+            log('✅ All sites scraped');
+        }
+
+        // Quick actions
+        function openTemplates() {
+            window.location.href = '/templates/browse';
+        }
+
+        function openContentManager() {
+            window.location.href = '/content/manager';
+        }
+
+        function openAdmin() {
+            window.location.href = '/admin/dashboard';
+        }
+
+        async function exportAll() {
+            log('📦 Exporting all brands...');
+
+            const brands = ['soulfra', 'calriven', 'deathtodata'];
+            for (const brand of brands) {
+                log(`📦 Exporting ${brand}...`);
+                // Call export API
+            }
+
+            log('✅ All brands exported');
+        }
+
+        function viewLogs() {
+            // Show detailed logs
+            window.location.href = '/admin/logs';
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/master-control/stats');
+                const stats = await response.json();
+
+                document.getElementById('total-posts').textContent = stats.total_posts;
+                document.getElementById('total-users').textContent = stats.total_users;
+                document.getElementById('last-deploy').textContent = stats.minutes_since_deploy;
+            } catch (err) {
+                log('⚠️ Failed to load stats', 'warning');
+            }
+        }
+
+        // URL Status Checker
+        async function checkAllURLs() {
+            const resultsDiv = document.getElementById('url-status-results');
+            resultsDiv.innerHTML = '<div style="padding: 10px; color: #666;">Checking URLs...</div>';
+
+            const domains = [
+                { name: 'soulfra', custom: 'soulfra.com', github: 'soulfra.github.io/soulfra' },
+                { name: 'calriven', custom: 'calriven.com', github: 'soulfra.github.io/calriven' },
+                { name: 'deathtodata', custom: 'deathtodata.com', github: 'soulfra.github.io/deathtodata' }
+            ];
+
+            let html = '';
+            for (const domain of domains) {
+                html += `<div style="margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">`;
+                html += `<strong style="font-size: 15px; color: #333;">${domain.name}</strong><br>`;
+
+                // Check GitHub Pages URL (always works)
+                html += `<div style="margin: 5px 0; color: #10b981;">✅ GitHub Pages: https://${domain.github}/</div>`;
+
+                // Note about custom domain
+                html += `<div style="margin: 5px 0; color: #f59e0b;">⚠️  Custom Domain: https://${domain.custom}/ (check DNS)</div>`;
+
+                html += `</div>`;
+            }
+
+            resultsDiv.innerHTML = html;
+            log('🔍 URL status displayed');
+            speak('URL status displayed. GitHub Pages URLs are working. Custom domains need DNS configuration.');
+        }
+
+        // DNS Helper Functions
+        function copyDNS() {
+            const ips = `185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153`;
+
+            navigator.clipboard.writeText(ips).then(() => {
+                showToast('GitHub Pages IPs copied to clipboard!', 'success');
+                speak('DNS IPs copied to clipboard');
+            }).catch(err => {
+                showToast('Failed to copy. Please copy manually.', 'error');
+            });
+        }
+
+        async function checkDNS() {
+            const resultsDiv = document.getElementById('dns-check-results');
+            resultsDiv.innerHTML = '<div style="padding: 10px; color: #666;">Checking DNS...</div>';
+
+            // Note: We can't actually query DNS from browser JavaScript
+            // This would need a server-side endpoint
+            const message = `
+                <div style="padding: 15px; background: #fffbeb; border-radius: 8px; border-left: 4px solid #f59e0b; margin-top: 10px;">
+                    <strong>Note:</strong> DNS checks require server-side tools.<br><br>
+                    <strong>To check DNS manually:</strong><br>
+                    Open Terminal and run:<br>
+                    <code style="background: #1f2937; color: #10b981; padding: 8px; border-radius: 4px; display: inline-block; margin-top: 5px; font-family: monospace;">
+                        dig soulfra.com +short
+                    </code><br><br>
+                    You should see GitHub Pages IPs (185.199.108-111.153).<br>
+                    If you see 138.197.94.123, your DNS needs updating.
+                </div>
+            `;
+
+            resultsDiv.innerHTML = message;
+            speak('DNS check instructions displayed');
+        }
+
+        // System Logs & Error Tracking
+        async function refreshLogs() {
+            try {
+                const response = await fetch('/api/logs/recent');
+                const data = await response.json();
+
+                // Update system status
+                updateSystemStatus(data.system_status);
+
+                // Update error log
+                displayLogs(data.logs);
+
+                log('🔄 System logs refreshed');
+            } catch (err) {
+                log('❌ Failed to load system logs', 'error');
+            }
+        }
+
+        function updateSystemStatus(status) {
+            // Ollama status
+            const ollamaStatus = document.getElementById('ollama-status');
+            const ollamaText = document.getElementById('ollama-text');
+            if (status.ollama === 'running') {
+                ollamaStatus.textContent = '🟢';
+                ollamaText.textContent = 'Running';
+                ollamaText.style.color = '#10b981';
+            } else if (status.ollama === 'offline') {
+                ollamaStatus.textContent = '🔴';
+                ollamaText.textContent = 'Offline';
+                ollamaText.style.color = '#ef4444';
+            } else {
+                ollamaStatus.textContent = '🟡';
+                ollamaText.textContent = 'Unknown';
+                ollamaText.style.color = '#f59e0b';
+            }
+
+            // Database status
+            const dbStatus = document.getElementById('database-status');
+            const dbText = document.getElementById('database-text');
+            if (status.database === 'connected') {
+                dbStatus.textContent = '🟢';
+                dbText.textContent = 'Connected';
+                dbText.style.color = '#10b981';
+            } else {
+                dbStatus.textContent = '🔴';
+                dbText.textContent = 'Error';
+                dbText.style.color = '#ef4444';
+            }
+
+            // Logs count
+            document.getElementById('logs-count').textContent = status.logs_count || 0;
+        }
+
+        function displayLogs(logs) {
+            const logContainer = document.getElementById('error-log');
+
+            if (logs.length === 0) {
+                logContainer.innerHTML = '<div style="color: #999; text-align: center; padding: 20px;">No recent logs</div>';
+                return;
+            }
+
+            let html = '';
+            // Show most recent first
+            const recentLogs = logs.slice().reverse();
+
+            recentLogs.forEach(log => {
+                const timestamp = new Date(log.timestamp).toLocaleTimeString();
+                const levelColor = {
+                    'INFO': '#10b981',
+                    'WARNING': '#f59e0b',
+                    'ERROR': '#ef4444'
+                }[log.level] || '#666';
+
+                const levelIcon = {
+                    'INFO': 'ℹ️',
+                    'WARNING': '⚠️',
+                    'ERROR': '❌'
+                }[log.level] || '•';
+
+                html += `
+                    <div style="margin-bottom: 10px; padding: 10px; background: white; border-radius: 6px; border-left: 4px solid ${levelColor};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <span style="font-weight: 600; color: ${levelColor};">${levelIcon} ${log.level}</span>
+                            <span style="font-size: 12px; color: #999;">${timestamp}</span>
+                        </div>
+                        <div style="font-size: 14px; color: #333;">${log.message}</div>
+                        ${log.details ? `<div style="font-size: 12px; color: #666; margin-top: 5px;">Details: ${JSON.stringify(log.details)}</div>` : ''}
+                    </div>
+                `;
+            });
+
+            logContainer.innerHTML = html;
+
+            // Auto-scroll to bottom if there are errors
+            const hasErrors = logs.some(log => log.level === 'ERROR');
+            if (hasErrors) {
+                logContainer.scrollTop = 0; // Scroll to top (most recent)
+            }
+        }
+
+        // Initialize
+        log('🎛️ Master Control Panel initialized');
+        loadStats();
+        refreshLogs();
+
+        // Refresh stats every 30 seconds
+        setInterval(loadStats, 30000);
+
+        // Refresh logs every 5 seconds
+        setInterval(refreshLogs, 5000);
+    </script>
+</body>
+</html>

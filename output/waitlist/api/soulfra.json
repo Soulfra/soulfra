@@ -1,0 +1,10 @@
+{
+  "domain_name": "soulfra",
+  "is_launched": false,
+  "signups": 2,
+  "days_until": 90,
+  "launch_date": "2026-04-09T13:28:16.012387+00:00",
+  "acceleration": 0,
+  "instant_threshold": 900,
+  "progress_pct": 0.2222222222222222
+}

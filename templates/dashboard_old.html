@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+
+{% block title %}Live Training Dashboard - Soulfra{% endblock %}
+
+{% block head %}
+<style>
+    .dashboard {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .dashboard-header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+    }
+
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .stat-label {
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
+    .networks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .network-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.2s;
+    }
+
+    .network-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .network-name {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .network-architecture {
+        font-family: monospace;
+        background: #f5f5f5;
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+    }
+
+    .network-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .network-stat {
+        text-align: center;
+    }
+
+    .network-stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .network-stat-label {
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .activity-feed {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .activity-item {
+        padding: 0.75rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-correct {
+        background-color: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+
+    .activity-incorrect {
+        background-color: #f8d7da;
+        border-left: 4px solid #dc3545;
+    }
+
+    .activity-network {
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .activity-time {
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    .contributors-board {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1.5rem;
+    }
+
+    .contributor-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .contributor-rank {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+        min-width: 50px;
+    }
+
+    .contributor-count {
+        background: #667eea;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+    .chart-mini {
+        height: 60px;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+    }
+
+    .chart-bar {
+        flex: 1;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px 2px 0 0;
+        min-height: 2px;
+        transition: opacity 0.2s;
+    }
+
+    .chart-bar:hover {
+        opacity: 0.7;
+    }
+
+    .export-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .export-btn:hover {
+        background: #218838;
+    }
+
+    .live-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #28a745;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+        margin-right: 0.5rem;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1><span class="live-indicator"></span>Live Training Dashboard</h1>
+        <p>Like r/place but for AI training - Everyone builds intelligence together!</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ total_networks }}</div>
+            <div class="stat-label">Neural Networks</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ activity|length }}</div>
+            <div class="stat-label">Recent Training Events</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ contributors|length }}</div>
+            <div class="stat-label">Contributors</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{% if activity %}{{ activity|length }}{% else %}0{% endif %}</div>
+            <div class="stat-label">Active Sessions</div>
+        </div>
+    </div>
+
+    <h2>🧠 Neural Networks</h2>
+    <div class="networks-grid">
+        {% for network in networks %}
+        <div class="network-card">
+            <div class="network-name">{{ network.name }}</div>
+            <div style="color: #666; font-size: 0.9rem;">{{ network.description }}</div>
+            <div class="network-architecture">{{ network.architecture }}</div>
+
+            {% if network.accuracy_chart %}
+            <div class="chart-mini">
+                {% for acc in network.accuracy_chart %}
+                <div class="chart-bar" style="height: {{ (acc * 100)|int }}%;"></div>
+                {% endfor %}
+            </div>
+            <div style="text-align: center; font-size: 0.7rem; color: #999; margin-top: 0.25rem;">
+                Accuracy History (last {{ network.accuracy_chart|length }} epochs)
+            </div>
+            {% endif %}
+
+            <div class="network-stats">
+                <div class="network-stat">
+                    <div class="network-stat-value">{{ (network.accuracy * 100)|round(2) }}%</div>
+                    <div class="network-stat-label">Accuracy</div>
+                </div>
+                <div class="network-stat">
+                    <div class="network-stat-value">{{ network.loss|round(4) }}</div>
+                    <div class="network-stat-label">Loss</div>
+                </div>
+                <div class="network-stat">
+                    <div class="network-stat-value">{{ network.epochs }}</div>
+                    <div class="network-stat-label">Epochs</div>
+                </div>
+            </div>
+
+            <button class="export-btn" onclick="exportNetwork('{{ network.name }}')">
+                📦 Export Network
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+        <!-- Activity Feed -->
+        <div>
+            <h2>📊 Live Training Activity</h2>
+            <div class="activity-feed">
+                {% if activity %}
+                    {% for act in activity[:20] %}
+                    <div class="activity-item {% if act.correct %}activity-correct{% else %}activity-incorrect{% endif %}">
+                        <div>
+                            <span class="activity-network">{{ act.network }}</span>
+                            <span style="color: #666;">→ {{ act.prediction }}</span>
+                            <span style="margin-left: 0.5rem;">
+                                {% if act.correct %}✅ Correct{% else %}❌ Wrong{% endif %}
+                            </span>
+                        </div>
+                        <div class="activity-time">{{ act.timestamp }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center; color: #999;">No training activity yet. <a href="/train?mode=colors">Start training!</a></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Contributors Leaderboard -->
+        <div>
+            <h2>🏆 Top Contributors</h2>
+            <div class="contributors-board">
+                {% if contributors %}
+                    {% for contrib in contributors %}
+                    <div class="contributor-item">
+                        <div style="display: flex; align-items: center;">
+                            <div class="contributor-rank">#{loop.index}</div>
+                            <div>{{ contrib.username }}</div>
+                        </div>
+                        <div class="contributor-count">{{ contrib.contributions }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center; color: #999;">No contributors yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 3rem 0 2rem; padding: 2rem; background: #f8f9fa; border-radius: 8px;">
+        <h2 style="color: #667eea;">🎨 Collaborative AI Training</h2>
+        <p style="font-size: 1.1rem; color: #666;">
+            Like r/place where everyone places pixels, here everyone trains the AI together!
+        </p>
+        <a href="/train?mode=colors" style="
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        ">Start Training →</a>
+    </div>
+</div>
+
+<script>
+// Export network function
+function exportNetwork(networkName) {
+    alert(`Exporting ${networkName}...\\n\\nRun this in terminal:\\n\\npython3 publish.py export ${networkName}`);
+}
+
+// Auto-refresh dashboard every 5 seconds (like r/place live updates)
+setTimeout(function() {
+    location.reload();
+}, 5000);
+</script>
+{% endblock %}

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CringeProof - Live Questions & Top Plays</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #FF1B6B 0%, #45CAFF 100%);
+            min-height: 100vh;
+        }
+
+        /* Hero Section with Carousel */
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .carousel-container {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .carousel-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* QR Code Quickstart */
+        .qr-quickstart {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .qr-quickstart h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .qr-quickstart img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+        }
+
+        .qr-quickstart p {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 10px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat {
+            text-align: center;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 60px 20px;
+            text-align: center;
+            background: white;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+
+        .cta-button.primary {
+            background: linear-gradient(135deg, #FF1B6B 0%, #45CAFF 100%);
+            color: white;
+        }
+
+        .cta-button.secondary {
+            background: white;
+            color: #2d3748;
+            border: 2px solid #e2e8f0;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+            }
+
+            .carousel-container {
+                height: 400px;
+            }
+
+            .qr-quickstart {
+                bottom: 20px;
+                right: 20px;
+                padding: 15px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+        }
+
+        /* Hide QR on mobile since they're already on mobile */
+        @media (max-width: 768px) {
+            .qr-quickstart {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section with Widget Carousel -->
+    <div class="hero">
+        <h1 class="hero-title">🎮 CringeProof Live</h1>
+        <p class="hero-subtitle">Top plays, questions, and ideas updating in real-time</p>
+
+        <div class="carousel-container">
+            <iframe src="/widget/carousel?auto_rotate=true&rotation_interval=30000&live=true"></iframe>
+        </div>
+    </div>
+
+    <!-- Live Stats -->
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-value">{{ stats.questions_today or 0 }}</div>
+            <div class="stat-label">Questions Today</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">{{ stats.players_online or 0 }}</div>
+            <div class="stat-label">Players Online</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">{{ stats.ideas_shared or 0 }}</div>
+            <div class="stat-label">Ideas Shared</div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2>Jump Into the Action</h2>
+        <p>
+            Choose your district and start playing. No downloads, no apps, just pure interaction.
+            Every choice you make trains the AI and earns you rewards.
+        </p>
+
+        <div class="cta-buttons">
+            <a href="/cringeproof/narrative/soulfra" class="cta-button primary">
+                🌌 Start Quiz
+            </a>
+            <a href="/feed" class="cta-button secondary">
+                🏪 Browse Feed
+            </a>
+            <a href="/voice" class="cta-button secondary">
+                🎨 Share Idea
+            </a>
+            {% if not session.get('user_id') %}
+            <a href="/login" class="cta-button secondary">
+                🔐 Sign In
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- QR Code Quickstart (Desktop Only) -->
+    <div class="qr-quickstart">
+        <h3>📱 Mobile Quickstart</h3>
+        <img id="qrCode" src="" alt="QR Code">
+        <p>Scan to jump in from your phone</p>
+    </div>
+
+    <script>
+        // Generate QR code for current page
+        const currentUrl = window.location.href;
+        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentUrl)}`;
+        document.getElementById('qrCode').src = qrApiUrl;
+
+        // Listen for widget launch messages from carousel
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'widget_launch') {
+                // User clicked launch in carousel
+                const widget = event.data.widget_id;
+                const actionUrls = {
+                    'universe': '/cringeproof/narrative/soulfra',
+                    'arena': '/cringeproof/create-room',
+                    'marketplace': '/feed',
+                    'immersion': '/voice'
+                };
+
+                if (actionUrls[widget]) {
+                    window.location.href = actionUrls[widget];
+                }
+            }
+        });
+
+        // Update stats every 30 seconds
+        setInterval(() => {
+            fetch('/api/cringeproof/live-stats')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelectorAll('.stat-value')[0].textContent = data.questions_today;
+                        document.querySelectorAll('.stat-value')[1].textContent = data.players_online;
+                        document.querySelectorAll('.stat-value')[2].textContent = data.ideas_shared;
+                    }
+                })
+                .catch(err => console.log('Stats update failed:', err));
+        }, 30000);
+    </script>
+</body>
+</html>

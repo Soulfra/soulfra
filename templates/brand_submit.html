@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Brand Theme - Soulfra Brand Vault{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="brand-submit-page">
+        <header class="submit-header">
+            <h1>📦 Submit Brand Theme</h1>
+            <p class="subtitle">Share your brand with the community - Auto-reviewed by neural networks in seconds</p>
+        </header>
+
+        <div class="submit-intro">
+            <h2>How It Works</h2>
+            <div class="workflow-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Create Brand</h3>
+                        <p>Build your brand theme locally using Soulfra</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Export ZIP</h3>
+                        <p>Run: <code>python3 brand_theme_manager.py export my-brand</code></p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Upload Here</h3>
+                        <p>Fill out form below and upload your brand ZIP</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>ML Review</h3>
+                        <p>Neural network auto-checks quality (instant results)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quality-requirements">
+            <h2>Quality Requirements</h2>
+            <p>Neural network checks for:</p>
+            <ul>
+                <li><strong>Wordmap Consistency (40%):</strong> Minimum 20 unique words, brand-specific vocabulary</li>
+                <li><strong>Emoji Patterns (30%):</strong> At least 3 consistent emoji with meaningful usage</li>
+                <li><strong>Content Quality (30%):</strong> Minimum 3 example posts (100+ words each)</li>
+                <li><strong>Images (Bonus):</strong> Logo and banner images (+10 points)</li>
+                <li><strong>License (Required):</strong> Valid LICENSE.txt file included</li>
+            </ul>
+            <div class="score-guide">
+                <div class="score-range approved">
+                    <strong>✅ 80-100:</strong> Auto-approved (instant)
+                </div>
+                <div class="score-range review">
+                    <strong>⚠️  70-79:</strong> Manual review (24-48 hours)
+                </div>
+                <div class="score-range rejected">
+                    <strong>❌ 0-69:</strong> Rejected (with suggestions)
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="submit-form">
+            <div class="form-section">
+                <h2>Brand Information</h2>
+
+                <div class="form-group">
+                    <label for="brand_name">Brand Name *</label>
+                    <input type="text" id="brand_name" name="brand_name" required
+                           placeholder="CalRiven, Ocean Dreams, etc.">
+                    <small>The display name for your brand</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="brand_slug">Brand Slug *</label>
+                    <input type="text" id="brand_slug" name="brand_slug" required
+                           pattern="[a-z0-9-]+"
+                           placeholder="calriven, ocean-dreams, etc.">
+                    <small>URL-friendly identifier (lowercase, hyphens only)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4"
+                              placeholder="Describe your brand's personality, use cases, and unique features..."></textarea>
+                    <small>Help users understand when to use this brand</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="license_type">License Type *</label>
+                    <select id="license_type" name="license_type" required>
+                        <option value="cc0">CC0 - Public Domain (no restrictions)</option>
+                        <option value="cc-by">CC-BY - Attribution Required</option>
+                        <option value="licensed">Licensed - Restricted Use</option>
+                        <option value="proprietary">Proprietary - All Rights Reserved</option>
+                    </select>
+                    <small>How can others use your brand?</small>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Upload Brand ZIP</h2>
+
+                <div class="form-group">
+                    <label for="brand_zip">Brand ZIP File *</label>
+                    <input type="file" id="brand_zip" name="brand_zip" accept=".zip" required>
+                    <small>
+                        Must contain: brand.yaml, wordmap.json, emoji_patterns.json, stories/, LICENSE.txt
+                        <br>
+                        Generate with: <code>python3 brand_theme_manager.py export your-brand</code>
+                    </small>
+                </div>
+
+                <div class="zip-checklist">
+                    <h3>Required Files:</h3>
+                    <ul>
+                        <li>✅ brand.yaml - Brand metadata</li>
+                        <li>✅ ml_models/wordmap.json - Vocabulary patterns</li>
+                        <li>✅ ml_models/emoji_patterns.json - Emoji usage</li>
+                        <li>✅ stories/ - Example posts (3+ posts)</li>
+                        <li>✅ LICENSE.txt - License terms</li>
+                        <li>⭐ images/logo.png - Logo (recommended)</li>
+                        <li>⭐ images/banner.png - Banner (recommended)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    🚀 Submit for Review
+                </button>
+                <a href="/brands" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+
+        <div class="submit-footer">
+            <h3>What Happens Next?</h3>
+            <ul>
+                <li><strong>Instant ML Review:</strong> Neural network checks quality in seconds</li>
+                <li><strong>Auto-Approval (80+):</strong> Your brand goes live immediately</li>
+                <li><strong>Manual Review (70-79):</strong> Admin reviews within 24-48 hours</li>
+                <li><strong>Rejection (&lt;70):</strong> Get specific suggestions to improve and resubmit</li>
+            </ul>
+            <p class="compare-note">
+                <strong>Like Storyteller's Vault</strong> for RPG content, but with ML instead of humans!
+                Quality gates ensure consistency without the wait.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.brand-submit-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.submit-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.submit-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.submit-intro {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.submit-intro h2 {
+    margin-top: 0;
+    color: white;
+}
+
+.workflow-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.step {
+    text-align: center;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.step h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.step p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.step code {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.quality-requirements {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.quality-requirements h2 {
+    margin-top: 0;
+}
+
+.quality-requirements ul {
+    margin: 1rem 0;
+}
+
+.quality-requirements li {
+    margin-bottom: 0.5rem;
+}
+
+.score-guide {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.score-range {
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.score-range.approved {
+    background: #d4edda;
+    border: 2px solid #28a745;
+}
+
+.score-range.review {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+}
+
+.score-range.rejected {
+    background: #f8d7da;
+    border: 2px solid #dc3545;
+}
+
+.submit-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #333;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-group input[type="file"] {
+    padding: 0.5rem;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.form-group small code {
+    background: #f1f3f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.zip-checklist {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.zip-checklist h3 {
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+.zip-checklist ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+}
+
+.zip-checklist li {
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    padding: 1rem 2rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #666;
+    font-weight: 600;
+    transition: border-color 0.2s;
+}
+
+.btn-cancel:hover {
+    border-color: #999;
+}
+
+.submit-footer {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.submit-footer h3 {
+    margin-top: 0;
+}
+
+.submit-footer ul {
+    margin: 1rem 0;
+}
+
+.submit-footer li {
+    margin-bottom: 0.5rem;
+}
+
+.compare-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-left: 4px solid #667eea;
+    border-radius: 4px;
+}
+</style>
+{% endblock %}

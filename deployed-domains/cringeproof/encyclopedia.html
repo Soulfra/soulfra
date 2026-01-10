@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encyclopedia - Your Knowledge Base | CringeProof</title>
+<meta name="description" content="Track your intellectual journey. See your Word of the Year, unlock features, and explore your evolving vocabulary.">
+
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff006e">
+
+<link rel="stylesheet" href="./css/soulfra.css">
+<link rel="stylesheet" href="popup-ui.css">
+<style>
+body {
+    background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+.encyclopedia-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero-section {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(189, 178, 255, 0.1));
+    border: 3px solid #ff006e;
+    border-radius: 12px;
+}
+
+.hero-section h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ff006e, #bdb2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    font-size: 1.5rem;
+    color: #ffe5ec;
+    opacity: 0.9;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 3px solid #bdb2ff;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: #ff006e;
+    background: rgba(255, 0, 110, 0.1);
+}
+
+.stat-value {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #ff006e;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1.25rem;
+    color: #ffe5ec;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.word-of-year {
+    background: linear-gradient(135deg, #ff006e, #bdb2ff);
+    border: 4px solid #000;
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 4rem;
+    box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.5);
+}
+
+.word-of-year h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #000;
+}
+
+.word-display {
+    font-size: 6rem;
+    font-weight: 900;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 1rem 0;
+    text-shadow: 4px 4px 0 rgba(255, 255, 255, 0.3);
+}
+
+.word-context {
+    font-size: 1.25rem;
+    color: #1a1a2e;
+    font-weight: 600;
+}
+
+.progression-section {
+    margin-bottom: 4rem;
+}
+
+.level-display {
+    background: rgba(255, 255, 255, 0.05);
+    border: 3px solid #ff006e;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.level-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.level-badge {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #ff006e;
+}
+
+.level-progress {
+    font-size: 1.25rem;
+    color: #ffe5ec;
+}
+
+.progress-bar {
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff006e, #bdb2ff);
+    transition: width 0.5s ease;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.feature-card.unlocked {
+    border-color: #00ff9f;
+    background: rgba(0, 255, 159, 0.1);
+}
+
+.feature-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.feature-name {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.feature-status {
+    font-size: 0.875rem;
+    color: #00ff9f;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.game-card {
+    background: #fff;
+    border: 5px solid #000;
+    border-radius: 12px;
+    box-shadow: 8px 8px 0 #000;
+    overflow: hidden;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.game-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 #000;
+}
+
+.game-header {
+    background: linear-gradient(135deg, #ff006e, #bdb2ff);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.game-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #000;
+    text-transform: uppercase;
+}
+
+.game-body {
+    padding: 1.5rem;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+
+    .word-display {
+        font-size: 3rem;
+    }
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="/" class="soulfra-logo">🚫 CringeProof</a>
+        <div class="soulfra-links">
+            <a href="/ideas/">💡 Ideas</a>
+            <a href="/wordmap.html">🗺️ Wordmap</a>
+            <a href="/encyclopedia.html" class="active">📚 Encyclopedia</a>
+            <a href="/record-simple.html" class="soulfra-record-btn">🎙️ Record</a>
+        </div>
+    </div>
+</nav>
+
+<div class="encyclopedia-container">
+    <section class="hero-section">
+        <h1>📚 Your Encyclopedia</h1>
+        <p>Track your intellectual journey. See how your ideas evolve over time.</p>
+    </section>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value" id="totalRecordings">0</div>
+            <div class="stat-label">Voice Memos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="uniqueWords">0</div>
+            <div class="stat-label">Unique Words</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="currentLevel">0</div>
+            <div class="stat-label">Level</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="unlockedFeatures">0</div>
+            <div class="stat-label">Features Unlocked</div>
+        </div>
+    </section>
+
+    <section class="word-of-year" id="wordOfYear">
+        <h2>🏆 Word of the Year 2026</h2>
+        <div class="word-display" id="wordDisplay">Loading...</div>
+        <div class="word-context" id="wordContext">Analyzing your recordings...</div>
+    </section>
+
+    <section class="progression-section">
+        <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">🎮 Your Progression</h2>
+
+        <div class="level-display">
+            <div class="level-header">
+                <div class="level-badge" id="levelBadge">Level 0</div>
+                <div class="level-progress" id="levelProgress">0 / 5 recordings</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 1.5rem;">Unlocked Features:</h3>
+        <div class="features-grid" id="featuresGrid">
+            <!-- Populated by JavaScript -->
+        </div>
+    </section>
+
+    <section>
+        <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">🎯 Your Games</h2>
+        <div class="games-grid">
+            <a href="/record-simple.html" class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🎤</div>
+                    <div class="game-title">Voice Recorder</div>
+                </div>
+                <div class="game-body">
+                    Record your daily idea. No cringe, just authenticity.
+                </div>
+            </a>
+
+            <a href="/wordmap.html" class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">🗺️</div>
+                    <div class="game-title">Wordmap</div>
+                </div>
+                <div class="game-body">
+                    Visualize your vocabulary. See patterns in your thinking.
+                </div>
+            </a>
+
+            <a href="/ideas/" class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">💡</div>
+                    <div class="game-title">Ideas Archive</div>
+                </div>
+                <div class="game-body">
+                    Browse all your ideas. Export as RSS, search by word.
+                </div>
+            </a>
+
+            <a href="/screenshot.html" class="game-card">
+                <div class="game-header">
+                    <div class="game-icon">📸</div>
+                    <div class="game-title">Screenshot OCR</div>
+                </div>
+                <div class="game-body">
+                    Extract text from images. Add to your knowledge base.
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section style="margin-top: 4rem;">
+        <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">🌐 The Tribe - Live Activity</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div style="background: rgba(255,255,255,0.05); border: 3px solid #bdb2ff; border-radius: 12px; padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;">📡 Recent Recordings</h3>
+                <div id="recentActivity" style="max-height: 500px; overflow-y: auto;">
+                    <div style="text-align: center; padding: 2rem; color: #ffe5ec; opacity: 0.7;">
+                        Loading activity...
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); border: 3px solid #ff006e; border-radius: 12px; padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;">🏆 Top Contributors</h3>
+                <div id="topContributors">
+                    <div style="text-align: center; padding: 2rem; color: #ffe5ec; opacity: 0.7;">
+                        Loading contributors...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="./config.js"></script>
+<script>
+const API_URL = window.CRINGEPROOF_CONFIG?.API_BACKEND_URL || 'https://sega-affordable-soviet-weed.trycloudflare.com';
+
+async function loadEncyclopediaData() {
+    try {
+        // Fetch word of the year
+        const wordResponse = await fetch(`${API_URL}/api/encyclopedia/word-of-year`);
+        if (wordResponse.ok) {
+            const wordData = await wordResponse.json();
+            document.getElementById('wordDisplay').textContent = wordData.word || 'N/A';
+            document.getElementById('wordContext').textContent =
+                `Used ${wordData.count} times across ${wordData.total_recordings} recordings`;
+        }
+
+        // Fetch user progression
+        const progressResponse = await fetch(`${API_URL}/api/encyclopedia/progression?user_id=1`);
+        if (progressResponse.ok) {
+            const progressData = await progressResponse.json();
+
+            // Update stats
+            document.getElementById('totalRecordings').textContent = progressData.stats.recordings;
+            document.getElementById('uniqueWords').textContent = progressData.stats.unique_words;
+            document.getElementById('currentLevel').textContent = progressData.level;
+            document.getElementById('unlockedFeatures').textContent = progressData.features.length;
+
+            // Update level display
+            document.getElementById('levelBadge').textContent = `Level ${progressData.level}`;
+
+            const nextMilestones = [5, 10, 50, 100];
+            const nextMilestone = nextMilestones[progressData.level] || 100;
+            const progress = Math.min((progressData.stats.recordings / nextMilestone) * 100, 100);
+
+            document.getElementById('levelProgress').textContent =
+                `${progressData.stats.recordings} / ${nextMilestone} recordings`;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+
+            // Render features
+            renderFeatures(progressData.features, progressData.level);
+        }
+    } catch (error) {
+        console.error('Failed to load encyclopedia data:', error);
+        document.getElementById('wordDisplay').textContent = 'Offline';
+        document.getElementById('wordContext').textContent = 'Backend not accessible';
+    }
+}
+
+function renderFeatures(unlockedFeatures, level) {
+    const allFeatures = [
+        { name: 'Voice Recording', icon: '🎤', level: 0 },
+        { name: 'Transcription', icon: '📝', level: 1 },
+        { name: 'Personal Wordmap', icon: '🗺️', level: 1 },
+        { name: 'RSS Feed', icon: '📡', level: 2 },
+        { name: 'Word of Month', icon: '📅', level: 2 },
+        { name: 'Cross-Domain Search', icon: '🔍', level: 2 },
+        { name: 'Word of Year', icon: '🏆', level: 3 },
+        { name: 'Reflection Analytics', icon: '📊', level: 3 },
+        { name: 'Export Encyclopedia', icon: '💾', level: 3 },
+        { name: 'Custom Wordmap', icon: '🎨', level: 4 },
+        { name: 'API Access', icon: '🔌', level: 4 },
+        { name: 'Contributor Dashboard', icon: '👥', level: 4 },
+    ];
+
+    const grid = document.getElementById('featuresGrid');
+    grid.innerHTML = allFeatures.map(feature => {
+        const isUnlocked = feature.level <= level;
+        return `
+            <div class="feature-card ${isUnlocked ? 'unlocked' : 'locked'}">
+                <div class="feature-icon">${feature.icon}</div>
+                <div class="feature-name">${feature.name}</div>
+                <div class="feature-status">${isUnlocked ? '✅ Unlocked' : `🔒 Level ${feature.level}`}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Generate Cal avatar - voice-powered visual identity
+function generateCalAvatar(email, user_id) {
+    if (user_id) {
+        // Cal avatar from wordmap (server-generated)
+        return `<img src="${API_URL}/api/cal-avatar/${user_id}.svg"
+                style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #000;"
+                alt="Cal avatar for ${email}"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div style="display: none; width: 40px; height: 40px; border-radius: 50%; background: #ff006e;
+                     align-items: center; justify-content: center; font-weight: 900;
+                     color: #000; border: 3px solid #000; font-size: 1.25rem;">${email.charAt(0).toUpperCase()}</div>`;
+    } else {
+        // Fallback: email-based Cal avatar
+        const emailHash = btoa(email).substring(0, 16);
+        return `<img src="${API_URL}/api/cal-avatar/email/${emailHash}.svg"
+                style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #000;"
+                alt="Cal avatar for ${email}">`;
+    }
+}
+
+// Load and render recent activity
+async function loadRecentActivity() {
+    try {
+        const response = await fetch(`${API_URL}/api/recent-activity?limit=20`);
+        if (!response.ok) throw new Error('Failed to fetch activity');
+
+        const data = await response.json();
+        const container = document.getElementById('recentActivity');
+
+        if (data.activity.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #ffe5ec; opacity: 0.7;">
+                    No recordings yet. Be the first!
+                </div>`;
+            return;
+        }
+
+        const items = data.activity.map(item => {
+            const date = new Date(item.recorded_at);
+            const timeAgo = getTimeAgo(date);
+
+            return `
+                <div style="background: rgba(255,255,255,0.03); border-left: 4px solid #ff006e;
+                     padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        ${generateCalAvatar(item.user_email, item.user_id)}
+                        <div>
+                            <div style="font-weight: 700; color: #ffe5ec;">${item.user_email}</div>
+                            <div style="font-size: 0.85rem; opacity: 0.7;">${timeAgo}</div>
+                        </div>
+                    </div>
+                    <div style="margin-left: 56px; color: #fff; line-height: 1.6;">
+                        "${item.transcription_preview}"
+                    </div>
+                    ${item.keywords.length > 0 ? `
+                        <div style="margin-left: 56px; margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            ${item.keywords.map(kw => `
+                                <span style="background: rgba(189, 178, 255, 0.2); padding: 0.25rem 0.5rem;
+                                      border-radius: 4px; font-size: 0.8rem; color: #bdb2ff;">${kw}</span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = items;
+    } catch (error) {
+        console.error('Failed to load activity:', error);
+        document.getElementById('recentActivity').innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: #ff006e;">
+                Backend offline - check connection
+            </div>`;
+    }
+}
+
+// Load and render top contributors
+async function loadTopContributors() {
+    try {
+        const response = await fetch(`${API_URL}/api/top-contributors?limit=10`);
+        if (!response.ok) throw new Error('Failed to fetch contributors');
+
+        const data = await response.json();
+        const container = document.getElementById('topContributors');
+
+        if (data.contributors.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #ffe5ec; opacity: 0.7;">
+                    No contributors yet
+                </div>`;
+            return;
+        }
+
+        const items = data.contributors.map((contributor, index) => {
+            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+            const levelBadge = `Level ${contributor.level}`;
+
+            return `
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; margin-bottom: 0.75rem;
+                     border-radius: 4px; border: 2px solid ${index < 3 ? '#00ff9f' : 'transparent'};">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 1.5rem; width: 40px; text-align: center;">${medal}</div>
+                        ${generateCalAvatar(contributor.user_email, contributor.user_id)}
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #ffe5ec;">${contributor.user_email}</div>
+                            <div style="font-size: 0.85rem; opacity: 0.8;">
+                                ${contributor.recording_count} recordings •
+                                ${contributor.unique_words} words •
+                                <span style="color: #00ff9f;">${levelBadge}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = items;
+    } catch (error) {
+        console.error('Failed to load contributors:', error);
+        document.getElementById('topContributors').innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: #ff006e;">
+                Backend offline - check connection
+            </div>`;
+    }
+}
+
+// Helper function to calculate time ago
+function getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+    return date.toLocaleDateString();
+}
+
+// Load data on page load
+loadEncyclopediaData();
+loadRecentActivity();
+loadTopContributors();
+
+// Auto-refresh activity feed every 10 seconds
+setInterval(() => {
+    loadRecentActivity();
+    loadTopContributors();
+}, 10000);
+</script>
+
+<!-- Load Popup UI System -->
+<script src="voice-feedback.js"></script>
+<script src="popup-ui.js"></script>
+</body>
+</html>

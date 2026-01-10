@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Domain - {{ research.domain }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .section {
+            padding: 32px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .research-data {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .research-item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .research-label {
+            font-weight: 600;
+            color: #666;
+            min-width: 120px;
+        }
+
+        .research-value {
+            color: #333;
+        }
+
+        .success {
+            color: #10b981;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            padding: 32px;
+            background: #f9fafb;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #666;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .suggested-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Domain Research Complete</h1>
+            <p>Review Ollama's suggestions and confirm to add</p>
+        </div>
+
+        <div class="content">
+            <!-- Research Data -->
+            <div class="section">
+                <div class="section-title">📊 What Ollama Found</div>
+
+                <div class="research-data">
+                    <div class="research-item">
+                        <div class="research-label">Domain:</div>
+                        <div class="research-value"><strong>{{ research.domain }}</strong></div>
+                    </div>
+
+                    <div class="research-item">
+                        <div class="research-label">DNS Status:</div>
+                        <div class="research-value {% if research.research_data.dns.exists %}success{% else %}error{% endif %}">
+                            {% if research.research_data.dns.exists %}
+                                ✅ Active (IP: {{ research.research_data.dns.ip }})
+                            {% else %}
+                                ⚠️ Not found / Not configured
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="research-item">
+                        <div class="research-label">Website Status:</div>
+                        <div class="research-value {% if research.research_data.website.success %}success{% else %}error{% endif %}">
+                            {% if research.research_data.website.success %}
+                                ✅ Found ({{ research.research_data.website.protocol|upper }})
+                            {% else %}
+                                ⚠️ Not accessible
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if research.research_data.metadata.title %}
+                    <div class="research-item">
+                        <div class="research-label">Website Title:</div>
+                        <div class="research-value">{{ research.research_data.metadata.title }}</div>
+                    </div>
+                    {% endif %}
+
+                    {% if research.research_data.metadata.description %}
+                    <div class="research-item">
+                        <div class="research-label">Description:</div>
+                        <div class="research-value">{{ research.research_data.metadata.description }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if research.errors %}
+                <div class="alert alert-warning">
+                    <strong>⚠️ Warnings:</strong>
+                    <ul style="margin: 8px 0 0 20px;">
+                        {% for error in research.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Suggested Details -->
+            <div class="section">
+                <div class="section-title">
+                    🤖 Ollama's Suggestions
+                    <span class="suggested-badge">AI Generated</span>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>📝 Review and edit these fields before adding to database</strong>
+                </div>
+
+                <form action="/admin/domains/confirm-add" method="POST">
+                    <input type="hidden" name="domain" value="{{ research.domain }}">
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Name *</label>
+                            <input type="text" name="name" value="{{ research.suggested.name }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Domain</label>
+                            <input type="text" name="domain_display" value="{{ research.domain }}" readonly style="background: #f3f4f6;">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select name="category" required>
+                                <option value="cooking" {% if research.suggested.category == 'cooking' %}selected{% endif %}>Cooking</option>
+                                <option value="tech" {% if research.suggested.category == 'tech' %}selected{% endif %}>Tech</option>
+                                <option value="privacy" {% if research.suggested.category == 'privacy' %}selected{% endif %}>Privacy</option>
+                                <option value="business" {% if research.suggested.category == 'business' %}selected{% endif %}>Business</option>
+                                <option value="health" {% if research.suggested.category == 'health' %}selected{% endif %}>Health</option>
+                                <option value="art" {% if research.suggested.category == 'art' %}selected{% endif %}>Art</option>
+                                <option value="education" {% if research.suggested.category == 'education' %}selected{% endif %}>Education</option>
+                                <option value="gaming" {% if research.suggested.category == 'gaming' %}selected{% endif %}>Gaming</option>
+                                <option value="finance" {% if research.suggested.category == 'finance' %}selected{% endif %}>Finance</option>
+                                <option value="local" {% if research.suggested.category == 'local' %}selected{% endif %}>Local</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tier</label>
+                            <select name="tier">
+                                <option value="foundation" selected>Foundation</option>
+                                <option value="business">Business</option>
+                                <option value="creative">Creative</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Emoji</label>
+                            <input type="text" name="emoji" value="{{ research.suggested.emoji }}" maxlength="2">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Brand Type</label>
+                            <select name="brand_type">
+                                <option value="blog" {% if research.suggested.brand_type == 'blog' %}selected{% endif %}>Blog</option>
+                                <option value="game" {% if research.suggested.brand_type == 'game' %}selected{% endif %}>Game</option>
+                                <option value="community" {% if research.suggested.brand_type == 'community' %}selected{% endif %}>Community</option>
+                                <option value="platform" {% if research.suggested.brand_type == 'platform' %}selected{% endif %}>Platform</option>
+                                <option value="directory" {% if research.suggested.brand_type == 'directory' %}selected{% endif %}>Directory</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Tagline</label>
+                            <input type="text" name="tagline" value="{{ research.suggested.tagline }}">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Target Audience</label>
+                            <input type="text" name="target_audience" value="{{ research.suggested.target_audience }}">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Purpose</label>
+                            <input type="text" name="purpose" value="{{ research.suggested.purpose }}">
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <a href="/admin/domains" class="btn btn-secondary">❌ Cancel</a>
+                        <button type="submit" class="btn btn-primary">✅ Approve & Add Domain</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

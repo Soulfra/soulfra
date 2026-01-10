@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<parameter name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain Studio - Voice-Driven Domain IDE</title>
+<meta name="description" content="Answer random questions about your domains with voice memos">
+
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.studio-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.domain-card {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 8px 8px 0 #000;
+}
+
+.domain-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.domain-badge {
+    padding: 0.5rem 1rem;
+    font-weight: 900;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 #000;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.domain-info {
+    flex: 1;
+}
+
+.domain-name {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.domain-desc {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.question-box {
+    background: #ffe66d;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 6px 6px 0 #000;
+}
+
+.question-label {
+    font-weight: 900;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.question-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #000;
+}
+
+.record-btn {
+    background: #ff006e;
+    color: white;
+    border: 4px solid #000;
+    padding: 2rem 3rem;
+    font-size: 2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 8px 8px 0 #000;
+    transition: all 0.1s;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.record-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 10px 10px 0 #000;
+}
+
+.record-btn:active {
+    transform: scale(0.98);
+    box-shadow: 4px 4px 0 #000;
+}
+
+.record-btn.recording {
+    background: #000;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.btn-secondary {
+    background: #bdb2ff;
+    color: #000;
+    border: 3px solid #000;
+    padding: 1rem 2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #000;
+    margin: 0.5rem;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 0 #000;
+}
+
+.status-message {
+    background: #00C49A;
+    border: 3px solid #000;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 4px 4px 0 #000;
+    font-weight: 700;
+}
+
+.status-message.error {
+    background: #ff006e;
+    color: #fff;
+}
+
+.audio-preview {
+    margin: 1rem 0;
+}
+
+.audio-preview audio {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.timer {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin: 1rem 0;
+    font-family: monospace;
+}
+</style>
+</head>
+<body>
+
+<div class="studio-container">
+    <h1 style="color: #fff; text-align: center; font-size: 3rem; margin-bottom: 2rem; text-shadow: 4px 4px 0 #000;">
+        🎙️ Domain Studio
+    </h1>
+
+    <div class="domain-card" id="domainCard" style="display: none;">
+        <div class="domain-header">
+            <div class="domain-badge" id="domainBadge">Loading...</div>
+            <div class="domain-info">
+                <div class="domain-name" id="domainName"></div>
+                <div class="domain-desc" id="domainDesc"></div>
+            </div>
+        </div>
+
+        <div class="question-box">
+            <div class="question-label">💡 Your Question:</div>
+            <div class="question-text" id="questionText">Loading question...</div>
+        </div>
+
+        <div id="statusMessage" style="display: none;"></div>
+
+        <div class="timer" id="timer" style="display: none;">00:00</div>
+
+        <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+            🎤 Press to Answer
+        </button>
+
+        <div class="audio-preview" id="audioPreview" style="display: none;">
+            <audio id="audioPlayback" controls></audio>
+            <button class="btn-secondary" onclick="saveRecording()">💾 Save to Database</button>
+            <button class="btn-secondary" onclick="discardRecording()">❌ Discard</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <button class="btn-secondary" onclick="loadNewQuestion()">🔄 New Question</button>
+        </div>
+    </div>
+
+    <div id="loadingMessage" style="text-align: center; color: #fff; font-size: 1.5rem; font-weight: 900;">
+        Loading your question...
+    </div>
+</div>
+
+<script>
+const API_BASE = window.location.origin;
+
+let currentDomain = null;
+let currentQuestion = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let recordingStartTime = null;
+let timerInterval = null;
+let audioBlob = null;
+
+// Load random question on page load
+loadNewQuestion();
+
+async function loadNewQuestion() {
+    document.getElementById('loadingMessage').style.display = 'block';
+    document.getElementById('domainCard').style.display = 'none';
+
+    try {
+        const response = await fetch(`${API_BASE}/api/domain-studio/question`);
+        const data = await response.json();
+
+        if (data.error) {
+            showStatus(data.error, true);
+            return;
+        }
+
+        currentDomain = data.domain;
+        currentQuestion = data.question;
+
+        // Update UI
+        document.getElementById('domainBadge').textContent = data.domain.toUpperCase();
+        document.getElementById('domainBadge').style.background = data.domain_info.color || '#00C49A';
+        document.getElementById('domainName').textContent = data.domain_info.description;
+        document.getElementById('domainDesc').textContent = data.domain_info.theme;
+        document.getElementById('questionText').textContent = data.question;
+
+        document.getElementById('loadingMessage').style.display = 'none';
+        document.getElementById('domainCard').style.display = 'block';
+
+        // Reset recording state
+        resetRecordingState();
+
+    } catch (error) {
+        showStatus('Failed to load question: ' + error.message, true);
+    }
+}
+
+function resetRecordingState() {
+    document.getElementById('audioPreview').style.display = 'none';
+    document.getElementById('statusMessage').style.display = 'none';
+    document.getElementById('timer').style.display = 'none';
+    document.getElementById('recordBtn').textContent = '🎤 Press to Answer';
+    document.getElementById('recordBtn').classList.remove('recording');
+    audioBlob = null;
+    audioChunks = [];
+}
+
+async function toggleRecording() {
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+        await startRecording();
+    } else {
+        stopRecording();
+    }
+}
+
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            document.getElementById('audioPlayback').src = audioUrl;
+            document.getElementById('audioPreview').style.display = 'block';
+            clearInterval(timerInterval);
+        };
+
+        mediaRecorder.start();
+        recordingStartTime = Date.now();
+
+        // Update UI
+        document.getElementById('recordBtn').textContent = '⏹️ Stop Recording';
+        document.getElementById('recordBtn').classList.add('recording');
+        document.getElementById('timer').style.display = 'block';
+
+        // Start timer
+        timerInterval = setInterval(updateTimer, 100);
+
+        showStatus('Recording...', false);
+    } catch (error) {
+        showStatus('Microphone access denied: ' + error.message, true);
+    }
+}
+
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        document.getElementById('recordBtn').classList.remove('recording');
+        showStatus('Recording complete! Review and save.', false);
+    }
+}
+
+function updateTimer() {
+    const elapsed = (Date.now() - recordingStartTime) / 1000;
+    const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const seconds = Math.floor(elapsed % 60).toString().padStart(2, '0');
+    document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+}
+
+async function saveRecording() {
+    if (!audioBlob) {
+        showStatus('No recording to save', true);
+        return;
+    }
+
+    showStatus('Saving recording...', false);
+
+    try {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.webm');
+        formData.append('domain', currentDomain);
+        formData.append('prompt', currentQuestion);
+
+        const response = await fetch(`${API_BASE}/api/simple-voice/save`, {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showStatus('✅ Saved! Loading new question...', false);
+            setTimeout(loadNewQuestion, 2000);
+        } else {
+            showStatus('Failed to save: ' + (data.error || 'Unknown error'), true);
+        }
+    } catch (error) {
+        showStatus('Error saving: ' + error.message, true);
+    }
+}
+
+function discardRecording() {
+    resetRecordingState();
+    showStatus('Recording discarded', false);
+}
+
+function showStatus(message, isError) {
+    const statusEl = document.getElementById('statusMessage');
+    statusEl.textContent = message;
+    statusEl.className = 'status-message' + (isError ? ' error' : '');
+    statusEl.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

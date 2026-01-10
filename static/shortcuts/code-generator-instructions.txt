@@ -1,0 +1,111 @@
+# 🎙️ Voice Code Generator - Siri Shortcut Setup
+
+## What This Does
+Say "Hey Siri, code this" → AI writes Python/JavaScript → Code in clipboard
+
+## Installation Steps
+
+### 1. Open iOS Shortcuts App
+(Pre-installed on iPhone/iPad)
+
+### 2. Create New Shortcut
+Tap the + button in top right
+
+### 3. Add These Actions (in order):
+
+ACTION 1: Record Audio
+- Search for "Record Audio"
+- Set "Stop Recording After" to 30 seconds
+- (This gives you time to describe your code)
+
+ACTION 2: Get Contents of URL
+- Search for "Get Contents of URL"
+- Configure:
+  URL: http://192.168.1.87:5001/api/voice/code-gen
+  Method: POST
+  Headers:
+    Content-Type: application/json
+  Request Body: JSON
+    {
+      "transcription": "[Audio from previous action]",
+      "language": "python",
+      "context": "Flask web application"
+    }
+
+  NOTE: Tap "Audio" above the keyboard to insert audio variable
+
+ACTION 3: Get Dictionary Value
+- Search for "Get Dictionary Value"
+- Get value for key: clipboard_text
+- From: Contents of URL
+
+ACTION 4: Copy to Clipboard
+- Search for "Copy to Clipboard"
+- Copy: Dictionary Value (from previous action)
+
+ACTION 5: Show Notification
+- Search for "Show Notification"
+- Title: "Code Ready"
+- Body: "Paste with Cmd+V or paste gesture"
+
+### 4. Name Your Shortcut
+- Tap "New Shortcut" at top
+- Rename to: "Code This"
+
+### 5. Add to Siri
+- Tap the (i) icon in top right
+- Tap "Add to Siri"
+- Record phrase: "Code this"
+- Tap "Done"
+
+## Usage
+
+1. Say: "Hey Siri, code this"
+2. Siri starts listening
+3. Describe your code:
+   - "Build me a Flask route that handles user authentication"
+   - "Create a function that validates email addresses"
+   - "Write JavaScript to fetch data from an API"
+4. Wait 10 seconds
+5. Code appears in clipboard
+6. Paste anywhere (Cmd+V or paste gesture)
+
+## Examples
+
+"Hey Siri, code this: Build a Python function that checks if a number is prime"
+"Hey Siri, code this: Create a Flask route that uploads files to S3"
+"Hey Siri, code this: Write JavaScript code to format dates as MM/DD/YYYY"
+
+## Troubleshooting
+
+Q: Siri says "There was a problem"
+A: Make sure Flask server is running: python3 app.py
+
+Q: No response after 30 seconds
+A: Server might be processing. Check http://192.168.1.87:5001/voice-studio for recordings
+
+Q: Code is gibberish
+A: Speak clearly and describe the code in detail. Include language (Python/JavaScript).
+
+## Advanced: Custom Languages
+
+To generate code in other languages, edit the shortcut:
+- In "Get Contents of URL" action
+- Change "language": "python" to:
+  - "javascript"
+  - "typescript"
+  - "go"
+  - "rust"
+
+## Network Requirements
+
+- iPhone and server must be on same WiFi
+- Server IP: 192.168.1.87
+- Port: 5001
+- Works great with AirPods!
+
+---
+
+Created: January 2026
+Platform: Voice Dev Studio
+URL: http://192.168.1.87:5001/shortcuts

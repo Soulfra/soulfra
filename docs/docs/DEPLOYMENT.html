@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Deployment Guide - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-deployment-guide">Soulfra Deployment Guide</h1>
+
+<p>This guide shows you how to deploy Soulfra in different configurations.</p>
+
+<p><strong>Key Principle</strong>: Python + SQL + Standard web server. That's it.</p>
+
+<hr />
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+<li><a href="#quick-start-single-domain">Quick Start (Single Domain)</a></li>
+<li><a href="#multiple-subdomains">Multiple Subdomains</a></li>
+<li><a href="#separate-instances">Separate Instances</a></li>
+<li><a href="#extension-pattern">Extension Pattern</a></li>
+<li><a href="#production-checklist">Production Checklist</a></li>
+</ol>
+
+<hr />
+
+<h2 id="quick-start-single-domain">Quick Start (Single Domain)</h2>
+
+<p><strong>Scenario</strong>: Deploy soulfra.com</p>
+
+<h3 id="step-1-install-soulfra">Step 1: Install Soulfra</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Clone or install</span>
+pip<span class="w"> </span>install<span class="w"> </span>soulfra
+
+<span class="c1"># Or from source</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/calriven/soulfra
+<span class="nb">cd</span><span class="w"> </span>soulfra
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre>
+</div>
+
+<h3 id="step-2-initialize-database">Step 2: Initialize Database</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Create database and tables</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from database import init_db; init_db()&quot;</span>
+
+<span class="c1"># Initialize soul git (optional)</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from soul_git import init_soul_git; init_soul_git()&quot;</span>
+
+<span class="c1"># Initialize URL shortener (optional)</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from url_shortener import init_url_shortener_table; init_url_shortener_table()&quot;</span>
+</code></pre>
+</div>
+
+<h3 id="step-3-run-flask-app">Step 3: Run Flask App</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Development</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># Production (with gunicorn)</span>
+pip<span class="w"> </span>install<span class="w"> </span>gunicorn
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>-b<span class="w"> </span><span class="m">0</span>.0.0.0:5000<span class="w"> </span>app:app
+</code></pre>
+</div>
+
+<h3 id="step-4-configure-nginx">Step 4: Configure Nginx</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># /etc/nginx/sites-available/soulfra.com</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">soulfra.com</span><span class="w"> </span><span class="s">www.soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:5000</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1"># Static files (optional - serve directly)</span>
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/static</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">alias</span><span class="w"> </span><span class="s">/path/to/soulfra/static</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">expires</span><span class="w"> </span><span class="s">30d</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="step-5-enable-and-restart">Step 5: Enable and Restart</h3>
+
+<div class="codehilite">
+<pre><span></span><code>sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/nginx/sites-available/soulfra.com<span class="w"> </span>/etc/nginx/sites-enabled/
+sudo<span class="w"> </span>nginx<span class="w"> </span>-t
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
+</code></pre>
+</div>
+
+<h3 id="step-6-ssl-with-lets-encrypt">Step 6: SSL with Let's Encrypt</h3>
+
+<div class="codehilite">
+<pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>certbot<span class="w"> </span>python3-certbot-nginx
+sudo<span class="w"> </span>certbot<span class="w"> </span>--nginx<span class="w"> </span>-d<span class="w"> </span>soulfra.com<span class="w"> </span>-d<span class="w"> </span>www.soulfra.com
+</code></pre>
+</div>
+
+<p><strong>Done!</strong> Visit https://soulfra.com</p>
+
+<hr />
+
+<h2 id="multiple-subdomains">Multiple Subdomains</h2>
+
+<p><strong>Scenario</strong>: Different subdomains for different souls/projects</p>
+
+<ul>
+<li><code>calriven.soulfra.com</code> → CalRiven's soul</li>
+<li><code>alice.soulfra.com</code> → Alice's soul</li>
+<li><code>blog.soulfra.com</code> → Blog/newsletter</li>
+</ul>
+
+<h3 id="option-a-same-codebase-different-views">Option A: Same Codebase, Different Views</h3>
+
+<p><strong>One database, multiple entry points</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># /etc/nginx/sites-available/soulfra-multi</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">*.soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:5000</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Then in <code>app.py</code>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">before_request</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">route_by_subdomain</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Route based on subdomain&quot;&quot;&quot;</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">host</span>
+
+    <span class="k">if</span> <span class="n">host</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;calriven.&#39;</span><span class="p">):</span>
+        <span class="c1"># Show CalRiven&#39;s soul</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;soul_detail&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;calriven&#39;</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">host</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;alice.&#39;</span><span class="p">):</span>
+        <span class="c1"># Show Alice&#39;s soul</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;soul_detail&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;alice&#39;</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">host</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;blog.&#39;</span><span class="p">):</span>
+        <span class="c1"># Show blog posts</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Default: main site</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre>
+</div>
+
+<h3 id="option-b-separate-instances">Option B: Separate Instances</h3>
+
+<p><strong>Different databases, separate processes</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Create different directories</span>
+/var/www/calriven.soulfra.com/
+/var/www/alice.soulfra.com/
+/var/www/blog.soulfra.com/
+
+<span class="c1"># Each has its own:</span>
+<span class="c1"># - app.py</span>
+<span class="c1"># - soulfra.db</span>
+<span class="c1"># - config.py</span>
+</code></pre>
+</div>
+
+<p>Nginx config:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># CalRiven</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">calriven.soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:5001</span><span class="p">;</span><span class="w">  </span><span class="c1"># Port 5001</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Alice</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">alice.soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:5002</span><span class="p">;</span><span class="w">  </span><span class="c1"># Port 5002</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Blog</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">blog.soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:5003</span><span class="p">;</span><span class="w">  </span><span class="c1"># Port 5003</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Run each on different port:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># CalRiven instance</span>
+<span class="nb">cd</span><span class="w"> </span>/var/www/calriven.soulfra.com
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">2</span><span class="w"> </span>-b<span class="w"> </span><span class="m">127</span>.0.0.1:5001<span class="w"> </span>app:app
+
+<span class="c1"># Alice instance</span>
+<span class="nb">cd</span><span class="w"> </span>/var/www/alice.soulfra.com
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">2</span><span class="w"> </span>-b<span class="w"> </span><span class="m">127</span>.0.0.1:5002<span class="w"> </span>app:app
+
+<span class="c1"># Blog instance</span>
+<span class="nb">cd</span><span class="w"> </span>/var/www/blog.soulfra.com
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">2</span><span class="w"> </span>-b<span class="w"> </span><span class="m">127</span>.0.0.1:5003<span class="w"> </span>app:app
+</code></pre>
+</div>
+
+<p><strong>Use systemd to manage each service:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># /etc/systemd/system/soulfra-calriven.service</span>
+<span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Soulfra - CalRiven Instance</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+
+<span class="k">[Service]</span>
+<span class="na">User</span><span class="o">=</span><span class="s">www-data</span>
+<span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/var/www/calriven.soulfra.com</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/gunicorn -w 2 -b 127.0.0.1:5001 app:app</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="separate-instances">Separate Instances</h2>
+
+<p><strong>Scenario</strong>: Completely separate deployments on different servers</p>
+
+<h3 id="server-1-soulfracom-main-platform">Server 1: soulfra.com (Main platform)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Full installation</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/calriven/soulfra
+<span class="nb">cd</span><span class="w"> </span>soulfra
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from database import init_db; init_db()&quot;</span>
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>-b<span class="w"> </span><span class="m">0</span>.0.0.0:5000<span class="w"> </span>app:app
+</code></pre>
+</div>
+
+<h3 id="server-2-myprojectcom-custom-instance">Server 2: myproject.com (Custom instance)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Install soulfra as dependency</span>
+pip<span class="w"> </span>install<span class="w"> </span>soulfra
+
+<span class="c1"># Create your custom app.py</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>app.py<span class="w"> </span><span class="s">&lt;&lt; &#39;PYTHON&#39;</span>
+<span class="s">from flask import Flask</span>
+<span class="s">from soulfra_core import get_unified_timeline, diff_souls</span>
+
+<span class="s">app = Flask(__name__)</span>
+
+<span class="s">@app.route(&#39;/&#39;)</span>
+<span class="s">def index():</span>
+<span class="s">    # Use soulfra&#39;s unified view</span>
+<span class="s">    timeline = get_unified_timeline(limit=20)</span>
+<span class="s">    return render_template(&#39;custom_index.html&#39;, timeline=timeline)</span>
+
+<span class="s">if __name__ == &#39;__main__&#39;:</span>
+<span class="s">    app.run()</span>
+<span class="s">PYTHON</span>
+
+<span class="c1"># Run your custom instance</span>
+python3<span class="w"> </span>app.py
+</code></pre>
+</div>
+
+<p><strong>This is the OSS pattern</strong>: Install soulfra, extend it, run your own version.</p>
+
+<hr />
+
+<h2 id="extension-pattern">Extension Pattern</h2>
+
+<p><strong>How to fork/extend Soulfra for your own use</strong></p>
+
+<h3 id="method-1-python-import">Method 1: Python Import</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># your_custom_app.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soulfra_core</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_unified_timeline</span><span class="p">,</span> <span class="n">diff_souls</span><span class="p">,</span> <span class="n">search_everything</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soul_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Soul</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soul_git</span><span class="w"> </span><span class="kn">import</span> <span class="n">soul_commit</span><span class="p">,</span> <span class="n">soul_log</span>
+
+<span class="c1"># Use any soulfra function</span>
+<span class="n">timeline</span> <span class="o">=</span> <span class="n">get_unified_timeline</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">soul</span> <span class="o">=</span> <span class="n">Soul</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">compile_pack</span><span class="p">()</span>
+<span class="n">commits</span> <span class="o">=</span> <span class="n">soul_log</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add your own features</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/my-custom-route&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_feature</span><span class="p">():</span>
+    <span class="c1"># Your code here</span>
+    <span class="k">pass</span>
+</code></pre>
+</div>
+
+<h3 id="method-2-subclass-soul-model">Method 2: Subclass Soul Model</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># custom_soul.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soul_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Soul</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomSoul</span><span class="p">(</span><span class="n">Soul</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extended soul with custom features&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile_pack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Call parent method</span>
+        <span class="n">pack</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">compile_pack</span><span class="p">()</span>
+
+        <span class="c1"># Add your custom data</span>
+        <span class="n">pack</span><span class="p">[</span><span class="s1">&#39;custom_field&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_custom_metric</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">pack</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_custom_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Your custom logic</span>
+        <span class="k">return</span> <span class="s2">&quot;custom value&quot;</span>
+</code></pre>
+</div>
+
+<h3 id="method-3-custom-database-schema">Method 3: Custom Database Schema</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># custom_init.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">database</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_db</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_custom_tables</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add your own tables&quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        CREATE TABLE IF NOT EXISTS my_custom_table (</span>
+<span class="s1">            id INTEGER PRIMARY KEY,</span>
+<span class="s1">            user_id INTEGER,</span>
+<span class="s1">            custom_data TEXT,</span>
+<span class="s1">            FOREIGN KEY (user_id) REFERENCES users(id)</span>
+<span class="s1">        )</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><strong>This is standard Python</strong>: Import, extend, customize.</p>
+
+<hr />
+
+<h2 id="production-checklist">Production Checklist</h2>
+
+<h3 id="security">Security</h3>
+
+<ul>
+<li>[ ] Change <code>SECRET_KEY</code> in config</li>
+<li>[ ] Use environment variables for secrets</li>
+<li>[ ] Enable HTTPS (Let's Encrypt)</li>
+<li>[ ] Set up firewall (ufw, iptables)</li>
+<li>[ ] Disable debug mode (<code>DEBUG=False</code>)</li>
+<li>[ ] Use strong database passwords</li>
+</ul>
+
+<h3 id="performance">Performance</h3>
+
+<ul>
+<li>[ ] Use gunicorn/uwsgi (not Flask dev server)</li>
+<li>[ ] Set up nginx for static files</li>
+<li>[ ] Enable gzip compression</li>
+<li>[ ] Add caching headers</li>
+<li>[ ] Consider CDN for static assets</li>
+<li>[ ] Database indexing (already done in init scripts)</li>
+</ul>
+
+<h3 id="monitoring">Monitoring</h3>
+
+<ul>
+<li>[ ] Set up logging</li>
+<li>[ ] Monitor error rates</li>
+<li>[ ] Track database size</li>
+<li>[ ] Set up backups</li>
+<li>[ ] Use systemd for auto-restart</li>
+</ul>
+
+<h3 id="backup">Backup</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Database backup</span>
+sqlite3<span class="w"> </span>soulfra.db<span class="w"> </span><span class="s2">&quot;.backup backup-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.db&quot;</span>
+
+<span class="c1"># Or with cron (daily)</span>
+<span class="m">0</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/var/www/soulfra<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sqlite3<span class="w"> </span>soulfra.db<span class="w"> </span><span class="s2">&quot;.backup backup-</span><span class="k">$(</span>date<span class="w"> </span>+<span class="se">\%</span>Y<span class="se">\%</span>m<span class="se">\%</span>d<span class="k">)</span><span class="s2">.db&quot;</span>
+</code></pre>
+</div>
+
+<h3 id="environment-variables">Environment Variables</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># .env</span>
+<span class="nv">FLASK_ENV</span><span class="o">=</span>production
+<span class="nv">SECRET_KEY</span><span class="o">=</span>your-secret-key-here
+<span class="nv">DATABASE_URL</span><span class="o">=</span>sqlite:///soulfra.db
+<span class="nv">DOMAIN</span><span class="o">=</span>soulfra.com
+</code></pre>
+</div>
+
+<p>Load in app:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="nginx-shows-502-bad-gateway">nginx shows 502 Bad Gateway</h3>
+
+<p><strong>Problem</strong>: Flask app not running or wrong port</p>
+
+<p><strong>Solution</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check if gunicorn is running</span>
+ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>gunicorn
+
+<span class="c1"># Check logs</span>
+sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>soulfra.service<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
+
+<span class="c1"># Restart service</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<h3 id="static-files-not-loading">Static files not loading</h3>
+
+<p><strong>Problem</strong>: nginx not serving static files</p>
+
+<p><strong>Solution</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">location</span><span class="w"> </span><span class="s">/static</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">alias</span><span class="w"> </span><span class="s">/path/to/soulfra/static</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">expires</span><span class="w"> </span><span class="s">30d</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">add_header</span><span class="w"> </span><span class="s">Cache-Control</span><span class="w"> </span><span class="s">&quot;public,</span><span class="w"> </span><span class="s">immutable&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="database-locked">Database locked</h3>
+
+<p><strong>Problem</strong>: SQLite locked by multiple processes</p>
+
+<p><strong>Solution</strong>: Use WAL mode</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;PRAGMA journal_mode=WAL&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Or migrate to PostgreSQL for multi-process:</p>
+
+<div class="codehilite">
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>soulfra<span class="o">[</span>postgres<span class="o">]</span>
+<span class="c1"># Update DATABASE_URL to PostgreSQL</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="summary">Summary</h2>
+
+<p><strong>Soulfra deployment is simple</strong>:</p>
+
+<ol>
+<li><strong>Install</strong>: <code>pip install soulfra</code> or clone repo</li>
+<li><strong>Initialize</strong>: Run init scripts for database</li>
+<li><strong>Run</strong>: <code>gunicorn -w 4 app:app</code></li>
+<li><strong>Proxy</strong>: nginx → Flask</li>
+<li><strong>SSL</strong>: certbot</li>
+<li><strong>Extend</strong>: Standard Python imports</li>
+</ol>
+
+<p><strong>No special infrastructure needed. Just Python + SQL + web server.</strong></p>
+
+<p><strong>That's what you wanted</strong>: Simple, reproducible, extensible. ✅</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

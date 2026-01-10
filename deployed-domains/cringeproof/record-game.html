@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Recorder + Token Game - CringeProof</title>
+<meta name="description" content="Earn tokens by performing challenges or pay $1 to skip">
+
+<!-- PWA Support -->
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CringeProof">
+<link rel="apple-touch-icon" href="/static/images/icon-192.png">
+<meta name="theme-color" content="#ff006e">
+
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+.recorder-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    text-align: center;
+    padding: 2rem;
+}
+
+.token-balance {
+    background: #00C49A;
+    border: 4px solid #000;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 8px 8px 0 #000;
+}
+
+.token-count {
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 0.5rem 0;
+}
+
+.mode-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.mode-btn {
+    flex: 1;
+    background: #fff;
+    border: 4px solid #000;
+    padding: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.mode-btn.active {
+    background: #ff006e;
+    color: white;
+    transform: scale(1.05);
+}
+
+.challenge-box {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin: 2rem 0;
+    display: none;
+}
+
+.challenge-box.show {
+    display: block;
+}
+
+.script-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f0f0f0;
+    border: 3px dashed #000;
+}
+
+.dice-container {
+    margin: 2rem 0;
+}
+
+.dice {
+    font-size: 5rem;
+    animation: roll 0.5s ease-out;
+}
+
+@keyframes roll {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.multiplier-calc {
+    background: #ffe5ec;
+    border: 3px solid #000;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.record-btn {
+    background: #ff006e;
+    color: white;
+    border: 4px solid #000;
+    padding: 3rem;
+    font-size: 3rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 8px 8px 0 #000;
+    transition: all 0.1s;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem auto;
+}
+
+.record-btn:active {
+    transform: scale(0.95);
+    box-shadow: 4px 4px 0 #000;
+}
+
+.record-btn.recording {
+    background: #000;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.payment-box {
+    background: #00C49A;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin: 2rem 0;
+    display: none;
+}
+
+.payment-box.show {
+    display: block;
+}
+
+.qr-code {
+    background: white;
+    padding: 2rem;
+    margin: 1rem auto;
+    width: 200px;
+    height: 200px;
+    border: 3px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.recordings-list {
+    margin-top: 3rem;
+    text-align: left;
+}
+
+.recording-item {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 6px 6px 0 #bdb2ff;
+}
+
+.recording-item audio {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.status {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin: 1rem 0;
+    min-height: 3rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 3px solid #000;
+    font-weight: 900;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+.badge.free {
+    background: #00C49A;
+}
+
+.badge.paid {
+    background: #ff006e;
+    color: white;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="/" class="soulfra-logo">🚫 CringeProof</a>
+        <div class="soulfra-links">
+            <a href="/ideas/">💡 Ideas</a>
+            <a href="/">🎤 Archive</a>
+            <a href="/record-game.html" class="active">🎮 Record + Game</a>
+            <a href="/login.html">🔐 Login</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <header style="text-align: center; margin: 2rem 0;">
+        <h1>🎮 Voice Recorder + Token Game</h1>
+        <p class="subtitle">Earn tokens by performing challenges OR pay $1 to skip</p>
+    </header>
+
+    <div class="recorder-container">
+        <!-- Token Balance -->
+        <div class="token-balance">
+            <div style="font-size: 1.25rem; font-weight: 900;">YOUR TOKENS</div>
+            <div class="token-count" id="tokenCount">0</div>
+            <div style="font-size: 0.9rem; margin-top: 0.5rem;">
+                1 recording = 100 tokens (or $1)
+            </div>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <button class="mode-btn active" id="freeMode" onclick="selectMode('free')">
+                🎲 Free (Play Game)
+            </button>
+            <button class="mode-btn" id="paidMode" onclick="selectMode('paid')">
+                💳 Paid ($1)
+            </button>
+        </div>
+
+        <!-- Free Mode: Challenge -->
+        <div class="challenge-box show" id="challengeBox">
+            <h2>🎯 Your Challenge</h2>
+            <p>Perform this script to earn tokens:</p>
+
+            <div class="script-text" id="scriptText">
+                Click "Generate Challenge" to start
+            </div>
+
+            <button class="mode-btn" onclick="generateChallenge()" style="width: 100%; margin: 1rem 0;">
+                🎲 Generate Challenge
+            </button>
+
+            <div id="challengeDetails" style="display: none;">
+                <div class="multiplier-calc">
+                    <strong>Token Calculation:</strong><br>
+                    Difficulty: <span id="difficulty">?</span> ×
+                    Roll: <span id="diceRoll">?</span> ×
+                    Base: 10 =
+                    <strong><span id="potentialTokens">?</span> tokens</strong>
+                </div>
+
+                <div class="dice-container">
+                    <div class="dice" id="diceDisplay">🎲</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paid Mode: Payment -->
+        <div class="payment-box" id="paymentBox">
+            <h2>💳 Pay $1 to Skip Game</h2>
+            <p>Choose payment method:</p>
+
+            <div style="margin: 1.5rem 0;">
+                <label style="display: block; margin-bottom: 1rem; text-align: left;">
+                    <input type="radio" name="payment" value="lightning" checked>
+                    ⚡ Lightning Network (<$0.01 fee)
+                </label>
+                <label style="display: block; margin-bottom: 1rem; text-align: left;">
+                    <input type="radio" name="payment" value="credits">
+                    💰 Prepaid Credits (if you have balance)
+                </label>
+            </div>
+
+            <button class="mode-btn" onclick="processPayment()" style="width: 100%;">
+                Continue to Payment
+            </button>
+
+            <div id="qrCodeBox" style="display: none; margin-top: 1.5rem;">
+                <div class="qr-code">📱</div>
+                <p style="font-size: 0.9rem; margin-top: 1rem;">
+                    Scan with Lightning wallet to pay
+                </p>
+            </div>
+        </div>
+
+        <div class="status" id="status">Choose mode above</div>
+
+        <!-- Record Button -->
+        <button class="record-btn" id="recordBtn" onclick="toggleRecording()" disabled>
+            🎤
+        </button>
+        <div style="font-size: 0.9rem; opacity: 0.7; margin-top: -1rem;">
+            <span id="recordHint">Complete challenge or pay to record</span>
+        </div>
+
+        <!-- Recordings List -->
+        <div class="recordings-list" id="recordingsList">
+            <h2>Your Recordings (<span id="recordingCount">0</span>)</h2>
+            <div id="recordings"></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div style="background: #ffe5ec; border: 4px solid #000; padding: 2rem; margin: 2rem 0;">
+        <h3 style="margin-bottom: 1rem;">🎮 How the Token Game Works</h3>
+        <p style="margin-bottom: 1rem;">
+            <strong>Free Mode:</strong><br>
+            1. Generate random script challenge<br>
+            2. Difficulty rated 1-10 (word complexity, length)<br>
+            3. Roll dice (1d20)<br>
+            4. Tokens = Difficulty × Roll × 10<br>
+            5. Record yourself performing the script<br>
+            6. Earn tokens (100 tokens = 1 recording)
+        </p>
+        <p style="margin-bottom: 1rem;">
+            <strong>Paid Mode:</strong><br>
+            1. Pay $1 via Lightning or credits<br>
+            2. Record immediately<br>
+            3. No game, no waiting
+        </p>
+        <p style="font-size: 0.9rem; opacity: 0.9;">
+            ✅ All recordings saved to IndexedDB (works offline)<br>
+            ✅ Token balance saved in browser (private)<br>
+            ✅ No registration required for free mode
+        </p>
+    </div>
+</footer>
+
+<script src="./config.js"></script>
+<script>
+// Configuration
+const API_URL = window.CRINGEPROOF_CONFIG?.API_BACKEND_URL || 'https://sega-affordable-soviet-weed.trycloudflare.com';
+
+// Token system (LocalStorage)
+let tokenBalance = parseInt(localStorage.getItem('cringeproof_tokens') || '0');
+let currentMode = 'free';
+let currentChallenge = null;
+let canRecord = false;
+
+// IndexedDB setup
+let db;
+const DB_NAME = 'CringeProofVoice';
+const STORE_NAME = 'recordings';
+
+// Initialize
+async function init() {
+    updateTokenDisplay();
+    await initDB();
+    await loadRecordings();
+}
+
+function updateTokenDisplay() {
+    document.getElementById('tokenCount').textContent = tokenBalance;
+}
+
+function selectMode(mode) {
+    currentMode = mode;
+
+    // Update UI
+    document.getElementById('freeMode').classList.toggle('active', mode === 'free');
+    document.getElementById('paidMode').classList.toggle('active', mode === 'paid');
+
+    document.getElementById('challengeBox').classList.toggle('show', mode === 'free');
+    document.getElementById('paymentBox').classList.toggle('show', mode === 'paid');
+
+    // Reset record button state
+    canRecord = false;
+    updateRecordButton();
+
+    document.getElementById('status').textContent = mode === 'free'
+        ? 'Generate a challenge to start'
+        : 'Choose payment method';
+}
+
+function generateChallenge() {
+    // Script templates with difficulty ratings
+    const scripts = [
+        { text: "Say the alphabet backwards in under 10 seconds", difficulty: 8 },
+        { text: "Describe your perfect day in exactly 30 seconds", difficulty: 3 },
+        { text: "Recite a tongue twister 5 times fast: She sells seashells by the seashore", difficulty: 7 },
+        { text: "Name 10 countries starting with 'A' in under 15 seconds", difficulty: 6 },
+        { text: "Explain quantum physics to a 5-year-old in 20 seconds", difficulty: 9 },
+        { text: "Count from 100 to 1 by 7s (100, 93, 86...)", difficulty: 8 },
+        { text: "Sing your favorite song chorus", difficulty: 2 },
+        { text: "Do an impression of a famous person for 15 seconds", difficulty: 5 },
+        { text: "List 15 animals that start with different letters", difficulty: 4 },
+        { text: "Tell a joke and explain why it's funny", difficulty: 3 }
+    ];
+
+    // Pick random script
+    currentChallenge = scripts[Math.floor(Math.random() * scripts.length)];
+
+    // Roll dice (1d20)
+    const diceRoll = Math.floor(Math.random() * 20) + 1;
+
+    // Calculate tokens
+    const tokensEarned = currentChallenge.difficulty * diceRoll * 10;
+
+    // Update UI
+    document.getElementById('scriptText').textContent = currentChallenge.text;
+    document.getElementById('difficulty').textContent = currentChallenge.difficulty;
+    document.getElementById('diceRoll').textContent = diceRoll;
+    document.getElementById('potentialTokens').textContent = tokensEarned;
+    document.getElementById('diceDisplay').textContent = `🎲 ${diceRoll}`;
+    document.getElementById('challengeDetails').style.display = 'block';
+
+    // Animate dice
+    document.getElementById('diceDisplay').style.animation = 'none';
+    setTimeout(() => {
+        document.getElementById('diceDisplay').style.animation = 'roll 0.5s ease-out';
+    }, 10);
+
+    // Store challenge data
+    currentChallenge.diceRoll = diceRoll;
+    currentChallenge.tokensEarned = tokensEarned;
+
+    // Enable recording
+    canRecord = true;
+    updateRecordButton();
+
+    document.getElementById('status').textContent = `✅ Challenge ready! Earn ${tokensEarned} tokens`;
+}
+
+async function processPayment() {
+    const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+    if (paymentMethod === 'credits') {
+        // Check if user has credits (would need backend)
+        alert('Credits mode requires logging in. For now, use Lightning payment.');
+        return;
+    }
+
+    if (paymentMethod === 'lightning') {
+        // Show QR code (mock - real implementation would call /api/oss-checkout/create)
+        document.getElementById('qrCodeBox').style.display = 'block';
+        document.getElementById('status').textContent = 'Scan QR code to pay $1';
+
+        // Mock payment success after 3 seconds
+        setTimeout(() => {
+            canRecord = true;
+            updateRecordButton();
+            document.getElementById('status').textContent = '✅ Payment received! You can now record';
+        }, 3000);
+    }
+}
+
+function updateRecordButton() {
+    const btn = document.getElementById('recordBtn');
+    btn.disabled = !canRecord;
+    btn.style.opacity = canRecord ? '1' : '0.5';
+    btn.style.cursor = canRecord ? 'pointer' : 'not-allowed';
+
+    document.getElementById('recordHint').textContent = canRecord
+        ? 'Tap to record'
+        : (currentMode === 'free' ? 'Complete challenge first' : 'Pay $1 first');
+}
+
+// Recording state
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
+async function toggleRecording() {
+    if (!canRecord) return;
+
+    if (isRecording) {
+        stopRecording();
+    } else {
+        await startRecording();
+    }
+}
+
+// iOS detection and audio format helper
+function getMediaRecorderOptions() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (isIOS) {
+        return { mimeType: 'audio/mp4', isIOS: true };
+    } else if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        return { mimeType: 'audio/webm;codecs=opus', isIOS: false };
+    } else {
+        return { mimeType: 'audio/webm', isIOS: false };
+    }
+}
+
+async function startRecording() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        const recorderConfig = getMediaRecorderOptions();
+        mediaRecorder = new MediaRecorder(stream, { mimeType: recorderConfig.mimeType });
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: recorderConfig.mimeType });
+            await saveRecording(audioBlob);
+            stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+
+        document.getElementById('status').textContent = '🔴 Recording...';
+        document.getElementById('recordBtn').classList.add('recording');
+        document.getElementById('recordBtn').textContent = '⏹️';
+
+    } catch (error) {
+        document.getElementById('status').textContent = '❌ Microphone access denied';
+        console.error('Recording error:', error);
+    }
+}
+
+function stopRecording() {
+    if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+
+        document.getElementById('status').textContent = '✅ Processing...';
+        document.getElementById('recordBtn').classList.remove('recording');
+        document.getElementById('recordBtn').textContent = '🎤';
+    }
+}
+
+async function saveRecording(audioBlob) {
+    const recording = {
+        blob: audioBlob,
+        timestamp: new Date().toISOString(),
+        size: audioBlob.size,
+        mode: currentMode,
+        challenge: currentMode === 'free' ? currentChallenge : null,
+        synced: false,
+        transcription: null
+    };
+
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    const addRequest = store.add(recording);
+
+    addRequest.onsuccess = async () => {
+        const recordingId = addRequest.result;
+
+        // Award tokens if free mode
+        if (currentMode === 'free' && currentChallenge) {
+            tokenBalance += currentChallenge.tokensEarned;
+            localStorage.setItem('cringeproof_tokens', tokenBalance);
+            updateTokenDisplay();
+
+            document.getElementById('status').textContent =
+                `✅ Earned ${currentChallenge.tokensEarned} tokens! Total: ${tokenBalance}`;
+        } else {
+            document.getElementById('status').textContent = '✅ Saved!';
+        }
+
+        // Try uploading to backend for transcription
+        try {
+            const formData = new FormData();
+            const fileExt = audioBlob.type.includes('mp4') ? '.m4a' : '.webm';
+            formData.append('audio', audioBlob, `token-game-${recordingId}${fileExt}`);
+
+            document.getElementById('status').textContent = '📤 Uploading...';
+
+            const response = await fetch(`${API_URL}/api/simple-voice/save`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Update recording with transcription
+                const updateTx = db.transaction([STORE_NAME], 'readwrite');
+                const updateStore = updateTx.objectStore(STORE_NAME);
+                recording.synced = true;
+                recording.transcription = data.transcription;
+                recording.server_id = data.recording_id;
+                await updateStore.put(recording, recordingId);
+
+                document.getElementById('status').textContent = `✅ Transcribed: "${data.transcription?.substring(0, 40)}..."`;
+            } else {
+                document.getElementById('status').textContent = currentMode === 'free'
+                    ? `✅ Earned ${currentChallenge?.tokensEarned} tokens! (saved offline)`
+                    : '💾 Saved offline';
+            }
+        } catch (err) {
+            console.log('Upload failed, keeping offline:', err);
+        }
+
+        // Reset for next recording
+        canRecord = false;
+        currentChallenge = null;
+        updateRecordButton();
+
+        setTimeout(() => {
+            document.getElementById('status').textContent = 'Choose mode for next recording';
+        }, 4000);
+
+        await loadRecordings();
+    };
+}
+
+// IndexedDB functions
+async function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                const objectStore = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+            }
+        };
+    });
+}
+
+// Convert Blob to data URL (fixes Safari playback issue)
+async function blobToDataURL(blob) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+    });
+}
+
+async function loadRecordings() {
+    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    const request = store.getAll();
+
+    request.onsuccess = async () => {
+        const recordings = request.result;
+        await displayRecordings(recordings.reverse());
+        document.getElementById('recordingCount').textContent = recordings.length;
+    };
+}
+
+async function displayRecordings(recordings) {
+    const container = document.getElementById('recordings');
+
+    if (recordings.length === 0) {
+        container.innerHTML = '<p style="text-align: center; opacity: 0.6;">No recordings yet</p>';
+        return;
+    }
+
+    // Detect iOS for file extension
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const fileExt = isIOS ? 'm4a' : 'webm';
+    const mimeType = isIOS ? 'audio/mp4' : 'audio/webm';
+
+    const items = await Promise.all(recordings.map(async (recording, index) => {
+        // Convert Blob to data URL (Safari can play these)
+        const dataURL = await blobToDataURL(recording.blob);
+        const date = new Date(recording.timestamp);
+        const size = (recording.size / 1024).toFixed(1);
+
+        const modeBadge = recording.mode === 'free'
+            ? `<span class="badge free">FREE (${recording.challenge?.tokensEarned || 0} tokens)</span>`
+            : `<span class="badge paid">PAID ($1)</span>`;
+
+        const challengeInfo = recording.mode === 'free' && recording.challenge
+            ? `<div style="font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem;">
+                Challenge: "${recording.challenge.text}"<br>
+                Difficulty: ${recording.challenge.difficulty} × Roll: ${recording.challenge.diceRoll}
+               </div>`
+            : '';
+
+        const transcriptInfo = recording.transcription
+            ? `<div style="font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem;">
+                📝 ${recording.transcription.substring(0, 100)}...
+               </div>`
+            : '';
+
+        return `
+            <div class="recording-item">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div>
+                        <strong>Recording #${recordings.length - index}</strong>
+                        ${modeBadge}
+                    </div>
+                    <button class="delete-btn" onclick="deleteRecording(${index})">🗑️</button>
+                </div>
+                <div style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 0.5rem;">
+                    ${date.toLocaleString()} • ${size} KB
+                </div>
+                ${challengeInfo}
+                ${transcriptInfo}
+                <audio controls src="${dataURL}" type="${mimeType}"></audio>
+                <div style="margin-top: 0.5rem;">
+                    <a href="${dataURL}" download="recording-${recordings.length - index}.${fileExt}"
+                       style="font-size: 0.9rem; color: #ff006e;">
+                        ⬇️ Download (.${fileExt})
+                    </a>
+                </div>
+            </div>
+        `;
+    }));
+
+    container.innerHTML = items.join('');
+}
+
+async function deleteRecording(id) {
+    if (!confirm('Delete this recording?')) return;
+
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+
+    await store.delete(id);
+    await loadRecordings();
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await init();
+    } catch (error) {
+        console.error('Initialization error:', error);
+        document.getElementById('status').textContent = '❌ Storage not available';
+    }
+});
+</script>
+
+</body>
+</html>

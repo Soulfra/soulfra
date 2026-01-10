@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Comparison - Why Educational Authority Wins</title>
+    <meta name="description" content="See how educational authority content beats traditional review sites, YouTube tutorials, and lead generation platforms.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f7fafc;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .platform-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .platform-card.winner {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        }
+
+        .platform-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .platform-card.winner h3::after {
+            content: " 🏆";
+            font-size: 1.2rem;
+        }
+
+        .platform-tagline {
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .comparison-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .comparison-list li {
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-list li:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-list li.pro::before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+
+        .comparison-list li.con::before {
+            content: "✗";
+            color: #f56565;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+
+        .stat-highlight {
+            background: #fef5e7;
+            border-left: 4px solid #f39c12;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .stat-highlight strong {
+            color: #d68910;
+            font-size: 1.2rem;
+        }
+
+        .detailed-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+
+        .detailed-comparison th {
+            background: #667eea;
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .detailed-comparison td {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        .detailed-comparison tr:hover {
+            background: #f7fafc;
+        }
+
+        .detailed-comparison .winner-cell {
+            background: rgba(102, 126, 234, 0.05);
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .roi-breakdown {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin: 40px 0;
+        }
+
+        .roi-breakdown h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .roi-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .roi-step {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .roi-step .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .roi-step .label {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            margin: 60px 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 40px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detailed-comparison {
+                font-size: 0.9rem;
+            }
+
+            .detailed-comparison th,
+            .detailed-comparison td {
+                padding: 12px 8px;
+            }
+
+            .roi-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Why Educational Authority Wins</h1>
+        <p>Traditional platforms rent you traffic. We help you own your audience.</p>
+    </div>
+
+    <div class="container">
+        <!-- Yelp/Google Reviews Comparison -->
+        <div class="section">
+            <h2>vs. Yelp / Google Reviews</h2>
+            <div class="comparison-grid">
+                <div class="platform-card">
+                    <h3>Yelp / Google Reviews</h3>
+                    <p class="platform-tagline">"Great service! 5 stars"</p>
+                    <ul class="comparison-list">
+                        <li class="con">Thin content (customer opinions only)</li>
+                        <li class="con">No educational value</li>
+                        <li class="con">Ranks only for brand queries</li>
+                        <li class="con">Covered in competitor ads</li>
+                        <li class="con">One-way reviews (customers review you)</li>
+                        <li class="con">Can't remove bad reviews</li>
+                        <li class="con">Pay for promoted listings to stand out</li>
+                    </ul>
+                    <div class="stat-highlight">
+                        <strong>Traffic:</strong> Only people already searching for your business name
+                    </div>
+                </div>
+
+                <div class="platform-card winner">
+                    <h3>Educational Authority Platform</h3>
+                    <p class="platform-tagline">"Why Your AC Fails: A Licensed HVAC Tech's Guide"</p>
+                    <ul class="comparison-list">
+                        <li class="pro">Deep educational content (tutorials, prevention guides)</li>
+                        <li class="pro">Solves customer problems → builds trust</li>
+                        <li class="pro">Ranks for long-tail problem/solution queries</li>
+                        <li class="pro">Zero ads (clean UX, no distractions)</li>
+                        <li class="pro">Bidirectional reviews (you review customers too)</li>
+                        <li class="pro">Full control over your content</li>
+                        <li class="pro">Organic leads from your own SEO authority</li>
+                    </ul>
+                    <div class="stat-highlight">
+                        <strong>Traffic:</strong> People searching "how to fix X" find YOUR tutorial, trust your expertise, call you
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- YouTube Comparison -->
+        <div class="section">
+            <h2>vs. YouTube DIY Tutorials</h2>
+            <div class="comparison-grid">
+                <div class="platform-card">
+                    <h3>YouTube</h3>
+                    <p class="platform-tagline">Anyone can post tutorials (verified or not)</p>
+                    <ul class="comparison-list">
+                        <li class="con">No creator verification (lots of bad advice)</li>
+                        <li class="con">No local connection (national/global scope)</li>
+                        <li class="con">Monetized with ads (terrible UX)</li>
+                        <li class="con">Video-only (harder to scan/skim)</li>
+                        <li class="con">No proof creator is licensed professional</li>
+                        <li class="con">Can't verify creator was on actual job site</li>
+                        <li class="con">Algorithm changes can tank your reach</li>
+                    </ul>
+                    <div class="stat-highlight">
+                        <strong>Problem:</strong> Viewers don't know if advice is legit, can't hire you locally
+                    </div>
+                </div>
+
+                <div class="platform-card winner">
+                    <h3>Educational Authority Platform</h3>
+                    <p class="platform-tagline">Licensed professionals only, verified with job site proof</p>
+                    <ul class="comparison-list">
+                        <li class="pro">License verification required (state API integration)</li>
+                        <li class="pro">Geofenced to your service area</li>
+                        <li class="pro">No ads anywhere (clean experience)</li>
+                        <li class="pro">Text + voice (scannable, SEO-friendly)</li>
+                        <li class="pro">Verified badge shows license number</li>
+                        <li class="pro">Job site photos prove real experience</li>
+                        <li class="pro">You own content + SEO rankings</li>
+                    </ul>
+                    <div class="stat-highlight">
+                        <strong>Solution:</strong> Viewers know you're licensed, see you serve their area, can hire you directly
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Angi/HomeAdvisor Comparison -->
+        <div class="section">
+            <h2>vs. Angi / HomeAdvisor (Lead Gen)</h2>
+            <div class="comparison-grid">
+                <div class="platform-card">
+                    <h3>Angi / HomeAdvisor</h3>
+                    <p class="platform-tagline">Pay-per-lead marketplace</p>
+                    <ul class="comparison-list">
+                        <li class="con">$15-50 per lead (adds up fast)</li>
+                        <li class="con">Leads shared with 3+ competitors</li>
+                        <li class="con">Low conversion (customer price shopping)</li>
+                        <li class="con">Platform owns customer relationship</li>
+                        <li class="con">Pay forever to keep leads flowing</li>
+                        <li class="con">No SEO benefit (traffic goes to Angi)</li>
+                        <li class="con">Can't export customer list</li>
+                    </ul>
+                    <div class="stat-highlight">
+                        <strong>Cost:</strong> $1,500-2,500/month for 50-100 leads (many low quality)
+                    </div>
+                </div>
+
+                <div class="platform-card winner">
+                    <h3>Educational Authority Platform</h3>
+                    <p class="platform-tagline">Own your leads through content marketing</p>
+                    <ul class="comparison-list">
+                        <li class="pro">$0 per lead (organic from your SEO)</li>
+                        <li class="pro">Exclusive leads (found you specifically)</li>
+                        <li class="pro">High conversion (trust from tutorials)</li>
+                        <li class="pro">You own customer relationship</li>
+                        <li class="pro">Build long-term asset (SEO compounds)</li>
+                        <li class="pro">Your content ranks on Google forever</li>
+                        <li class="pro">Full CRM export anytime</li>
+                    </ul>
+                    <div class="stat-highlight">
+                        <strong>Cost:</strong> $49/month, unlimited organic leads (10-30+ per tutorial)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Feature Comparison Table -->
+        <div class="section">
+            <h2>Complete Feature Comparison</h2>
+            <table class="detailed-comparison">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Yelp/Google</th>
+                        <th>YouTube</th>
+                        <th>Angi/HomeAdvisor</th>
+                        <th>This Platform</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Content Type</strong></td>
+                        <td>Customer reviews</td>
+                        <td>Video tutorials</td>
+                        <td>Lead forms</td>
+                        <td class="winner-cell">Educational tutorials + voice</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Verification</strong></td>
+                        <td>Email/phone</td>
+                        <td>None</td>
+                        <td>Background check</td>
+                        <td class="winner-cell">License + geofencing + job site photos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SEO Value</strong></td>
+                        <td>Brand queries only</td>
+                        <td>Video SERP</td>
+                        <td>Zero (platform ranks)</td>
+                        <td class="winner-cell">Long-tail keywords, 50+ pages per tutorial</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lead Cost</strong></td>
+                        <td>$0 direct, $500+/mo promoted</td>
+                        <td>$0</td>
+                        <td>$15-50 per lead</td>
+                        <td class="winner-cell">$0 per lead (organic)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lead Quality</strong></td>
+                        <td>Medium</td>
+                        <td>Low (not local)</td>
+                        <td>Low (price shopping)</td>
+                        <td class="winner-cell">High (trust from education)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exclusivity</strong></td>
+                        <td>Shared directory</td>
+                        <td>N/A</td>
+                        <td>Shared with 3+ pros</td>
+                        <td class="winner-cell">Exclusive (found you specifically)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customer Control</strong></td>
+                        <td>None (can't remove reviews)</td>
+                        <td>Comments only</td>
+                        <td>None</td>
+                        <td class="winner-cell">Bidirectional reviews</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Platform Fees</strong></td>
+                        <td>$0-500/mo promoted</td>
+                        <td>$0</td>
+                        <td>15-20% of job value</td>
+                        <td class="winner-cell">$49/mo flat (no commissions)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Long-term Value</strong></td>
+                        <td>None (reviews age)</td>
+                        <td>Medium (videos rank)</td>
+                        <td>Zero (pay forever)</td>
+                        <td class="winner-cell">High (SEO compounds over time)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ROI Breakdown -->
+        <div class="roi-breakdown">
+            <h3>Real ROI: One Tutorial Example</h3>
+            <p style="text-align: center; margin-bottom: 20px;">Licensed HVAC tech in Tampa creates tutorial: "Why Your AC Freezes Up"</p>
+            <div class="roi-steps">
+                <div class="roi-step">
+                    <span class="number">1</span>
+                    <span class="label">10-minute voice recording on job site</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">→</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">85</span>
+                    <span class="label">pSEO landing pages created automatically</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">→</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">500</span>
+                    <span class="label">Google visitors per month</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">→</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">25</span>
+                    <span class="label">Leads generated (5% conversion)</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">→</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">10</span>
+                    <span class="label">Customers booked (40% close rate)</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">→</span>
+                </div>
+                <div class="roi-step">
+                    <span class="number">$3,000</span>
+                    <span class="label">Monthly revenue ($300 avg service)</span>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 30px; font-size: 1.2rem;"><strong>Platform cost: $49/mo | ROI: 61x</strong></p>
+            <p style="text-align: center; margin-top: 10px;">Most professionals create 5-10 tutorials = $15,000-30,000/month in leads</p>
+        </div>
+
+        <!-- The Bottom Line -->
+        <div class="section">
+            <h2>The Bottom Line</h2>
+            <p style="font-size: 1.2rem; line-height: 1.8; color: #4a5568; max-width: 900px; margin: 0 auto;">
+                <strong>Traditional platforms rent you traffic.</strong> You pay monthly fees or per-lead costs forever. If you stop paying, leads stop flowing. You're a renter, not an owner.
+            </p>
+            <p style="font-size: 1.2rem; line-height: 1.8; color: #4a5568; max-width: 900px; margin: 30px auto;">
+                <strong>Educational authority builds an asset.</strong> Your tutorials rank on Google, generate organic leads, and compound over time. Each tutorial becomes a lead generation machine that works 24/7. You're building equity in your online presence.
+            </p>
+            <p style="font-size: 1.2rem; line-height: 1.8; color: #4a5568; max-width: 900px; margin: 30px auto;">
+                <strong>The question isn't "should I try this?"</strong> The question is "how much longer can I afford to rent traffic when I could own my audience?"
+            </p>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Ready to Own Your Leads?</h2>
+            <p>Start with 5 free tutorials. No credit card required.</p>
+            <a href="/signup" class="cta-button">Get Started Free</a>
+            <p style="margin-top: 20px; font-size: 0.95rem; opacity: 0.9;">Upgrade to Professional ($49/mo) when you're ready to scale</p>
+        </div>
+
+        <footer style="text-align: center; padding: 40px 20px; color: #718096;">
+            <p><a href="/" style="color: #667eea; text-decoration: none; font-weight: 600;">Home</a> • <a href="/pricing" style="color: #667eea; text-decoration: none; font-weight: 600;">Pricing</a> • <a href="/docs" style="color: #667eea; text-decoration: none; font-weight: 600;">Documentation</a> • <a href="/attribution" style="color: #667eea; text-decoration: none; font-weight: 600;">Attribution</a></p>
+            <p style="margin-top: 20px;">© 2026 Soulfra Educational Authority Platform</p>
+        </footer>
+    </div>
+</body>
+</html>

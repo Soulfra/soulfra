@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - CringeProof </title>
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+.auth-container {
+    max-width: 500px;
+    margin: 4rem auto;
+    padding: 3rem;
+    background: #fff;
+    border: 5px solid #000;
+    box-shadow: 12px 12px 0 #000;
+}
+
+.auth-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #ff006e;
+}
+
+.auth-form {
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 3px solid #000;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff006e;
+}
+
+.submit-btn {
+    width: 100%;
+    background: #ff006e;
+    color: white;
+    border: 4px solid #000;
+    padding: 1.25rem;
+    font-size: 1.125rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 6px 6px 0 #000;
+    transition: all 0.1s;
+}
+
+.submit-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #000;
+}
+
+.submit-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0 #000;
+}
+
+.message {
+    padding: 1rem;
+    margin: 1rem 0;
+    border: 3px solid #000;
+    display: none;
+}
+
+.message.success {
+    background: #d4edda;
+    border-color: #00C49A;
+}
+
+.message.error {
+    background: #f8d7da;
+    border-color: #FF4136;
+}
+
+.message.show {
+    display: block;
+}
+
+.login-link {
+    margin-top: 2rem;
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 3px solid #000;
+}
+
+.admin-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #ff006e;
+    color: white;
+    border: 3px solid #000;
+    font-weight: 900;
+    margin-top: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="https://cringeproof.com/" class="soulfra-logo">
+            🚫 CringeProof
+        </a>
+
+        <div class="soulfra-links">
+            <a href="https://cringeproof.com/ideas/">💡 Ideas</a>
+            <a href="https://cringeproof.com/">🎤 Archive</a>
+            <a href="https://cringeproof.com/login.html">🔐 Login</a>
+        </div>
+    </div>
+</nav>
+
+<div class="auth-container">
+    <h1>Create Account</h1>
+    <p>Join CringeProof. First user becomes admin.</p>
+
+    <div class="message" id="message"></div>
+
+    <form class="auth-form" id="signup-form">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required autocomplete="new-password" minlength="8">
+            <small>At least 8 characters</small>
+        </div>
+
+        <button type="submit" class="submit-btn">Create Account</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="/login.html">Log in</a>
+    </div>
+</div>
+
+<script src="./config.js"></script>
+<script>
+const form = document.getElementById('signup-form');
+const messageEl = document.getElementById('message');
+
+// Use Soulfra unified backend (port 5001), not isolated cringeproof API
+const API_URL = window.CRINGEPROOF_CONFIG?.API_BACKEND_URL || 'http://localhost:5001';
+console.log('[CringeProof Signup] Using Soulfra unified backend:', API_URL);
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const response = await fetch(`${API_URL}/api/auth/signup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, password }),
+            credentials: 'include'  // Important for cookies/sessions
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showMessage(`✅ Account created! ${data.is_admin ? '👑 You are the admin!' : ''}`, 'success');
+
+            if (data.is_admin) {
+                messageEl.innerHTML += '<div class="admin-badge">👑 ADMIN ACCESS GRANTED</div>';
+            }
+
+            // Redirect to homepage after 2 seconds
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        } else {
+            showMessage(`❌ ${data.error || 'Signup failed'}`, 'error');
+        }
+    } catch (error) {
+        showMessage(`❌ Connection error. Is the API running at ${API_URL}?`, 'error');
+        console.error('Signup error:', error);
+    }
+});
+
+function showMessage(text, type) {
+    messageEl.textContent = text;
+    messageEl.className = `message show ${type}`;
+}
+</script>
+
+<footer>
+    <p><strong>🔒 Privacy First</strong></p>
+    <p>Your account is stored locally. No tracking, no surveillance.</p>
+    <p style="margin-top: 1.5rem;">
+        <a href="/">Home</a> |
+        <a href="/privacy.html">Privacy</a> |
+        <a href="/ideas/">Ideas</a>
+    </p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join {{ domain_name }} - {{ domain_question }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 3em; margin-bottom: 10px; }
+        .header .question { font-size: 1.3em; opacity: 0.95; line-height: 1.4; }
+        .content { padding: 40px 30px; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .step h2 { color: {{ theme_primary }}; margin-bottom: 20px; font-size: 1.8em; }
+        .step p { color: #666; margin-bottom: 20px; line-height: 1.6; }
+        input, select {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: {{ theme_primary }};
+        }
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: {{ theme_primary }};
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #e0e0e0;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: {{ theme_primary }};
+            transition: width 0.3s;
+        }
+        .preview-box {
+            background: {{ theme_background }};
+            border: 2px solid {{ theme_primary }};
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .preview-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .preview-label { font-weight: 600; color: #666; }
+        .preview-value { color: {{ theme_primary }}; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress" style="width: 25%;"></div>
+        </div>
+
+        <div class="header">
+            <h1>{{ domain_emoji }} {{ domain_name }}</h1>
+            <p class="question">{{ domain_question }}</p>
+        </div>
+
+        <div class="content">
+            <form method="POST" id="onboardingForm">
+                <!-- Step 1: Username -->
+                <div class="step active" id="step1">
+                    <h2>Choose Your Identity</h2>
+                    <p>Pick a username that represents you in {{ domain_name }}.</p>
+
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required minlength="3">
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+
+                    <button type="button" class="btn" onclick="nextStep(2)">Continue</button>
+                </div>
+
+                <!-- Step 2: Personality Quiz -->
+                <div class="step" id="step2">
+                    <h2>✨ Tell Us Your Vibe</h2>
+                    <p>5 quick questions to match you with the perfect theme (takes 30 seconds!)</p>
+
+                    <label for="vibe">What's your vibe?</label>
+                    <select id="vibe" name="vibe" required>
+                        <option value="">Choose your energy...</option>
+                        <option value="calm">🌊 Calm & Peaceful</option>
+                        <option value="focused">🎯 Focused & Driven</option>
+                        <option value="creative">🎨 Creative & Expressive</option>
+                        <option value="careful">🔒 Careful & Private</option>
+                        <option value="energetic">⚡ Energetic & Bold</option>
+                    </select>
+
+                    <label for="communication_style">How do you communicate?</label>
+                    <select id="communication_style" name="communication_style" required>
+                        <option value="">Choose your style...</option>
+                        <option value="thoughtful">💭 Thoughtful & Reflective</option>
+                        <option value="precise">📊 Precise & Data-Driven</option>
+                        <option value="expressive">🎭 Expressive & Creative</option>
+                        <option value="private">🤐 Private & Selective</option>
+                        <option value="direct">💬 Direct & Quick</option>
+                    </select>
+
+                    <label for="goals">What brings you here?</label>
+                    <select id="goals" name="goals" required>
+                        <option value="">Choose your goal...</option>
+                        <option value="sharing ideas">💡 Sharing Ideas</option>
+                        <option value="building projects">🛠️ Building Projects</option>
+                        <option value="privacy">🔐 Privacy & Control</option>
+                        <option value="creating art">🎨 Creating Art</option>
+                        <option value="connecting">🤝 Connecting with Others</option>
+                    </select>
+
+                    <label for="aesthetic">Pick your aesthetic</label>
+                    <select id="aesthetic" name="aesthetic" required>
+                        <option value="">Choose your look...</option>
+                        <option value="minimal">⚪ Minimal & Clean</option>
+                        <option value="technical">💻 Technical & Precise</option>
+                        <option value="colorful">🌈 Colorful & Vibrant</option>
+                        <option value="dark">🌑 Dark & Secure</option>
+                        <option value="natural">🌿 Natural & Organic</option>
+                    </select>
+
+                    <label for="privacy">How public is your work?</label>
+                    <select id="privacy" name="privacy" required>
+                        <option value="">Choose privacy level...</option>
+                        <option value="public">🌍 Public - Share with everyone</option>
+                        <option value="selective">👥 Selective - Share with some</option>
+                        <option value="private">🔒 Private - Just for me</option>
+                    </select>
+
+                    <button type="button" class="btn" onclick="nextStep(3)">Continue</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(1)">Back</button>
+                </div>
+
+                <!-- Step 3: Town/Plot -->
+                <div class="step" id="step3">
+                    <h2>Name Your Territory</h2>
+                    <p>What will you call your plot in {{ domain_name }}?</p>
+
+                    <label for="town_name">Town/Plot Name</label>
+                    <input type="text" id="town_name" name="town_name" placeholder="My Awesome Plot" required>
+
+                    <label for="plot_type">Plot Type</label>
+                    <select id="plot_type" name="plot_type">
+                        <option value="town">Town</option>
+                        <option value="fortress">Fortress</option>
+                        <option value="garden">Garden</option>
+                        <option value="workshop">Workshop</option>
+                    </select>
+
+                    <button type="button" class="btn" onclick="nextStep(4)">Continue</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Back</button>
+                </div>
+
+                <!-- Step 4: Confirm -->
+                <div class="step" id="step4">
+                    <h2>Review & Join</h2>
+                    <p>Everything look good? Your QR code will be generated automatically!</p>
+
+                    <div class="preview-box">
+                        <div class="preview-item">
+                            <span class="preview-label">Username:</span>
+                            <span class="preview-value" id="preview-username"></span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Email:</span>
+                            <span class="preview-value" id="preview-email"></span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Vibe:</span>
+                            <span class="preview-value" id="preview-vibe"></span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Town Name:</span>
+                            <span class="preview-value" id="preview-town"></span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Plot Type:</span>
+                            <span class="preview-value" id="preview-type"></span>
+                        </div>
+                    </div>
+
+                    <label for="password">Create Password</label>
+                    <input type="password" id="password" name="password" placeholder="Choose a secure password" required minlength="6">
+
+                    <button type="submit" class="btn">🚀 Join {{ domain_name }}!</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(3)">Back</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function nextStep(step) {
+            // Validate current step
+            const currentStep = document.querySelector('.step.active');
+            const inputs = currentStep.querySelectorAll('input[required], select[required]');
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (!input.value || (input.minLength && input.value.length < input.minLength)) {
+                    valid = false;
+                    input.style.borderColor = '#ff4444';
+                } else {
+                    input.style.borderColor = '#e0e0e0';
+                }
+            });
+
+            if (!valid) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Update preview
+            if (step === 4) {
+                document.getElementById('preview-username').textContent = document.getElementById('username').value;
+                document.getElementById('preview-email').textContent = document.getElementById('email').value;
+
+                // Get selected vibe text
+                const vibeSelect = document.getElementById('vibe');
+                const vibeText = vibeSelect.options[vibeSelect.selectedIndex].text;
+                document.getElementById('preview-vibe').textContent = vibeText;
+
+                document.getElementById('preview-town').textContent = document.getElementById('town_name').value;
+                document.getElementById('preview-type').textContent = document.getElementById('plot_type').value;
+            }
+
+            // Show next step
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            // Update progress
+            const progress = (step / 4) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function prevStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            const progress = (step / 4) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>

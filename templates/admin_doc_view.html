@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ filename }} - Soulfra Docs</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .doc-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #000;
+    }
+    .doc-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      padding: 10px 20px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #000;
+      font-size: 14px;
+    }
+    .btn:hover {
+      background: #e9e9e9;
+    }
+    .btn-primary {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+    .btn-primary:hover {
+      background: #333;
+    }
+    .doc-content {
+      line-height: 1.8;
+      font-size: 16px;
+    }
+    .doc-content h1 {
+      font-size: 32px;
+      margin: 30px 0 20px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #000;
+    }
+    .doc-content h2 {
+      font-size: 26px;
+      margin: 25px 0 15px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    .doc-content h3 {
+      font-size: 22px;
+      margin: 20px 0 10px 0;
+    }
+    .doc-content pre {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      border-left: 4px solid #000;
+    }
+    .doc-content code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .doc-content pre code {
+      background: none;
+      padding: 0;
+    }
+    .doc-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .doc-content table th,
+    .doc-content table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    .doc-content table th {
+      background: #f9f9f9;
+      font-weight: bold;
+    }
+    .doc-content blockquote {
+      border-left: 4px solid #ddd;
+      margin: 20px 0;
+      padding-left: 20px;
+      color: #666;
+      font-style: italic;
+    }
+    .snippets-section {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 40px;
+    }
+    .snippet {
+      background: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      border-left: 4px solid #007bff;
+    }
+    .snippet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .snippet-lang {
+      background: #007bff;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+    }
+    .snippet-meta {
+      color: #666;
+      font-size: 12px;
+    }
+    .snippet-code {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 3px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      white-space: pre;
+    }
+    .copy-btn {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .copy-btn:hover {
+      background: #218838;
+    }
+    .view-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .toggle-btn {
+      padding: 10px 20px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .toggle-btn.active {
+      background: #000;
+      color: #fff;
+    }
+    .raw-content {
+      display: none;
+    }
+    .raw-content.active {
+      display: block;
+    }
+    .raw-content textarea {
+      width: 100%;
+      min-height: 600px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <h2>📄 {{ filename }}</h2>
+    <nav class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/docs">← Back to Docs</a>
+      <a href="/admin/snippets">Snippets</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </div>
+
+  <div class="doc-container">
+    <div class="doc-header">
+      <div class="view-toggle">
+        <button class="toggle-btn active" onclick="toggleView('rendered')">📖 Rendered</button>
+        <button class="toggle-btn" onclick="toggleView('raw')">📝 Raw Markdown</button>
+      </div>
+      <div class="doc-actions">
+        <button class="btn copy-btn" onclick="copyRawContent()">📋 Copy Raw</button>
+      </div>
+    </div>
+
+    <div id="rendered" class="doc-content">
+      {{ content|safe }}
+    </div>
+
+    <div id="raw" class="raw-content">
+      <textarea id="rawTextarea" readonly>{{ raw_content }}</textarea>
+    </div>
+
+    {% if snippets %}
+    <div class="snippets-section">
+      <h2>💻 Code Snippets ({{ snippets|length }})</h2>
+      {% for snippet in snippets %}
+      <div class="snippet">
+        <div class="snippet-header">
+          <div>
+            <span class="snippet-lang">{{ snippet.language }}</span>
+            <span class="snippet-meta">{{ snippet.lines }} lines</span>
+          </div>
+          <button class="copy-btn" onclick="copySnippet({{ snippet.id }})">Copy</button>
+        </div>
+        <div class="snippet-code" id="snippet-{{ snippet.id }}">{{ snippet.code }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function toggleView(view) {
+      const rendered = document.getElementById('rendered');
+      const raw = document.getElementById('raw');
+      const buttons = document.querySelectorAll('.toggle-btn');
+
+      if (view === 'rendered') {
+        rendered.style.display = 'block';
+        raw.classList.remove('active');
+        buttons[0].classList.add('active');
+        buttons[1].classList.remove('active');
+      } else {
+        rendered.style.display = 'none';
+        raw.classList.add('active');
+        buttons[0].classList.remove('active');
+        buttons[1].classList.add('active');
+      }
+    }
+
+    function copyRawContent() {
+      const textarea = document.getElementById('rawTextarea');
+      textarea.select();
+      document.execCommand('copy');
+      alert('Raw markdown copied to clipboard!');
+    }
+
+    function copySnippet(id) {
+      const snippet = document.getElementById('snippet-' + id);
+      const range = document.createRange();
+      range.selectNode(snippet);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      alert('Code snippet copied to clipboard!');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+
+{% block title %}API Explorer Game{% endblock %}
+
+{% block content %}
+<div class="game-header">
+    <h1>🎮 API Explorer Game</h1>
+    <p class="game-subtitle">
+        Interactive Swagger Alternative - Explore {{ total_routes }} routes like a dungeon crawler!
+    </p>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        <span class="progress-text" id="progressText">0 / {{ total_routes }} routes tested</span>
+    </div>
+</div>
+
+<!-- Category Tabs -->
+<div class="category-tabs" id="categoryTabs">
+    {% for category in routes.keys() %}
+    <button class="tab-btn {% if loop.first %}active{% endif %}"
+            data-category="{{ loop.index0 }}"
+            onclick="switchCategory({{ loop.index0 }})">
+        {{ category }}
+    </button>
+    {% endfor %}
+</div>
+
+<!-- Route Panels -->
+{% for category, route_list in routes.items() %}
+<div class="route-panel {% if loop.first %}active{% endif %}" id="panel-{{ loop.index0 }}">
+    <div class="route-grid">
+        {% for route in route_list %}
+        <div class="route-item" id="route-{{ loop.index0 }}-{{ loop.parent.loop.index0 }}"
+             data-path="{{ route.path }}"
+             data-method="{{ route.method }}">
+            <div class="route-item-header">
+                <span class="route-status" id="status-{{ loop.index0 }}-{{ loop.parent.loop.index0 }}">
+                    <span class="unchecked">○</span>
+                </span>
+                <span class="route-method method-{{ route.method|lower }}">{{ route.method }}</span>
+                <code class="route-path-code">{{ route.path }}</code>
+            </div>
+            <p class="route-description">{{ route.desc }}</p>
+            <div class="route-actions">
+                <button class="test-btn"
+                        onclick="testRoute({{ loop.index0 }}, {{ loop.parent.loop.index0 }}, '{{ route.path }}', '{{ route.method }}')">
+                    🧪 Test Route
+                </button>
+                <a href="{{ route.path.replace('<slug>', 'test').replace('<username>', 'alice').replace('<id>', '1').replace('<path>', 'app.py') }}"
+                   class="visit-btn"
+                   target="_blank">
+                    🔗 Visit
+                </a>
+            </div>
+            <div class="test-result" id="result-{{ loop.index0 }}-{{ loop.parent.loop.index0 }}" style="display: none;"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+<!-- Achievement Panel -->
+<div class="achievement-panel" id="achievementPanel" style="display: none;">
+    <div class="achievement-content">
+        <h2>🏆 Achievement Unlocked!</h2>
+        <p id="achievementText"></p>
+        <button onclick="closeAchievement()">Continue</button>
+    </div>
+</div>
+
+<style>
+/* Header */
+.game-header {
+    text-align: center;
+    margin: 2em 0 3em;
+}
+
+.game-subtitle {
+    font-size: 1.1em;
+    color: #666;
+    margin-top: 0.5em;
+}
+
+/* Progress Bar */
+.progress-bar {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 30px;
+    background: #e0e0e0;
+    border-radius: 15px;
+    margin: 1.5em auto;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #45a049);
+    transition: width 500ms ease;
+    border-radius: 15px;
+}
+
+.progress-text {
+    position: relative;
+    display: block;
+    line-height: 30px;
+    font-weight: 600;
+    color: #333;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    z-index: 1;
+}
+
+/* Category Tabs */
+.category-tabs {
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    margin-bottom: 2em;
+    padding: 1em;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.tab-btn {
+    padding: 0.75em 1.5em;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms ease;
+    font-size: 0.9em;
+}
+
+.tab-btn:hover {
+    background: #f0f7ff;
+    border-color: #0066cc;
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background: #0066cc;
+    color: white;
+    border-color: #0066cc;
+}
+
+/* Route Panels */
+.route-panel {
+    display: none;
+}
+
+.route-panel.active {
+    display: block;
+}
+
+.route-grid {
+    display: grid;
+    gap: 1.5em;
+}
+
+/* Route Items */
+.route-item {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5em;
+    transition: all 200ms ease;
+}
+
+.route-item:hover {
+    border-color: #0066cc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.route-item.tested {
+    border-left: 5px solid #4CAF50;
+    background: #f0fff0;
+}
+
+.route-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    margin-bottom: 0.75em;
+}
+
+.route-status {
+    font-size: 1.5em;
+}
+
+.route-status .unchecked {
+    color: #ccc;
+}
+
+.route-status .checked {
+    color: #4CAF50;
+}
+
+.route-method {
+    padding: 0.25em 0.75em;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.8em;
+    text-transform: uppercase;
+}
+
+.method-get {
+    background: #61affe;
+    color: white;
+}
+
+.method-post {
+    background: #49cc90;
+    color: white;
+}
+
+.method-put {
+    background: #fca130;
+    color: white;
+}
+
+.method-delete {
+    background: #f93e3e;
+    color: white;
+}
+
+.route-path-code {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.95em;
+    color: #333;
+    font-weight: 600;
+}
+
+.route-description {
+    color: #666;
+    margin: 0 0 1em;
+    line-height: 1.5;
+}
+
+/* Actions */
+.route-actions {
+    display: flex;
+    gap: 0.75em;
+}
+
+.test-btn, .visit-btn {
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.test-btn {
+    background: #ff9800;
+    color: white;
+}
+
+.test-btn:hover {
+    background: #f57c00;
+    transform: scale(1.05);
+}
+
+.visit-btn {
+    background: #0066cc;
+    color: white;
+}
+
+.visit-btn:hover {
+    background: #004080;
+    transform: scale(1.05);
+}
+
+/* Test Results */
+.test-result {
+    margin-top: 1em;
+    padding: 1em;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.85em;
+}
+
+.test-result.success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.test-result.error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.test-result pre {
+    margin: 0.5em 0 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Achievement Panel */
+.achievement-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.achievement-content {
+    background: white;
+    padding: 3em;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 500px;
+    animation: popIn 300ms ease;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.achievement-content h2 {
+    margin: 0 0 0.5em;
+    color: #ff9800;
+}
+
+.achievement-content button {
+    margin-top: 1.5em;
+    padding: 0.75em 2em;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.achievement-content button:hover {
+    background: #45a049;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .category-tabs {
+        justify-content: center;
+    }
+
+    .route-actions {
+        flex-direction: column;
+    }
+
+    .achievement-content {
+        margin: 1em;
+        padding: 2em;
+    }
+}
+</style>
+
+<script>
+// Game state
+let testedRoutes = new Set();
+const totalRoutes = {{ total_routes }};
+
+// Load saved progress from localStorage
+if (localStorage.getItem('testedRoutes')) {
+    try {
+        testedRoutes = new Set(JSON.parse(localStorage.getItem('testedRoutes')));
+        restoreProgress();
+    } catch (e) {
+        console.error('Failed to load progress:', e);
+    }
+}
+
+// Restore visual state of tested routes
+function restoreProgress() {
+    testedRoutes.forEach(routeKey => {
+        const [catIdx, routeIdx] = routeKey.split('-');
+        markRouteTested(catIdx, routeIdx);
+    });
+    updateProgress();
+}
+
+// Switch category tab
+function switchCategory(categoryIndex) {
+    // Update tabs
+    document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === categoryIndex);
+    });
+
+    // Update panels
+    document.querySelectorAll('.route-panel').forEach((panel, idx) => {
+        panel.classList.toggle('active', idx === categoryIndex);
+    });
+}
+
+// Test route via fetch
+async function testRoute(catIdx, routeIdx, path, method) {
+    const routeKey = `${catIdx}-${routeIdx}`;
+    const resultDiv = document.getElementById(`result-${catIdx}-${routeIdx}`);
+
+    // Replace route params with test values
+    let testPath = path
+        .replace('<slug>', 'test')
+        .replace('<username>', 'alice')
+        .replace('<id>', '1')
+        .replace('<path>', 'app.py')
+        .replace('<short_id>', 'test')
+        .replace('<qr_id>', 'test')
+        .replace('<hash>', 'test');
+
+    // Show loading
+    resultDiv.style.display = 'block';
+    resultDiv.className = 'test-result';
+    resultDiv.innerHTML = '⏳ Testing route...';
+
+    try {
+        const response = await fetch(testPath, {
+            method: method === 'POST' ? 'POST' : 'GET',
+            headers: method === 'POST' ? {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            } : {},
+        });
+
+        const contentType = response.headers.get('content-type');
+        let data;
+
+        if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+            data = JSON.stringify(data, null, 2);
+        } else {
+            data = await response.text();
+            // Truncate long responses
+            if (data.length > 500) {
+                data = data.substring(0, 500) + '\n... (truncated)';
+            }
+        }
+
+        // Show result
+        resultDiv.className = 'test-result success';
+        resultDiv.innerHTML = `
+            <strong>✅ Status: ${response.status} ${response.statusText}</strong>
+            <pre>${escapeHtml(data)}</pre>
+        `;
+
+        // Mark as tested
+        if (!testedRoutes.has(routeKey)) {
+            testedRoutes.add(routeKey);
+            markRouteTested(catIdx, routeIdx);
+            updateProgress();
+            saveProgress();
+            checkAchievements();
+        }
+
+    } catch (error) {
+        resultDiv.className = 'test-result error';
+        resultDiv.innerHTML = `<strong>❌ Error:</strong> ${escapeHtml(error.message)}`;
+    }
+}
+
+// Mark route as tested
+function markRouteTested(catIdx, routeIdx) {
+    const routeItem = document.getElementById(`route-${catIdx}-${routeIdx}`);
+    const statusSpan = document.getElementById(`status-${catIdx}-${routeIdx}`);
+
+    if (routeItem) {
+        routeItem.classList.add('tested');
+    }
+
+    if (statusSpan) {
+        statusSpan.innerHTML = '<span class="checked">✓</span>';
+    }
+}
+
+// Update progress bar
+function updateProgress() {
+    const tested = testedRoutes.size;
+    const percentage = Math.round((tested / totalRoutes) * 100);
+
+    document.getElementById('progressBar').style.width = percentage + '%';
+    document.getElementById('progressText').textContent = `${tested} / ${totalRoutes} routes tested`;
+}
+
+// Save progress to localStorage
+function saveProgress() {
+    localStorage.setItem('testedRoutes', JSON.stringify([...testedRoutes]));
+}
+
+// Check for achievements
+function checkAchievements() {
+    const tested = testedRoutes.size;
+
+    if (tested === 1) {
+        showAchievement('First Steps', 'You tested your first route!');
+    } else if (tested === 10) {
+        showAchievement('Explorer', 'You tested 10 routes!');
+    } else if (tested === 25) {
+        showAchievement('API Master', 'You tested 25 routes!');
+    } else if (tested === totalRoutes) {
+        showAchievement('Completionist', 'You tested ALL routes! 🎉');
+    }
+}
+
+// Show achievement popup
+function showAchievement(title, description) {
+    const panel = document.getElementById('achievementPanel');
+    const text = document.getElementById('achievementText');
+
+    text.innerHTML = `<strong>${title}</strong><br>${description}`;
+    panel.style.display = 'flex';
+}
+
+// Close achievement popup
+function closeAchievement() {
+    document.getElementById('achievementPanel').style.display = 'none';
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    // 1-8 to switch categories
+    if (e.key >= '1' && e.key <= '8') {
+        const idx = parseInt(e.key) - 1;
+        if (idx < {{ routes|length }}) {
+            switchCategory(idx);
+        }
+    }
+});
+</script>
+
+{% endblock %}

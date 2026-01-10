@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Learning Dashboard{% endblock %}
+
+{% block extra_head %}
+<!-- Tailwind CSS for utility classes -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Override base.html body max-width for dashboard layouts */
+  body {
+    max-width: 100% !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">📚 Learning Dashboard</h1>
+        <p class="text-gray-600">Spaced repetition powered by neural networks</p>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 text-center">
+            <div class="text-4xl font-bold text-red-600">{{ stats.due_today }}</div>
+            <div class="text-sm text-gray-600 mt-2">Due Today</div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 text-center">
+            <div class="text-4xl font-bold text-indigo-600">{{ stats.total_cards }}</div>
+            <div class="text-sm text-gray-600 mt-2">Total Cards</div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 text-center">
+            <div class="text-4xl font-bold text-green-600">{{ stats.longest_streak }}</div>
+            <div class="text-sm text-gray-600 mt-2">Longest Streak</div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 text-center">
+            <div class="text-4xl font-bold text-purple-600">{{ "%.1f"|format(stats.recent_accuracy) }}%</div>
+            <div class="text-sm text-gray-600 mt-2">Accuracy (7d)</div>
+        </div>
+    </div>
+
+    <!-- Review Button -->
+    {% if stats.due_today > 0 %}
+    <div class="mb-8">
+        <a href="/learn/review" class="block">
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition">
+                <div class="text-2xl font-bold mb-2">Start Review Session</div>
+                <div class="text-lg opacity-90">{{ stats.due_today }} cards waiting</div>
+                <div class="mt-4 text-3xl">→</div>
+            </div>
+        </a>
+    </div>
+    {% else %}
+    <div class="mb-8 bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+        <div class="text-4xl mb-2">✅</div>
+        <div class="text-xl font-semibold text-green-900">All Caught Up!</div>
+        <div class="text-green-700 mt-2">No cards due for review. Come back later!</div>
+    </div>
+    {% endif %}
+
+    <!-- Card Status Breakdown -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <!-- Status Distribution -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">📊 Card Status</h2>
+
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-gray-400 rounded mr-3"></div>
+                        <span class="text-gray-700">New</span>
+                    </div>
+                    <span class="font-semibold text-gray-900">{{ stats.new_cards }}</span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-yellow-400 rounded mr-3"></div>
+                        <span class="text-gray-700">Learning</span>
+                    </div>
+                    <span class="font-semibold text-gray-900">{{ stats.learning_cards }}</span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-blue-400 rounded mr-3"></div>
+                        <span class="text-gray-700">Young</span>
+                    </div>
+                    <span class="font-semibold text-gray-900">{{ stats.young_cards }}</span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-green-400 rounded mr-3"></div>
+                        <span class="text-gray-700">Mature</span>
+                    </div>
+                    <span class="font-semibold text-gray-900">{{ stats.mature_cards }}</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mt-6">
+                <div class="text-sm text-gray-600 mb-2">Overall Progress</div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    {% set mature_pct = (stats.mature_cards / (stats.total_cards or 1) * 100)|int %}
+                    <div class="bg-green-500 h-2 rounded-full" style="width: {{ mature_pct }}%"></div>
+                </div>
+                <div class="text-xs text-gray-500 mt-1">{{ mature_pct }}% mature cards</div>
+            </div>
+        </div>
+
+        <!-- Learning Insights -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">🧠 Learning Insights</h2>
+
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <div class="text-2xl mr-3">📈</div>
+                    <div>
+                        <div class="font-semibold text-gray-900">Average Ease Factor</div>
+                        <div class="text-gray-600">{{ "%.2f"|format(stats.avg_ease) }}</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            {% if stats.avg_ease > 2.5 %}
+                            Cards are getting easier over time!
+                            {% elif stats.avg_ease > 2.0 %}
+                            You're making steady progress
+                            {% else %}
+                            Focus on understanding the material
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="text-2xl mr-3">🔥</div>
+                    <div>
+                        <div class="font-semibold text-gray-900">Neural Network Assistance</div>
+                        <div class="text-gray-600">Difficulty prediction active</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            Using calriven_technical_classifier to optimize learning path
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="text-2xl mr-3">⏱️</div>
+                    <div>
+                        <div class="font-semibold text-gray-900">Estimated Review Time</div>
+                        <div class="text-gray-600">~{{ (stats.due_today * 0.5)|int }} minutes</div>
+                        <div class="text-xs text-gray-500 mt-1">
+                            Based on average time per card
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Learning Paths -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">📚 Learning Paths</h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+            {% if tutorials %}
+            {% for tutorial in tutorials %}
+            <div class="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition cursor-pointer">
+                <div class="font-semibold text-gray-900 mb-2">{{ tutorial.title }}</div>
+                <div class="text-sm text-gray-600 mb-3">
+                    {{ tutorial.card_count }} cards
+                </div>
+                <div class="flex space-x-2">
+                    <a href="/learn/path/{{ tutorial.id }}" class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded text-sm hover:bg-indigo-200 transition">
+                        Study
+                    </a>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded text-sm">
+                        {{ tutorial.topic }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-span-2 text-center py-8 text-gray-500">
+                <div class="text-4xl mb-2">📖</div>
+                <div>No learning paths yet. Import a tutorial to get started!</div>
+                <a href="/tutorial/builder" class="inline-block mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                    Create Tutorial
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid md:grid-cols-3 gap-4">
+        <a href="/learn/import" class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer">
+            <div class="text-3xl mb-2">📥</div>
+            <div class="font-semibold text-gray-900 mb-1">Import Cards</div>
+            <div class="text-sm text-gray-600">Add questions from tutorials</div>
+        </a>
+
+        <a href="/learn/stats" class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer">
+            <div class="text-3xl mb-2">📊</div>
+            <div class="font-semibold text-gray-900 mb-1">Detailed Stats</div>
+            <div class="text-sm text-gray-600">View learning analytics</div>
+        </a>
+
+        <a href="/tutorial/builder" class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition cursor-pointer">
+            <div class="text-3xl mb-2">✨</div>
+            <div class="font-semibold text-gray-900 mb-1">Create Tutorial</div>
+            <div class="text-sm text-gray-600">Generate questions with AI</div>
+        </a>
+    </div>
+
+    <!-- Tips -->
+    <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <div class="flex items-start">
+            <div class="text-2xl mr-3">💡</div>
+            <div>
+                <div class="font-semibold text-blue-900 mb-2">Learning Tips</div>
+                <ul class="text-sm text-blue-800 space-y-1">
+                    <li>• Review daily for best retention (spaced repetition works!)</li>
+                    <li>• Be honest with your ratings - it helps the algorithm optimize your learning</li>
+                    <li>• Mature cards are reviewed less frequently, saving you time</li>
+                    <li>• Neural networks predict difficulty to personalize your experience</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.container {
+    max-width: 1200px;
+}
+</style>
+{% endblock %}

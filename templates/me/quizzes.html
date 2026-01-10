@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz History - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+  .quizzes-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .quizzes-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .quizzes-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+  }
+
+  .quizzes-header p {
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .stats-banner {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
+    margin: 0;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+  }
+
+  .quiz-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .quiz-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .quiz-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .quiz-emoji {
+    font-size: 2.5rem;
+  }
+
+  .quiz-info h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.3rem;
+    color: #333;
+  }
+
+  .quiz-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .quiz-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .quiz-status.completed {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .quiz-status.active {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .quiz-details {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .quiz-meta {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.85rem;
+    color: #666;
+  }
+
+  .quiz-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #667eea;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #5568d3;
+  }
+
+  .btn-secondary {
+    background: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background: #5a6268;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+  }
+
+  .empty-state-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h2 {
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state p {
+    color: #666;
+    margin-bottom: 2rem;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: #666;
+  }
+
+  .filter-tab:hover {
+    border-color: #667eea;
+    color: #667eea;
+  }
+
+  .filter-tab.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+  }
+</style>
+
+<div class="quizzes-container">
+  <!-- Header -->
+  <div class="quizzes-header">
+    <h1>📊 Quiz History</h1>
+    <p>All your personality quizzes and AI friend matches</p>
+  </div>
+
+  <!-- Stats Banner -->
+  <div class="stats-banner">
+    <div class="stat">
+      <div class="stat-value">{{ quizzes|length }}</div>
+      <div class="stat-label">Total Quizzes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ quizzes|selectattr('status', 'equalto', 'completed')|list|length }}</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ quizzes|selectattr('status', 'equalto', 'active')|list|length }}</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <a href="/me/quizzes" class="filter-tab {% if not filter_brand %}active{% endif %}">All Brands</a>
+    <a href="/me/quizzes?brand=soulfra" class="filter-tab {% if filter_brand == 'soulfra' %}active{% endif %}">🌙 Soulfra</a>
+    <a href="/me/quizzes?brand=calriven" class="filter-tab {% if filter_brand == 'calriven' %}active{% endif %}">🏛️ CalRiven</a>
+    <a href="/me/quizzes?brand=deathtodata" class="filter-tab {% if filter_brand == 'deathtodata' %}active{% endif %}">🔒 DeathToData</a>
+  </div>
+
+  <!-- Quiz Cards -->
+  {% if quizzes %}
+    {% for quiz in quizzes %}
+      <div class="quiz-card">
+        <div class="quiz-header">
+          <div class="quiz-title">
+            <div class="quiz-emoji">{{ quiz.brand_emoji }}</div>
+            <div class="quiz-info">
+              <h3>{{ quiz.brand_name }}</h3>
+              <p>{{ quiz.tagline or 'Personality quiz' }}</p>
+            </div>
+          </div>
+          <div class="quiz-status {{ quiz.status }}">
+            {% if quiz.status == 'completed' %}✅ Completed{% else %}⏳ In Progress{% endif %}
+          </div>
+        </div>
+
+        <div class="quiz-details">
+          <div class="quiz-meta">
+            <div>
+              <strong>Started:</strong> {{ quiz.created_at[:10] }}
+            </div>
+            {% if quiz.completed_at %}
+              <div>
+                <strong>Completed:</strong> {{ quiz.completed_at[:10] }}
+              </div>
+            {% endif %}
+            <div>
+              <strong>Chapter:</strong> {{ quiz.current_chapter or 1 }}
+            </div>
+          </div>
+
+          <div class="quiz-actions">
+            {% if quiz.status == 'completed' %}
+              <a href="/cringeproof/narrative/{{ quiz.brand_slug }}" class="btn btn-primary">
+                🔄 Retake
+              </a>
+            {% else %}
+              <a href="/cringeproof/narrative/{{ quiz.brand_slug }}" class="btn btn-primary">
+                ▶️ Continue
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">🎮</div>
+      <h2>No Quizzes Yet</h2>
+      <p>Take your first personality quiz to discover your AI friend match!</p>
+      <a href="/start" class="btn btn-primary" style="font-size: 1rem; padding: 0.75rem 1.5rem;">
+        🚀 Start First Quiz
+      </a>
+    </div>
+  {% endif %}
+
+  <!-- Back to Dashboard -->
+  <div style="text-align: center; margin-top: 3rem;">
+    <a href="/me" style="color: #667eea; text-decoration: none; font-weight: bold;">
+      ← Back to Dashboard
+    </a>
+  </div>
+</div>
+{% endblock %}

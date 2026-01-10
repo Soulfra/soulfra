@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ filename }} - Soulfra Code</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+    }
+
+    .line-numbers {
+      display: inline-block;
+      width: 3rem;
+      color: #6a6a6a;
+      text-align: right;
+      user-select: none;
+      margin-right: 1rem;
+      border-right: 1px solid #555;
+      padding-right: 0.5rem;
+    }
+
+    .code-line {
+      display: block;
+    }
+
+    .breadcrumb {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .file-header {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #007bff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{{ url_for('index') }}" class="logo">Soulfra</a>
+      <div class="nav-links">
+        <a href="{{ url_for('index') }}">Posts</a>
+        <a href="{{ url_for('code_browser') }}" style="font-weight: bold;">Source Code</a>
+        <a href="{{ url_for('about') }}">About</a>
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('logout') }}">Logout ({{ session.get('username') }})</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+          <a href="{{ url_for('signup') }}">Sign Up</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <main style="max-width: 1400px; margin: 2rem auto; padding: 0 2rem;">
+    <div class="breadcrumb">
+      <a href="{{ url_for('code_browser') }}">← Back to Code Browser</a>
+    </div>
+
+    <div class="file-header">
+      <h1 style="margin: 0; font-size: 1.5rem; font-family: monospace;">
+        📄 {{ filename }}
+      </h1>
+      <p style="margin: 0.5rem 0 0 0; color: #666;">
+        <strong>Path:</strong> <code>{{ filepath }}</code>
+      </p>
+      <p style="margin: 0.25rem 0 0 0; color: #666; font-size: 0.9rem;">
+        <strong>Language:</strong> {{ language }}
+      </p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="{{ category }}" style="padding: 1rem; margin: 1rem 0; border-radius: 4px; background: {% if category == 'error' %}#fee{% elif category == 'success' %}#efe{% else %}#eef{% endif %};">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div style="margin: 1rem 0;">
+      <pre><code>{% set lines = content.split('\n') %}{% for line in lines %}<span class="code-line"><span class="line-numbers">{{ loop.index }}</span>{{ line }}</span>
+{% endfor %}</code></pre>
+    </div>
+
+    <div style="margin-top: 2rem; padding: 1rem; background: #f9f9f9; border-radius: 4px;">
+      <h3>💡 About This File</h3>
+      <p style="color: #666;">
+        This is the actual source code running Soulfra. It's public, auditable, and transparent.
+      </p>
+      <p style="margin-bottom: 0;">
+        <a href="{{ url_for('code_browser') }}" style="color: #007bff; text-decoration: none;">← Browse all source files</a>
+      </p>
+    </div>
+  </main>
+
+  <footer style="text-align: center; padding: 2rem; color: #666; border-top: 1px solid #e0e0e0; margin-top: 3rem;">
+    <p>Soulfra - Transparent Development Platform</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Soulfra{% endblock %}</title>
+
+  <!-- PWA Support -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Soulfra">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="{% block description %}Soulfra - Self-documenting development platform with AI reasoning and soul-based user profiles{% endblock %}">
+  <meta name="author" content="Soulfra">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
+  <meta property="og:site_name" content="Soulfra">
+  {% block og_image %}{% endblock %}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ self.og_title() }}">
+  <meta name="twitter:description" content="{{ self.og_description() }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="alternate" type="application/rss+xml" title="Soulfra" href="{{ url_for('rss_feed') }}">
+
+  {# Brand theme CSS injection (subdomain routing) #}
+  {% if brand_css %}
+    {{ brand_css|safe }}
+  {% endif %}
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{{ url_for('index') }}" class="logo">Soulfra</a>
+      <div class="nav-links">
+        <a href="{{ url_for('hub') }}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 600; margin-right: 10px;">🌟 Hub</a>
+        <a href="{{ url_for('index') }}">Posts</a>
+        <a href="{{ url_for('souls_index') }}">Souls</a>
+        <a href="{{ url_for('games_gallery') }}">🎮 Games</a>
+        <a href="{{ url_for('reasoning_dashboard') }}">Reasoning</a>
+        <a href="{{ url_for('ml_dashboard') }}">ML</a>
+        <a href="{{ url_for('dashboard') }}" style="color: #667eea; font-weight: bold;">🔴 Dashboard</a>
+        <div class="dropdown" style="display: inline-block; position: relative;">
+          <a href="#" style="cursor: pointer;">Tags ▾</a>
+          <div class="dropdown-content" style="display: none; position: absolute; background: white; min-width: 160px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); z-index: 1; border-radius: 4px; padding: 0.5rem 0;">
+            {% for tag in all_tags %}
+              <a href="{{ url_for('tag_posts', slug=tag['slug']) }}" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">{{ tag['name'] }}</a>
+            {% endfor %}
+          </div>
+        </div>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('feedback') }}">Feedback</a>
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('logout') }}">Logout ({{ session.get('username') }})</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+          <a href="{{ url_for('signup') }}">Sign Up</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+  <script>
+    // Simple dropdown functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdown = document.querySelector('.dropdown');
+      const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+      dropdown.addEventListener('mouseenter', function() {
+        dropdownContent.style.display = 'block';
+      });
+
+      dropdown.addEventListener('mouseleave', function() {
+        dropdownContent.style.display = 'none';
+      });
+    });
+  </script>
+
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="{{ category }}" style="padding: 1rem; margin: 1rem; border-radius: 4px; background: {% if category == 'error' %}#fee{% elif category == 'success' %}#efe{% else %}#eef{% endif %};">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Soulfra. <a href="{{ url_for('subscribe') }}">Subscribe</a> | <a href="{{ url_for('status_dashboard') }}">Status</a> | <a href="{{ url_for('showcase') }}">Showcase</a> | <a href="{{ url_for('shipyard') }}">🚢 Shipyard</a> | <a href="{{ url_for('brands_marketplace') }}">Brands</a> | <a href="{{ url_for('tiers_showcase') }}">Tiers</a> | <a href="{{ url_for('code_browser') }}">Code</a> | <a href="{{ url_for('admin_dashboard') }}">Admin</a></p>
+  </footer>
+
+  <!-- Floating AI Assistant Widget -->
+  <div id="ai-assistant-widget">
+    <!-- Floating bubble (collapsed state) -->
+    <div id="assistant-bubble" onclick="toggleAssistant()">
+      <span id="bubble-icon">💬</span>
+    </div>
+
+    <!-- Chat window (expanded state) -->
+    <div id="assistant-window" style="display: none;">
+      <div id="assistant-header">
+        <span>🤖 Soulfra Assistant</span>
+        <span id="assistant-close" onclick="toggleAssistant()">×</span>
+      </div>
+
+      <div id="assistant-quick-actions"></div>
+
+      <div id="assistant-messages"></div>
+
+      <div id="assistant-input-area">
+        <input type="text"
+               id="assistant-input"
+               placeholder="Ask anything or type /command..."
+               onkeypress="if(event.key==='Enter') sendAssistantMessage()">
+        <button onclick="sendAssistantMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Floating Assistant Styles */
+    #ai-assistant-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    #assistant-bubble {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #assistant-bubble:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+    }
+
+    #bubble-icon {
+      font-size: 28px;
+    }
+
+    #assistant-window {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 400px;
+      max-width: calc(100vw - 40px);
+      height: 600px;
+      max-height: calc(100vh - 100px);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #assistant-header {
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #assistant-close {
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    #assistant-quick-actions {
+      padding: 0.75rem;
+      background: #f9f9f9;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .quick-action-btn {
+      padding: 0.4rem 0.8rem;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-action-btn:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    #assistant-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background: #f5f5f5;
+    }
+
+    .assistant-message {
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      max-width: 85%;
+      word-wrap: break-word;
+    }
+
+    .assistant-message.user {
+      background: #e3f2fd;
+      margin-left: auto;
+    }
+
+    .assistant-message.ai {
+      background: #f3e5f5;
+    }
+
+    .assistant-message.system {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      font-size: 0.9rem;
+    }
+
+    .message-artifact {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: white;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+
+    .message-artifact img {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+
+    #assistant-input-area {
+      padding: 0.75rem;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    #assistant-input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    #assistant-input-area button {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #assistant-input-area button:hover {
+      opacity: 0.9;
+    }
+  </style>
+
+  <script>
+    // Assistant state
+    let assistantOpen = false;
+
+    // Toggle assistant window
+    function toggleAssistant() {
+      assistantOpen = !assistantOpen;
+      const bubble = document.getElementById('assistant-bubble');
+      const window = document.getElementById('assistant-window');
+
+      if (assistantOpen) {
+        bubble.style.display = 'none';
+        window.style.display = 'flex';
+        loadQuickActions();
+        // Focus input
+        setTimeout(() => document.getElementById('assistant-input').focus(), 100);
+      } else {
+        bubble.style.display = 'flex';
+        window.style.display = 'none';
+      }
+    }
+
+    // Get current page context
+    function getPageContext() {
+      const context = {
+        url: window.location.pathname
+      };
+
+      // Try to extract post data if on post page
+      const postMatch = window.location.pathname.match(/\/post\/([^\/]+)/);
+      if (postMatch) {
+        // TODO: Could inject post data from server-side template
+        context.post_slug = postMatch[1];
+      }
+
+      return context;
+    }
+
+    // Load quick actions based on context
+    async function loadQuickActions() {
+      const actionsDiv = document.getElementById('assistant-quick-actions');
+      actionsDiv.innerHTML = '<div style="color: #666; font-size: 0.85rem;">Loading...</div>';
+
+      try {
+        const response = await fetch('/api/assistant/quick-actions', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({context: getPageContext()})
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.actions) {
+          actionsDiv.innerHTML = data.actions.map(action =>
+            `<button class="quick-action-btn" onclick="executeQuickAction('${action.command.replace(/'/g, "\\'")}')">${action.label}</button>`
+          ).join('');
+        } else {
+          actionsDiv.innerHTML = '';
+        }
+      } catch (error) {
+        console.error('Failed to load quick actions:', error);
+        actionsDiv.innerHTML = '';
+      }
+    }
+
+    // Execute quick action
+    function executeQuickAction(command) {
+      document.getElementById('assistant-input').value = command;
+      sendAssistantMessage();
+    }
+
+    // Send message to assistant
+    async function sendAssistantMessage() {
+      const input = document.getElementById('assistant-input');
+      const message = input.value.trim();
+      if (!message) return;
+
+      // Clear input
+      input.value = '';
+
+      // Add user message to UI
+      addAssistantMessage('user', message);
+
+      // Show loading
+      const loadingId = addAssistantMessage('ai', '⏳ Thinking...');
+
+      try {
+        const response = await fetch('/api/assistant/message', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            message: message,
+            context: getPageContext()
+          })
+        });
+
+        const data = await response.json();
+
+        // Remove loading message
+        document.getElementById(loadingId)?.remove();
+
+        if (data.success) {
+          // Add AI response
+          addAssistantMessage('ai', data.response, data.artifact);
+        } else {
+          addAssistantMessage('system', `❌ Error: ${data.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        document.getElementById(loadingId)?.remove();
+        addAssistantMessage('system', `❌ Error: ${error.message}`);
+      }
+
+      scrollAssistantToBottom();
+    }
+
+    // Simple markdown parser
+    function parseMarkdown(text) {
+      if (!text) return '';
+      return text
+        // Headers
+        .replace(/^### (.*$)/gim, '<h3 style="margin: 0.5rem 0;">$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2 style="margin: 0.5rem 0;">$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1 style="margin: 0.5rem 0;">$1</h1>')
+        // Bold
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        // Italic
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        // Code blocks
+        .replace(/```(.+?)```/gs, '<pre style="background: #f4f4f4; padding: 0.5rem; border-radius: 4px; overflow-x: auto;"><code>$1</code></pre>')
+        // Inline code
+        .replace(/`(.+?)`/g, '<code style="background: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 3px;">$1</code>')
+        // Line breaks
+        .replace(/\n/g, '<br>');
+    }
+
+    // Add message to chat
+    function addAssistantMessage(sender, content, artifact) {
+      const messagesDiv = document.getElementById('assistant-messages');
+      const messageId = 'msg-' + Date.now();
+
+      const messageDiv = document.createElement('div');
+      messageDiv.id = messageId;
+      messageDiv.className = `assistant-message ${sender}`;
+
+      // Parse markdown in content
+      let html = `<div>${parseMarkdown(content)}</div>`;
+
+      // Add artifact if present
+      if (artifact) {
+        if (artifact.type === 'qr_code') {
+          html += `<div class="message-artifact">
+            <img src="data:image/png;base64,${artifact.data}" alt="QR Code">
+            <div style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">Scan to get: ${artifact.text}</div>
+          </div>`;
+        } else if (artifact.type === 'neural_prediction') {
+          html += `<div class="message-artifact">
+            <div style="font-weight: 600;">Brand: ${artifact.data.brand}</div>
+            <div style="font-size: 0.9rem; color: #666;">Confidence: ${(artifact.data.confidence * 100).toFixed(1)}%</div>
+          </div>`;
+        } else {
+          html += `<div class="message-artifact">
+            <pre style="margin: 0; font-size: 0.85rem; white-space: pre-wrap;">${JSON.stringify(artifact, null, 2)}</pre>
+          </div>`;
+        }
+      }
+
+      messageDiv.innerHTML = html;
+      messagesDiv.appendChild(messageDiv);
+
+      return messageId;
+    }
+
+    // Scroll to bottom
+    function scrollAssistantToBottom() {
+      const messagesDiv = document.getElementById('assistant-messages');
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Initialize - add welcome message
+    document.addEventListener('DOMContentLoaded', function() {
+      // Optional: add welcome message when first opened
+    });
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/static/sw.js')
+          .then(function(registration) {
+            console.log('[PWA] Service Worker registered successfully:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('[PWA] Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>

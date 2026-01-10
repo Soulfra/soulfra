@@ -1,0 +1,430 @@
+# Unified Domain Configuration
+# Single source of truth for all Soulfra multi-domain system
+#
+# Last updated: 2026-01-09
+# Format: YAML
+#
+# Security note: Secrets (API keys, salts, hashes) should be in .env file, NOT here
+
+version: "1.0"
+network_name: "Soulfra Network"
+master_auth_domain: "soulfra.com"
+
+# All domains in the network
+domains:
+  # ============================================================================
+  # SOULFRA - Master Hub & Identity Provider
+  # ============================================================================
+  soulfra:
+    name: "Soulfra"
+    domain: "soulfra.com"
+    slug: "soulfra"
+    tagline: "Your keys. Your identity. Period."
+    category: "Identity & Security"
+    type: "hub"
+    verified: true
+    network_role: "master"
+
+    # Authentication
+    requires_auth: false  # Public homepage, auth optional
+    provides_auth: true   # Master auth provider for all domains
+    sso_enabled: true
+
+    # Features
+    features:
+      - "master_authentication"
+      - "cross_domain_sso"
+      - "user_profiles"
+      - "voice_recording"
+      - "idea_tracking"
+      - "messages"
+
+    # Theme
+    theme:
+      primary: "#667eea"    # Purple
+      secondary: "#764ba2"  # Deep purple
+      accent: "#61dafb"     # Cyan
+
+    # Content types/silos
+    silos:
+      - slug: "creators"
+        name: "Creators"
+        description: "Voice creators, storytellers, idea generators"
+      - slug: "developers"
+        name: "Developers"
+        description: "Open source contributors"
+
+  # ============================================================================
+  # STPETEPROS - Professional Directory (Tampa Bay)
+  # ============================================================================
+  stpetepros:
+    name: "StPetePros"
+    domain: "stpetepros.com"
+    slug: "stpetepros"
+    tagline: "Tampa Bay's Trusted Professional Directory"
+    category: "Home Services"
+    type: "directory"
+    verified: true
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: true   # Must login to create professional profile
+    provides_auth: false  # Uses Soulfra Master Auth
+    sso_enabled: true
+
+    # Geo-restriction
+    geo_restricted: true
+    geo_config:
+      state: "FL"
+      area_codes: ["727", "813"]  # St. Petersburg / Tampa
+      max_radius_miles: 30
+      center_lat: 27.7676
+      center_lon: -82.6403
+      enforcement_mode: "soft"  # "soft" = warn, "hard" = block
+
+    # Features
+    features:
+      - "professional_profiles"
+      - "business_listings"
+      - "qr_business_cards"
+      - "customer_reviews"
+      - "inbox_messages"
+      - "search_filter"
+      - "category_browse"
+
+    # Theme
+    theme:
+      primary: "#0EA5E9"    # Sky blue
+      secondary: "#0284C7"  # Darker blue
+      accent: "#10B981"     # Green
+
+    # Content types/silos
+    silos:
+      - slug: "professionals"
+        name: "Professionals"
+        description: "Verified local service professionals"
+        requires_verification: true
+        categories:
+          - "plumbing"
+          - "electrical"
+          - "hvac"
+          - "roofing"
+          - "legal"
+          - "landscaping"
+          - "cleaning"
+          - "pest-control"
+          - "painting"
+          - "pool-service"
+          - "real-estate"
+          - "auto-repair"
+          - "contracting"
+          - "handyman"
+          - "home-inspection"
+
+  # ============================================================================
+  # CRINGEPROOF - Voice Ideas Platform
+  # ============================================================================
+  cringeproof:
+    name: "CringeProof"
+    domain: "cringeproof.com"
+    slug: "cringeproof"
+    tagline: "Zero Performance Anxiety - Voice Your Ideas"
+    category: "Social & Creativity"
+    type: "community"
+    verified: true
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: true   # Must login to submit voice ideas
+    provides_auth: false
+    sso_enabled: true
+
+    # Features
+    features:
+      - "voice_recording"
+      - "idea_voting"
+      - "gamification"
+      - "leaderboards"
+      - "ai_analysis"
+      - "feed"
+
+    # Theme
+    theme:
+      primary: "#ff006e"    # Hot pink
+      secondary: "#bdb2ff"  # Lavender
+      accent: "#000000"     # Black
+
+    # Content types/silos
+    silos:
+      - slug: "creators"
+        name: "Voice Creators"
+        description: "People sharing ideas via voice"
+      - slug: "voters"
+        name: "Voters"
+        description: "Community members voting on ideas"
+
+  # ============================================================================
+  # CALRIVEN - AI Platform & Real Estate Intelligence
+  # ============================================================================
+  calriven:
+    name: "CalRiven"
+    domain: "calriven.com"
+    slug: "calriven"
+    tagline: "Best AI for the job. Every time."
+    category: "AI & Real Estate"
+    type: "platform"
+    verified: true
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: false
+    provides_auth: false
+    sso_enabled: true
+
+    # Features
+    features:
+      - "ai_routing"
+      - "predictions"
+      - "real_estate_data"
+      - "market_analysis"
+
+    # Theme
+    theme:
+      primary: "#2C5F2D"    # Forest green
+      secondary: "#1B3A1C"  # Dark green
+      accent: "#F4D03F"     # Gold
+
+    # Content types/silos
+    silos:
+      - slug: "analysts"
+        name: "Market Analysts"
+        description: "Real estate and market experts"
+      - slug: "agents"
+        name: "Real Estate Agents"
+        description: "Licensed real estate professionals"
+
+  # ============================================================================
+  # DEATHTODATA - Privacy & Crypto Truth
+  # ============================================================================
+  deathtodata:
+    name: "DeathToData"
+    domain: "deathtodata.com"
+    slug: "deathtodata"
+    tagline: "Search without surveillance. Deal with it, Google."
+    category: "Privacy & Crypto"
+    type: "blog"
+    verified: true
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: false
+    provides_auth: false
+    sso_enabled: true
+
+    # Features
+    features:
+      - "privacy_tools"
+      - "crypto_analysis"
+      - "blog"
+      - "predictions"
+
+    # Theme
+    theme:
+      primary: "#1A1A1A"    # Dark gray
+      secondary: "#E74C3C"  # Red
+      accent: "#F39C12"     # Orange
+
+    # Content types/silos
+    silos:
+      - slug: "researchers"
+        name: "Privacy Researchers"
+        description: "Security and privacy experts"
+      - slug: "writers"
+        name: "Writers"
+        description: "Privacy and crypto content creators"
+
+  # ============================================================================
+  # HOWTOCOOKATHOME - Recipe Platform
+  # ============================================================================
+  howtocookathome:
+    name: "HowToCookAtHome"
+    domain: "howtocookathome.com"
+    slug: "howtocookathome"
+    tagline: "Simple recipes for home cooks"
+    category: "Cooking & Food"
+    type: "content"
+    verified: false
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: false
+    provides_auth: false
+    sso_enabled: true
+
+    # Features
+    features:
+      - "recipes"
+      - "cooking_videos"
+      - "ingredient_lists"
+
+    # Theme
+    theme:
+      primary: "#FF6B35"    # Orange
+      secondary: "#F7931E"  # Golden orange
+      accent: "#C1272D"     # Red
+
+    # Content types/silos
+    silos:
+      - slug: "chefs"
+        name: "Home Chefs"
+        description: "Recipe creators and cooking enthusiasts"
+      - slug: "instructors"
+        name: "Cooking Instructors"
+        description: "Professional cooking teachers"
+
+  # ============================================================================
+  # HOLLOWTOWN - Gaming Community
+  # ============================================================================
+  hollowtown:
+    name: "HollowTown"
+    domain: "hollowtown.com"
+    slug: "hollowtown"
+    tagline: "Where gaming mysteries unfold"
+    category: "Gaming"
+    type: "community"
+    verified: false
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: false
+    provides_auth: false
+    sso_enabled: true
+
+    # Features
+    features:
+      - "gaming_content"
+      - "community"
+
+    # Theme
+    theme:
+      primary: "#2c1810"    # Dark brown
+      secondary: "#8b4513"  # Saddle brown
+      accent: "#ff6b35"     # Orange
+
+    # Content types/silos
+    silos:
+      - slug: "streamers"
+        name: "Streamers"
+        description: "Gaming streamers and content creators"
+
+  # ============================================================================
+  # OOFBOX - Gaming Platform
+  # ============================================================================
+  oofbox:
+    name: "OofBox"
+    domain: "oofbox.com"
+    slug: "oofbox"
+    tagline: "Gaming moments that make you go 'oof'"
+    category: "Gaming"
+    type: "community"
+    verified: false
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: false
+    provides_auth: false
+    sso_enabled: true
+
+    # Features
+    features:
+      - "gaming_clips"
+      - "community"
+
+    # Theme
+    theme:
+      primary: "#2c1810"    # Dark brown
+      secondary: "#8b4513"  # Saddle brown
+      accent: "#ff6b35"     # Orange
+
+    # Content types/silos
+    silos:
+      - slug: "gamers"
+        name: "Gamers"
+        description: "Gaming community members"
+
+  # ============================================================================
+  # NICELEAK - Gaming Discovery
+  # ============================================================================
+  niceleak:
+    name: "NiceLeak"
+    domain: "niceleak.com"
+    slug: "niceleak"
+    tagline: "Experience the thrill of the unknown, one game at a time"
+    category: "Gaming"
+    type: "discovery"
+    verified: false
+    network_role: "vertical"
+
+    # Authentication
+    requires_auth: false
+    provides_auth: false
+    sso_enabled: true
+
+    # Features
+    features:
+      - "game_discovery"
+      - "reviews"
+
+    # Theme
+    theme:
+      primary: "#1a1d23"    # Dark slate
+      secondary: "#343a40"  # Gray
+      accent: "#ff69b4"     # Hot pink
+
+    # Content types/silos
+    silos:
+      - slug: "reviewers"
+        name: "Game Reviewers"
+        description: "Gaming critics and reviewers"
+
+# ============================================================================
+# SHARED CONFIGURATION
+# ============================================================================
+
+# Default silo types across all domains
+global_silo_types:
+  professionals:
+    icon: "briefcase"
+    requires_verification: true
+    has_inbox: true
+    has_ratings: true
+  creators:
+    icon: "microphone"
+    requires_verification: false
+    has_inbox: true
+    has_ratings: true
+  developers:
+    icon: "code"
+    requires_verification: false
+    has_inbox: true
+    has_ratings: false
+  educators:
+    icon: "graduation-cap"
+    requires_verification: true
+    has_inbox: true
+    has_ratings: true
+
+# Authentication flow
+auth_flow:
+  signup_redirect_domain: "soulfra.com"
+  login_endpoint: "/api/master/login"
+  signup_endpoint: "/api/master/signup"
+  verify_endpoint: "/api/master/verify"
+  token_expiry_hours: 168  # 7 days
+
+# Localhost/development overrides
+dev_mode:
+  enabled: true
+  default_domain: "stpetepros"  # When accessing via localhost:5001
+  geo_override_allowed: true
+  skip_ssl_verification: true

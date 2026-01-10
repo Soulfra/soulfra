@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Architecture Explained - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-architecture-explained">Soulfra Architecture Explained</h1>
+
+<p><strong>How database + filesystem + templates + CSS all work together</strong></p>
+
+<hr />
+
+<h2 id="the-big-picture">The Big Picture</h2>
+
+<p>Soulfra uses a <strong>hybrid architecture</strong>:
+- <strong>Database (SQLite)</strong> = Source of truth for dynamic data
+- <strong>Filesystem</strong> = Git-trackable exports, static assets, templates
+- <strong>Templates (Jinja2)</strong> = Dynamic HTML generation
+- <strong>CSS</strong> = Brand-specific styling via variables</p>
+
+<p>Think of it like Linux:
+- Database = <code>/proc</code> (dynamic, runtime data)
+- Filesystem = <code>/home</code> (persistent, exportable)
+- Templates = <code>/etc/</code> (configuration files)
+- CSS = Themes/desktop environments</p>
+
+<hr />
+
+<h2 id="directory-structure-linux-style">Directory Structure (Linux-Style)</h2>
+
+<pre><code>soulfra-simple/
+├── app.py                      # Main Flask server (like systemd)
+├── soulfra.db                  # SQLite database (like /var/lib)
+│
+├── templates/                  # HTML templates (like /etc/)
+│   ├── components/             # Reusable UI components
+│   │   ├── header.html         # Site header
+│   │   ├── footer.html         # Site footer
+│   │   └── menu.html           # Navigation menu
+│   ├── base.html               # Base template (all pages inherit)
+│   ├── index.html              # Homepage
+│   └── post.html               # Blog post page
+│
+├── static/                     # Static assets (like /usr/share/)
+│   ├── css/                    # Stylesheets
+│   │   ├── theme.css           # Global theme system
+│   │   ├── deathtodata.css     # DeathToData brand colors
+│   │   ├── calriven.css        # Calriven brand colors
+│   │   └── soulfra.css         # Soulfra brand colors
+│   ├── js/                     # JavaScript
+│   └── generated/              # AI-generated images
+│
+├── brands/                     # Exported brand filesystems
+│   ├── deathtodata/            # DeathToData export
+│   │   ├── config.json         # Brand configuration
+│   │   ├── posts/              # All posts as markdown
+│   │   └── README.md           # Documentation
+│   ├── calriven/
+│   └── soulfra/
+│
+├── neural_networks/            # Trained classifiers (like /var/models/)
+│   ├── deathtodata_privacy_classifier.pkl
+│   ├── calriven_technical_classifier.pkl
+│   └── topic_classifier_encryption_privacy.pkl
+│
+├── logs/                       # Application logs (like /var/log/)
+│
+└── archive/                    # Old experiments (like /opt/)
+    ├── experiments/            # Archived Python scripts
+    └── docs/                   # Archived documentation
+</code></pre>
+
+<hr />
+
+<h2 id="how-it-all-connects">How It All Connects</h2>
+
+<h3 id="1-database-templates-html">1. Database → Templates → HTML</h3>
+
+<p><strong>Flow:</strong> User visits <code>/post/privacy-101</code> → Flask queries database → Jinja2 renders template → HTML sent to browser</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/post/&lt;slug&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">view_post</span><span class="p">(</span><span class="n">slug</span><span class="p">):</span>
+    <span class="c1"># 1. Query database</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM posts WHERE slug = ?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">slug</span><span class="p">,))</span>
+    <span class="n">brand</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM brands WHERE id = ?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">post</span><span class="o">.</span><span class="n">brand_id</span><span class="p">,))</span>
+
+    <span class="c1"># 2. Render template with data</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;post.html&#39;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="n">post</span><span class="p">,</span> <span class="n">brand</span><span class="o">=</span><span class="n">brand</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cm">&lt;!-- templates/post.html --&gt;</span>
+{% include &#39;components/header.html&#39; %}
+
+<span class="p">&lt;</span><span class="nt">article</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>{{ post.title }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;content&quot;</span><span class="p">&gt;</span>{{ post.content }}<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">article</span><span class="p">&gt;</span>
+
+{% include &#39;components/footer.html&#39; %}
+</code></pre>
+</div>
+
+<p><strong>Result:</strong> Dynamic HTML page with post content from database</p>
+
+<hr />
+
+<h3 id="2-database-css-variables-styled-page">2. Database → CSS Variables → Styled Page</h3>
+
+<p><strong>Flow:</strong> Brand colors stored in database → Injected as CSS variables → Page styled dynamically</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/brand/&lt;slug&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">view_brand</span><span class="p">(</span><span class="n">slug</span><span class="p">):</span>
+    <span class="n">brand</span> <span class="o">=</span> <span class="n">get_brand</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span>
+
+    <span class="c1"># Inject brand colors as CSS variables</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;brand.html&#39;</span><span class="p">,</span>
+        <span class="n">brand</span><span class="o">=</span><span class="n">brand</span><span class="p">,</span>
+        <span class="n">css_vars</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;--brand-primary&#39;</span><span class="p">:</span> <span class="n">brand</span><span class="o">.</span><span class="n">color_primary</span><span class="p">,</span>
+            <span class="s1">&#39;--brand-secondary&#39;</span><span class="p">:</span> <span class="n">brand</span><span class="o">.</span><span class="n">color_secondary</span><span class="p">,</span>
+            <span class="s1">&#39;--brand-accent&#39;</span><span class="p">:</span> <span class="n">brand</span><span class="o">.</span><span class="n">color_accent</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cm">&lt;!-- templates/brand.html --&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/static/css/theme.css&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/static/css/{{ brand.slug }}.css&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="p">:</span><span class="nd">root</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nv">--brand-primary</span><span class="p">:</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="n">css_vars</span><span class="p">[</span><span class="s1">&#39;--brand-primary&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="err">}</span><span class="o">;</span>
+<span class="w">      </span><span class="nt">--brand-secondary</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"> </span><span class="err">css_vars[&#39;--brand-secondary&#39;]</span><span class="w"> </span><span class="p">}</span><span class="err">}</span><span class="o">;</span>
+<span class="w">      </span><span class="nt">--brand-accent</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="err">{</span><span class="w"> </span><span class="err">css_vars[&#39;--brand-accent&#39;]</span><span class="w"> </span><span class="p">}</span><span class="err">}</span><span class="o">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">  </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;brand-{{ brand.slug }}&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">header</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;background: var(--color-primary);&quot;</span><span class="p">&gt;</span>
+    {{ brand.name }}
+  <span class="p">&lt;/</span><span class="nt">header</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p><strong>Result:</strong> Page styled with brand-specific colors from database</p>
+
+<hr />
+
+<h3 id="3-database-filesystem-export-git">3. Database → Filesystem Export → Git</h3>
+
+<p><strong>Flow:</strong> Content in database → Export to filesystem → Track with git → Deploy anywhere</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Export brand to filesystem</span>
+python3<span class="w"> </span>export_brand_filesystem.py<span class="w"> </span>--brand<span class="w"> </span>deathtodata
+
+<span class="c1"># Creates:</span>
+brands/deathtodata/
+├──<span class="w"> </span>config.json<span class="w">          </span><span class="c1"># Brand settings</span>
+├──<span class="w"> </span>posts/<span class="w">               </span><span class="c1"># All posts as markdown</span>
+│<span class="w">   </span>├──<span class="w"> </span>privacy-101.md
+│<span class="w">   </span>└──<span class="w"> </span>encryption-guide.md
+└──<span class="w"> </span>README.md
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1">// brands/deathtodata/config.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeathToData&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;slug&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deathtodata&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;colors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;primary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#e74c3c&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;secondary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#c0392b&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;accent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#f39c12&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;personality&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;tone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Rebellious, defiant&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ai_style&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;edgy, confrontational&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="gu">&lt;!-- brands/deathtodata/posts/privacy-101.md --&gt;</span>
+<span class="gu">---</span>
+title: Privacy 101
+slug: privacy-101
+published: 2025-12-26T09:59:39
+<span class="gu">brand: deathtodata</span>
+<span class="gu">---</span>
+
+<span class="gh"># Privacy 101</span>
+
+Your guide to digital privacy...
+</code></pre>
+</div>
+
+<p><strong>Result:</strong> Git-trackable, portable brand content</p>
+
+<hr />
+
+<h3 id="4-templates-components-reusable-ui">4. Templates → Components → Reusable UI</h3>
+
+<p><strong>Flow:</strong> Base template → Include components → DRY (Don't Repeat Yourself)</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cm">&lt;!-- templates/base.html --&gt;</span>
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/static/css/theme.css&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/static/css/{{ brand_slug }}.css&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;brand-{{ brand_slug }}&quot;</span><span class="p">&gt;</span>
+  {% include &#39;components/header.html&#39; %}
+
+  <span class="p">&lt;</span><span class="nt">main</span><span class="p">&gt;</span>
+    {% block content %}{% endblock %}
+  <span class="p">&lt;/</span><span class="nt">main</span><span class="p">&gt;</span>
+
+  {% include &#39;components/footer.html&#39; %}
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cm">&lt;!-- templates/post.html --&gt;</span>
+{% extends &#39;base.html&#39; %}
+
+{% block content %}
+<span class="p">&lt;</span><span class="nt">article</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>{{ post.title }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>{{ post.content }}<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">article</span><span class="p">&gt;</span>
+{% endblock %}
+</code></pre>
+</div>
+
+<p><strong>Result:</strong> Shared layout across all pages, easy to update</p>
+
+<hr />
+
+<h3 id="5-neural-networks-topic-classification-smart-content">5. Neural Networks → Topic Classification → Smart Content</h3>
+
+<p><strong>Flow:</strong> User chats about "encryption" → Neural network detects topic → Recommends related posts</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Train topic classifier</span>
+python3<span class="w"> </span>train_topic_networks.py<span class="w"> </span>--topics<span class="w"> </span>encryption,privacy,surveillance<span class="w"> </span>--train
+
+<span class="c1"># Creates:</span>
+neural_networks/topic_classifier_encryption_privacy_surveillance.pkl
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># soulfra_assistant.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">recommend_posts</span><span class="p">(</span><span class="n">user_message</span><span class="p">):</span>
+    <span class="c1"># Load topic classifier</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;neural_networks/topic_classifier.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Classify user&#39;s message</span>
+    <span class="n">topic</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="s1">&#39;classifier&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">[</span><span class="s1">&#39;vectorizer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">user_message</span><span class="p">])</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Find posts about that topic</span>
+    <span class="n">posts</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT * FROM posts</span>
+<span class="s2">        WHERE content LIKE ?</span>
+<span class="s2">        ORDER BY published_at DESC</span>
+<span class="s2">        LIMIT 5</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%</span><span class="si">{</span><span class="n">topic</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,))</span>
+
+    <span class="k">return</span> <span class="n">posts</span>
+</code></pre>
+</div>
+
+<p><strong>Result:</strong> AI understands what user is interested in, suggests relevant content</p>
+
+<hr />
+
+<h2 id="data-flow-examples">Data Flow Examples</h2>
+
+<h3 id="example-1-qr-code-chat-blog-post">Example 1: QR Code → Chat → Blog Post</h3>
+
+<pre><code>1. User scans QR code
+   → GET /chat?username=matt
+
+2. User types: "I want to learn about encryption"
+   → POST /chat/send
+   → soulfra_assistant.py processes message
+   → Ollama generates response
+
+3. User says: "Turn this into a blog post"
+   → POST /generate-post
+   → Creates post in database:
+      INSERT INTO posts (title, content, brand_id)
+      VALUES ('Encryption Guide', '...', 2)
+
+4. Neural network classifies post
+   → python3 classify_post.py --post-id 26
+   → Adds topic tags: encryption, privacy
+
+5. Post appears on website
+   → GET /post/encryption-guide-1766764779
+   → Template renders with DeathToData styling
+</code></pre>
+
+<h3 id="example-2-brand-export-zip-share">Example 2: Brand Export → ZIP → Share</h3>
+
+<pre><code>1. Export brand to filesystem
+   → python3 export_brand_filesystem.py --brand deathtodata --zip
+
+2. Creates ZIP package:
+   deathtodata_export_1766764779.zip
+   ├── config.json
+   ├── posts/
+   │   ├── encryption-guide.md
+   │   └── privacy-101.md
+   └── deathtodata_privacy_classifier.pkl
+
+3. Share with others
+   → Upload to GitHub
+   → Others can import: python3 import_brand_filesystem.py
+
+4. Or track with git
+   → git add brands/deathtodata/
+   → git commit -m "Update DeathToData content"
+   → git push
+</code></pre>
+
+<h3 id="example-3-claude-auto-generation">Example 3: Claude Auto-Generation</h3>
+
+<pre><code>1. Trigger Claude to write
+   → python3 force_claude_write.py --brand deathtodata --topic "privacy" --save
+
+2. Claude API generates content
+   → Anthropic API call
+   → Returns 500-word blog post
+
+3. Saves to database
+   → INSERT INTO posts (...)
+   → Post appears on website immediately
+
+4. Neural network learns
+   → New training data for topic classifier
+   → Improves recommendations
+</code></pre>
+
+<hr />
+
+<h2 id="key-design-principles">Key Design Principles</h2>
+
+<h3 id="1-database-as-source-of-truth">1. Database as Source of Truth</h3>
+
+<ul>
+<li>All dynamic data lives in <code>soulfra.db</code></li>
+<li>Fast queries, easy to update</li>
+<li>Relationships between brands, posts, users</li>
+</ul>
+
+<h3 id="2-filesystem-for-portability">2. Filesystem for Portability</h3>
+
+<ul>
+<li>Export brands to git-trackable format</li>
+<li>Share as ZIP packages</li>
+<li>Import into other Soulfra instances</li>
+</ul>
+
+<h3 id="3-templates-for-flexibility">3. Templates for Flexibility</h3>
+
+<ul>
+<li>Shared components (header, footer, menu)</li>
+<li>Easy to update site-wide changes</li>
+<li>Brand-specific styling via CSS variables</li>
+</ul>
+
+<h3 id="4-css-variables-for-theming">4. CSS Variables for Theming</h3>
+
+<ul>
+<li>Brand colors defined once in database</li>
+<li>Injected as CSS variables</li>
+<li>Automatic light/dark mode support</li>
+</ul>
+
+<h3 id="5-neural-networks-for-intelligence">5. Neural Networks for Intelligence</h3>
+
+<ul>
+<li>Topic classification (not just brand)</li>
+<li>User profiling based on conversations</li>
+<li>Content recommendations</li>
+</ul>
+
+<hr />
+
+<h2 id="terminology-translation">Terminology Translation</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Linux/Unix</th>
+  <th>Soulfra</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/home/user/</code></td>
+  <td><code>brands/deathtodata/</code></td>
+  <td>User's home directory</td>
+</tr>
+<tr>
+  <td><code>/etc/nginx/nginx.conf</code></td>
+  <td><code>templates/base.html</code></td>
+  <td>Configuration file</td>
+</tr>
+<tr>
+  <td><code>/var/www/html/</code></td>
+  <td><code>static/</code></td>
+  <td>Static web content</td>
+</tr>
+<tr>
+  <td><code>/var/lib/mysql/</code></td>
+  <td><code>soulfra.db</code></td>
+  <td>Database storage</td>
+</tr>
+<tr>
+  <td><code>/var/log/</code></td>
+  <td><code>logs/</code></td>
+  <td>Application logs</td>
+</tr>
+<tr>
+  <td><code>/usr/share/themes/</code></td>
+  <td><code>static/css/</code></td>
+  <td>Theme files</td>
+</tr>
+<tr>
+  <td><code>/opt/</code></td>
+  <td><code>archive/</code></td>
+  <td>Optional software</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="how-to-use-this-architecture">How to Use This Architecture</h2>
+
+<h3 id="creating-a-new-brand">Creating a New Brand</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Add to database (via admin panel or SQL)</span>
+INSERT<span class="w"> </span>INTO<span class="w"> </span>brands<span class="w"> </span><span class="o">(</span>name,<span class="w"> </span>slug,<span class="w"> </span>color_primary,<span class="w"> </span>color_secondary,<span class="w"> </span>color_accent<span class="o">)</span>
+VALUES<span class="w"> </span><span class="o">(</span><span class="s1">&#39;MyBrand&#39;</span>,<span class="w"> </span><span class="s1">&#39;mybrand&#39;</span>,<span class="w"> </span><span class="s1">&#39;#ff0000&#39;</span>,<span class="w"> </span><span class="s1">&#39;#cc0000&#39;</span>,<span class="w"> </span><span class="s1">&#39;#ffaa00&#39;</span><span class="o">)</span><span class="p">;</span>
+
+<span class="c1"># 2. Create CSS file</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>static/css/mybrand.css<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s">:root {</span>
+<span class="s">  --brand-primary: #ff0000;</span>
+<span class="s">  --brand-secondary: #cc0000;</span>
+<span class="s">  --brand-accent: #ffaa00;</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+
+<span class="c1"># 3. Export to filesystem</span>
+python3<span class="w"> </span>export_brand_filesystem.py<span class="w"> </span>--brand<span class="w"> </span>mybrand
+
+<span class="c1"># 4. Visit website</span>
+open<span class="w"> </span>http://localhost:5001/brand/mybrand
+</code></pre>
+</div>
+
+<h3 id="adding-a-new-template-component">Adding a New Template Component</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Create component</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>templates/components/sidebar.html<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s">&lt;aside class=&quot;sidebar&quot;&gt;</span>
+<span class="s">  &lt;h3&gt;Related Posts&lt;/h3&gt;</span>
+<span class="s">  {% for post in related_posts %}</span>
+<span class="s">    &lt;a href=&quot;/post/{{ post.slug }}&quot;&gt;{{ post.title }}&lt;/a&gt;</span>
+<span class="s">  {% endfor %}</span>
+<span class="s">&lt;/aside&gt;</span>
+<span class="s">EOF</span>
+
+<span class="c1"># 2. Include in templates</span>
+<span class="c1"># Edit templates/post.html:</span>
+<span class="o">{</span>%<span class="w"> </span>include<span class="w"> </span><span class="s1">&#39;components/sidebar.html&#39;</span><span class="w"> </span>%<span class="o">}</span>
+</code></pre>
+</div>
+
+<h3 id="training-a-new-topic-classifier">Training a New Topic Classifier</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Analyze topic coverage</span>
+python3<span class="w"> </span>train_topic_networks.py<span class="w"> </span>--topic<span class="w"> </span>blockchain<span class="w"> </span>--analyze
+
+<span class="c1"># 2. Generate more content if needed</span>
+python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>calriven<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;blockchain&quot;</span><span class="w"> </span>--save
+
+<span class="c1"># 3. Train classifier</span>
+python3<span class="w"> </span>train_topic_networks.py<span class="w"> </span>--topics<span class="w"> </span>blockchain,crypto,web3<span class="w"> </span>--train
+
+<span class="c1"># 4. Use in recommendations</span>
+<span class="c1"># Neural network now understands blockchain content</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="the-philosophy">The Philosophy</h2>
+
+<p><strong>Why this architecture?</strong></p>
+
+<ol>
+<li><p><strong>Database for Speed</strong></p>
+
+<ul>
+<li>Fast queries, indexing, relationships</li>
+<li>Perfect for dynamic content</li>
+</ul></li>
+<li><p><strong>Filesystem for Control</strong></p>
+
+<ul>
+<li>Git-trackable, human-readable</li>
+<li>Easy to backup, share, migrate</li>
+</ul></li>
+<li><p><strong>Templates for Maintainability</strong></p>
+
+<ul>
+<li>DRY principle, reusable components</li>
+<li>One change updates entire site</li>
+</ul></li>
+<li><p><strong>CSS Variables for Branding</strong></p>
+
+<ul>
+<li>Dynamic theming without rebuilding</li>
+<li>Same codebase, infinite brands</li>
+</ul></li>
+<li><p><strong>Neural Networks for Intelligence</strong></p>
+
+<ul>
+<li>Learn from user behavior</li>
+<li>Improve over time automatically</li>
+</ul></li>
+</ol>
+
+<hr />
+
+<h2 id="future-enhancements">Future Enhancements</h2>
+
+<h3 id="2025-q1">2025 Q1</h3>
+
+<ul>
+<li>Import brands from filesystem back to database</li>
+<li>Multi-brand newsletters (one email, multiple brands)</li>
+<li>Topic-based content clustering</li>
+</ul>
+
+<h3 id="2025-q2">2025 Q2</h3>
+
+<ul>
+<li>User profiling neural networks</li>
+<li>Automated content suggestions based on conversation</li>
+<li>Domain name suggestions based on topics</li>
+</ul>
+
+<h3 id="2025-q3">2025 Q3</h3>
+
+<ul>
+<li>Federated brand sharing (ActivityPub)</li>
+<li>Cross-brand content recommendations</li>
+<li>Neural network ensemble voting</li>
+</ul>
+
+<hr />
+
+<h2 id="quick-reference">Quick Reference</h2>
+
+<p><strong>Export brand:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>export_brand_filesystem.py<span class="w"> </span>--brand<span class="w"> </span>deathtodata<span class="w"> </span>--zip
+</code></pre>
+</div>
+
+<p><strong>Train topic classifier:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>train_topic_networks.py<span class="w"> </span>--topics<span class="w"> </span>encryption,privacy<span class="w"> </span>--train
+</code></pre>
+</div>
+
+<p><strong>Generate post with Claude:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>force_claude_write.py<span class="w"> </span>--brand<span class="w"> </span>deathtodata<span class="w"> </span>--topic<span class="w"> </span><span class="s2">&quot;privacy&quot;</span><span class="w"> </span>--save
+</code></pre>
+</div>
+
+<p><strong>View brand on website:</strong></p>
+
+<pre><code>http://localhost:5001/brand/deathtodata
+</code></pre>
+
+<p><strong>Check database schema:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>sqlite3<span class="w"> </span>soulfra.db<span class="w"> </span><span class="s2">&quot;.schema brands&quot;</span>
+sqlite3<span class="w"> </span>soulfra.db<span class="w"> </span><span class="s2">&quot;.schema posts&quot;</span>
+</code></pre>
+</div>
+
+<hr />
+
+<p><strong>The system is designed to be simple yet powerful: database for speed, filesystem for control, templates for flexibility, and neural networks for intelligence.</strong></p>
+
+<p>Built with Python, Flask, SQLite, Jinja2, and scikit-learn.</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

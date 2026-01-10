@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReadTheDocs-Style Multi-Subdomain Architecture - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="readthedocs-style-multi-subdomain-architecture">ReadTheDocs-Style Multi-Subdomain Architecture</h1>
+
+<p><strong>Soulfra Platform - Unified Account System with Brand Subdomains</strong></p>
+
+<p>Inspired by ReadTheDocs.org's multi-subdomain architecture where different subdomains serve different purposes but share the same user accounts.</p>
+
+<hr />
+
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<pre><code>deathtodata.com              ← Main Entry Point (Privacy/Encryption Focus)
+  │
+  ├── app.deathtodata.com    ← Interactive Application
+  ├── ref.deathtodata.com    ← API Reference &amp; Docs
+  ├── org.deathtodata.com    ← Organization/About
+
+soulfra.com                  ← Account &amp; Faucet System
+  │
+  ├── faucet.soulfra.com     ← QR-based Signup/Login
+  ├── profile.soulfra.com    ← User Profiles
+
+calriven.com                 ← AI Agent Marketplace
+  │
+  ├── api.calriven.com       ← AI API Endpoints
+  ├── marketplace.calriven.com ← Browse AI Agents
+</code></pre>
+
+<p><strong>All subdomains share:</strong>
+- Same user database (<code>users</code> table)
+- Same session system (cross-subdomain cookies)
+- Same keyring unlock system (permanent feature access)</p>
+
+<hr />
+
+<h2 id="the-three-pillars">The Three Pillars</h2>
+
+<h3 id="1-deathtodata-entry-point">1. DeathToData - Entry Point</h3>
+
+<p><strong>Purpose</strong>: Public-facing site, privacy focus, encryption advocacy</p>
+
+<p><strong>Subdomains:</strong>
+- <strong><code>deathtodata.com</code></strong> - Main landing page
+- <strong><code>app.deathtodata.com</code></strong> - Interactive tools
+- <strong><code>ref.deathtodata.com</code></strong> - Documentation
+- <strong><code>org.deathtodata.com</code></strong> - About/mission</p>
+
+<p><strong>Content:</strong>
+- Encryption tiers explanation
+- Privacy guides
+- Blog posts about data ownership
+- Entry to quiz/narrative game</p>
+
+<h3 id="2-soulfra-account-system-faucet">2. Soulfra - Account System (Faucet)</h3>
+
+<p><strong>Purpose</strong>: User accounts, QR signup, personality profiles</p>
+
+<p><strong>Subdomains:</strong>
+- <strong><code>soulfra.com</code></strong> - Dashboard
+- <strong><code>faucet.soulfra.com</code></strong> - QR code signup (like a crypto faucet)
+- <strong><code>profile.soulfra.com</code></strong> - User profiles</p>
+
+<p><strong>Features:</strong>
+- QR code authentication (passwordless)
+- Personality quiz &amp; AI friend assignment
+- Keyring unlock system (permanent feature access)
+- Email alias generation (<code>user@soulfra.com</code>)</p>
+
+<h3 id="3-calriven-ai-marketplace">3. CalRiven - AI Marketplace</h3>
+
+<p><strong>Purpose</strong>: AI agent directory, API access, technical tools</p>
+
+<p><strong>Subdomains:</strong>
+- <strong><code>calriven.com</code></strong> - Marketplace landing
+- <strong><code>api.calriven.com</code></strong> - AI API endpoints
+- <strong><code>marketplace.calriven.com</code></strong> - Browse agents</p>
+
+<p><strong>Features:</strong>
+- AI persona directory (CalRiven, Soulfra, DeathToData, TheAuditor)
+- API key management
+- Webhook integrations
+- Developer docs</p>
+
+<hr />
+
+<h2 id="keyring-unlock-system-runescape-style">Keyring Unlock System (Runescape Style)</h2>
+
+<p>Like the Runescape keyring: <strong>once you unlock something, it stays unlocked permanently</strong>.</p>
+
+<h3 id="how-it-works">How It Works</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># User completes quiz</span>
+<span class="n">unlock_quiz_completion</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ai_friend</span><span class="o">=</span><span class="s1">&#39;soulfra&#39;</span><span class="p">)</span>
+<span class="c1"># Unlocks: &#39;personality_profile&#39;, &#39;soulfra_ai&#39;</span>
+
+<span class="c1"># User upgrades to premium</span>
+<span class="n">unlock_tier_upgrade</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s1">&#39;premium&#39;</span><span class="p">,</span> <span class="n">payment_id</span><span class="o">=</span><span class="s1">&#39;stripe_123&#39;</span><span class="p">)</span>
+<span class="c1"># Unlocks: &#39;premium_tier&#39;, &#39;custom_email&#39;, &#39;api_access&#39;</span>
+</code></pre>
+</div>
+
+<h3 id="unlockable-features">Unlockable Features</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Feature Key</th>
+  <th>Name</th>
+  <th>Category</th>
+  <th>How to Unlock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>personality_profile</code></td>
+  <td>Personality Profile</td>
+  <td>Profile</td>
+  <td>Complete quiz</td>
+</tr>
+<tr>
+  <td><code>soulfra_ai</code></td>
+  <td>Soulfra AI Friend</td>
+  <td>AI</td>
+  <td>Complete quiz</td>
+</tr>
+<tr>
+  <td><code>premium_tier</code></td>
+  <td>Premium Tier</td>
+  <td>Tier</td>
+  <td>One-time payment</td>
+</tr>
+<tr>
+  <td><code>pro_tier</code></td>
+  <td>Pro Tier</td>
+  <td>Tier</td>
+  <td>One-time payment</td>
+</tr>
+<tr>
+  <td><code>calriven_api</code></td>
+  <td>CalRiven AI API</td>
+  <td>AI</td>
+  <td>Pro tier</td>
+</tr>
+<tr>
+  <td><code>custom_email</code></td>
+  <td>Custom Email</td>
+  <td>Communication</td>
+  <td>Premium tier</td>
+</tr>
+<tr>
+  <td><code>api_access</code></td>
+  <td>API Access</td>
+  <td>Developer</td>
+  <td>Premium tier</td>
+</tr>
+<tr>
+  <td><code>deathtodata_encryption</code></td>
+  <td>E2E Encryption</td>
+  <td>Encryption</td>
+  <td>Pro tier</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="checking-unlocks">Checking Unlocks</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">keyring_unlocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_unlocked</span><span class="p">,</span> <span class="n">get_user_unlocks</span>
+
+<span class="c1"># Check single feature</span>
+<span class="k">if</span> <span class="n">has_unlocked</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">feature_key</span><span class="o">=</span><span class="s1">&#39;calriven_api&#39;</span><span class="p">):</span>
+    <span class="c1"># User has access</span>
+
+<span class="c1"># Get all unlocks</span>
+<span class="n">unlocks</span> <span class="o">=</span> <span class="n">get_user_unlocks</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">unlock</span> <span class="ow">in</span> <span class="n">unlocks</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">unlock</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="s1">&#39;PERMANENT&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">unlock</span><span class="p">[</span><span class="s1">&#39;is_permanent&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Expires&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="subdomain-routing-flask">Subdomain Routing (Flask)</h2>
+
+<h3 id="current-implementation">Current Implementation</h3>
+
+<p><code>subdomain_router.py</code> handles brand-based subdomains:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># In app.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">subdomain_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_subdomain_routing</span>
+<span class="n">setup_subdomain_routing</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>How it works:</strong>
+1. Detects subdomain from <code>request.host</code>
+2. Looks up brand by slug
+3. Applies brand-specific theming (CSS overrides)
+4. Makes brand context available in templates</p>
+
+<h3 id="local-testing">Local Testing</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Add to /etc/hosts (macOS/Linux)</span>
+<span class="m">127</span>.0.0.1<span class="w"> </span>deathtodata.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>app.deathtodata.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>ref.deathtodata.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>soulfra.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>faucet.soulfra.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>calriven.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>api.calriven.localhost
+
+<span class="c1"># Then visit:</span>
+http://deathtodata.localhost:5001
+http://app.deathtodata.localhost:5001
+http://faucet.soulfra.localhost:5001
+</code></pre>
+</div>
+
+<h3 id="production-nginx">Production (nginx)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="w"> </span><span class="s">http2</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">deathtodata.com</span><span class="w"> </span><span class="s">*.deathtodata.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/deathtodata.com/fullchain.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/deathtodata.com/privkey.pem</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://localhost:5001</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="unified-account-flow">Unified Account Flow</h2>
+
+<h3 id="1-new-user-arrives">1. New User Arrives</h3>
+
+<pre><code>User → deathtodata.com
+  ↓
+Clicks "Get Started"
+  ↓
+Redirected to faucet.soulfra.com
+  ↓
+Scans QR code (passwordless signup)
+  ↓
+Account created in `users` table
+  ↓
+Session cookie set (works across all subdomains)
+</code></pre>
+
+<h3 id="2-complete-personality-quiz">2. Complete Personality Quiz</h3>
+
+<pre><code>User → app.deathtodata.com/cringeproof
+  ↓
+Complete narrative quiz
+  ↓
+Keyring unlocks: 'personality_profile', 'soulfra_ai'
+  ↓
+Profile built with AI friend assignment
+  ↓
+Welcome email sent to user@soulfra.com
+</code></pre>
+
+<h3 id="3-access-calriven-marketplace">3. Access CalRiven Marketplace</h3>
+
+<pre><code>User → calriven.com/marketplace
+  ↓
+Browse AI agents
+  ↓
+Click "Get API Access"
+  ↓
+Check unlocks: has_unlocked(user_id, 'calriven_api')
+  ↓
+If unlocked: Generate API key
+  ↓
+If not: Redirect to upgrade page
+</code></pre>
+
+<hr />
+
+<h2 id="cross-subdomain-sessions">Cross-Subdomain Sessions</h2>
+
+<h3 id="cookie-configuration">Cookie Configuration</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Flask session settings for cross-subdomain cookies</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SESSION_COOKIE_DOMAIN&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.deathtodata.com&#39;</span>  <span class="c1"># Leading dot = all subdomains</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SESSION_COOKIE_HTTPONLY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SESSION_COOKIE_SECURE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># HTTPS only</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SESSION_COOKIE_SAMESITE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Lax&#39;</span>
+</code></pre>
+</div>
+
+<p><strong>Result</strong>: User logs in at <code>faucet.soulfra.com</code> → session works at <code>app.deathtodata.com</code></p>
+
+<hr />
+
+<h2 id="email-system-future-phase">Email System (Future Phase)</h2>
+
+<h3 id="custom-email-aliases">Custom Email Aliases</h3>
+
+<p><strong>Goal</strong>: Give users custom email addresses based on quiz results</p>
+
+<pre><code>username@soulfra.com        → Forwards to real_email@gmail.com
+username@calriven.com       → Forwards to real_email@gmail.com
+username@deathtodata.com    → Forwards to real_email@gmail.com
+</code></pre>
+
+<h3 id="implementation-plan">Implementation Plan</h3>
+
+<ol>
+<li><strong>Postfix/Dovecot</strong> mail server</li>
+<li><p><strong>Virtual alias table</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">email_aliases</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">alias_email</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w">  </span><span class="c1">-- &#39;user@soulfra.com&#39;</span>
+<span class="w">    </span><span class="n">forward_to</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w">               </span><span class="c1">-- &#39;real@gmail.com&#39;</span>
+<span class="w">    </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">brand_slug</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<span class="p">)</span>
+</code></pre>
+</div></li>
+<li><p><strong>Postfix virtual map</strong>:</p>
+
+<pre><code>user@soulfra.com     real@gmail.com
+user@calriven.com    real@gmail.com
+</code></pre></li>
+</ol>
+
+<hr />
+
+<h2 id="api-architecture">API Architecture</h2>
+
+<h3 id="ref-subdomain-docs">REF Subdomain (Docs)</h3>
+
+<p><code>ref.deathtodata.com</code> → API reference documentation</p>
+
+<pre><code>GET https://ref.deathtodata.com/docs/api
+GET https://ref.deathtodata.com/docs/webhooks
+GET https://ref.deathtodata.com/docs/encryption-tiers
+</code></pre>
+
+<h3 id="api-subdomain-endpoints">API Subdomain (Endpoints)</h3>
+
+<p><code>api.calriven.com</code> → Actual API endpoints</p>
+
+<pre><code>POST https://api.calriven.com/v1/chat
+GET  https://api.calriven.com/v1/models
+POST https://api.calriven.com/v1/judgment
+</code></pre>
+
+<p><strong>Authentication</strong>: API keys from keyring unlock system</p>
+
+<hr />
+
+<h2 id="version-routing-like-readthedocs">Version Routing (Like ReadTheDocs)</h2>
+
+<p><strong>Future enhancement</strong>: Version-specific docs</p>
+
+<pre><code>ref.deathtodata.com/latest/    → Latest documentation
+ref.deathtodata.com/v1.0/      → Version 1.0 docs
+ref.deathtodata.com/v2.0/      → Version 2.0 docs
+</code></pre>
+
+<h3 id="implementation">Implementation</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/docs/&lt;version&gt;/&lt;path:page&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">docs_version</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serve version-specific documentation&quot;&quot;&quot;</span>
+    <span class="n">docs_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;docs/</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">page</span><span class="si">}</span><span class="s1">.md&#39;</span>
+    <span class="c1"># Render markdown to HTML</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="comparison-to-readthedocs">Comparison to ReadTheDocs</h2>
+
+<table>
+<thead>
+<tr>
+  <th>ReadTheDocs</th>
+  <th>Soulfra Platform</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>project.readthedocs.org</code></td>
+  <td><code>brand.deathtodata.com</code></td>
+</tr>
+<tr>
+  <td><code>docs.readthedocs.io</code></td>
+  <td><code>ref.deathtodata.com</code></td>
+</tr>
+<tr>
+  <td><code>about.readthedocs.com</code></td>
+  <td><code>org.deathtodata.com</code></td>
+</tr>
+<tr>
+  <td>GitHub auth</td>
+  <td>QR code faucet</td>
+</tr>
+<tr>
+  <td>One account for all projects</td>
+  <td>One account for all brands</td>
+</tr>
+<tr>
+  <td>Version routing</td>
+  <td>Version routing (future)</td>
+</tr>
+<tr>
+  <td>Hosted docs</td>
+  <td>Hosted apps + docs</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="implementation-checklist">Implementation Checklist</h2>
+
+<h3 id="phase-1-broken-routes">Phase 1: Broken Routes ✅</h3>
+
+<ul>
+<li>[x] Move <code>ollama_discussion.py</code> from archive</li>
+<li>[x] Fix <code>/dashboard</code> network_name error</li>
+<li>[x] Add <code>/simple-test</code> route</li>
+<li>[x] Enable subdomain routing</li>
+<li>[x] Create keyring unlock system</li>
+</ul>
+
+<h3 id="phase-2-subdomain-infrastructure">Phase 2: Subdomain Infrastructure</h3>
+
+<ul>
+<li>[ ] Configure nginx for wildcard subdomains</li>
+<li>[ ] Set up SSL certificates (Let's Encrypt wildcard)</li>
+<li>[ ] Configure cross-subdomain cookies</li>
+<li>[ ] Test subdomain routing locally</li>
+</ul>
+
+<h3 id="phase-3-email-system">Phase 3: Email System</h3>
+
+<ul>
+<li>[ ] Install Postfix/Dovecot</li>
+<li>[ ] Create <code>email_aliases</code> table</li>
+<li>[ ] Build alias generator (quiz completion → <code>user@soulfra.com</code>)</li>
+<li>[ ] Configure forwarding rules</li>
+</ul>
+
+<h3 id="phase-4-api-docs">Phase 4: API &amp; Docs</h3>
+
+<ul>
+<li>[ ] Build <code>ref.</code> subdomain docs site</li>
+<li>[ ] Create <code>api.</code> subdomain endpoints</li>
+<li>[ ] API key generation from keyring unlocks</li>
+<li>[ ] Webhook system for integrations</li>
+</ul>
+
+<hr />
+
+<h2 id="testing-locally">Testing Locally</h2>
+
+<h3 id="1-update-etchosts">1. Update /etc/hosts</h3>
+
+<div class="codehilite">
+<pre><span></span><code>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/hosts
+
+<span class="c1"># Add:</span>
+<span class="m">127</span>.0.0.1<span class="w"> </span>deathtodata.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>app.deathtodata.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>ref.deathtodata.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>soulfra.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>faucet.soulfra.localhost
+<span class="m">127</span>.0.0.1<span class="w"> </span>calriven.localhost
+</code></pre>
+</div>
+
+<h3 id="2-start-flask">2. Start Flask</h3>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>app.py
+<span class="c1"># Server runs on port 5001</span>
+</code></pre>
+</div>
+
+<h3 id="3-test-subdomains">3. Test Subdomains</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Main entry</span>
+curl<span class="w"> </span>http://deathtodata.localhost:5001
+
+<span class="c1"># Faucet (signup)</span>
+curl<span class="w"> </span>http://faucet.soulfra.localhost:5001
+
+<span class="c1"># AI marketplace</span>
+curl<span class="w"> </span>http://calriven.localhost:5001
+</code></pre>
+</div>
+
+<h3 id="4-check-keyring">4. Check Keyring</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">keyring_unlocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_unlocks</span>
+
+<span class="n">unlocks</span> <span class="o">=</span> <span class="n">get_user_unlocks</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">unlock</span> <span class="ow">in</span> <span class="n">unlocks</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">unlock</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="summary">Summary</h2>
+
+<p><strong>Soulfra Platform = ReadTheDocs-Style Multi-Brand Architecture</strong></p>
+
+<ul>
+<li><strong>DeathToData</strong>: Front door (privacy/encryption focus)</li>
+<li><strong>Soulfra</strong>: Account faucet (QR signup, profiles)</li>
+<li><strong>CalRiven</strong>: AI marketplace (API access)</li>
+</ul>
+
+<p><strong>Unified by:</strong>
+- Single user database
+- Cross-subdomain sessions
+- Keyring unlock system (Runescape style)
+- Shared email/notification infrastructure</p>
+
+<p><strong>Like ReadTheDocs but for:</strong>
+- AI agents instead of docs
+- QR auth instead of GitHub
+- Feature unlocks instead of project permissions
+- Privacy/encryption focus instead of documentation hosting</p>
+
+<hr />
+
+<p><strong>Next Steps</strong>: Configure nginx wildcard SSL, test cross-subdomain cookies, build email alias system.</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siri Voice Coding - Shortcuts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            opacity: 0.95;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .shortcut-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .shortcut-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .shortcut-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .shortcut-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #ff4081 0%, #ff6b9d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .shortcut-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .shortcut-command {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+
+        .shortcut-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .shortcut-steps {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .shortcut-steps h3 {
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .shortcut-steps ol {
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76,175,80,0.4);
+        }
+
+        .manual-setup {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .manual-setup h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .setup-step {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .setup-step h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .demo-video {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .demo-video p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .shortcut-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ Code With Your Voice</h1>
+            <p class="tagline">"Hey Siri, code this" → Working Python in 10 seconds</p>
+            <p class="subtitle">Install these shortcuts and never type code again</p>
+        </header>
+
+        <!-- Shortcuts Grid -->
+        <div class="shortcuts-grid">
+            <!-- Code Generator -->
+            <div class="shortcut-card">
+                <div class="shortcut-header">
+                    <div class="shortcut-icon">💻</div>
+                    <div class="shortcut-info">
+                        <h2>Voice Code Generator</h2>
+                        <div class="shortcut-command">"Hey Siri, code this"</div>
+                    </div>
+                </div>
+
+                <p class="shortcut-description">
+                    Speak your code idea and AI writes working Python/JavaScript.
+                    Code automatically copies to your clipboard - just paste and run.
+                </p>
+
+                <div class="shortcut-steps">
+                    <h3>What happens:</h3>
+                    <ol>
+                        <li>Siri starts recording your voice</li>
+                        <li>You describe what code you want (e.g., "Build a Flask route for user auth")</li>
+                        <li>AI generates the code</li>
+                        <li>Code copies to clipboard</li>
+                        <li>Notification: "✅ Code ready! Paste with Cmd+V"</li>
+                    </ol>
+                </div>
+
+                <div class="demo-video">
+                    <div style="font-size: 4rem;">🎬</div>
+                    <p>Demo: Build entire Flask route using only voice</p>
+                </div>
+
+                <button class="download-btn" onclick="downloadShortcut('code')">
+                    📥 Download Shortcut
+                </button>
+            </div>
+
+            <!-- Content Creator -->
+            <div class="shortcut-card">
+                <div class="shortcut-header">
+                    <div class="shortcut-icon">📝</div>
+                    <div class="shortcut-info">
+                        <h2>Voice Content Creator</h2>
+                        <div class="shortcut-command">"Hey Siri, create content"</div>
+                    </div>
+                </div>
+
+                <p class="shortcut-description">
+                    Talk for 5 minutes and AI creates blog post, tweet thread, video script,
+                    docs, LinkedIn post, and email newsletter.
+                </p>
+
+                <div class="shortcut-steps">
+                    <h3>What happens:</h3>
+                    <ol>
+                        <li>Siri records up to 5 minutes of your voice</li>
+                        <li>You ramble about any topic</li>
+                        <li>AI structures it into 6+ content formats</li>
+                        <li>Blog post copies to clipboard</li>
+                        <li>All formats saved to Notes app</li>
+                    </ol>
+                </div>
+
+                <div class="demo-video">
+                    <div style="font-size: 4rem;">🎬</div>
+                    <p>Demo: 5 min ramble → 2 weeks of content</p>
+                </div>
+
+                <button class="download-btn" onclick="downloadShortcut('content')">
+                    📥 Download Shortcut
+                </button>
+            </div>
+
+            <!-- Quick Bug Reporter -->
+            <div class="shortcut-card">
+                <div class="shortcut-header">
+                    <div class="shortcut-icon">🐛</div>
+                    <div class="shortcut-info">
+                        <h2>Voice Bug Reporter</h2>
+                        <div class="shortcut-command">"Hey Siri, bug report"</div>
+                    </div>
+                </div>
+
+                <p class="shortcut-description">
+                    Describe a bug while driving, AI creates formatted GitHub issue.
+                    Never lose track of bugs again.
+                </p>
+
+                <div class="shortcut-steps">
+                    <h3>What happens:</h3>
+                    <ol>
+                        <li>Siri records bug description</li>
+                        <li>AI formats it with steps to reproduce, expected vs actual</li>
+                        <li>Creates GitHub issue (optional)</li>
+                        <li>Adds to your backlog</li>
+                        <li>Notification with issue number</li>
+                    </ol>
+                </div>
+
+                <button class="download-btn" onclick="downloadShortcut('bug')">
+                    📥 Download Shortcut
+                </button>
+            </div>
+        </div>
+
+        <!-- Manual Setup Guide -->
+        <div class="manual-setup">
+            <h2>📋 Manual Setup (5 minutes)</h2>
+
+            <div class="setup-step">
+                <h3>Step 1: Configure Server URL</h3>
+                <p>When you install the shortcut, you'll be asked for your server URL:</p>
+                <div class="code-block">http://192.168.1.87:5001</div>
+                <p style="margin-top: 10px; opacity: 0.8;">
+                    This is your local Flask server. Make sure it's running before using shortcuts.
+                </p>
+            </div>
+
+            <div class="setup-step">
+                <h3>Step 2: Test the Shortcut</h3>
+                <p>After installation:</p>
+                <ol style="margin: 15px 0 0 20px; line-height: 1.8;">
+                    <li>Say "Hey Siri, code this"</li>
+                    <li>Wait for Siri to start listening</li>
+                    <li>Say: "Build me a function that validates email addresses"</li>
+                    <li>Wait 10 seconds</li>
+                    <li>Siri will say "Code is ready in your clipboard"</li>
+                    <li>Paste anywhere (Cmd+V)</li>
+                </ol>
+            </div>
+
+            <div class="setup-step">
+                <h3>Step 3: Customize Voice Commands</h3>
+                <p>In iOS Shortcuts app, you can change the trigger phrase:</p>
+                <ul style="margin: 15px 0 0 20px; line-height: 1.8;">
+                    <li>"Code this" → "Build me X"</li>
+                    <li>"Create content" → "Write blog"</li>
+                    <li>"Bug report" → "Found a bug"</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Voice Command Cheat Sheet -->
+        <div class="manual-setup">
+            <h2>🗣️ Voice Command Examples</h2>
+
+            <div class="setup-step">
+                <h3>For Code Generation:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.9;">
+                    <li>"Build me a Flask route that handles file uploads"</li>
+                    <li>"Create a Python function that validates email addresses with regex"</li>
+                    <li>"Write JavaScript code to fetch data from an API with error handling"</li>
+                    <li>"Build a database model for a user with username, email, and password"</li>
+                </ul>
+            </div>
+
+            <div class="setup-step">
+                <h3>For Content Creation:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.9;">
+                    <li>Just ramble about any topic for 2-5 minutes</li>
+                    <li>Talk about frustrations, ideas, observations</li>
+                    <li>AI will structure it into coherent content</li>
+                    <li>Example: "I'm so tired of typing code. Everyone's on their AirPods anyway..."</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Back Link -->
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/" style="color: white; text-decoration: none; font-size: 1.1rem; opacity: 0.8;">
+                ← Back to Voice Dev Studio
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function downloadShortcut(type) {
+            const shortcuts = {
+                'code': '/static/shortcuts/code-generator-instructions.txt',
+                'content': '/static/shortcuts/content-creator-instructions.txt',
+                'bug': '/static/shortcuts/bug-reporter-instructions.txt'
+            };
+
+            // Show instructions modal instead of download
+            // (Actual .shortcut files need to be created in iOS Shortcuts app)
+            alert(`
+📋 How to Create This Shortcut:
+
+1. Open iOS Shortcuts app
+2. Tap + (New Shortcut)
+3. Add these actions:
+   - "Record Audio" (Stop after 30 seconds for code, 5 min for content)
+   - "Get Contents of URL"
+     URL: http://192.168.1.87:5001/api/voice/${type}-gen
+     Method: POST
+     Headers: Content-Type: application/json
+     Body: {"audio": [Audio from previous action]}
+   - "Get Dictionary Value" (key: clipboard_text)
+   - "Copy to Clipboard"
+   - "Show Notification" with result
+
+4. Tap the (i) icon and add to Siri
+5. Set phrase: "${type === 'code' ? 'code this' : type === 'content' ? 'create content' : 'bug report'}"
+
+Full instructions: http://192.168.1.87:5001/static/shortcuts/${type}-generator-instructions.txt
+            `);
+        }
+    </script>
+</body>
+</html>

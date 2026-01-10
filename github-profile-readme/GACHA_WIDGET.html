@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CringeProof Gacha Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .gacha-container {
+            background: white;
+            border: 5px solid #000;
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            box-shadow:
+                15px 15px 0 #ff006e,
+                -15px -15px 0 #00ffcc;
+            position: relative;
+        }
+
+        .gacha-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .gacha-header h1 {
+            font-size: 3rem;
+            color: #ff006e;
+            text-shadow: 4px 4px 0 #000;
+            margin-bottom: 10px;
+            transform: rotate(-2deg);
+        }
+
+        .gacha-header p {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 5px solid #000;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .card {
+            text-align: center;
+            animation: cardReveal 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .card-rarity {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-image {
+            font-size: 8rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .card-name {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow:
+                3px 3px 0 #000,
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: white;
+            font-size: 1.1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .pull-button {
+            width: 100%;
+            padding: 20px;
+            background: #ff006e;
+            border: 5px solid #000;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .pull-button:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .pull-button:active {
+            transform: translate(0, 0);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .pull-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: #f5f5f5;
+            border: 3px solid #000;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ff006e;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        @keyframes cardReveal {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(10deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 1s ease-in-out;
+        }
+
+        /* Rarity colors */
+        .rarity-common { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+        .rarity-uncommon { background: linear-gradient(135deg, #27ae60, #229954); }
+        .rarity-rare { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .rarity-epic { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .rarity-legendary { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .rarity-mythic { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    </style>
+</head>
+<body>
+    <div class="gacha-container">
+        <div class="gacha-header">
+            <h1>🎲 GACHA</h1>
+            <p>CringeProof Simulator</p>
+        </div>
+
+        <div class="card-display" id="cardDisplay">
+            <div class="card-placeholder">
+                Pull to reveal your character!
+            </div>
+        </div>
+
+        <button class="pull-button" id="pullButton" onclick="pullGacha()">
+            🎲 PULL GACHA
+        </button>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalPulls">0</div>
+                <div class="stat-label">Total Pulls</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="legendaryCount">0</div>
+                <div class="stat-label">Legendary</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="collectionCount">0</div>
+                <div class="stat-label">Collected</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gacha Characters Database
+        const characters = [
+            // Common (60%)
+            { name: 'Code Monkey', emoji: '🐒', rarity: 'common', description: 'Writes bugs for breakfast' },
+            { name: 'Coffee Addict', emoji: '☕', rarity: 'common', description: 'Powered by caffeine' },
+            { name: 'Debug Warrior', emoji: '🐛', rarity: 'common', description: 'console.log everything' },
+            { name: 'Merge Conflict', emoji: '⚔️', rarity: 'common', description: 'Git gud' },
+            { name: 'Stack Overflow', emoji: '📚', rarity: 'common', description: 'Copy-paste master' },
+
+            // Uncommon (25%)
+            { name: 'Senior Dev', emoji: '👴', rarity: 'uncommon', description: 'Been there, done that' },
+            { name: 'DevOps Ninja', emoji: '🥷', rarity: 'uncommon', description: 'Docker all the things' },
+            { name: 'UI/UX Wizard', emoji: '🎨', rarity: 'uncommon', description: 'Makes it pretty' },
+            { name: 'Database Guardian', emoji: '🗄️', rarity: 'uncommon', description: 'Normalization is life' },
+
+            // Rare (10%)
+            { name: 'Blockchain Bro', emoji: '⛓️', rarity: 'rare', description: 'To the moon!' },
+            { name: 'AI Overlord', emoji: '🤖', rarity: 'rare', description: 'Beep boop' },
+            { name: 'Security Expert', emoji: '🔐', rarity: 'rare', description: 'Hacker? I am the hacker' },
+
+            // Epic (3%)
+            { name: 'Tech Lead', emoji: '👑', rarity: 'epic', description: 'Makes all decisions' },
+            { name: '10x Engineer', emoji: '🚀', rarity: 'epic', description: 'Literally unstoppable' },
+
+            // Legendary (1.5%)
+            { name: 'Linus Torvalds', emoji: '🐧', rarity: 'legendary', description: 'Created Linux' },
+            { name: 'Grace Hopper', emoji: '⚡', rarity: 'legendary', description: 'Debugged the first bug' },
+
+            // Mythic (0.5%)
+            { name: 'Dennis Ritchie', emoji: '💎', rarity: 'mythic', description: 'Created C language' },
+            { name: 'Alan Turing', emoji: '🧠', rarity: 'mythic', description: 'Father of computer science' }
+        ];
+
+        // Rarity weights
+        const rarityWeights = {
+            common: 60,
+            uncommon: 25,
+            rare: 10,
+            epic: 3,
+            legendary: 1.5,
+            mythic: 0.5
+        };
+
+        // Stats
+        let totalPulls = parseInt(localStorage.getItem('gacha_pulls') || '0');
+        let legendaryCount = parseInt(localStorage.getItem('gacha_legendary') || '0');
+        let collection = JSON.parse(localStorage.getItem('gacha_collection') || '[]');
+
+        // Update stats display
+        function updateStats() {
+            document.getElementById('totalPulls').textContent = totalPulls;
+            document.getElementById('legendaryCount').textContent = legendaryCount;
+            document.getElementById('collectionCount').textContent = new Set(collection).size;
+        }
+
+        // Random pull with weighted rarity
+        function getRandomCharacter() {
+            const totalWeight = Object.values(rarityWeights).reduce((a, b) => a + b, 0);
+            let random = Math.random() * totalWeight;
+
+            let selectedRarity = 'common';
+            for (const [rarity, weight] of Object.entries(rarityWeights)) {
+                random -= weight;
+                if (random <= 0) {
+                    selectedRarity = rarity;
+                    break;
+                }
+            }
+
+            const rarityPool = characters.filter(c => c.rarity === selectedRarity);
+            return rarityPool[Math.floor(Math.random() * rarityPool.length)];
+        }
+
+        // Pull gacha animation
+        async function pullGacha() {
+            const button = document.getElementById('pullButton');
+            const display = document.getElementById('cardDisplay');
+
+            // Disable button
+            button.disabled = true;
+            button.textContent = '🎲 PULLING...';
+
+            // Clear display
+            display.innerHTML = '<div class="card-placeholder">✨ Revealing... ✨</div>';
+            display.classList.add('pulling');
+
+            // Add sparkle effects
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    display.appendChild(sparkle);
+
+                    setTimeout(() => sparkle.remove(), 1000);
+                }, i * 50);
+            }
+
+            // Wait for suspense
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Get character
+            const character = getRandomCharacter();
+
+            // Update stats
+            totalPulls++;
+            if (character.rarity === 'legendary' || character.rarity === 'mythic') {
+                legendaryCount++;
+            }
+            collection.push(character.name);
+
+            // Save to localStorage
+            localStorage.setItem('gacha_pulls', totalPulls);
+            localStorage.setItem('gacha_legendary', legendaryCount);
+            localStorage.setItem('gacha_collection', JSON.stringify(collection));
+
+            // Update display
+            display.className = `card-display rarity-${character.rarity}`;
+            display.innerHTML = `
+                <div class="card">
+                    <div class="card-rarity">${character.rarity.toUpperCase()}</div>
+                    <div class="card-image">${character.emoji}</div>
+                    <div class="card-name">${character.name}</div>
+                    <div class="card-description">${character.description}</div>
+                </div>
+            `;
+
+            // Update stats
+            updateStats();
+
+            // Re-enable button
+            button.disabled = false;
+            button.textContent = '🎲 PULL AGAIN';
+        }
+
+        // Initialize stats
+        updateStats();
+    </script>
+</body>
+</html>

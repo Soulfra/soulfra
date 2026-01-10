@@ -1,0 +1,541 @@
+{% extends "base.html" %}
+
+{% block title %}{{ brand.name }} - Debug Panel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="debug-panel">
+        <div class="debug-header">
+            <h1>🔧 Debug Panel: {{ brand.name }}</h1>
+            <p>See the source code, validation, and error schemas</p>
+            <div class="debug-actions">
+                <a href="{{ url_for('brand_page', slug=brand.slug) }}" class="btn-back">← Back to Brand</a>
+                <a href="{{ url_for('brand_preview', slug=brand.slug) }}" class="btn-preview-link">👁️ Preview</a>
+            </div>
+        </div>
+
+        <!-- Validation Results -->
+        <section class="debug-section">
+            <h2>📋 Validation Results</h2>
+            <div class="validation-status {% if validation.is_valid %}valid{% else %}invalid{% endif %}">
+                {% if validation.is_valid %}
+                <div class="status-badge valid">
+                    ✅ CONFIG VALID
+                </div>
+                <p>All schema checks passed!</p>
+                {% else %}
+                <div class="status-badge invalid">
+                    ❌ CONFIG INVALID
+                </div>
+                <p>{{ validation.errors|length }} error(s) found</p>
+                {% endif %}
+            </div>
+
+            {% if validation.errors %}
+            <div class="error-list">
+                <h3>Errors:</h3>
+                {% for error in validation.errors %}
+                <div class="error-item">
+                    <span class="error-icon">❌</span>
+                    <span class="error-message">{{ error }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if validation.warnings %}
+            <div class="warning-list">
+                <h3>Warnings:</h3>
+                {% for warning in validation.warnings %}
+                <div class="warning-item">
+                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-message">{{ warning }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if validation.failure_patterns %}
+            <div class="patterns-list">
+                <h3>🔍 Failure Patterns Detected:</h3>
+                <p class="patterns-help">
+                    These are common mistakes we've seen before. Fixing these patterns
+                    prevents future crashes!
+                </p>
+                {% for pattern in validation.failure_patterns %}
+                <div class="pattern-item">
+                    <span class="pattern-icon">🔍</span>
+                    <span class="pattern-message">{{ pattern }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Raw Config JSON -->
+        <section class="debug-section">
+            <h2>📄 Raw Config JSON (from database)</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Column: config_json</span>
+                    <button onclick="copyCode('raw-json')" class="btn-copy">📋 Copy</button>
+                </div>
+                <pre id="raw-json"><code>{{ raw_config }}</code></pre>
+            </div>
+        </section>
+
+        <!-- Parsed Config -->
+        <section class="debug-section">
+            <h2>🔧 Parsed Config (after processing)</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Python dict representation</span>
+                    <button onclick="copyCode('parsed-config')" class="btn-copy">📋 Copy</button>
+                </div>
+                <pre id="parsed-config"><code>{{ parsed_config }}</code></pre>
+            </div>
+
+            {% if color_conversion %}
+            <div class="transformation-notice">
+                <strong>⚙️ Color Format Conversion:</strong>
+                <div class="transform-steps">
+                    <div class="transform-step">
+                        <span class="step-label">From (array):</span>
+                        <code>{{ color_conversion.from }}</code>
+                    </div>
+                    <div class="transform-arrow">↓</div>
+                    <div class="transform-step">
+                        <span class="step-label">To (dict):</span>
+                        <code>{{ color_conversion.to }}</code>
+                    </div>
+                </div>
+                <p class="transform-reason">
+                    Colors converted from array to dict format because CSS generator
+                    expects dict with 'primary', 'secondary', 'accent' keys.
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Color Swatches -->
+        {% if brand_config.colors %}
+        <section class="debug-section">
+            <h2>🎨 Color Palette</h2>
+            <div class="color-palette">
+                <div class="color-swatch-large" style="background: {{ brand_config.colors.primary }}">
+                    <div class="swatch-label">Primary</div>
+                    <div class="swatch-value">{{ brand_config.colors.primary }}</div>
+                </div>
+                {% if brand_config.colors.secondary %}
+                <div class="color-swatch-large" style="background: {{ brand_config.colors.secondary }}">
+                    <div class="swatch-label">Secondary</div>
+                    <div class="swatch-value">{{ brand_config.colors.secondary }}</div>
+                </div>
+                {% endif %}
+                {% if brand_config.colors.accent %}
+                <div class="color-swatch-large" style="background: {{ brand_config.colors.accent }}">
+                    <div class="swatch-label">Accent</div>
+                    <div class="swatch-value">{{ brand_config.colors.accent }}</div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="gradient-preview">
+                <strong>Gradient Preview:</strong>
+                <div class="gradient-bar" style="background: linear-gradient(135deg, {{ brand_config.colors.primary }} 0%, {{ brand_config.colors.secondary or brand_config.colors.primary }} 100%)">
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Generated CSS -->
+        <section class="debug-section">
+            <h2>🎨 Generated CSS (source code)</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Dynamic CSS injected into templates</span>
+                    <button onclick="copyCode('generated-css')" class="btn-copy">📋 Copy</button>
+                </div>
+                <pre id="generated-css"><code class="language-css">{{ brand_css|striptags|safe }}</code></pre>
+            </div>
+            <div class="css-reasoning">
+                <strong>🧠 CSS Generation Reasoning:</strong>
+                <ol>
+                    <li>Load brand config from database <code>config_json</code> column</li>
+                    <li>Parse JSON → Python dict</li>
+                    <li>Convert colors (array → dict if needed)</li>
+                    <li>Generate CSS variables:
+                        <ul>
+                            <li><code>--brand-primary</code> = {{ brand_config.colors.primary if brand_config.colors else 'N/A' }}</li>
+                            <li><code>--brand-secondary</code> = {{ brand_config.colors.secondary if brand_config.colors else 'N/A' }}</li>
+                        </ul>
+                    </li>
+                    <li>Apply to CSS classes (<code>.brand-header</code>, <code>.btn-brand</code>, etc.)</li>
+                    <li>Inject into template via <code>{{ "{{ brand_css|safe }}" }}</code></li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Schema Documentation -->
+        <section class="debug-section">
+            <h2>📖 Expected Schema</h2>
+            <div class="schema-doc">
+                <pre><code>{
+  "name": "string (required, 1-100 chars)",
+  "slug": "string (optional, lowercase-dash)",
+  "colors": {
+    "type": "dict OR array",
+    "dict format": {
+      "primary": "#RRGGBB (required)",
+      "secondary": "#RRGGBB (optional)",
+      "accent": "#RRGGBB (optional)"
+    },
+    "array format": ["#RRGGBB", "#RRGGBB", ...] (auto-converted to dict)
+  },
+  "personality": "string (required, 3+ chars)",
+  "tone": "string (required, 3+ chars)",
+  "license_type": "cc0 | cc-by | licensed | proprietary (optional)",
+  "emoji": "unicode emoji (optional)"
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Test Live Rendering -->
+        <section class="debug-section">
+            <h2>🧪 Live Rendering Test</h2>
+            <p>See how brand styling looks when applied to components:</p>
+
+            <!-- Apply brand CSS to this section -->
+            {{ brand_css|safe }}
+
+            <div class="brand-card test-component">
+                <div class="brand-card-header">
+                    <h3>Test Component</h3>
+                </div>
+                <div style="padding: 2rem;">
+                    <p>This component uses the generated brand CSS.</p>
+                    <button class="btn-brand">Brand Button</button>
+                    <button class="btn-brand-secondary">Secondary Button</button>
+                    <div class="brand-badge" style="margin-top: 1rem;">Badge</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+.debug-panel {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.debug-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.debug-header h1 {
+    margin: 0 0 0.5rem 0;
+}
+
+.debug-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-back, .btn-preview-link {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-back:hover, .btn-preview-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+.debug-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.debug-section h2 {
+    margin-top: 0;
+    border-bottom: 3px solid #1a1a1a;
+    padding-bottom: 0.5rem;
+    color: #1a1a1a;
+}
+
+.validation-status {
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.validation-status.valid {
+    background: #d4edda;
+    border: 2px solid #28a745;
+}
+
+.validation-status.invalid {
+    background: #f8d7da;
+    border: 2px solid #dc3545;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.status-badge.valid {
+    background: #28a745;
+    color: white;
+}
+
+.status-badge.invalid {
+    background: #dc3545;
+    color: white;
+}
+
+.error-list, .warning-list, .patterns-list {
+    margin-top: 1.5rem;
+}
+
+.error-list h3, .warning-list h3, .patterns-list h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.error-item, .warning-item, .pattern-item {
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.error-item {
+    border-left: 4px solid #dc3545;
+}
+
+.warning-item {
+    border-left: 4px solid #ffc107;
+}
+
+.pattern-item {
+    border-left: 4px solid #17a2b8;
+}
+
+.patterns-help {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.code-block {
+    background: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.code-header {
+    background: #2d2d2d;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+.code-header span {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.btn-copy {
+    background: #007acc;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.btn-copy:hover {
+    background: #005a9e;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.code-block code {
+    color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.transformation-notice {
+    background: #e3f2fd;
+    border: 2px solid #2196f3;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.transform-steps {
+    margin: 1rem 0;
+}
+
+.transform-step {
+    padding: 0.75rem;
+    background: white;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+}
+
+.step-label {
+    font-weight: 600;
+    margin-right: 0.5rem;
+    color: #2196f3;
+}
+
+.transform-arrow {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #2196f3;
+    margin: 0.5rem 0;
+}
+
+.transform-reason {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 1rem;
+}
+
+.color-palette {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.color-swatch-large {
+    flex: 1;
+    min-width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.swatch-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.swatch-value {
+    font-family: monospace;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.gradient-preview {
+    margin-top: 2rem;
+}
+
+.gradient-bar {
+    height: 60px;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.css-reasoning {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+.css-reasoning ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.css-reasoning li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.css-reasoning code {
+    background: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.schema-doc {
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.schema-doc code {
+    color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+.test-component {
+    margin-top: 1.5rem;
+}
+</style>
+
+<script>
+function copyCode(elementId) {
+    const element = document.getElementById(elementId);
+    const text = element.textContent;
+
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
+}
+</script>
+{% endblock %}

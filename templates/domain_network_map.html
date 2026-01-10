@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Network Map - Soulfra</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .controls {
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .controls h3 {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .stat-label {
+            opacity: 0.7;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .legend {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .legend h3 {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .legend-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 0.85em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        #network-graph {
+            width: 100%;
+            height: calc(100vh - 80px);
+        }
+
+        .node {
+            cursor: pointer;
+        }
+
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+
+        .node text {
+            font-size: 12px;
+            pointer-events: none;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .link {
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 2px;
+            marker-end: url(#arrowhead);
+        }
+
+        .node.hub circle {
+            stroke-width: 4px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9em;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌐 Blog Network Map</h1>
+        <p class="subtitle">Visual representation of your domain network and relationships</p>
+    </div>
+
+    <div class="controls">
+        <h3>📊 Network Stats</h3>
+        <div class="stat-item">
+            <span class="stat-label">Total Domains:</span>
+            <span class="stat-value" id="stat-domains">-</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Relationships:</span>
+            <span class="stat-value" id="stat-relationships">-</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Hub Domains:</span>
+            <span class="stat-value" id="stat-hubs">-</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Member Domains:</span>
+            <span class="stat-value" id="stat-members">-</span>
+        </div>
+    </div>
+
+    <div class="legend">
+        <h3>🎨 Legend</h3>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #ff6b6b;"></div>
+            <span>Hub (Central Domain)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #4ecdc4;"></div>
+            <span>Member (Connected Domain)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #95e1d3;"></div>
+            <span>Satellite (Leaf Domain)</span>
+        </div>
+    </div>
+
+    <svg id="network-graph"></svg>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <button class="back-btn" onclick="window.location.href='/domains'">← Back to Domain Manager</button>
+
+    <script>
+        // Color scheme based on role
+        const colorMap = {
+            hub: '#ff6b6b',
+            member: '#4ecdc4',
+            satellite: '#95e1d3'
+        };
+
+        // Load network data and render
+        async function loadNetwork() {
+            try {
+                const response = await fetch('/api/domains/network/map');
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update stats
+                    document.getElementById('stat-domains').textContent = data.stats.total_domains;
+                    document.getElementById('stat-relationships').textContent = data.stats.total_relationships;
+                    document.getElementById('stat-hubs').textContent = data.stats.hubs;
+                    document.getElementById('stat-members').textContent = data.stats.members;
+
+                    // Render network graph
+                    renderNetwork(data.nodes, data.edges);
+                } else {
+                    alert('Error loading network: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error loading network: ' + error.message);
+            }
+        }
+
+        function renderNetwork(nodes, edges) {
+            const svg = d3.select('#network-graph');
+            const width = window.innerWidth;
+            const height = window.innerHeight - 80;
+
+            svg.attr('width', width).attr('height', height);
+
+            // Add arrowhead marker
+            svg.append('defs').append('marker')
+                .attr('id', 'arrowhead')
+                .attr('viewBox', '-0 -5 10 10')
+                .attr('refX', 25)
+                .attr('refY', 0)
+                .attr('orient', 'auto')
+                .attr('markerWidth', 6)
+                .attr('markerHeight', 6)
+                .append('svg:path')
+                .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+                .attr('fill', 'rgba(255, 255, 255, 0.3)');
+
+            // Create force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(edges).id(d => d.id).distance(150))
+                .force('charge', d3.forceManyBody().strength(-400))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(50));
+
+            // Create links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(edges)
+                .join('line')
+                .attr('class', 'link');
+
+            // Create nodes
+            const node = svg.append('g')
+                .selectAll('g')
+                .data(nodes)
+                .join('g')
+                .attr('class', d => `node ${d.role}`)
+                .call(drag(simulation));
+
+            // Add circles to nodes
+            node.append('circle')
+                .attr('r', d => d.role === 'hub' ? 25 : 18)
+                .attr('fill', d => colorMap[d.role] || '#4ecdc4');
+
+            // Add labels to nodes
+            node.append('text')
+                .attr('dy', 35)
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'white')
+                .text(d => d.name);
+
+            // Tooltip
+            const tooltip = d3.select('#tooltip');
+
+            node.on('mouseover', function(event, d) {
+                tooltip
+                    .style('opacity', 1)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 20) + 'px')
+                    .html(`
+                        <strong>${d.name}</strong><br>
+                        Domain: ${d.id}<br>
+                        Role: ${d.role}<br>
+                        Tier: ${d.tier}<br>
+                        Category: ${d.category}
+                    `);
+            })
+            .on('mouseout', function() {
+                tooltip.style('opacity', 0);
+            })
+            .on('click', function(event, d) {
+                window.location.href = `/domains?domain=${d.id}`;
+            });
+
+            // Update positions on simulation tick
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+        }
+
+        // Drag behavior
+        function drag(simulation) {
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            return d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended);
+        }
+
+        // Load network on page load
+        loadNetwork();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>

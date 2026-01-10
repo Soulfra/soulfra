@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ domain_question }} - {{ domain_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px 30px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2em;
+            color: {{ theme_primary }};
+            margin-bottom: 10px;
+        }
+        .question {
+            font-size: 1.4em;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        .input-section {
+            margin-bottom: 25px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: {{ theme_primary }};
+        }
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-voice {
+            background: #ff6b6b;
+            color: white;
+        }
+        .btn-voice:hover { background: #ff5252; }
+        .btn-voice.recording {
+            background: #4ecdc4;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .btn-submit {
+            background: {{ theme_primary }};
+            color: white;
+        }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+        .recording-indicator {
+            display: none;
+            text-align: center;
+            margin: 15px 0;
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+        .recording-indicator.active {
+            display: block;
+        }
+        .plot-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ domain_emoji }} {{ domain_name }}</h1>
+        </div>
+
+        {% if plot_name %}
+        <div class="plot-info">
+            📍 Answering for: <strong>{{ plot_name }}</strong>
+        </div>
+        {% endif %}
+
+        <div class="question">{{ domain_question }}</div>
+
+        <form method="POST" id="responseForm">
+            <input type="hidden" name="plot_id" value="{{ plot_id }}">
+            <input type="hidden" name="question" value="{{ domain_question }}">
+            <input type="hidden" name="audio_data" id="audioData">
+
+            <div class="input-section">
+                <textarea name="response_text" id="responseText" 
+                          placeholder="Type your answer here, or tap the mic to record..."></textarea>
+            </div>
+
+            <div class="voice-controls">
+                <button type="button" class="btn btn-voice" id="voiceBtn">
+                    🎤 Voice Input
+                </button>
+                <button type="submit" class="btn btn-submit">
+                    ✓ Submit
+                </button>
+            </div>
+
+            <div class="recording-indicator" id="recordingIndicator">
+                🔴 Recording... Tap to stop
+            </div>
+
+            <div class="status" id="status"></div>
+        </form>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        const voiceBtn = document.getElementById('voiceBtn');
+        const recordingIndicator = document.getElementById('recordingIndicator');
+        const responseText = document.getElementById('responseText');
+        const audioData = document.getElementById('audioData');
+        const status = document.getElementById('status');
+
+        voiceBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener('stop', () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        
+                        // Convert to base64
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => {
+                            audioData.value = reader.result;
+                            status.textContent = '✓ Audio recorded! You can submit now.';
+                        };
+
+                        // Stop all tracks
+                        stream.getTracks().forEach(track => track.stop());
+                    });
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    voiceBtn.classList.add('recording');
+                    voiceBtn.textContent = '⏹️ Stop Recording';
+                    recordingIndicator.classList.add('active');
+                    status.textContent = 'Recording audio...';
+
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                    status.textContent = '❌ Microphone access denied. Please use text input.';
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+                voiceBtn.textContent = '🎤 Voice Input';
+                recordingIndicator.classList.remove('active');
+            }
+        });
+
+        // Form submission
+        document.getElementById('responseForm').addEventListener('submit', (e) => {
+            const hasText = responseText.value.trim().length > 0;
+            const hasAudio = audioData.value.length > 0;
+
+            if (!hasText && !hasAudio) {
+                e.preventDefault();
+                status.textContent = '⚠️ Please provide a text or voice response.';
+                return false;
+            }
+
+            status.textContent = '📤 Submitting...';
+        });
+    </script>
+</body>
+</html>

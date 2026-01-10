@@ -1,0 +1,3037 @@
+{
+  "api-debug-helper.py": [
+    "json",
+    "datetime",
+    "sys",
+    "requests"
+  ],
+  "membership_system.py": [
+    "json",
+    "datetime",
+    "stripe",
+    "os",
+    "typing",
+    "sqlite3"
+  ],
+  "creative_onboarding.py": [
+    "database",
+    "PIL",
+    "secrets",
+    "requests",
+    "io",
+    "json",
+    "datetime",
+    "argparse",
+    "pytesseract",
+    "hashlib",
+    "os",
+    "typing",
+    "sqlite3",
+    "base64"
+  ],
+  "question_routes.py": [
+    "database",
+    "whisper_transcriber",
+    "secrets",
+    "voice_ollama_processor",
+    "datetime",
+    "rate_limiter",
+    "os",
+    "rotation_helpers",
+    "tempfile",
+    "flask"
+  ],
+  "db_helpers.py": [
+    "database",
+    "datetime",
+    "avatar_generator",
+    "hashlib",
+    "sqlite3",
+    "werkzeug"
+  ],
+  "docs_routes.py": [
+    "json",
+    "pathlib",
+    "markdown2",
+    "os",
+    "lib",
+    "typing",
+    "urllib",
+    "re",
+    "flask"
+  ],
+  "canvas_routes.py": [
+    "database",
+    "qr_faucet",
+    "canvas_integration",
+    "json",
+    "datetime",
+    "hashlib",
+    "typing",
+    "progression_system",
+    "flask"
+  ],
+  "build.py": [
+    "database",
+    "shutil",
+    "json",
+    "datetime",
+    "sys",
+    "re",
+    "os",
+    "markdown2",
+    "pathlib"
+  ],
+  "interactive_onboarding.py": [
+    "brand_creator",
+    "json",
+    "sys",
+    "ollama_domain_analyzer",
+    "pathlib"
+  ],
+  "bidirectional_review_engine.py": [
+    "database",
+    "json",
+    "datetime",
+    "typing",
+    "flask"
+  ],
+  "automation_workflows.py": [
+    "database",
+    "json",
+    "anthropic",
+    "datetime",
+    "blog_syndication",
+    "sys",
+    "sqlite3",
+    "os",
+    "typing",
+    "pathlib"
+  ],
+  "inspect-live-site.py": [
+    "glob",
+    "requests",
+    "json",
+    "datetime",
+    "sys",
+    "bs4",
+    "os"
+  ],
+  "ollama_domain_analyzer.py": [
+    "typing",
+    "json",
+    "sys",
+    "requests"
+  ],
+  "template_components.py": [
+    "json"
+  ],
+  "voice_pipeline.py": [
+    "file_importer",
+    "voice_input",
+    "qr_voice_integration",
+    "time",
+    "content_pipeline",
+    "datetime",
+    "argparse",
+    "os",
+    "typing",
+    "whisper_transcriber",
+    "pathlib",
+    "watchdog"
+  ],
+  "comment_to_post.py": [
+    "database",
+    "db_helpers",
+    "datetime",
+    "sys",
+    "re",
+    "sqlite3"
+  ],
+  "formula_engine.py": [
+    "ast",
+    "json",
+    "argparse",
+    "pathlib",
+    "colorsys",
+    "typing",
+    "re",
+    "operator",
+    "yaml"
+  ],
+  "github_repo_creator.py": [
+    "requests",
+    "subprocess",
+    "sys",
+    "os",
+    "typing",
+    "pathlib"
+  ],
+  "widget_router.py": [
+    "database",
+    "pathlib",
+    "os",
+    "sys"
+  ],
+  "qr_auto_generate.py": [
+    "database",
+    "qrcode",
+    "sys",
+    "os",
+    "pathlib"
+  ],
+  "cleanup_fake_domains.py": [
+    "sqlite3",
+    "os"
+  ],
+  "auto_content_generator.py": [
+    "requests",
+    "json",
+    "datetime",
+    "argparse",
+    "re",
+    "sqlite3"
+  ],
+  "audit_pii_exposure.py": [
+    "database",
+    "json",
+    "collections",
+    "datetime",
+    "pathlib",
+    "sys",
+    "re"
+  ],
+  "test_complete_flow.py": [
+    "vanity_qr",
+    "json",
+    "requests"
+  ],
+  "test_full_pipeline.py": [
+    "export_static",
+    "content_transformer",
+    "json",
+    "subprocess",
+    "pathlib",
+    "sys",
+    "os",
+    "sqlite3",
+    "time",
+    "domain_manager"
+  ],
+  "plugin_loader.py": [
+    "importlib",
+    "sys",
+    "os",
+    "sqlite3",
+    "typing",
+    "pathlib",
+    "yaml"
+  ],
+  "image_composer.py": [
+    "dataclasses",
+    "PIL",
+    "io",
+    "qrcode",
+    "os",
+    "typing"
+  ],
+  "SIMPLE_DEMO.py": [
+    "requests",
+    "json",
+    "datetime",
+    "sys",
+    "traceback",
+    "sqlite3"
+  ],
+  "generator_routes.py": [
+    "database",
+    "json",
+    "traceback",
+    "unified_generator",
+    "flask"
+  ],
+  "voice_idea_board_routes.py": [
+    "database",
+    "whisper_transcriber",
+    "json",
+    "datetime",
+    "os",
+    "ollama_client",
+    "typing",
+    "tempfile",
+    "re",
+    "flask"
+  ],
+  "api_image_generator.py": [
+    "PIL",
+    "requests",
+    "io",
+    "json",
+    "procedural_media",
+    "argparse",
+    "sys",
+    "openai",
+    "BingImageCreator",
+    "os",
+    "replicate",
+    "traceback",
+    "typing",
+    "time",
+    "base64"
+  ],
+  "domain_researcher.py": [
+    "typing",
+    "json",
+    "sys",
+    "ssl",
+    "bs4",
+    "socket",
+    "urllib",
+    "re"
+  ],
+  "context_manager.py": [
+    "database",
+    "json",
+    "collections",
+    "datetime",
+    "re",
+    "hashlib",
+    "typing",
+    "urllib",
+    "config"
+  ],
+  "chapter_version_control.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "difflib",
+    "chapter_tutorials",
+    "typing"
+  ],
+  "draw_routes.py": [
+    "database",
+    "PIL",
+    "io",
+    "datetime",
+    "ocr_extractor",
+    "hashlib",
+    "difflib",
+    "flask",
+    "base64"
+  ],
+  "deployment_ladder.py": [
+    "requests",
+    "secrets",
+    "subprocess",
+    "argparse",
+    "sys",
+    "os",
+    "socket",
+    "pathlib"
+  ],
+  "hello_world.py": [
+    "database",
+    "traceback",
+    "os",
+    "sys"
+  ],
+  "token_purchase_system.py": [
+    "membership_system",
+    "json",
+    "datetime",
+    "stripe",
+    "os",
+    "typing",
+    "sqlite3"
+  ],
+  "dev_config.py": [
+    "datetime",
+    "os"
+  ],
+  "voice_podcast_chapters.py": [
+    "database",
+    "voice_ollama_processor",
+    "json",
+    "datetime",
+    "argparse",
+    "ollama_client",
+    "typing",
+    "re"
+  ],
+  "ai_image_generator.py": [
+    "PIL",
+    "io",
+    "procedural_media",
+    "torch",
+    "diffusers",
+    "hashlib",
+    "os",
+    "typing"
+  ],
+  "proof_of_concept.py": [
+    "requests",
+    "subprocess",
+    "pathlib",
+    "sys",
+    "traceback",
+    "os",
+    "sqlite3",
+    "time"
+  ],
+  "brand_ai_orchestrator.py": [
+    "database",
+    "json",
+    "sys",
+    "brand_ai_persona_generator",
+    "typing",
+    "sqlite3"
+  ],
+  "comment_voice_chain.py": [
+    "database",
+    "qrcode",
+    "io",
+    "json",
+    "datetime",
+    "hashlib",
+    "flask",
+    "base64"
+  ],
+  "ollama_proxy.py": [
+    "requests",
+    "database",
+    "flask",
+    "flask_cors"
+  ],
+  "config.py": [
+    "socket",
+    "os"
+  ],
+  "test_encryption_tiers.py": [
+    "requests",
+    "json",
+    "subprocess",
+    "argparse",
+    "sys",
+    "ssl",
+    "app",
+    "hashlib",
+    "qr_auth",
+    "socket",
+    "pathlib",
+    "time"
+  ],
+  "ollama_client.py": [
+    "typing",
+    "json",
+    "pathlib",
+    "requests"
+  ],
+  "build_from_scratch.py": [
+    "database",
+    "anki_learning_system",
+    "sys",
+    "init_learning_cards_for_user",
+    "app",
+    "os",
+    "init_learning_cards",
+    "time"
+  ],
+  "ollama_auto_commenter.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "brand_ai_orchestrator",
+    "brand_ai_persona_generator",
+    "typing",
+    "urllib"
+  ],
+  "avatar_generator.py": [
+    "database",
+    "PIL",
+    "io",
+    "json",
+    "hashlib",
+    "os"
+  ],
+  "transcript_aggregator.py": [
+    "glob",
+    "json",
+    "datetime",
+    "argparse",
+    "pathlib",
+    "sys",
+    "os",
+    "typing",
+    "sqlite3"
+  ],
+  "blamechain.py": [
+    "datetime",
+    "sqlite3",
+    "hashlib",
+    "flask"
+  ],
+  "admin_routes.py": [
+    "admin_system",
+    "flask"
+  ],
+  "tribunal_token_test.py": [
+    "requests",
+    "json",
+    "datetime",
+    "argparse",
+    "hashlib",
+    "token_purchase_system",
+    "typing",
+    "time"
+  ],
+  "economy_mesh_network.py": [
+    "database",
+    "text_encoder",
+    "user_economy",
+    "user_wordmap_engine",
+    "json",
+    "datetime",
+    "domain_unlock_engine",
+    "sys",
+    "voice_content_generator",
+    "domain_wordmap_aggregator",
+    "ownership_rewards",
+    "typing"
+  ],
+  "debug_affiliate_system.py": [
+    "github_star_validator",
+    "tier_progression_engine",
+    "affiliate_link_tracker",
+    "sys",
+    "traceback",
+    "os",
+    "sqlite3",
+    "pathlib"
+  ],
+  "business_schemas.py": [
+    "hmac",
+    "json",
+    "datetime",
+    "base64",
+    "hashlib",
+    "typing",
+    "gzip"
+  ],
+  "url_shortener.py": [
+    "database",
+    "PIL",
+    "qrcode",
+    "datetime",
+    "hashlib",
+    "os",
+    "config",
+    "base64"
+  ],
+  "dns_setup_guide.py": [
+    "secrets",
+    "dns",
+    "argparse",
+    "sys",
+    "socket",
+    "urllib",
+    "pathlib"
+  ],
+  "test_domain_diversity.py": [
+    "ollama_domain_analyzer",
+    "json"
+  ],
+  "generate_fake_domains.py": [
+    "random"
+  ],
+  "image_dataset.py": [
+    "PIL",
+    "io",
+    "math",
+    "hashlib",
+    "os",
+    "typing",
+    "urllib",
+    "sqlite3",
+    "matplotlib"
+  ],
+  "lore_extraction_engine.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "re",
+    "ollama_client",
+    "typing",
+    "sqlite3"
+  ],
+  "export_brand_filesystem.py": [
+    "shutil",
+    "json",
+    "datetime",
+    "argparse",
+    "pathlib",
+    "pickle",
+    "os",
+    "sqlite3"
+  ],
+  "nudge_system.py": [
+    "database",
+    "db_helpers",
+    "datetime",
+    "typing",
+    "simple_emailer"
+  ],
+  "audit_database.py": [
+    "sqlite3",
+    "os"
+  ],
+  "test_integration_flow.py": [
+    "database",
+    "qr_faucet",
+    "json",
+    "datetime",
+    "pathlib",
+    "sys",
+    "practice_room",
+    "widget_qr_bridge",
+    "qr_user_profile",
+    "os",
+    "traceback",
+    "sqlite3",
+    "base64"
+  ],
+  "publish_everywhere.py": [
+    "requests",
+    "datetime",
+    "argparse",
+    "pathlib",
+    "sys",
+    "subprocess",
+    "os",
+    "sqlite3"
+  ],
+  "voice_content_generator.py": [
+    "database",
+    "json",
+    "domain_unlock_engine",
+    "sys",
+    "ollama_client",
+    "typing",
+    "re"
+  ],
+  "llm_router.py": [
+    "typing",
+    "json",
+    "urllib"
+  ],
+  "soulfra_assistant.py": [
+    "database",
+    "io",
+    "brand_voice_generator",
+    "json",
+    "datetime",
+    "simple_games",
+    "url_shortener",
+    "logging",
+    "trading_system",
+    "aging_curves",
+    "traceback",
+    "os",
+    "content_generator",
+    "qr_encoder_stdlib",
+    "urllib",
+    "base64"
+  ],
+  "progression_system.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "typing"
+  ],
+  "batch_import_posts.py": [
+    "pandas",
+    "datetime",
+    "argparse",
+    "pathlib",
+    "sys",
+    "re",
+    "csv",
+    "typing",
+    "sqlite3"
+  ],
+  "story_modes_system.py": [
+    "typing",
+    "soulfra_dark_story",
+    "llm_router"
+  ],
+  "theme_compiler.py": [
+    "json",
+    "argparse",
+    "colorsys",
+    "typing",
+    "pathlib"
+  ],
+  "migrate_stpetepros.py": [
+    "database"
+  ],
+  "debug_lab.py": [
+    "requests",
+    "json",
+    "collections",
+    "subprocess",
+    "datetime",
+    "os",
+    "typing",
+    "re",
+    "flask"
+  ],
+  "user_wordmap_engine.py": [
+    "database",
+    "wordmap_pitch_integrator",
+    "json",
+    "collections",
+    "datetime",
+    "sys",
+    "typing"
+  ],
+  "voice_captcha.py": [
+    "database",
+    "whisper_transcriber",
+    "secrets",
+    "json",
+    "datetime",
+    "archive",
+    "sys",
+    "os",
+    "typing",
+    "tempfile",
+    "sqlite3",
+    "time",
+    "flask"
+  ],
+  "seed_domain_wordmaps.py": [
+    "database",
+    "json",
+    "datetime",
+    "traceback"
+  ],
+  "publisher_routes.py": [
+    "database",
+    "requests",
+    "json",
+    "subprocess",
+    "datetime",
+    "os",
+    "pathlib",
+    "domain_manager",
+    "flask"
+  ],
+  "github_faucet.py": [
+    "database",
+    "requests",
+    "secrets",
+    "datetime",
+    "argparse",
+    "hashlib",
+    "os",
+    "typing",
+    "sqlite3"
+  ],
+  "publish_to_github.py": [
+    "subprocess",
+    "sqlite3",
+    "datetime",
+    "pathlib"
+  ],
+  "keyring_unlocks.py": [
+    "database",
+    "typing",
+    "datetime"
+  ],
+  "github_star_validator.py": [
+    "database",
+    "requests",
+    "datetime",
+    "argparse",
+    "os",
+    "typing",
+    "flask"
+  ],
+  "migrate_blog_network.py": [
+    "sqlite3",
+    "os"
+  ],
+  "watch_folder.py": [
+    "file_importer",
+    "content_pipeline",
+    "argparse",
+    "os",
+    "pathlib",
+    "time",
+    "watchdog"
+  ],
+  "simple_emailer.py": [
+    "smtplib",
+    "typing",
+    "email",
+    "config_secrets"
+  ],
+  "profile_builder.py": [
+    "typing",
+    "database",
+    "json"
+  ],
+  "qr_unified.py": [
+    "typing",
+    "database",
+    "io",
+    "qr_gallery_system",
+    "dm_via_qr",
+    "json",
+    "qrcode",
+    "business_schemas",
+    "advanced_qr",
+    "business_qr",
+    "vanity_qr"
+  ],
+  "affiliate_link_tracker.py": [
+    "database",
+    "secrets",
+    "json",
+    "datetime",
+    "hashlib",
+    "typing",
+    "flask"
+  ],
+  "soulfra_dark_story.py": [
+    "database",
+    "typing",
+    "datetime"
+  ],
+  "interactive_docs.py": [],
+  "auto_fix_routes.py": [
+    "json",
+    "subprocess",
+    "sys",
+    "requests"
+  ],
+  "one_command_live.py": [
+    "database",
+    "ollama_auto_commenter",
+    "subprocess",
+    "sys",
+    "brand_ai_orchestrator",
+    "urllib",
+    "re",
+    "time",
+    "comment_to_post"
+  ],
+  "business_qr.py": [
+    "database",
+    "io",
+    "qrcode",
+    "business_schemas",
+    "json",
+    "typing",
+    "sqlite3",
+    "base64"
+  ],
+  "workflow_routes.py": [
+    "automation_workflows",
+    "functools",
+    "datetime",
+    "flask"
+  ],
+  "automation_routes.py": [
+    "database",
+    "requests",
+    "json",
+    "subprocess",
+    "datetime",
+    "os",
+    "flask"
+  ],
+  "database.py": [
+    "sqlite3",
+    "datetime",
+    "os"
+  ],
+  "ascii_player.py": [
+    "glob",
+    "sys",
+    "curses",
+    "os",
+    "image_to_ascii",
+    "time"
+  ],
+  "query_templates.py": [
+    "database",
+    "datetime"
+  ],
+  "cringeproof_content_judge.py": [
+    "json",
+    "datetime",
+    "sqlite3",
+    "argparse"
+  ],
+  "prompt_templates.py": [
+    "typing"
+  ],
+  "audio_quality.py": [
+    "json",
+    "subprocess",
+    "argparse",
+    "os",
+    "typing",
+    "tempfile",
+    "sqlite3"
+  ],
+  "url_to_blog.py": [
+    "database",
+    "template_orchestrator",
+    "enrich_content",
+    "datetime",
+    "subprocess",
+    "argparse",
+    "sys",
+    "typing",
+    "re"
+  ],
+  "domain_partnership.py": [
+    "database",
+    "string",
+    "random",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "pathlib"
+  ],
+  "test_flow.py": [
+    "sqlite3",
+    "time",
+    "pathlib",
+    "requests"
+  ],
+  "model_trainer.py": [
+    "PIL",
+    "json",
+    "datetime",
+    "image_dataset",
+    "ai_image_generator",
+    "os",
+    "traceback",
+    "typing"
+  ],
+  "deployment_diagnostic.py": [
+    "database",
+    "requests",
+    "json",
+    "subprocess",
+    "argparse",
+    "pathlib",
+    "sys",
+    "os",
+    "sqlite3"
+  ],
+  "init_qr_database.py": [
+    "qr_auth"
+  ],
+  "tribunal_email_notifier.py": [
+    "email",
+    "datetime",
+    "os",
+    "smtplib",
+    "sqlite3"
+  ],
+  "web_domain_manager_routes.py": [
+    "database",
+    "glob",
+    "llm_router",
+    "qrcode",
+    "io",
+    "requests",
+    "subprocess",
+    "os",
+    "urllib3",
+    "flask",
+    "base64"
+  ],
+  "dm_via_qr.py": [
+    "database",
+    "qrcode",
+    "secrets",
+    "json",
+    "datetime",
+    "sys",
+    "hashlib",
+    "os",
+    "pathlib",
+    "time"
+  ],
+  "kangaroo_court_routes.py": [
+    "database",
+    "json",
+    "datetime",
+    "ollama_client",
+    "flask"
+  ],
+  "voice_bank_routes.py": [
+    "database",
+    "json",
+    "flask"
+  ],
+  "migrate_onboarding_system.py": [
+    "database",
+    "sqlite3",
+    "datetime",
+    "argparse"
+  ],
+  "demo_user_journey.py": [
+    "database",
+    "anki_learning_system",
+    "requests",
+    "datetime",
+    "sqlite3"
+  ],
+  "prove_voice_pipeline.py": [
+    "database",
+    "json",
+    "datetime",
+    "argparse",
+    "cringeproof_content_judge",
+    "sys",
+    "voice_content_generator",
+    "traceback",
+    "pathlib",
+    "lore_extraction_engine",
+    "economy_mesh_network"
+  ],
+  "test_hello_world.py": [
+    "requests",
+    "neural_network",
+    "pathlib",
+    "sys",
+    "sqlite3",
+    "time"
+  ],
+  "build_routes.py": [
+    "requests",
+    "pathlib",
+    "os",
+    "sqlite3",
+    "flask"
+  ],
+  "rate_limiter.py": [
+    "database",
+    "typing",
+    "datetime"
+  ],
+  "post_to_quiz.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "hashlib",
+    "re"
+  ],
+  "publish_all_brands.py": [
+    "subprocess",
+    "datetime",
+    "pathlib",
+    "sys",
+    "sqlite3"
+  ],
+  "generate_manifest.py": [
+    "json",
+    "subprocess",
+    "datetime",
+    "pathlib",
+    "sys",
+    "argparse",
+    "re",
+    "csv",
+    "os",
+    "typing",
+    "urllib",
+    "sqlite3"
+  ],
+  "multi_part_qr.py": [
+    "io",
+    "qrcode",
+    "json",
+    "hashlib",
+    "os",
+    "typing",
+    "base64"
+  ],
+  "domain_unlock_engine.py": [
+    "database",
+    "random",
+    "datetime",
+    "sys",
+    "typing"
+  ],
+  "content_pipeline.py": [
+    "file_importer",
+    "shutil",
+    "requests",
+    "qrcode",
+    "json",
+    "collections",
+    "datetime",
+    "folder_router",
+    "pathlib",
+    "argparse",
+    "markdown2",
+    "os",
+    "typing",
+    "re"
+  ],
+  "create_blog_post_offline.py": [
+    "database",
+    "datetime",
+    "sys",
+    "event_hooks",
+    "traceback",
+    "os",
+    "sqlite3"
+  ],
+  "train_context_networks.py": [
+    "neural_network",
+    "database",
+    "re",
+    "numpy"
+  ],
+  "domain_health.py": [
+    "requests",
+    "subprocess",
+    "datetime",
+    "sys"
+  ],
+  "ocr_extractor.py": [
+    "easyocr",
+    "PIL",
+    "io",
+    "os",
+    "typing",
+    "urllib"
+  ],
+  "voice_domain_creator_routes.py": [
+    "database",
+    "config",
+    "qrcode",
+    "io",
+    "json",
+    "ollama_client",
+    "re",
+    "flask",
+    "base64"
+  ],
+  "voice_ollama_processor.py": [
+    "database",
+    "json",
+    "collections",
+    "sys",
+    "ollama_client",
+    "typing",
+    "re"
+  ],
+  "full_flow_demo.py": [
+    "database",
+    "sys"
+  ],
+  "import_domains_csv.py": [
+    "csv",
+    "sqlite3",
+    "pathlib",
+    "sys"
+  ],
+  "voice_input.py": [
+    "database",
+    "shutil",
+    "json",
+    "datetime",
+    "subprocess",
+    "sys",
+    "hashlib",
+    "sqlite3",
+    "os",
+    "pathlib"
+  ],
+  "install_ai.py": [
+    "os",
+    "subprocess",
+    "platform",
+    "sys"
+  ],
+  "init_mesh_economy.py": [
+    "sqlite3",
+    "datetime"
+  ],
+  "websocket_server.py": [
+    "test_runner",
+    "database",
+    "time",
+    "requests",
+    "json",
+    "datetime",
+    "sys",
+    "flask_socketio",
+    "threading",
+    "subdomain_router",
+    "flask"
+  ],
+  "qr_faucet.py": [
+    "hmac",
+    "config",
+    "secrets",
+    "qrcode",
+    "io",
+    "json",
+    "idea_submission_system",
+    "datetime",
+    "argparse",
+    "hashlib",
+    "typing",
+    "sqlite3",
+    "time",
+    "base64"
+  ],
+  "test_default_values.py": [
+    "formula_engine"
+  ],
+  "wordmap_pitch_integrator.py": [
+    "database",
+    "collections",
+    "json",
+    "domain_unlock_engine",
+    "sys",
+    "voice_content_generator",
+    "typing",
+    "re"
+  ],
+  "generate_pwa_icons.py": [
+    "PIL",
+    "os"
+  ],
+  "verify_image.py": [
+    "database",
+    "PIL",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "pyzbar",
+    "hashlib",
+    "os",
+    "typing",
+    "pathlib"
+  ],
+  "PROOF_IT_ALL_WORKS.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "sqlite3"
+  ],
+  "api_routes.py": [
+    "database",
+    "json",
+    "flask"
+  ],
+  "logger.py": [
+    "pathlib",
+    "datetime",
+    "os",
+    "logging"
+  ],
+  "user_pairing.py": [
+    "database",
+    "json",
+    "datetime",
+    "cringeproof",
+    "typing"
+  ],
+  "inspect-local-system.py": [
+    "glob",
+    "json",
+    "datetime",
+    "subprocess",
+    "os",
+    "sqlite3",
+    "socket",
+    "pathlib"
+  ],
+  "template_orchestrator.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "simple_emailer",
+    "os",
+    "traceback",
+    "markdown2",
+    "pathlib"
+  ],
+  "voice_routes.py": [
+    "voice_input",
+    "qr_voice_integration",
+    "os",
+    "werkzeug",
+    "whisper_transcriber",
+    "pathlib",
+    "flask",
+    "voice_pipeline"
+  ],
+  "train_color_features.py": [
+    "math",
+    "colorsys"
+  ],
+  "init_voice_memos_federation.py": [
+    "sqlite3",
+    "datetime"
+  ],
+  "audio_enhancer.py": [
+    "database",
+    "whisper_transcriber",
+    "datetime",
+    "subprocess",
+    "argparse",
+    "noisereduce",
+    "librosa",
+    "os",
+    "traceback",
+    "typing",
+    "tempfile",
+    "pathlib",
+    "soundfile"
+  ],
+  "shortcuts_integration.py": [
+    "database",
+    "requests",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "os",
+    "typing",
+    "sqlite3"
+  ],
+  "content_transformer.py": [
+    "requests",
+    "json",
+    "sys",
+    "typing",
+    "domain_manager"
+  ],
+  "start.py": [
+    "database",
+    "subprocess",
+    "webbrowser",
+    "sys",
+    "init_learning_cards_for_user",
+    "app",
+    "os",
+    "pathlib",
+    "time"
+  ],
+  "test_comment_voice_chain.py": [
+    "base64",
+    "json",
+    "traceback",
+    "requests"
+  ],
+  "image_metadata.py": [
+    "PIL",
+    "io",
+    "image_composer",
+    "json",
+    "datetime",
+    "typing",
+    "piexif"
+  ],
+  "qr_image_overlay.py": [
+    "PIL",
+    "qrcode",
+    "io",
+    "json",
+    "procedural_media",
+    "datetime",
+    "sys",
+    "pyzbar",
+    "hashlib",
+    "traceback",
+    "typing"
+  ],
+  "init_learning_cards_for_user.py": [
+    "database",
+    "datetime",
+    "sys"
+  ],
+  "avatar_auto_attach.py": [
+    "database",
+    "hashlib",
+    "sys"
+  ],
+  "content_brand_detector.py": [
+    "database",
+    "sys",
+    "brand_ai_persona_generator",
+    "typing",
+    "re"
+  ],
+  "test_soulfra_deployment.py": [
+    "datetime",
+    "sys",
+    "requests"
+  ],
+  "token_routes.py": [
+    "stripe",
+    "os",
+    "flask",
+    "token_purchase_system"
+  ],
+  "test_template_rendering.py": [
+    "formula_engine"
+  ],
+  "business_routes.py": [
+    "database",
+    "payment_integrations",
+    "io",
+    "business_schemas",
+    "json",
+    "traceback",
+    "os",
+    "business_qr",
+    "typing",
+    "flask"
+  ],
+  "folder_router.py": [
+    "database",
+    "datetime",
+    "argparse",
+    "pathlib",
+    "os",
+    "sqlite3",
+    "typing",
+    "re",
+    "flask"
+  ],
+  "qr_user_profile.py": [
+    "database",
+    "config",
+    "qr_faucet",
+    "qrcode",
+    "io",
+    "json",
+    "sys",
+    "typing",
+    "pathlib",
+    "flask",
+    "base64"
+  ],
+  "practice_room.py": [
+    "database",
+    "voice_input",
+    "secrets",
+    "qr_faucet",
+    "json",
+    "datetime",
+    "sys",
+    "qr_to_ascii",
+    "typing"
+  ],
+  "deploy_tribunal_to_github.py": [
+    "tribunal_email_notifier",
+    "dotenv",
+    "json",
+    "subprocess",
+    "datetime",
+    "pathlib",
+    "sys",
+    "argparse",
+    "os",
+    "sqlite3"
+  ],
+  "session_sync.py": [
+    "database",
+    "ast",
+    "secrets",
+    "qrcode",
+    "io",
+    "domain_unlock_engine",
+    "typing",
+    "time",
+    "flask",
+    "base64"
+  ],
+  "text_encoder.py": [
+    "json",
+    "datetime",
+    "hashlib",
+    "typing",
+    "base64"
+  ],
+  "voice_health_checker.py": [
+    "database",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "typing"
+  ],
+  "domain_onboarding.py": [
+    "brand_creator",
+    "argparse",
+    "sys",
+    "ollama_domain_analyzer",
+    "sqlite3",
+    "domain_manager"
+  ],
+  "ollama_email_node.py": [
+    "email",
+    "imaplib",
+    "requests",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "hashlib",
+    "os",
+    "smtplib",
+    "typing",
+    "time"
+  ],
+  "ownership_rewards.py": [
+    "database",
+    "wordmap_pitch_integrator",
+    "json",
+    "datetime",
+    "domain_unlock_engine",
+    "sys",
+    "domain_wordmap_aggregator",
+    "typing"
+  ],
+  "fix_ip_storage.py": [
+    "database",
+    "argparse",
+    "pathlib",
+    "sys",
+    "hashlib",
+    "re"
+  ],
+  "test_mesh_flow.py": [
+    "text_encoder",
+    "json",
+    "datetime",
+    "domain_wordmap_aggregator",
+    "typing",
+    "sqlite3",
+    "economy_mesh_network"
+  ],
+  "status_routes.py": [
+    "database",
+    "json",
+    "subprocess",
+    "datetime",
+    "os",
+    "config",
+    "flask"
+  ],
+  "qr_learning_session.py": [],
+  "wiki_concepts.py": [
+    "database",
+    "ollama_auto_commenter",
+    "json",
+    "datetime",
+    "brand_ai_orchestrator",
+    "typing",
+    "sqlite3"
+  ],
+  "extract_snippets.py": [
+    "json",
+    "argparse",
+    "pathlib",
+    "sys",
+    "os",
+    "typing",
+    "re"
+  ],
+  "test_qr_flow.py": [
+    "database",
+    "voice_input",
+    "qr_faucet",
+    "json",
+    "datetime",
+    "sys",
+    "pathlib",
+    "time",
+    "base64"
+  ],
+  "install_cross_platform.py": [
+    "shutil",
+    "platform",
+    "subprocess",
+    "argparse",
+    "sys",
+    "os",
+    "typing"
+  ],
+  "chapter_tutorials.py": [],
+  "soulfra_types.py": [
+    "typing",
+    "json",
+    "re",
+    "datetime"
+  ],
+  "image_workflow.py": [
+    "database",
+    "image_metadata",
+    "PIL",
+    "io",
+    "json",
+    "datetime",
+    "hashlib",
+    "os",
+    "typing",
+    "image_composer",
+    "prompt_templates",
+    "vanity_qr"
+  ],
+  "neural_network.py": [
+    "database",
+    "json",
+    "numpy",
+    "datetime"
+  ],
+  "cringeproof_personas.py": [
+    "json",
+    "sqlite3",
+    "datetime",
+    "flask"
+  ],
+  "merge_test_to_main.py": [
+    "sqlite3",
+    "os"
+  ],
+  "api_server.py": [
+    "database",
+    "sys",
+    "os",
+    "flask",
+    "flask_cors"
+  ],
+  "start_demo.py": [
+    "database",
+    "qrcode",
+    "datetime",
+    "practice_room",
+    "traceback",
+    "socket",
+    "time"
+  ],
+  "url_to_content.py": [
+    "requests",
+    "datetime",
+    "bs4",
+    "typing",
+    "urllib",
+    "re"
+  ],
+  "widget_qr_bridge.py": [
+    "database",
+    "qr_faucet",
+    "qrcode",
+    "io",
+    "json",
+    "sys",
+    "typing",
+    "config",
+    "flask",
+    "base64"
+  ],
+  "event_hooks.py": [
+    "database",
+    "ollama_auto_commenter",
+    "db_helpers",
+    "profile_builder",
+    "typing",
+    "simple_emailer"
+  ],
+  "user_economy.py": [
+    "database",
+    "text_encoder",
+    "user_wordmap_engine",
+    "json",
+    "datetime",
+    "domain_unlock_engine",
+    "sys",
+    "domain_wordmap_aggregator",
+    "ownership_rewards",
+    "typing"
+  ],
+  "user_workspace.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "typing"
+  ],
+  "ollama_discussion.py": [
+    "sop_generator",
+    "database",
+    "json",
+    "datetime",
+    "typing",
+    "urllib",
+    "sqlite3"
+  ],
+  "ollama_github_search.py": [
+    "json",
+    "argparse",
+    "sys",
+    "typing",
+    "urllib",
+    "pathlib",
+    "base64"
+  ],
+  "test_system.py": [
+    "domain_context",
+    "json",
+    "argparse",
+    "logger",
+    "sys",
+    "os",
+    "sqlite3",
+    "urllib",
+    "pathlib"
+  ],
+  "test_advanced_qr.py": [
+    "advanced_qr",
+    "os"
+  ],
+  "tier_progression_engine.py": [
+    "database",
+    "github_star_validator",
+    "json",
+    "datetime",
+    "typing",
+    "github_faucet",
+    "flask"
+  ],
+  "build_all.py": [
+    "database",
+    "content_brand_detector",
+    "sys",
+    "traceback",
+    "os",
+    "brand_ai_persona_generator"
+  ],
+  "whisper_transcriber.py": [
+    "file_importer",
+    "voice_input",
+    "whisper",
+    "json",
+    "subprocess",
+    "datetime",
+    "argparse",
+    "os",
+    "typing",
+    "pathlib",
+    "economy_mesh_network"
+  ],
+  "auto_deploy_domain.py": [
+    "brand_creator",
+    "time",
+    "requests",
+    "subprocess",
+    "github_repo_creator",
+    "sys",
+    "sqlite3",
+    "ollama_domain_analyzer",
+    "pathlib",
+    "domain_manager"
+  ],
+  "voice_capsule_engine.py": [
+    "typing",
+    "sqlite3",
+    "datetime"
+  ],
+  "local_domain_tester.py": [
+    "requests",
+    "json",
+    "subprocess",
+    "sys",
+    "os",
+    "typing",
+    "pathlib"
+  ],
+  "test_signup.py": [
+    "database",
+    "traceback"
+  ],
+  "domain_manager.py": [
+    "typing",
+    "csv",
+    "os"
+  ],
+  "project_launcher.py": [
+    "database",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "pathlib"
+  ],
+  "test_butter_image.py": [
+    "traceback",
+    "prompt_templates",
+    "ai_image_generator",
+    "os"
+  ],
+  "neural_soul_scorer.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "hashlib",
+    "os",
+    "re"
+  ],
+  "init_knowledge_graph.py": [
+    "sqlite3",
+    "datetime"
+  ],
+  "domain_chatroom.py": [
+    "database",
+    "llm_router",
+    "qrcode",
+    "io",
+    "json",
+    "sys",
+    "vanity_qr"
+  ],
+  "deploy_github.py": [
+    "json",
+    "subprocess",
+    "sys",
+    "traceback",
+    "os",
+    "pathlib"
+  ],
+  "build_cringeproof.py": [
+    "database",
+    "user_wordmap_engine",
+    "json",
+    "datetime",
+    "domain_unlock_engine",
+    "argparse",
+    "sys",
+    "voice_content_generator",
+    "domain_wordmap_aggregator",
+    "ownership_rewards"
+  ],
+  "gps_encryption.py": [
+    "database",
+    "argparse",
+    "sys",
+    "math",
+    "voice_encryption",
+    "pathlib",
+    "base64"
+  ],
+  "brand_builder.py": [
+    "database",
+    "requests",
+    "json",
+    "datetime",
+    "typing",
+    "config"
+  ],
+  "seed_domains.py": [
+    "json",
+    "sqlite3",
+    "datetime"
+  ],
+  "procedural_media.py": [
+    "database",
+    "PIL",
+    "random",
+    "io",
+    "json",
+    "pixel_utils",
+    "hashlib",
+    "typing"
+  ],
+  "unified_logger.py": [
+    "database",
+    "json",
+    "re",
+    "datetime"
+  ],
+  "test_voice_integration.py": [
+    "database",
+    "glob",
+    "voice_ollama_processor",
+    "json",
+    "datetime",
+    "argparse",
+    "audio_quality",
+    "os",
+    "typing",
+    "whisper_transcriber",
+    "pathlib"
+  ],
+  "test_everything.py": [
+    "database",
+    "anki_learning_system",
+    "json",
+    "datetime",
+    "sys",
+    "app"
+  ],
+  "generate_test_csv.py": [
+    "argparse",
+    "random"
+  ],
+  "manage_subscribers.py": [
+    "datetime",
+    "argparse",
+    "pathlib",
+    "sys",
+    "csv",
+    "sqlite3"
+  ],
+  "app.py": [
+    "stripe_membership",
+    "comment_voice_chain",
+    "brand_sop_templates",
+    "voice_federation_routes",
+    "emoji_pattern_analyzer",
+    "llm_router",
+    "chat_routes",
+    "json",
+    "practice_room",
+    "game_sharing",
+    "csv",
+    "psutil",
+    "event_hooks",
+    "hashlib",
+    "markdown2",
+    "werkzeug",
+    "pre_deploy_routes",
+    "api_routes",
+    "public_comments_api",
+    "generator_routes",
+    "cleanup_orphaned_associations",
+    "brand_vocabulary_trainer",
+    "business_routes",
+    "automation_workflows",
+    "urllib",
+    "pathlib",
+    "subdomain_router",
+    "brand_quality_gate",
+    "init_brands_from_manifest",
+    "text_encoder",
+    "io",
+    "dns",
+    "neural_proxy",
+    "cringeproof",
+    "game_orchestrator",
+    "ai_host",
+    "chapter_tutorials",
+    "blamechain",
+    "soul_model",
+    "url_to_blog",
+    "generate_proof",
+    "narrative_cringeproof",
+    "random",
+    "dm_via_qr",
+    "brand_theme_manager",
+    "math",
+    "docs_routes",
+    "cringeproof_personas",
+    "feed_generator",
+    "ollama_client",
+    "brand_config_validator",
+    "user_workspace",
+    "publisher_routes",
+    "automation_routes",
+    "voice_routes",
+    "brand_voice_generator",
+    "subprocess",
+    "cringeproof_reasoning",
+    "brand_css_generator",
+    "simple_ml",
+    "uuid",
+    "contribution_validator",
+    "soulfra_games",
+    "user_economy",
+    "voice_input",
+    "content_transformer",
+    "platform_connectors",
+    "qrcode",
+    "neural_network",
+    "query_templates",
+    "requests",
+    "db_helpers",
+    "zipfile",
+    "url_shortener",
+    "feature_factory",
+    "widget_qr_bridge",
+    "domain_wordmap_aggregator",
+    "aging_curves",
+    "route_discovery",
+    "status_routes",
+    "base64",
+    "idea_backpropagation",
+    "secrets",
+    "soulfra_simple_builder",
+    "email_server",
+    "config",
+    "github_star_validator",
+    "ownership_helper",
+    "shutil",
+    "qr_faucet",
+    "idea_submission_system",
+    "numpy",
+    "brand_status_dashboard",
+    "nudge_system",
+    "brand_ai_persona_generator",
+    "check_templates",
+    "session_sync",
+    "rotation_helpers",
+    "schema_inspector",
+    "flask",
+    "ollama_auto_commenter",
+    "bidirectional_review_engine",
+    "collections",
+    "datetime",
+    "flask_socketio",
+    "profile_compilers",
+    "qr_user_profile",
+    "string",
+    "anki_learning_system",
+    "soul_transformer",
+    "tribunal_blamechain",
+    "tier_progression_engine",
+    "kangaroo_court_routes",
+    "build_routes",
+    "ownership_rewards",
+    "gallery_routes",
+    "socket",
+    "sqlite3",
+    "voice_bank_routes",
+    "public_builder",
+    "emails",
+    "formula_engine",
+    "story_pipeline_tracer",
+    "economy_mesh_network",
+    "export_static",
+    "token_routes",
+    "device_multiplier_system",
+    "soulfra_assistant",
+    "web_domain_manager_routes",
+    "sys",
+    "logging",
+    "brand_qr_generator",
+    "newsletter_digest",
+    "train_context_networks",
+    "train_website_model",
+    "time",
+    "brand_neural_analysis",
+    "user_data_export",
+    "brand_ai_orchestrator",
+    "html",
+    "voice_capsule_routes",
+    "canvas_routes",
+    "qr_auth",
+    "lib",
+    "simple_voice_routes",
+    "freelancer_api",
+    "tempfile",
+    "brand_builder",
+    "image_admin_routes",
+    "concurrent",
+    "draw_routes",
+    "email_reply_handler",
+    "trading_system",
+    "visual_generator",
+    "typing",
+    "onboarding_routes",
+    "re",
+    "train_color_features",
+    "yaml",
+    "database",
+    "mimetypes",
+    "voice_domain_creator_routes",
+    "user_wordmap_engine",
+    "comment_github_integration",
+    "ollama_discussion",
+    "traceback",
+    "bs4",
+    "glob",
+    "dotenv",
+    "route_generator",
+    "affiliate_link_tracker",
+    "wiki_concepts",
+    "brand_color_neural_network",
+    "simple_games",
+    "website_structure_parser",
+    "ollama_github_search",
+    "domain_researcher",
+    "os",
+    "profile_builder"
+  ],
+  "analyze_dependencies.py": [
+    "ast",
+    "json",
+    "collections",
+    "os",
+    "typing",
+    "re"
+  ],
+  "test_practice_room.py": [
+    "socket",
+    "practice_room",
+    "traceback",
+    "sys"
+  ],
+  "qr_analytics.py": [
+    "database",
+    "json",
+    "collections",
+    "datetime",
+    "sys",
+    "pathlib"
+  ],
+  "test_gallery_integration.py": [
+    "gallery_routes",
+    "flask"
+  ],
+  "qr_to_ascii.py": [
+    "qr_encoder_stdlib",
+    "struct",
+    "sys"
+  ],
+  "init_simple_voice.py": [
+    "sqlite3"
+  ],
+  "blog_syndication.py": [
+    "database",
+    "json",
+    "datetime",
+    "os",
+    "sqlite3"
+  ],
+  "url_to_email.py": [
+    "database",
+    "argparse",
+    "sys",
+    "markdown2",
+    "simple_emailer",
+    "url_to_blog"
+  ],
+  "unified_generator.py": [
+    "json",
+    "datetime",
+    "pathlib",
+    "hashlib",
+    "typing",
+    "sqlite3",
+    "vanity_qr"
+  ],
+  "verify_mvp_integration.py": [
+    "pathlib",
+    "gallery_routes",
+    "os",
+    "sqlite3",
+    "flask"
+  ],
+  "api_health_scanner.py": [
+    "requests",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "bs4",
+    "typing",
+    "time"
+  ],
+  "theme_builder.py": [
+    "dataclasses",
+    "shutil",
+    "json",
+    "datetime",
+    "sys",
+    "os",
+    "typing",
+    "pathlib"
+  ],
+  "notifications.py": [
+    "dataclasses",
+    "database",
+    "datetime",
+    "sys",
+    "typing",
+    "flask"
+  ],
+  "tribunal_blamechain.py": [
+    "json",
+    "sqlite3",
+    "datetime",
+    "flask"
+  ],
+  "voice_seo_pattern_detector.py": [
+    "database",
+    "json",
+    "collections",
+    "argparse",
+    "sys",
+    "typing",
+    "re"
+  ],
+  "canvas_integration.py": [
+    "user_workspace",
+    "database",
+    "llm_router",
+    "secrets",
+    "qr_faucet",
+    "chapter_version_control",
+    "json",
+    "datetime",
+    "sys",
+    "typing",
+    "re"
+  ],
+  "narrative_cringeproof.py": [
+    "database",
+    "json",
+    "datetime",
+    "event_hooks",
+    "typing",
+    "sqlite3",
+    "soulfra_dark_story"
+  ],
+  "anki_learning_system.py": [
+    "database",
+    "neural_network",
+    "json",
+    "datetime",
+    "argparse",
+    "numpy",
+    "math",
+    "typing",
+    "sqlite3"
+  ],
+  "launcher.py": [
+    "subprocess",
+    "signal",
+    "webbrowser",
+    "tkinter",
+    "sys",
+    "pathlib",
+    "os",
+    "threading"
+  ],
+  "qr_gallery_system.py": [
+    "database",
+    "qrcode",
+    "json",
+    "datetime",
+    "sys",
+    "hashlib",
+    "os",
+    "traceback",
+    "pathlib"
+  ],
+  "pseo_generator.py": [
+    "database",
+    "json",
+    "datetime",
+    "pathlib",
+    "sys",
+    "os",
+    "re"
+  ],
+  "voice_health.py": [
+    "database",
+    "voice_ollama_processor",
+    "json",
+    "sys",
+    "ollama_client",
+    "typing",
+    "time",
+    "flask"
+  ],
+  "send_post_email.py": [
+    "database",
+    "argparse",
+    "sys",
+    "markdown2",
+    "simple_emailer"
+  ],
+  "navigation.py": [
+    "dataclasses",
+    "json",
+    "datetime",
+    "os",
+    "typing",
+    "flask"
+  ],
+  "force_claude_write.py": [
+    "anthropic",
+    "datetime",
+    "argparse",
+    "sys",
+    "config_secrets",
+    "sqlite3"
+  ],
+  "device_auth.py": [
+    "database",
+    "secrets",
+    "json",
+    "datetime",
+    "hashlib",
+    "typing",
+    "time"
+  ],
+  "install.py": [
+    "database",
+    "secrets",
+    "subprocess",
+    "argparse",
+    "pathlib",
+    "sys",
+    "datetime",
+    "os",
+    "typing",
+    "sqlite3",
+    "license_manager"
+  ],
+  "customer_discovery_backend.py": [
+    "http",
+    "secrets",
+    "json",
+    "github_faucet",
+    "datetime",
+    "sys",
+    "hashlib",
+    "os",
+    "ollama_client",
+    "typing",
+    "urllib",
+    "sqlite3"
+  ],
+  "gallery_routes.py": [
+    "database",
+    "dm_via_qr",
+    "json",
+    "datetime",
+    "hashlib",
+    "pathlib",
+    "flask"
+  ],
+  "ad_injector.py": [
+    "database",
+    "pathlib",
+    "sys",
+    "os",
+    "re"
+  ],
+  "public_comments_api.py": [
+    "database",
+    "flask",
+    "flask_cors"
+  ],
+  "github_watcher.py": [
+    "email",
+    "imaplib",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "hashlib",
+    "os",
+    "smtplib",
+    "typing",
+    "urllib",
+    "sqlite3",
+    "time"
+  ],
+  "vanity_qr.py": [
+    "database",
+    "PIL",
+    "qrcode",
+    "io",
+    "json",
+    "datetime",
+    "hashlib",
+    "typing",
+    "sqlite3"
+  ],
+  "image_to_ascii.py": [
+    "struct",
+    "os",
+    "sys"
+  ],
+  "voice_encryption.py": [
+    "secrets",
+    "cryptography",
+    "hashlib",
+    "os",
+    "typing",
+    "base64"
+  ],
+  "train_topic_networks.py": [
+    "datetime",
+    "argparse",
+    "pathlib",
+    "numpy",
+    "pickle",
+    "os",
+    "sqlite3",
+    "sklearn"
+  ],
+  "preview_server.py": [
+    "subprocess",
+    "pathlib",
+    "socket",
+    "threading",
+    "time",
+    "flask"
+  ],
+  "scrape_live_domains.py": [
+    "requests",
+    "json",
+    "datetime",
+    "argparse",
+    "hashlib",
+    "bs4",
+    "urllib",
+    "sqlite3",
+    "time"
+  ],
+  "test_idea_board.py": [
+    "database",
+    "json",
+    "datetime",
+    "voice_idea_board_routes"
+  ],
+  "voice_capsule_routes.py": [
+    "database",
+    "voice_capsule_engine",
+    "datetime",
+    "hashlib",
+    "flask"
+  ],
+  "ssh_tunnel.py": [
+    "qrcode",
+    "io",
+    "subprocess",
+    "sys",
+    "os",
+    "re",
+    "time"
+  ],
+  "export_voice_recordings.py": [
+    "sqlite3",
+    "pathlib",
+    "os",
+    "sys"
+  ],
+  "test_all_scripts.py": [
+    "importlib",
+    "subprocess",
+    "sys"
+  ],
+  "content_tumbler.py": [
+    "database",
+    "multi_port_ollama",
+    "json",
+    "github_faucet",
+    "datetime",
+    "argparse",
+    "sys",
+    "hashlib",
+    "unified_generator",
+    "typing",
+    "pathlib",
+    "vanity_qr"
+  ],
+  "enrich_content.py": [
+    "url_to_content",
+    "database",
+    "procedural_media",
+    "typing",
+    "re"
+  ],
+  "chat_routes.py": [
+    "database",
+    "secrets",
+    "json",
+    "datetime",
+    "dev_config",
+    "knowledge_extractor",
+    "progression_system",
+    "threading",
+    "flask",
+    "context_manager"
+  ],
+  "image_admin_routes.py": [
+    "json",
+    "image_metadata",
+    "ai_image_generator",
+    "typing",
+    "urllib",
+    "re",
+    "base64",
+    "vanity_qr",
+    "database",
+    "PIL",
+    "io",
+    "traceback",
+    "image_composer",
+    "image_workflow",
+    "procedural_media",
+    "sys",
+    "os",
+    "advanced_qr",
+    "flask"
+  ],
+  "whisper_processor.py": [
+    "whisper",
+    "datetime",
+    "argparse",
+    "pathlib",
+    "ssl",
+    "os",
+    "urllib",
+    "typing",
+    "tempfile",
+    "sqlite3"
+  ],
+  "test_handle_system.py": [
+    "database",
+    "domain_unlock_engine",
+    "sys"
+  ],
+  "payment_integrations.py": [
+    "square",
+    "business_schemas",
+    "json",
+    "quickbooks",
+    "datetime",
+    "intuitlib",
+    "stripe",
+    "os",
+    "business_qr",
+    "typing"
+  ],
+  "admin_system.py": [
+    "datetime",
+    "functools",
+    "hashlib",
+    "os",
+    "typing",
+    "sqlite3",
+    "flask"
+  ],
+  "qr_auth.py": [
+    "database",
+    "secrets",
+    "io",
+    "qrcode",
+    "json",
+    "datetime",
+    "sys",
+    "hashlib",
+    "typing",
+    "config",
+    "time",
+    "base64"
+  ],
+  "domain_context.py": [
+    "json",
+    "logger",
+    "csv",
+    "typing",
+    "urllib",
+    "pathlib"
+  ],
+  "advanced_qr.py": [
+    "PIL",
+    "io",
+    "qrcode",
+    "math",
+    "os",
+    "imageio",
+    "typing"
+  ],
+  "brand_ai_persona_generator.py": [
+    "database",
+    "json",
+    "db_helpers",
+    "datetime",
+    "sys",
+    "typing",
+    "sqlite3"
+  ],
+  "battle_routes.py": [
+    "database",
+    "secrets",
+    "json",
+    "datetime",
+    "unified_logger",
+    "threading",
+    "flask",
+    "context_manager"
+  ],
+  "tutorial_builder.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "traceback",
+    "typing",
+    "urllib",
+    "sqlite3"
+  ],
+  "init_voice_capsules.py": [
+    "sqlite3",
+    "datetime"
+  ],
+  "contributor_rewards.py": [
+    "database",
+    "requests",
+    "datetime",
+    "argparse",
+    "sys",
+    "os"
+  ],
+  "export_static.py": [
+    "database",
+    "shutil",
+    "sys",
+    "markdown2",
+    "traceback",
+    "os",
+    "re",
+    "pathlib"
+  ],
+  "pre_deploy_check.py": [
+    "database",
+    "api_health_scanner",
+    "qrcode",
+    "io",
+    "requests",
+    "json",
+    "subprocess",
+    "datetime",
+    "argparse",
+    "sys",
+    "os",
+    "ollama_client",
+    "typing",
+    "base64"
+  ],
+  "voice_federation_routes.py": [
+    "database",
+    "io",
+    "qrcode",
+    "secrets",
+    "json",
+    "datetime",
+    "voice_encryption",
+    "config",
+    "flask",
+    "base64"
+  ],
+  "ollama_docs_qa.py": [
+    "json",
+    "argparse",
+    "pathlib",
+    "sys",
+    "os",
+    "typing",
+    "urllib",
+    "re"
+  ],
+  "backfill_mesh_network.py": [
+    "database",
+    "argparse",
+    "sys",
+    "traceback",
+    "typing",
+    "economy_mesh_network"
+  ],
+  "content_generator.py": [
+    "content_templates",
+    "json",
+    "datetime",
+    "hashlib",
+    "ai_image_generator",
+    "traceback",
+    "typing",
+    "sqlite3",
+    "prompt_templates"
+  ],
+  "query_by_tier.py": [
+    "json",
+    "collections",
+    "sqlite3",
+    "argparse"
+  ],
+  "verify_import.py": [
+    "json",
+    "collections",
+    "datetime",
+    "argparse",
+    "hashlib",
+    "sqlite3"
+  ],
+  "domain_wordmap_aggregator.py": [
+    "database",
+    "user_wordmap_engine",
+    "json",
+    "collections",
+    "datetime",
+    "domain_unlock_engine",
+    "sys",
+    "typing"
+  ],
+  "qr_voice_integration.py": [
+    "qr_faucet",
+    "json",
+    "datetime",
+    "subprocess",
+    "pathlib",
+    "sys",
+    "typing",
+    "sqlite3"
+  ],
+  "publish_ipfs.py": [
+    "json",
+    "subprocess",
+    "argparse",
+    "datetime",
+    "sys",
+    "os",
+    "pathlib"
+  ],
+  "network_diagram.py": [
+    "requests",
+    "subprocess",
+    "argparse",
+    "sys",
+    "os",
+    "socket",
+    "pathlib",
+    "time"
+  ],
+  "brand_creator.py": [
+    "ollama_domain_analyzer",
+    "typing",
+    "sqlite3",
+    "sys"
+  ],
+  "migrate_chat_transcripts.py": [
+    "sqlite3",
+    "datetime",
+    "os"
+  ],
+  "import_domains_simple.py": [
+    "json",
+    "pathlib",
+    "sys",
+    "urllib",
+    "sqlite3"
+  ],
+  "subdomain_router.py": [
+    "database",
+    "json",
+    "tier_progression_engine",
+    "rotation_helpers",
+    "typing",
+    "flask"
+  ],
+  "test_multipart_qr.py": [
+    "multi_part_qr"
+  ],
+  "scrape_godaddy_landers.py": [
+    "requests",
+    "json",
+    "datetime",
+    "argparse",
+    "urllib3",
+    "bs4",
+    "re",
+    "urllib",
+    "sqlite3"
+  ],
+  "init_kangaroo_court.py": [
+    "sqlite3",
+    "datetime"
+  ],
+  "ai_host.py": [
+    "typing",
+    "database",
+    "json",
+    "urllib"
+  ],
+  "onboarding_routes.py": [
+    "file_importer",
+    "creative_onboarding",
+    "content_pipeline",
+    "folder_router",
+    "pathlib",
+    "functools",
+    "os",
+    "werkzeug",
+    "github_faucet",
+    "flask"
+  ],
+  "file_importer.py": [
+    "database",
+    "mimetypes",
+    "secrets",
+    "qrcode",
+    "json",
+    "datetime",
+    "docx",
+    "pathlib",
+    "argparse",
+    "markdown2",
+    "hashlib",
+    "os",
+    "sqlite3",
+    "bs4",
+    "typing",
+    "re",
+    "yaml"
+  ],
+  "demo_complete_system.py": [
+    "pathlib",
+    "sys"
+  ],
+  "studio_api.py": [
+    "test_runner",
+    "requests",
+    "json",
+    "sys",
+    "os",
+    "typing",
+    "flask"
+  ],
+  "simple_voice_routes.py": [
+    "audio_enhancer",
+    "datetime",
+    "voice_content_generator",
+    "tempfile",
+    "domain_manager",
+    "dev_config",
+    "wordmap_pitch_integrator",
+    "domain_unlock_engine",
+    "domain_wordmap_aggregator",
+    "pathlib",
+    "database",
+    "secrets",
+    "user_wordmap_engine",
+    "voice_idea_board_routes",
+    "voice_ollama_processor",
+    "os",
+    "ollama_client",
+    "whisper_transcriber",
+    "flask"
+  ],
+  "setup_test_database.py": [
+    "sqlite3",
+    "shutil",
+    "os"
+  ],
+  "qr_events.py": [
+    "typing",
+    "database",
+    "business_schemas",
+    "json",
+    "datetime",
+    "os",
+    "qr_unified",
+    "enum"
+  ],
+  "comment_github_integration.py": [
+    "database",
+    "github_star_validator",
+    "bidirectional_review_engine",
+    "json",
+    "hashlib",
+    "typing",
+    "github_faucet",
+    "flask"
+  ],
+  "test_network_stack.py": [
+    "typing",
+    "platform",
+    "requests",
+    "json",
+    "subprocess",
+    "argparse",
+    "sys",
+    "os",
+    "socket",
+    "pathlib",
+    "flask"
+  ],
+  "user_data_export.py": [
+    "database",
+    "json",
+    "datetime",
+    "sys",
+    "typing"
+  ],
+  "rotation_helpers.py": [
+    "database",
+    "datetime"
+  ],
+  "multi_port_ollama.py": [
+    "requests",
+    "json",
+    "sys",
+    "typing",
+    "concurrent",
+    "time"
+  ],
+  "soulfra_client.py": [
+    "typing",
+    "time",
+    "requests"
+  ],
+  "knowledge_extractor.py": [
+    "database",
+    "json",
+    "datetime",
+    "typing",
+    "re"
+  ],
+  "pixel_utils.py": [
+    "PIL",
+    "hashlib",
+    "os"
+  ],
+  "license_manager.py": [
+    "secrets",
+    "json",
+    "datetime",
+    "argparse",
+    "sys",
+    "hashlib",
+    "uuid",
+    "typing",
+    "sqlite3"
+  ],
+  "qr_card_printer.py": [
+    "PIL",
+    "qrcode",
+    "io",
+    "multi_part_qr",
+    "os",
+    "typing",
+    "soulfra_dark_story",
+    "reportlab"
+  ],
+  "make_it_automatic.py": [
+    "database",
+    "subprocess",
+    "datetime",
+    "sys"
+  ],
+  "pre_deploy_routes.py": [
+    "pre_deploy_check",
+    "flask"
+  ],
+  "test_image_system.py": [
+    "qr_image_overlay",
+    "theme_builder",
+    "PIL",
+    "time",
+    "io",
+    "json",
+    "traceback",
+    "os",
+    "image_composer",
+    "prompt_templates"
+  ],
+  "init_business_db.py": [
+    "database",
+    "unified_generator",
+    "vanity_qr"
+  ],
+  "Soulfra/generate-qr.py": [
+    "qrcode",
+    "os",
+    "sys"
+  ],
+  "Soulfra/Soulfra.com/app.py": [
+    "json",
+    "datetime",
+    "hashlib",
+    "os",
+    "flask",
+    "flask_cors"
+  ],
+  "Soulfra/Soulfra.ai/app.py": [
+    "requests",
+    "json",
+    "flask",
+    "hashlib",
+    "os",
+    "flask_cors"
+  ],
+  "Soulfra/Soulfraapi.com/app.py": [
+    "random",
+    "secrets",
+    "json",
+    "datetime",
+    "hashlib",
+    "os",
+    "sqlite3",
+    "flask",
+    "flask_cors"
+  ],
+  "simple_games/dnd_campaign.py": [
+    "binary_protocol",
+    "dnd_ai_commenters",
+    "json",
+    "sys",
+    "aging_curves",
+    "hashlib",
+    "game_orchestrator",
+    "os",
+    "typing",
+    "sqlite3"
+  ],
+  "simple_games/two_plus_two.py": [
+    "json",
+    "sys",
+    "hashlib",
+    "game_orchestrator",
+    "os",
+    "sqlite3"
+  ],
+  "integrations/twitter_integration.py": [
+    "database",
+    "config",
+    "requests",
+    "json",
+    "datetime",
+    "url_shortener",
+    "sys",
+    "unified_logger",
+    "os",
+    "pathlib"
+  ]
+}

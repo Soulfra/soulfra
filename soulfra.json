@@ -1,0 +1,268 @@
+{
+  "name": "soulfra",
+  "version": "1.0.0",
+  "description": "AI-powered ghost writing platform for blogs, businesses, and personal brands",
+  "author": "CalRiven",
+  "license": "MIT",
+  "homepage": "https://soulfra.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/calriven/soulfra"
+  },
+
+  "package_type": "ghost_writer_platform",
+  "categories": [
+    "blogging",
+    "content-generation",
+    "AI",
+    "newsletter",
+    "personal-branding"
+  ],
+
+  "python_version": ">=3.8",
+  "dependencies": {
+    "required": [
+      "flask>=2.0.0",
+      "markdown2>=2.4.0",
+      "anthropic>=0.7.0",
+      "scikit-learn>=1.0.0",
+      "pandas>=1.3.0",
+      "openpyxl>=3.0.0"
+    ],
+    "optional": {
+      "ai": [
+        "ollama>=0.1.0"
+      ],
+      "deployment": [
+        "gunicorn>=20.1.0",
+        "docker>=5.0.0"
+      ],
+      "email": [
+        "sendgrid>=6.9.0"
+      ]
+    }
+  },
+
+  "features": {
+    "ai_reasoning": {
+      "enabled": true,
+      "description": "Neural network-powered content classification and recommendations",
+      "requires": ["ollama"]
+    },
+    "ml_training": {
+      "enabled": true,
+      "description": "Train topic-specific neural networks on your content",
+      "requires": ["scikit-learn"]
+    },
+    "batch_import": {
+      "enabled": true,
+      "description": "Import posts in bulk from CSV/Excel files",
+      "requires": ["pandas", "openpyxl"]
+    },
+    "claude_generation": {
+      "enabled": false,
+      "description": "Auto-generate posts using Claude API",
+      "requires": ["anthropic"],
+      "requires_api_key": true
+    },
+    "email_newsletters": {
+      "enabled": false,
+      "description": "Send automated email newsletters to subscribers",
+      "requires_config": ["SMTP_HOST", "SMTP_EMAIL", "SMTP_PASSWORD"]
+    },
+    "qr_tracking": {
+      "enabled": true,
+      "description": "QR code generation and analytics",
+      "requires": []
+    },
+    "brand_builder": {
+      "enabled": true,
+      "description": "Multi-brand content management system",
+      "requires": []
+    }
+  },
+
+  "tiers": {
+    "free": {
+      "name": "Free",
+      "price": 0,
+      "limits": {
+        "posts_per_month": 100,
+        "brands": 1,
+        "api_calls_per_day": 100,
+        "neural_networks": 1,
+        "subscribers": 100
+      },
+      "features": [
+        "basic_blogging",
+        "single_brand",
+        "manual_posts"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": 15,
+      "currency": "USD",
+      "billing": "yearly",
+      "limits": {
+        "posts_per_month": -1,
+        "brands": 5,
+        "api_calls_per_day": 10000,
+        "neural_networks": 10,
+        "subscribers": 10000
+      },
+      "features": [
+        "unlimited_posts",
+        "multi_brand",
+        "claude_generation",
+        "batch_import",
+        "email_newsletters",
+        "custom_domain",
+        "api_access"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "custom",
+      "limits": {
+        "posts_per_month": -1,
+        "brands": -1,
+        "api_calls_per_day": -1,
+        "neural_networks": -1,
+        "subscribers": -1
+      },
+      "features": [
+        "everything_in_pro",
+        "white_label",
+        "priority_support",
+        "custom_integrations",
+        "dedicated_hosting",
+        "sla_guarantee"
+      ]
+    }
+  },
+
+  "deployment": {
+    "methods": [
+      "docker-compose",
+      "manual",
+      "cloud-vps",
+      "kubernetes"
+    ],
+    "minimum_requirements": {
+      "cpu": "1 core",
+      "memory": "512 MB",
+      "disk": "1 GB",
+      "os": ["linux", "macos", "windows"]
+    },
+    "recommended_requirements": {
+      "cpu": "2 cores",
+      "memory": "2 GB",
+      "disk": "10 GB",
+      "os": ["linux"]
+    }
+  },
+
+  "database": {
+    "type": "sqlite",
+    "path": "soulfra.db",
+    "version": "2",
+    "migrations": {
+      "auto_migrate": true,
+      "backup_before_migrate": true
+    },
+    "tables": [
+      "users",
+      "posts",
+      "brands",
+      "subscribers",
+      "comments",
+      "licenses",
+      "api_keys",
+      "neural_networks",
+      "import_jobs"
+    ]
+  },
+
+  "api": {
+    "version": "v1",
+    "base_path": "/api/v1",
+    "authentication": {
+      "methods": ["api_key", "session"],
+      "header": "X-API-Key"
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "default_limit": "100/day",
+      "tier_limits": {
+        "free": "100/day",
+        "pro": "10000/day",
+        "enterprise": "unlimited"
+      }
+    },
+    "endpoints": {
+      "posts": "/api/v1/{brand}/posts",
+      "generate": "/api/v1/{brand}/generate",
+      "classify": "/api/v1/{brand}/classify",
+      "batch_import": "/api/batch/posts/import",
+      "auth": "/api/v1/auth/key"
+    }
+  },
+
+  "integrations": {
+    "claude_api": {
+      "provider": "anthropic",
+      "required_env": ["CLAUDE_API_KEY"],
+      "models": ["claude-sonnet-4", "claude-opus-4"]
+    },
+    "ollama": {
+      "provider": "ollama",
+      "required_env": ["OLLAMA_HOST"],
+      "models": ["llama2", "mistral", "codellama"]
+    },
+    "smtp": {
+      "providers": ["gmail", "sendgrid", "mailgun"],
+      "required_env": ["SMTP_HOST", "SMTP_PORT", "SMTP_EMAIL", "SMTP_PASSWORD"]
+    }
+  },
+
+  "security": {
+    "secret_key_required": true,
+    "admin_password_required": true,
+    "https_recommended": true,
+    "api_key_length": 64,
+    "license_key_format": "uuid-v4"
+  },
+
+  "installation": {
+    "wizard": "install.py",
+    "steps": [
+      "verify_python_version",
+      "install_dependencies",
+      "setup_environment",
+      "initialize_database",
+      "create_admin_user",
+      "configure_domain",
+      "generate_license",
+      "start_server"
+    ]
+  },
+
+  "documentation": {
+    "quickstart": "QUICKSTART.md",
+    "deployment": "DEPLOYMENT.md",
+    "architecture": "ARCHITECTURE_EXPLAINED.md",
+    "api": "API_DOCUMENTATION.md",
+    "pitch": "PITCH_DECK.md"
+  },
+
+  "support": {
+    "documentation": "https://docs.soulfra.com",
+    "issues": "https://github.com/calriven/soulfra/issues",
+    "community": "https://discord.gg/soulfra",
+    "email": "support@soulfra.com"
+  },
+
+  "manifest_version": "1.0.0",
+  "generated_at": "2025-12-26T10:30:00Z"
+}

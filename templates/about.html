@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Soulfra Newsletter</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Soulfra</a>
+      <div class="nav-links">
+        <a href="/">Posts</a>
+        <a href="/about">About</a>
+        <a href="/subscribe">Subscribe</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="about-page">
+      <h1>About Soulfra</h1>
+
+      <p>
+        Soulfra is a self-documenting platform where <strong>conversations become content</strong>.
+        Talk to our AI widget, and it transforms your ideas into structured blog posts, research, and interactive experiences.
+      </p>
+
+      <h2>Core Philosophy</h2>
+      <ul>
+        <li><strong>Conversational First</strong> - Talk naturally, generate content automatically</li>
+        <li><strong>AI-Organized</strong> - Neural networks classify and tag posts by brand</li>
+        <li><strong>Exportable Brands</strong> - Download entire themes as ZIP packages</li>
+        <li><strong>Self-Hosted</strong> - Python, SQLite, Ollama. No external dependencies.</li>
+        <li><strong>Open Source</strong> - Everything we build is public and modifiable</li>
+      </ul>
+
+      <h2>How It Works (3 Steps)</h2>
+
+      <h3>1. Talk to the Widget</h3>
+      <p>
+        Click the purple 💬 bubble in the bottom-right corner. Have a natural conversation about any topic.
+      </p>
+
+      <h3>2. Generate Content</h3>
+      <p>
+        Type <code>/generate post</code> and watch your conversation transform into a structured blog post.
+        The widget can also:
+      </p>
+      <ul>
+        <li><code>/research &lt;topic&gt;</code> - Search and analyze your content</li>
+        <li><code>/qr &lt;text&gt;</code> - Generate QR codes</li>
+        <li><code>/neural &lt;text&gt;</code> - Get brand predictions from neural networks</li>
+        <li><code>/dnd quests</code> - Play interactive D&D campaigns (bonus!)</li>
+      </ul>
+
+      <h3>3. AI Auto-Classifies</h3>
+      <p>
+        Neural networks automatically classify posts by brand:
+      </p>
+      <ul>
+        <li><strong>Calriven</strong> - Technical AI and ML content 💻</li>
+        <li><strong>DeathToData</strong> - Privacy and anti-surveillance 🔒</li>
+        <li><strong>Soulfra</strong> - Platform philosophy and architecture 🌟</li>
+      </ul>
+
+      <h2>Key Features</h2>
+
+      <h3>✅ Blog Generator</h3>
+      <p>
+        Transform conversations into blog posts. Multiple templates available (Q&A, tutorial, insight, story).
+        <a href="/BLOG_GENERATOR_GUIDE.md">Read the guide →</a>
+      </p>
+
+      <h3>✅ Neural Network Classification</h3>
+      <p>
+        4 trained classifiers analyze content and assign posts to brands automatically.
+        Built from scratch using Python and scikit-learn.
+      </p>
+
+      <h3>✅ Brand Theme Export</h3>
+      <p>
+        Export any brand as a standalone ZIP package containing:
+      </p>
+      <ul>
+        <li>Brand configuration (colors, personality, tone)</li>
+        <li>All posts as markdown files</li>
+        <li>Logos and images</li>
+        <li>Trained ML models (wordmaps, emoji patterns)</li>
+        <li>Installation instructions</li>
+      </ul>
+      <p>
+        Import on any server to create a branded standalone site.
+        This is how you "branch" the platform!
+      </p>
+
+      <h3>✅ Interactive Elements</h3>
+      <ul>
+        <li><strong>D&D Campaigns</strong> - AI-judged quests with character aging and inventory</li>
+        <li><strong>QR Code Generation</strong> - Create scannable codes for content</li>
+        <li><strong>Research Assistant</strong> - Search and synthesize your posts</li>
+      </ul>
+
+      <h2>Technical Stack</h2>
+      <ul>
+        <li><strong>Backend:</strong> Python 3.x (Flask)</li>
+        <li><strong>Database:</strong> SQLite (filesystem-from-database pattern)</li>
+        <li><strong>AI:</strong> Ollama (llama2 model, local inference)</li>
+        <li><strong>ML:</strong> Custom neural networks + scikit-learn</li>
+        <li><strong>Frontend:</strong> Vanilla JavaScript (no frameworks)</li>
+      </ul>
+
+      <h2>Why Soulfra Exists</h2>
+      <p>
+        Most platforms lock you in. Substack takes 10% forever. Medium owns your audience.
+        WordPress is bloated. Static site generators require manual work.
+      </p>
+
+      <p>
+        <strong>Soulfra inverts this model:</strong>
+      </p>
+      <ul>
+        <li>Own your content (SQLite database)</li>
+        <li>Own your AI (local Ollama inference)</li>
+        <li>Own your brand (exportable themes)</li>
+        <li>Own your deployment (self-hosted, $0/month)</li>
+      </ul>
+
+      <h2>Documentation</h2>
+      <ul>
+        <li><a href="/@docs/HOW_IT_ALL_CONNECTS">How It All Connects</a> - System overview</li>
+        <li><a href="/@docs/BLOG_GENERATOR_GUIDE">Blog Generator Guide</a> - Widget usage</li>
+        <li><a href="/@docs/WHITEPAPER">Platform Whitepaper</a> - Comprehensive technical doc</li>
+        <li><a href="/@docs/READY_TO_USE">Ready to Use Guide</a> - D&D and integration</li>
+        <li><a href="/@docs/WORKING_VS_DOCS">What Works vs What's Documented</a> - Status check</li>
+      </ul>
+
+      <h2>Try It Now</h2>
+      <p>
+        <strong>1. Open the widget:</strong> Click the purple 💬 bubble<br>
+        <strong>2. Have a conversation:</strong> Talk about any topic<br>
+        <strong>3. Generate content:</strong> Type <code>/generate post</code><br>
+        <strong>4. View your post:</strong> Check <a href="/admin">admin dashboard</a>
+      </p>
+
+      <h2>Source Code</h2>
+      <p>
+        Want to build your own? Check out the
+        <a href="https://github.com/Soulfra/roommate-chat/tree/main/soulfra-simple" target="_blank">source code on GitHub</a>.
+      </p>
+
+      <h2>Contact</h2>
+      <p>Questions? <a href="/feedback">Submit feedback</a> or email us at <a href="mailto:hello@soulfra.com">hello@soulfra.com</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Soulfra. <a href="/feed.xml">RSS</a> | <a href="/subscribe">Subscribe</a> | <a href="/admin">Admin</a></p>
+  </footer>
+</body>
+</html>

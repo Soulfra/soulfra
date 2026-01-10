@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify {{ brand.name }} - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .method {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .method h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .method-steps {
+            margin: 16px 0;
+        }
+
+        .method-steps ol {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .token-box {
+            background: #000;
+            color: #0f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 12px 0;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        code {
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .status-verified {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .flash {
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .flash-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .flash-error {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                🔐 Verify Domain Ownership
+                {% if brand.verified %}
+                    <span class="status-badge status-verified">✅ Verified</span>
+                {% else %}
+                    <span class="status-badge status-pending">⏳ Pending</span>
+                {% endif %}
+            </h1>
+            <p class="subtitle">{{ brand.name }} - {{ brand.domain }}</p>
+        </div>
+
+        {% if brand.verified %}
+            <!-- Already Verified -->
+            <div class="card">
+                <div class="section-title">✅ Domain Verified!</div>
+                <p>This domain was verified on <strong>{{ brand.verified_at }}</strong></p>
+                <p>Method: <strong>{{ brand.verification_method }}</strong></p>
+                <div class="actions">
+                    <a href="/admin/domains" class="btn btn-secondary">← Back to Domains</a>
+                </div>
+            </div>
+        {% else %}
+            <!-- Verification Methods -->
+            <div class="card">
+                <div class="section-title">📋 Choose Verification Method</div>
+
+                <!-- Method 1: DNS TXT Record -->
+                <div class="method">
+                    <h3>Method 1: DNS TXT Record (Recommended)</h3>
+                    <p>Add a TXT record to your domain's DNS configuration.</p>
+
+                    <div class="method-steps">
+                        <strong>Steps:</strong>
+                        <ol>
+                            <li>Log in to your domain registrar (GoDaddy, Namecheap, Cloudflare, etc.)</li>
+                            <li>Find DNS settings / DNS management</li>
+                            <li>Add a new TXT record with these values:</li>
+                        </ol>
+                    </div>
+
+                    <div style="margin: 16px 0;">
+                        <strong>Record Type:</strong> <code>TXT</code><br>
+                        <strong>Name/Host:</strong> <code>@</code> (or leave blank for root domain)<br>
+                        <strong>Value/Content:</strong>
+                        <div class="token-box">
+                            <button class="copy-btn" onclick="copyToken()">Copy</button>
+                            <span id="token-txt">{{ token }}</span>
+                        </div>
+                    </div>
+
+                    <p style="color: #666; font-size: 14px;">
+                        💡 DNS changes can take 5-60 minutes to propagate. Be patient!
+                    </p>
+                </div>
+
+                <!-- Method 2: Meta Tag -->
+                <div class="method">
+                    <h3>Method 2: Meta Tag</h3>
+                    <p>Add a meta tag to your website's HTML <code>&lt;head&gt;</code> section.</p>
+
+                    <div class="method-steps">
+                        <strong>Steps:</strong>
+                        <ol>
+                            <li>Open your website's main HTML file (usually <code>index.html</code>)</li>
+                            <li>Add this meta tag inside the <code>&lt;head&gt;</code> section:</li>
+                        </ol>
+                    </div>
+
+                    <div class="token-box">
+                        <button class="copy-btn" onclick="copyMetaTag()">Copy</button>
+                        <span id="meta-tag">&lt;meta name="soulfra-verify" content="{{ token }}"&gt;</span>
+                    </div>
+
+                    <p style="color: #666; font-size: 14px;">
+                        💡 Make sure to deploy your changes so the meta tag is visible on your live site.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Check Verification -->
+            <div class="card">
+                <div class="section-title">🔍 Check Verification</div>
+                <p>After adding the TXT record or meta tag, click the button below to verify.</p>
+
+                <div class="actions">
+                    <form action="/admin/domains/check-verification/{{ brand.id }}" method="POST">
+                        <button type="submit" class="btn btn-success">Check Verification Status</button>
+                    </form>
+                    <a href="/admin/domains" class="btn btn-secondary">← Back to Domains</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function copyToken() {
+            const token = document.getElementById('token-txt').textContent;
+            navigator.clipboard.writeText(token);
+            alert('Token copied to clipboard!');
+        }
+
+        function copyMetaTag() {
+            const metaTag = document.getElementById('meta-tag').textContent;
+            navigator.clipboard.writeText(metaTag);
+            alert('Meta tag copied to clipboard!');
+        }
+
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const flashes = document.querySelectorAll('.flash');
+            flashes.forEach(flash => {
+                flash.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => flash.remove(), 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

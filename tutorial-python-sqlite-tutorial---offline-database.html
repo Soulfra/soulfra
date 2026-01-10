@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python SQLite Tutorial - Offline Database - Tutorial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .tutorial-header {
+            background: #667eea;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .tutorial-header h1 {
+            margin: 0 0 10px 0;
+        }
+        .question {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .question h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .options li:hover {
+            background: #e9e9e9;
+        }
+        .answer {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .explanation {
+            background: #e8f5e9;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .aptitude {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tutorial-header">
+        <h1>Python SQLite Tutorial - Offline Database</h1>
+        <p>📚 GeeksForGeeks-Style Tutorial | 🤖 Generated with Ollama AI</p>
+        <p>⚡ 100% Offline | No internet required</p>
+    </div>
+
+    <h2>📖 Tutorial Questions</h2>
+    <p>Test your understanding of the concepts:</p>
+
+    <div class="question">
+        <h3>Question 1</h3>
+        <p><strong>What happens if you call `sqlite3.connect('test.db')` without specifying any database file?</strong></p>
+
+        <ul class="options">
+            <li>The function will return an error</li><li>A new empty database file will be created</li><li>An existing database file will be opened</li><li>No action will be taken</li>
+        </ul>
+
+        <p class="answer">✅ Answer: The function will return an error</p>
+
+        <div class="explanation">
+            💡 If no database file is specified, `sqlite3.connect()` throws a `FileNotFoundError` or returns an error depending on the Python environment.
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Question 2</h3>
+        <p><strong>What does SQLite use for the primary key when AUTOINCREMENT is specified?</strong></p>
+
+        <ul class="options">
+            <li>Manual ID</li><li>Unique UUID</li><li>Auto-incrementing integer</li><li>Random number</li>
+        </ul>
+
+        <p class="answer">✅ Answer: Auto-incrementing integer</p>
+
+        <div class="explanation">
+            💡 SQLite automatically generates unique integer IDs starting from 1 when AUTOINCREMENT is used on a PRIMARY KEY column.
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Question 3</h3>
+        <p><strong>What happens to the data in the database file if you call `conn.close()` without committing changes?</strong></p>
+
+        <ul class="options">
+            <li>The changes are lost</li><li>The data remains unchanged</li><li>An error occurs</li><li>The connection is closed but not released</li>
+        </ul>
+
+        <p class="answer">✅ Answer: The changes are lost</p>
+
+        <div class="explanation">
+            💡 If you don't commit changes before closing the connection, SQLite will discard all modifications made to the database.
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Question 4</h3>
+        <p><strong>Can SQLite be used as a full-featured relational database with transactions?</strong></p>
+
+        <ul class="options">
+            <li>Yes</li><li>No</li><li>Only for offline use</li><li>Only for web applications</li>
+        </ul>
+
+        <p class="answer">✅ Answer: Yes</p>
+
+        <div class="explanation">
+            💡 SQLite supports ACID compliance, making it suitable for use in transactional environments like relational databases.
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Question 5</h3>
+        <p><strong>What type of database does SQLite use for its internal storage?</strong></p>
+
+        <ul class="options">
+            <li>File-based</li><li>In-memory</li><li>Distributed</li><li>Hybrid</li>
+        </ul>
+
+        <p class="answer">✅ Answer: File-based</p>
+
+        <div class="explanation">
+            💡 SQLite stores its data in a single file with the `.db` extension, making it an embedded database.
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Question 6</h3>
+        <p><strong>Can SQLite be used across multiple platforms (Windows, Mac, Linux) without modification?</strong></p>
+
+        <ul class="options">
+            <li>Yes</li><li>No</li><li>Only for Windows and macOS</li><li>Only for Linux</li>
+        </ul>
+
+        <p class="answer">✅ Answer: Yes</p>
+
+        <div class="explanation">
+            💡 SQLite is designed to be cross-platform and can run on any platform that has a Python interpreter.
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Question 7</h3>
+        <p><strong>What happens if the database file is deleted while connected to SQLite?</strong></p>
+
+        <ul class="options">
+            <li>An error occurs</li><li>The connection is lost</li><li>The data remains intact</li><li>A new empty database file is created</li>
+        </ul>
+
+        <p class="answer">✅ Answer: The connection is lost</p>
+
+        <div class="explanation">
+            💡 If you try to access or manipulate a database that has been deleted, SQLite will throw an exception.
+        </div>
+    </div>
+
+    <h2>🧠 Aptitude Questions</h2>
+    <p>How do these concepts relate to you? (Rate 1-5: Never to Always)</p>
+
+    <div class="question aptitude">
+        <h3>Question 1</h3>
+        <p><strong>I often find myself needing to access and update data in my work or personal projects without relying on an internet connection</strong></p>
+        <p style="font-size: 14px; color: #666;">Category: reflection</p>
+    </div>
+
+    <div class="question aptitude">
+        <h3>Question 2</h3>
+        <p><strong>I tend to view manual database setup and management as a necessary evil</strong></p>
+        <p style="font-size: 14px; color: #666;">Category: automation</p>
+    </div>
+
+    <div class="question aptitude">
+        <h3>Question 3</h3>
+        <p><strong>I believe that having control over the configuration of my own databases is essential for my productivity</strong></p>
+        <p style="font-size: 14px; color: #666;">Category: reflection</p>
+    </div>
+
+    <div class="question aptitude">
+        <h3>Question 4</h3>
+        <p><strong>I find myself appreciating the simplicity and ease of use of self-contained databases like SQLite</strong></p>
+        <p style="font-size: 14px; color: #666;">Category: self-awareness</p>
+    </div>
+
+    <div class="question aptitude">
+        <h3>Question 5</h3>
+        <p><strong>I often struggle to balance the need for data organization with the desire for flexibility and adaptability in my projects</strong></p>
+        <p style="font-size: 14px; color: #666;">Category: automation</p>
+    </div>
+
+    <div class="footer">
+        <p>Tutorial generated from blog post on 2025-12-27T07:42:46.378090</p>
+        <p>Powered by Ollama AI (100% offline) | Post ID: 27</p>
+    </div>
+</body>
+</html>

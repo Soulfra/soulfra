@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Preview - All Sites</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .domain-list {
+            list-style: none;
+        }
+        .domain-item {
+            background: #f5f5f5;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .domain-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .domain-link {
+            display: block;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .domain-name {
+            font-weight: 600;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .domain-url {
+            color: #667eea;
+            font-size: 0.95em;
+        }
+        .tip {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+        .tip strong {
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Domain Preview</h1>
+        <p class="subtitle">All your sites, running locally. Click to preview.</p>
+
+        <ul class="domain-list" id="domainList">
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8001" class="domain-link" target="_blank">
+                    <div class="domain-name">sellthismvp-site</div>
+                    <div class="domain-url">http://192.168.1.87:8001</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8002" class="domain-link" target="_blank">
+                    <div class="domain-name">soulfra</div>
+                    <div class="domain-url">http://192.168.1.87:8002</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8003" class="domain-link" target="_blank">
+                    <div class="domain-name">mascotrooms-site</div>
+                    <div class="domain-url">http://192.168.1.87:8003</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8004" class="domain-link" target="_blank">
+                    <div class="domain-name">calriven</div>
+                    <div class="domain-url">http://192.168.1.87:8004</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8005" class="domain-link" target="_blank">
+                    <div class="domain-name">deathtodata</div>
+                    <div class="domain-url">http://192.168.1.87:8005</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8006" class="domain-link" target="_blank">
+                    <div class="domain-name">finishthisrepo-site</div>
+                    <div class="domain-url">http://192.168.1.87:8006</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8007" class="domain-link" target="_blank">
+                    <div class="domain-name">dealordelete-site</div>
+                    <div class="domain-url">http://192.168.1.87:8007</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8008" class="domain-link" target="_blank">
+                    <div class="domain-name">saveorsink-site</div>
+                    <div class="domain-url">http://192.168.1.87:8008</div>
+                </a>
+            </li>
+            <li class="domain-item">
+                <a href="http://192.168.1.87:8009" class="domain-link" target="_blank">
+                    <div class="domain-name">shiprekt-site</div>
+                    <div class="domain-url">http://192.168.1.87:8009</div>
+                </a>
+            </li>
+        </ul>
+
+        <div class="tip">
+            <strong>📱 On iPhone:</strong> Bookmark this page! Open Safari and visit <strong>http://192.168.1.87:5001/preview</strong> to see all your domains.
+        </div>
+    </div>
+</body>
+</html>

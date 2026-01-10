@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% block title %}Train the AI - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+.train-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.level-info {
+    background: #f0f0f0;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.training-area {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.squares-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 2rem 0;
+}
+
+.square {
+    width: 150px;
+    height: 150px;
+    border: 3px solid #333;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.square:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.question {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.prediction {
+    background: #e3f2fd;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.feedback-buttons {
+    margin-top: 1rem;
+}
+
+.feedback-buttons button {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    margin: 0 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.correct-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.wrong-btn {
+    background: #f44336;
+    color: white;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+#lossChart {
+    max-width: 600px;
+    margin: 2rem auto;
+    height: 200px;
+    border: 1px solid #ddd;
+}
+</style>
+
+<div class="train-container">
+    <h1>🧠 Train the AI</h1>
+    <p>YOU control the training. Click correct/wrong and watch the network learn.</p>
+
+    <div style="display: flex; gap: 1rem; margin: 2rem auto; justify-content: center; max-width: 600px;">
+        <a href="/train?mode=colors" style="flex: 1; padding: 0.75rem; background: #007bff; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center;">
+            🎨 Color Training
+        </a>
+        <a href="/train?mode=posts" style="flex: 1; padding: 0.75rem; background: #f0f0f0; color: #333; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center;">
+            📝 Post Debate
+        </a>
+    </div>
+
+    <div class="level-info">
+        <strong>Level 1: Red vs Blue</strong>
+        <p>Click the {{ target_color|upper }} square</p>
+        <p style="font-size: 0.9rem; color: #666;">Start simple. Binary classification.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ stats.total_trained }}</div>
+            <div class="stat-label">Trained</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ stats.correct }}</div>
+            <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ "%.2f"|format(stats.accuracy * 100) }}%</div>
+            <div class="stat-label">Accuracy</div>
+        </div>
+    </div>
+
+    <div class="training-area">
+        <div class="question">Click the {{ target_color|upper }} square:</div>
+
+        <div class="squares-container">
+            <div class="square"
+                 style="background-color: {{ left_color }};"
+                 onclick="makeChoice('left')">
+            </div>
+
+            <div class="square"
+                 style="background-color: {{ right_color }};"
+                 onclick="makeChoice('right')">
+            </div>
+        </div>
+
+        {% if prediction %}
+        <div class="prediction">
+            <div style="margin-bottom: 1rem;">
+                <strong style="font-size: 1.2rem;">🤖 Network Predicted:</strong>
+                <span style="font-size: 1.5rem; font-weight: bold; color: #007bff;">{{ prediction.choice|upper }}</span>
+            </div>
+
+            <div style="margin: 1.5rem 0;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-weight: 600;">Confidence:</span>
+                    <div style="flex: 1; background: #e0e0e0; height: 30px; border-radius: 15px; overflow: hidden; position: relative;">
+                        <div style="background: linear-gradient(90deg, #4caf50, #8bc34a); height: 100%; width: {{ '%.1f'|format(prediction.confidence * 100) }}%; transition: width 0.5s;"></div>
+                        <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-weight: bold; color: #333;">
+                            {{ "%.1f"|format(prediction.confidence * 100) }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            {% if prediction.get('features') %}
+            <!-- Color Feature Analysis -->
+            <div style="background: #f9f9f9; border: 2px solid #ddd; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+                <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem; text-align: center;">
+                    🔬 Color Analysis (Why AI Chose This)
+                </div>
+
+                <!-- Color Wheel Visualization -->
+                {% if prediction.get('hue_degrees') is not none %}
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <svg width="120" height="120" viewBox="0 0 120 120" style="margin: 0 auto;">
+                        <!-- Rainbow wheel -->
+                        <defs>
+                            <linearGradient id="rainbow-color-wheel" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                                <stop offset="17%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                                <stop offset="33%" style="stop-color:rgb(0,255,0);stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:rgb(0,255,255);stop-opacity:1" />
+                                <stop offset="67%" style="stop-color:rgb(0,0,255);stop-opacity:1" />
+                                <stop offset="83%" style="stop-color:rgb(255,0,255);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="60" cy="60" r="45" fill="none" stroke="url(#rainbow-color-wheel)" stroke-width="14"/>
+                        <!-- Pointer -->
+                        <line x1="60" y1="60" x2="{{ prediction.pointer_x }}" y2="{{ prediction.pointer_y }}"
+                              stroke="#333" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="{{ prediction.pointer_x }}" cy="{{ prediction.pointer_y }}" r="6" fill="#333"/>
+                    </svg>
+                    <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Color Wheel Position</div>
+                </div>
+                {% endif %}
+
+                <!-- Feature Bars -->
+                <div style="margin: 1rem 0;">
+                    <!-- Temperature Bar -->
+                    <div style="margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">🌡️ Temperature</span>
+                            <span style="font-size: 0.85rem;">{{ "%.0f"|format(prediction.temperature * 100) }}%</span>
+                        </div>
+                        <div style="background: linear-gradient(90deg, #2196f3, #f44336); height: 20px; border-radius: 10px; position: relative;">
+                            <div style="position: absolute; left: {{ '%.1f'|format(prediction.temperature * 100) }}%; top: -2px; width: 4px; height: 24px; background: #333; border-radius: 2px;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #666; margin-top: 0.25rem;">
+                            <span>Cool (Blue)</span>
+                            <span>Warm (Red)</span>
+                        </div>
+                    </div>
+
+                    <!-- Saturation Bar -->
+                    <div style="margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">🌈 Saturation</span>
+                            <span style="font-size: 0.85rem;">{{ "%.0f"|format(prediction.saturation * 100) }}%</span>
+                        </div>
+                        <div style="background: linear-gradient(90deg, #e0e0e0, #ff1493); height: 20px; border-radius: 10px; position: relative;">
+                            <div style="position: absolute; left: {{ '%.1f'|format(prediction.saturation * 100) }}%; top: -2px; width: 4px; height: 24px; background: #333; border-radius: 2px;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #666; margin-top: 0.25rem;">
+                            <span>Muted</span>
+                            <span>Vibrant</span>
+                        </div>
+                    </div>
+
+                    <!-- Brightness Bar -->
+                    <div style="margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">💡 Brightness</span>
+                            <span style="font-size: 0.85rem;">{{ "%.0f"|format(prediction.brightness * 100) }}%</span>
+                        </div>
+                        <div style="background: linear-gradient(90deg, #000, #fff); height: 20px; border-radius: 10px; position: relative;">
+                            <div style="position: absolute; left: {{ '%.1f'|format(prediction.brightness * 100) }}%; top: -2px; width: 4px; height: 24px; background: #f00; border-radius: 2px;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #666; margin-top: 0.25rem;">
+                            <span>Dark</span>
+                            <span>Bright</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Explanations -->
+                <div style="background: white; border-radius: 6px; padding: 1rem; margin-top: 1rem;">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">📊 Detailed Features:</div>
+                    {% for feature in prediction.features %}
+                    <div style="padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem;">
+                        {{ feature }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="feedback-buttons">
+                <button class="correct-btn" onclick="submitFeedback(true)">✓ Correct</button>
+                <button class="wrong-btn" onclick="submitFeedback(false)">✗ Wrong</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <canvas id="lossChart"></canvas>
+    <div style="text-align: center; color: #666; font-size: 0.9rem;">
+        Loss over training examples (should decrease)
+    </div>
+</div>
+
+<script>
+let userChoice = null;
+
+function makeChoice(choice) {
+    userChoice = choice;
+
+    // Send choice to server to get AI prediction
+    fetch('/train/predict', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            choice: choice,
+            left_color: '{{ left_color }}',
+            right_color: '{{ right_color }}',
+            target_color: '{{ target_color }}'
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        // Reload page to show prediction
+        location.reload();
+    });
+}
+
+function submitFeedback(correct) {
+    fetch('/train/feedback', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            correct: correct,
+            user_choice: '{{ user_choice }}',
+            target_color: '{{ target_color }}'
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        // Show visual feedback
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: ${correct ? '#4caf50' : '#f44336'};
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        `;
+
+        if (correct) {
+            feedbackDiv.innerHTML = `
+                <div>🎉 Training Complete!</div>
+                <div style="font-size: 1.2rem; margin-top: 1rem;">
+                    Loss: ${data.loss.toFixed(4)}<br/>
+                    Accuracy: ${(data.accuracy * 100).toFixed(1)}%<br/>
+                    <span style="font-size: 0.9rem; opacity: 0.9;">I'm getting smarter! 🧠</span>
+                </div>
+            `;
+        } else {
+            feedbackDiv.innerHTML = `
+                <div>📚 Learning from Mistakes!</div>
+                <div style="font-size: 1.2rem; margin-top: 1rem;">
+                    This helps me improve!<br/>
+                    <span style="font-size: 0.9rem; opacity: 0.9;">Loss: ${data.loss.toFixed(4)}</span>
+                </div>
+            `;
+        }
+
+        document.body.appendChild(feedbackDiv);
+
+        // Reload after showing message
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+    });
+}
+
+// Draw loss chart (simple canvas visualization)
+{% if stats.loss_history %}
+const canvas = document.getElementById('lossChart');
+const ctx = canvas.getContext('2d');
+const losses = {{ stats.loss_history|tojson }};
+
+const width = canvas.width;
+const height = canvas.height;
+const maxLoss = Math.max(...losses, 0.1);
+
+ctx.strokeStyle = '#f44336';
+ctx.lineWidth = 2;
+ctx.beginPath();
+
+losses.forEach((loss, i) => {
+    const x = (i / (losses.length - 1)) * width;
+    const y = height - (loss / maxLoss) * height;
+
+    if (i === 0) {
+        ctx.moveTo(x, y);
+    } else {
+        ctx.lineTo(x, y);
+    }
+});
+
+ctx.stroke();
+{% endif %}
+</script>
+
+{% endblock %}

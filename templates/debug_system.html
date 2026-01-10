@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Debug - See What's Actually Working</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { color: #4ec9b0; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #569cd6; margin: 30px 0 15px 0; font-size: 1.3em; }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .status-box {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 6px;
+            padding: 20px;
+        }
+
+        .status-box.good { border-left: 4px solid #4ec9b0; }
+        .status-box.bad { border-left: 4px solid #f48771; }
+        .status-box.warn { border-left: 4px solid #dcdcaa; }
+
+        .status-label { font-size: 0.9em; color: #858585; margin-bottom: 8px; }
+        .status-value { font-size: 1.5em; font-weight: bold; }
+
+        .code-block {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            padding: 8px;
+            border-left: 3px solid #3e3e42;
+            margin-bottom: 5px;
+        }
+        .log-entry.info { border-left-color: #569cd6; }
+        .log-entry.success { border-left-color: #4ec9b0; }
+        .log-entry.error { border-left-color: #f48771; }
+        .log-entry.warn { border-left-color: #dcdcaa; }
+
+        .test-btn {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            font-family: inherit;
+            margin-right: 10px;
+        }
+        .test-btn:hover { background: #1177bb; }
+        .test-btn:disabled { background: #3e3e42; cursor: not-allowed; }
+
+        .model-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .model-item {
+            padding: 8px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #test-output {
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #3e3e42;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 System Debug Dashboard</h1>
+        <p style="color: #858585; margin-bottom: 30px;">See what's actually working vs what's bullshit</p>
+
+        <!-- Status Grid -->
+        <div class="status-grid">
+            <div class="status-box {% if ollama_running %}good{% else %}bad{% endif %}">
+                <div class="status-label">Ollama API</div>
+                <div class="status-value">{% if ollama_running %}✓ Running{% else %}✗ Down{% endif %}</div>
+                <div style="font-size: 0.8em; margin-top: 10px; color: #858585;">
+                    {% if ollama_running %}http://localhost:11434{% else %}Start with: ollama serve{% endif %}
+                </div>
+            </div>
+
+            <div class="status-box {% if models_count > 0 %}good{% else %}bad{% endif %}">
+                <div class="status-label">AI Models Loaded</div>
+                <div class="status-value">{{ models_count }}</div>
+                <div style="font-size: 0.8em; margin-top: 10px; color: #858585;">
+                    {% if custom_models %}Including {{ custom_models|length }} custom{% endif %}
+                </div>
+            </div>
+
+            <div class="status-box {% if ai_comments > 0 %}good{% elif posts_count > 0 %}warn{% else %}bad{% endif %}">
+                <div class="status-label">AI Comments Generated</div>
+                <div class="status-value">{{ ai_comments }} / {{ posts_count }} posts</div>
+                <div style="font-size: 0.8em; margin-top: 10px; color: #858585;">
+                    {% if ai_comments == 0 %}Auto-commenter never triggered!{% endif %}
+                </div>
+            </div>
+
+            <div class="status-box {% if ai_users > 0 %}good{% else %}bad{% endif %}">
+                <div class="status-label">AI Persona Users</div>
+                <div class="status-value">{{ ai_users }}</div>
+                <div style="font-size: 0.8em; margin-top: 10px; color: #858585;">
+                    {% if ai_users == 0 %}Need to create AI users{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Models List -->
+        <h2>📦 Available Models</h2>
+        <div class="model-list">
+            {% if models %}
+                {% for model in models %}
+                <div class="model-item">
+                    <span>{{ model.name }}</span>
+                    <span style="color: #858585; font-size: 0.9em;">
+                        {% if 'soulfra' in model.name or 'deathtodata' in model.name or 'calos' in model.name %}
+                            <span style="color: #4ec9b0;">CUSTOM</span>
+                        {% else %}
+                            base
+                        {% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="color: #858585;">No models found</div>
+            {% endif %}
+        </div>
+
+        <!-- Test Controls -->
+        <h2>🧪 Test Auto-Commenter</h2>
+        <div style="background: #252526; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+            <p style="margin-bottom: 15px; color: #858585;">
+                Click below to manually trigger ONE AI comment. This will:
+                <br>1. Pick a random post from your 24 posts
+                <br>2. Call Ollama API to generate a comment
+                <br>3. Save it to database
+                <br>4. Show you the full request/response
+            </p>
+            <button class="test-btn" onclick="testAIComment()">Generate 1 AI Comment Now</button>
+            <button class="test-btn" onclick="clearLogs()">Clear Logs</button>
+        </div>
+
+        <!-- Output -->
+        <h2>📋 Test Output & Logs</h2>
+        <div id="test-output">
+            <div class="log-entry info">Ready to test. Click "Generate 1 AI Comment Now" above.</div>
+        </div>
+
+        <!-- Ollama Explanation -->
+        <h2>ℹ️ What Ollama Actually Is</h2>
+        <div class="code-block">
+<strong>Ollama is NOT:</strong>
+- An admin system
+- A fine-tuning platform
+- Automatically learning from your data
+- Connected to your database
+
+<strong>Ollama IS:</strong>
+- A local API server (like running a web server)
+- Runs pre-trained AI models (llama2, mistral, etc.)
+- Takes text input → returns text output
+- Completely stateless (doesn't remember previous calls)
+
+<strong>Your Custom Models (soulfra-model, deathtodata-model):</strong>
+- Probably just base models with custom system prompts
+- NOT fine-tuned on your data (Ollama doesn't support fine-tuning)
+- To actually fine-tune: Need to export data → Use external tools → Reimport
+
+<strong>Cringeproof Ratings:</strong>
+- Currently just stored in database
+- NOT used for training
+- Would need: Format conversion → Training pipeline → Model updates
+- This is a multi-step manual process, not automatic
+        </div>
+    </div>
+
+    <script>
+        async function testAIComment() {
+            const output = document.getElementById('test-output');
+            output.innerHTML = '<div class="log-entry info">Starting test...</div>';
+
+            try {
+                // Call test endpoint
+                const response = await fetch('/debug/test-ai-comment', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    output.innerHTML += `<div class="log-entry success">✓ Success! Generated comment ID: ${data.comment_id}</div>`;
+                    output.innerHTML += `<div class="log-entry info">Post: "${data.post_title}"</div>`;
+                    output.innerHTML += `<div class="log-entry info">AI Persona: ${data.ai_name}</div>`;
+                    output.innerHTML += `<div class="code-block"><strong>Generated Comment:</strong>\n${data.comment_content}</div>`;
+
+                    if (data.ollama_request) {
+                        output.innerHTML += `<div class="code-block"><strong>Ollama Request:</strong>\n${JSON.stringify(data.ollama_request, null, 2)}</div>`;
+                    }
+                    if (data.ollama_response) {
+                        output.innerHTML += `<div class="code-block"><strong>Ollama Response:</strong>\n${data.ollama_response.substring(0, 500)}...</div>`;
+                    }
+                } else {
+                    output.innerHTML += `<div class="log-entry error">✗ Error: ${data.error}</div>`;
+                    if (data.details) {
+                        output.innerHTML += `<div class="code-block">${data.details}</div>`;
+                    }
+                }
+            } catch (error) {
+                output.innerHTML += `<div class="log-entry error">✗ Request failed: ${error.message}</div>`;
+            }
+
+            // Auto-scroll to bottom
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('test-output').innerHTML = '<div class="log-entry info">Logs cleared. Ready for next test.</div>';
+        }
+    </script>
+</body>
+</html>

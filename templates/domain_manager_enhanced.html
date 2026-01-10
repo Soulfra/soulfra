@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Network Manager - Soulfra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-layout {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Main Content - 4 Column Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr 40% 30%;
+            gap: 0;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        @media (max-width: 1600px) {
+            .main-content {
+                grid-template-columns: 250px 1fr 40%;
+            }
+            .chat-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 250px 1fr;
+            }
+            .preview-panel, .chat-panel {
+                display: none;
+            }
+        }
+
+        /* Column styles */
+        .panel {
+            background: #252526;
+            border-right: 1px solid #3e3e42;
+            overflow-y: auto;
+        }
+
+        .panel-header {
+            background: #2d2d30;
+            padding: 12px 15px;
+            border-bottom: 1px solid #3e3e42;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Domains List Panel */
+        .domains-list .domain-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #3e3e42;
+            transition: background 0.2s;
+        }
+
+        .domains-list .domain-item:hover {
+            background: #2d2d30;
+        }
+
+        .domains-list .domain-item.active {
+            background: #37373d;
+            border-left: 3px solid #667eea;
+        }
+
+        .domain-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 0.95em;
+        }
+
+        .domain-url {
+            font-size: 0.8em;
+            color: #858585;
+        }
+
+        .domain-role {
+            display: inline-block;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: #667eea;
+            color: white;
+            margin-top: 4px;
+        }
+
+        /* Files Panel */
+        .files-panel {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        .file-tree {
+            padding: 10px 0;
+        }
+
+        .file-item {
+            padding: 6px 15px 6px 25px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-item:hover {
+            background: #2d2d30;
+        }
+
+        .file-item.active {
+            background: #37373d;
+            color: #4ec9b0;
+        }
+
+        .file-item::before {
+            content: "📄 ";
+            margin-right: 6px;
+        }
+
+        .file-item[data-type="html"]::before { content: "🌐 "; }
+        .file-item[data-type="css"]::before { content: "🎨 "; }
+        .file-item[data-type="js"]::before { content: "📜 "; }
+        .file-item[data-type="md"]::before { content: "📝 "; }
+        .file-item[data-type="txt"]::before { content: "📄 "; }
+        .file-item[data-type="py"]::before { content: "🐍 "; }
+        .file-item[data-type="json"]::before { content: "📊 "; }
+
+        .file-actions {
+            padding: 15px;
+            border-top: 1px solid #3e3e42;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            background: #667eea;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background 0.2s;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .btn-success {
+            background: #48bb78;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            background: #1e1e1e;
+        }
+
+        .editor-header {
+            background: #2d2d30;
+            padding: 10px 15px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editor-tab {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .editor-tab.active {
+            color: #d4d4d4;
+            border-bottom-color: #667eea;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editor-actions button {
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+
+        .CodeMirror {
+            height: 100% !important;
+            font-size: 14px;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            background: #2d2d30;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: #007acc;
+            color: white;
+            padding: 4px 15px;
+            font-size: 0.75em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Empty States */
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: #858585;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #858585;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Header -->
+        <div class="header">
+            <h1>🌐 Blog Network Manager</h1>
+            <p class="subtitle">Manage domains, edit files, and build your multi-brand network</p>
+        </div>
+
+        <!-- Main Content: 3 Columns -->
+        <div class="main-content">
+            <!-- Column 1: Domains List -->
+            <div class="panel domains-panel">
+                <div class="panel-header">Domains</div>
+                <div class="domains-list" id="domains-list">
+                    {% for brand in brands %}
+                    <div class="domain-item" onclick="selectDomain('{{ brand.domain }}', '{{ brand.name }}', '{{ brand.slug }}', '{{ brand.network_role or 'member' }}')"
+                         data-domain="{{ brand.domain }}">
+                        <div class="domain-name">{{ brand.name }}</div>
+                        <div class="domain-url">{{ brand.domain }}</div>
+                        {% if brand.network_role %}
+                        <span class="domain-role">{{ brand.network_role }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Column 2: File Browser + Editor -->
+            <div class="panel files-panel">
+                <div class="panel-header" id="files-header">Select a domain</div>
+
+                <div class="file-tree" id="file-tree">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📁</div>
+                        <div>Select a domain to browse files</div>
+                    </div>
+                </div>
+
+                <div class="editor-panel" style="display: none;" id="editor-panel">
+                    <div class="editor-header">
+                        <div class="editor-tabs">
+                            <button class="editor-tab active">Edit</button>
+                        </div>
+                        <div class="editor-actions">
+                            <button class="btn btn-success" onclick="saveFile()">💾 Save</button>
+                            <button class="btn" onclick="reloadPreview()">🔄 Preview</button>
+                        </div>
+                    </div>
+                    <textarea id="code-editor"></textarea>
+                </div>
+
+                <div class="file-actions" id="file-actions" style="display: none;">
+                    <button class="btn" onclick="refreshFiles()">🔄 Refresh Files</button>
+                </div>
+            </div>
+
+            <!-- Column 3: Live Preview -->
+            <div class="panel preview-panel">
+                <div class="panel-header">Live Preview</div>
+                <iframe id="preview-frame" class="preview-frame"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="status-bar">Ready</div>
+
+    <script>
+        let currentDomain = null;
+        let currentFile = null;
+        let codeEditor = null;
+        let currentSlug = null;
+
+        // Initialize CodeMirror
+        function initEditor() {
+            const textarea = document.getElementById('code-editor');
+            codeEditor = CodeMirror.fromTextArea(textarea, {
+                mode: 'htmlmixed',
+                theme: 'monokai',
+                lineNumbers: true,
+                indentUnit: 2,
+                tabSize: 2,
+                lineWrapping: true
+            });
+
+            // Auto-save on Ctrl+S
+            codeEditor.setOption("extraKeys", {
+                "Ctrl-S": saveFile,
+                "Cmd-S": saveFile
+            });
+        }
+
+        // Select domain
+        async function selectDomain(domain, name, slug, role) {
+            currentDomain = domain;
+            currentSlug = slug;
+
+            // Update active state
+            document.querySelectorAll('.domain-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`[data-domain="${domain}"]`).classList.add('active');
+
+            // Update header
+            document.getElementById('files-header').textContent = `${name} (${role})`;
+
+            // Load files
+            await loadFiles(domain);
+
+            // Load preview
+            loadPreview(domain);
+
+            updateStatus(`Selected ${name}`);
+        }
+
+        // Load files for a domain
+        async function loadFiles(domain) {
+            const fileTree = document.getElementById('file-tree');
+            const fileActions = document.getElementById('file-actions');
+
+            fileTree.innerHTML = '<div class="loading">Loading files...</div>';
+            fileActions.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/domains/files/list', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({domain})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Group files by directory
+                    const filesByDir = {};
+                    data.files.forEach(file => {
+                        if (!filesByDir[file.dir]) {
+                            filesByDir[file.dir] = [];
+                        }
+                        filesByDir[file.dir].push(file);
+                    });
+
+                    // Render file tree
+                    let html = '';
+                    Object.keys(filesByDir).sort().forEach(dir => {
+                        if (dir !== '.') {
+                            html += `<div style="padding: 8px 15px; font-weight: 600; color: #858585; font-size: 0.8em;">📁 ${dir}</div>`;
+                        }
+                        filesByDir[dir].forEach(file => {
+                            html += `<div class="file-item" data-type="${file.type}" onclick="openFile('${file.path}', '${file.type}')">${file.name}</div>`;
+                        });
+                    });
+
+                    fileTree.innerHTML = html;
+                    fileActions.style.display = 'block';
+                } else {
+                    fileTree.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>${data.error}</div></div>`;
+                }
+            } catch (error) {
+                fileTree.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❌</div><div>Error: ${error.message}</div></div>`;
+            }
+        }
+
+        // Open file in editor
+        async function openFile(filePath, fileType) {
+            if (!currentDomain) return;
+
+            currentFile = filePath;
+
+            // Update active state
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show editor panel
+            const editorPanel = document.getElementById('editor-panel');
+            editorPanel.style.display = 'grid';
+
+            // Initialize editor if not done
+            if (!codeEditor) {
+                initEditor();
+            }
+
+            updateStatus(`Loading ${filePath}...`);
+
+            try {
+                const response = await fetch('/api/domains/files/read', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        domain: currentDomain,
+                        file_path: filePath
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Set editor mode based on file type
+                    const modeMap = {
+                        html: 'htmlmixed',
+                        css: 'css',
+                        js: 'javascript',
+                        md: 'markdown',
+                        py: 'python',
+                        json: 'javascript'
+                    };
+                    codeEditor.setOption('mode', modeMap[fileType] || 'htmlmixed');
+
+                    // Set content
+                    codeEditor.setValue(data.content);
+
+                    updateStatus(`Editing ${filePath}`);
+                } else {
+                    alert('Error loading file: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error loading file: ' + error.message);
+            }
+        }
+
+        // Save file
+        async function saveFile() {
+            if (!currentDomain || !currentFile || !codeEditor) {
+                alert('No file open');
+                return false;
+            }
+
+            const content = codeEditor.getValue();
+
+            updateStatus(`Saving ${currentFile}...`);
+
+            try {
+                const response = await fetch('/api/domains/files/save', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        domain: currentDomain,
+                        file_path: currentFile,
+                        content: content
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    updateStatus(`✅ Saved ${currentFile}`);
+
+                    // Reload preview if HTML file
+                    if (currentFile.endsWith('.html')) {
+                        setTimeout(() => reloadPreview(), 500);
+                    }
+                } else {
+                    alert('Error saving file: ' + data.error);
+                    updateStatus(`❌ Failed to save ${currentFile}`);
+                }
+            } catch (error) {
+                alert('Error saving file: ' + error.message);
+                updateStatus(`❌ Error: ${error.message}`);
+            }
+
+            return false; // Prevent default
+        }
+
+        // Refresh files list
+        function refreshFiles() {
+            if (currentDomain) {
+                loadFiles(currentDomain);
+            }
+        }
+
+        // Load preview
+        function loadPreview(domain) {
+            const iframe = document.getElementById('preview-frame');
+
+            // Try to preview via Host header override
+            fetch('/api/domains/preview', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({domain})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(data.html);
+                    iframeDoc.close();
+                } else {
+                    iframe.srcdoc = `<div style="padding: 40px; font-family: sans-serif; text-align: center;"><h2>Preview not available</h2><p>${data.error}</p></div>`;
+                }
+            })
+            .catch(error => {
+                iframe.srcdoc = `<div style="padding: 40px; font-family: sans-serif; text-align: center;"><h2>Preview error</h2><p>${error.message}</p></div>`;
+            });
+        }
+
+        // Reload preview
+        function reloadPreview() {
+            if (currentDomain) {
+                loadPreview(currentDomain);
+                updateStatus('Preview reloaded');
+            }
+        }
+
+        // Update status bar
+        function updateStatus(message) {
+            document.getElementById('status-bar').textContent = message;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveFile();
+            }
+        });
+    </script>
+</body>
+</html>

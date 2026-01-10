@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attribution & Badges - Verified Professional Badges</title>
+    <meta name="description" content="Generate verified professional badges for your website. Show customers you're licensed and building authority through education.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f7fafc;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .badge-generator {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .badge-preview-section {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .badge-preview-section h3 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .badge-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .badge-option {
+            padding: 30px;
+            background: #f7fafc;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .badge-option:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .badge-option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .badge-style-1 {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .badge-style-1::before {
+            content: "✓";
+            background: #48bb78;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .badge-style-2 {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            color: #667eea;
+            padding: 20px 30px;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-style-2 .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .badge-style-3 {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            color: #2d3748;
+            padding: 16px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 2px solid #e2e8f0;
+        }
+
+        .badge-style-3::before {
+            content: "🏆";
+            font-size: 1.5rem;
+            margin-right: 12px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-button:hover {
+            opacity: 0.8;
+        }
+
+        .copy-button.copied {
+            background: #48bb78;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .benefit-card {
+            padding: 30px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .benefit-card h4 {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card p {
+            color: #718096;
+            line-height: 1.8;
+        }
+
+        .usage-examples {
+            background: #fef5e7;
+            border-left: 4px solid #f39c12;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .usage-examples h3 {
+            color: #d68910;
+            margin-bottom: 20px;
+        }
+
+        .usage-examples ul {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .usage-examples li {
+            padding: 10px 0;
+            color: #4a5568;
+        }
+
+        .usage-examples li::before {
+            content: "→";
+            color: #f39c12;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .badge-options {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Verified Professional Badges</h1>
+        <p>Show customers you're licensed, verified, and building authority through education</p>
+    </div>
+
+    <div class="container">
+        <!-- Badge Generator -->
+        <div class="section">
+            <h2>Generate Your Badge</h2>
+            <p style="color: #718096; margin-bottom: 30px; font-size: 1.1rem;">Create a badge to display on your website, business cards, or marketing materials. Shows customers you're a verified professional building educational authority.</p>
+
+            <div class="badge-generator">
+                <div class="form-group">
+                    <label for="professional-name">Your Name / Business Name</label>
+                    <input type="text" id="professional-name" placeholder="Joe's Plumbing" value="Joe's Plumbing">
+                </div>
+
+                <div class="form-group">
+                    <label for="license-number">License Number</label>
+                    <input type="text" id="license-number" placeholder="FL-CFC1234567" value="FL-CFC1234567">
+                </div>
+
+                <div class="form-group">
+                    <label for="trade-type">Trade / Profession</label>
+                    <select id="trade-type">
+                        <option value="Plumber">Licensed Plumber</option>
+                        <option value="HVAC">HVAC Technician</option>
+                        <option value="Electrician">Electrician</option>
+                        <option value="Roofer">Roofer</option>
+                        <option value="Contractor">General Contractor</option>
+                        <option value="Locksmith">Locksmith</option>
+                        <option value="Appliance">Appliance Repair</option>
+                        <option value="Mechanic">Auto Mechanic</option>
+                        <option value="Landscaper">Landscaper</option>
+                        <option value="Pest">Pest Control</option>
+                        <option value="Pool">Pool Service</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="profile-url">Your Profile URL (Optional)</label>
+                    <input type="text" id="profile-url" placeholder="https://yourname.cringeproof.com" value="https://joesplumbing.cringeproof.com">
+                </div>
+            </div>
+
+            <div class="badge-preview-section">
+                <h3>Choose Your Badge Style</h3>
+                <div class="badge-options">
+                    <div class="badge-option selected" data-style="1">
+                        <h4 style="margin-bottom: 20px;">Style 1: Gradient</h4>
+                        <a href="#" class="badge-style-1" onclick="return false;">
+                            <span id="badge1-text">Verified Professional - FL-CFC1234567</span>
+                        </a>
+                    </div>
+
+                    <div class="badge-option" data-style="2">
+                        <h4 style="margin-bottom: 20px;">Style 2: Card</h4>
+                        <a href="#" class="badge-style-2" onclick="return false;">
+                            <span class="badge-icon">🏅</span>
+                            <span id="badge2-text">Licensed Plumber</span>
+                            <span style="font-size: 0.9rem; opacity: 0.8; margin-top: 4px;" id="badge2-license">FL-CFC1234567</span>
+                        </a>
+                    </div>
+
+                    <div class="badge-option" data-style="3">
+                        <h4 style="margin-bottom: 20px;">Style 3: Pill</h4>
+                        <a href="#" class="badge-style-3" onclick="return false;">
+                            <span id="badge3-text">Verified on Soulfra</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <h3 style="margin-bottom: 20px;">Embed Code</h3>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode()">Copy</button>
+                        <pre id="embed-code">&lt;!-- Verified Professional Badge --&gt;
+&lt;a href="https://joesplumbing.cringeproof.com"
+   style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);"&gt;
+   ✓ Verified Professional - FL-CFC1234567
+&lt;/a&gt;</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="section">
+            <h2>Why Use a Verified Badge?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h4>🔒 Build Trust Instantly</h4>
+                    <p>Customers see you're licensed and verified before they even call. Badge links to your full profile with license verification.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>📈 Improve SEO</h4>
+                    <p>Badge links back to your profile, creating backlinks that improve your Google rankings. More authority signals = higher visibility.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>🎯 Differentiate from Competitors</h4>
+                    <p>Most pros don't verify their licenses publicly. Stand out by showing customers you're the real deal with proof.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>📱 Works Everywhere</h4>
+                    <p>Add to website, email signature, business cards (QR code), social media bios, Craigslist ads, anywhere you market.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>🚀 Free Marketing</h4>
+                    <p>When customers see the badge, they click to learn more. Free traffic to your educational content and lead generation.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <h4>✅ Easy to Update</h4>
+                    <p>License expires? We auto-update the verification. No need to change badge code on your website.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usage Examples -->
+        <div class="section">
+            <h2>Where to Use Your Badge</h2>
+            <div class="usage-examples">
+                <h3>High-Impact Placements</h3>
+                <ul>
+                    <li><strong>Website footer:</strong> Every page shows you're verified (instant trust)</li>
+                    <li><strong>Contact page:</strong> Right above your phone number/form (removes friction)</li>
+                    <li><strong>Email signature:</strong> Every email you send shows verification</li>
+                    <li><strong>Business cards:</strong> QR code version links to your profile</li>
+                    <li><strong>Truck/van wrap:</strong> QR code customers can scan on the job site</li>
+                    <li><strong>Social media bios:</strong> Instagram, Facebook, LinkedIn, Twitter</li>
+                    <li><strong>Craigslist/marketplace ads:</strong> Stand out from unlicensed competitors</li>
+                    <li><strong>Google My Business:</strong> Add to business description with profile link</li>
+                    <li><strong>Invoices/estimates:</strong> Show professionalism on every document</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- QR Code Version -->
+        <div class="section">
+            <h2>QR Code Badge</h2>
+            <p style="color: #718096; margin-bottom: 30px; font-size: 1.1rem;">Perfect for business cards, truck wraps, or anywhere customers can scan with their phone.</p>
+
+            <div style="background: #f7fafc; border-radius: 12px; padding: 40px; text-align: center;">
+                <div style="display: inline-block; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                    <img src="/api/qr/badge?profile=joesplumbing" alt="QR Code Badge" style="width: 200px; height: 200px; display: block;">
+                    <p style="margin-top: 15px; font-weight: 600; color: #2d3748;">Scan to verify license</p>
+                </div>
+                <p style="margin-top: 30px; color: #718096; max-width: 600px; margin-left: auto; margin-right: auto;">When scanned, customers see your full profile with license verification, educational tutorials, and contact info. Perfect for proving legitimacy on the job site.</p>
+            </div>
+        </div>
+
+        <!-- Attribution -->
+        <div class="section">
+            <h2>Attribution & Sponsorship</h2>
+            <p style="color: #718096; margin-bottom: 30px; font-size: 1.1rem;">This platform wouldn't exist without amazing open-source projects and contributors.</p>
+
+            <div style="background: #f7fafc; border-radius: 12px; padding: 40px; margin: 30px 0;">
+                <h3 style="margin-bottom: 20px; color: #2d3748;">Built With</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div style="padding: 20px; background: white; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Tailwind CSS</h4>
+                        <p style="color: #718096; font-size: 0.95rem;">Design system & styles</p>
+                    </div>
+                    <div style="padding: 20px; background: white; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Flask</h4>
+                        <p style="color: #718096; font-size: 0.95rem;">Backend framework</p>
+                    </div>
+                    <div style="padding: 20px; background: white; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Anthropic Claude</h4>
+                        <p style="color: #718096; font-size: 0.95rem;">AI content generation</p>
+                    </div>
+                    <div style="padding: 20px; background: white; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Ollama</h4>
+                        <p style="color: #718096; font-size: 0.95rem;">Local AI processing</p>
+                    </div>
+                    <div style="padding: 20px; background: white; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Whisper</h4>
+                        <p style="color: #718096; font-size: 0.95rem;">Voice transcription</p>
+                    </div>
+                    <div style="padding: 20px; background: white; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Stripe</h4>
+                        <p style="color: #718096; font-size: 0.95rem;">Payment processing</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 40px; margin: 40px 0; text-align: center; color: white;">
+                <h3 style="margin-bottom: 20px;">Our Commitment</h3>
+                <p style="font-size: 1.1rem; line-height: 1.8; max-width: 700px; margin: 0 auto;">As we grow, we're committed to sponsoring the open-source projects that made this possible. Starting with <strong>Tailwind CSS</strong>, we'll give back a percentage of revenue to support the tools we all rely on.</p>
+                <p style="margin-top: 20px; font-size: 0.95rem; opacity: 0.9;"><a href="/contributors" style="color: white; font-weight: 600;">See all contributors →</a></p>
+            </div>
+        </div>
+
+        <footer style="text-align: center; padding: 40px 20px; color: #718096;">
+            <p><a href="/" style="color: #667eea; text-decoration: none; font-weight: 600;">Home</a> • <a href="/pricing" style="color: #667eea; text-decoration: none; font-weight: 600;">Pricing</a> • <a href="/docs" style="color: #667eea; text-decoration: none; font-weight: 600;">Documentation</a> • <a href="/compare" style="color: #667eea; text-decoration: none; font-weight: 600;">Compare</a></p>
+            <p style="margin-top: 20px;">© 2026 Soulfra Educational Authority Platform</p>
+        </footer>
+    </div>
+
+    <script>
+        // Update badge previews based on form inputs
+        const professionalName = document.getElementById('professional-name');
+        const licenseNumber = document.getElementById('license-number');
+        const tradeType = document.getElementById('trade-type');
+        const profileUrl = document.getElementById('profile-url');
+
+        function updateBadges() {
+            const name = professionalName.value || 'Your Business';
+            const license = licenseNumber.value || 'LICENSE-NUMBER';
+            const trade = tradeType.options[tradeType.selectedIndex].text;
+            const url = profileUrl.value || 'https://yourname.cringeproof.com';
+
+            document.getElementById('badge1-text').textContent = `Verified Professional - ${license}`;
+            document.getElementById('badge2-text').textContent = trade;
+            document.getElementById('badge2-license').textContent = license;
+            document.getElementById('badge3-text').textContent = `Verified on Soulfra`;
+
+            // Update embed code
+            const embedCode = document.getElementById('embed-code');
+            embedCode.textContent = `<!-- Verified Professional Badge -->
+<a href="${url}"
+   style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+   ✓ Verified Professional - ${license}
+</a>`;
+        }
+
+        professionalName.addEventListener('input', updateBadges);
+        licenseNumber.addEventListener('input', updateBadges);
+        tradeType.addEventListener('change', updateBadges);
+        profileUrl.addEventListener('input', updateBadges);
+
+        // Badge style selection
+        document.querySelectorAll('.badge-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.badge-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Copy code function
+        function copyCode() {
+            const code = document.getElementById('embed-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const button = document.querySelector('.copy-button');
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

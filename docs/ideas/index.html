@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Ideas - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            opacity: 0.8;
+            font-size: 0.875rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-id {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            opacity: 0.6;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .card-summary {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-domains {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .domain-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-soulfra {
+            background: rgba(139, 92, 246, 0.3);
+            border: 1px solid #8b5cf6;
+        }
+
+        .badge-calriven {
+            background: rgba(59, 130, 246, 0.3);
+            border: 1px solid #3b82f6;
+        }
+
+        .badge-deathtodata {
+            background: rgba(239, 68, 68, 0.3);
+            border: 1px solid #ef4444;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-link {
+            color: white;
+            text-decoration: none;
+            font-size: 0.875rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .card-link:hover {
+            opacity: 1;
+        }
+
+        .voice-link {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            opacity: 0.7;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://soulfra.github.io/" class="back-link">← Back to Soulfra Hub</a>
+            <h1>💡 Voice Ideas</h1>
+            <p class="subtitle">AI-extracted concepts from voice memos</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Ideas Extracted</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Voice Recordings</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- Idea 2: Authentic Social Interaction -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-id">#2</div>
+                </div>
+                <h2 class="card-title">Authentic Social Interaction</h2>
+                <p class="card-summary">The need for genuine connection and vulnerability in social media interactions.</p>
+
+                <div class="card-tags">
+                    <span class="tag">social_media</span>
+                    <span class="tag">authenticity</span>
+                </div>
+
+                <div class="card-domains">
+                    <span class="domain-badge badge-soulfra">Soulfra</span>
+                    <span class="domain-badge badge-calriven">CalRiven</span>
+                    <span class="domain-badge badge-deathtodata">DeathToData</span>
+                </div>
+
+                <div class="card-footer">
+                    <a href="idea-2-authentic-social-interaction.md" class="card-link">View Full Idea →</a>
+                    <a href="../../voice-archive/recordings/7/" class="card-link voice-link">🎤 Voice Recording</a>
+                </div>
+            </div>
+
+            <!-- Idea 3: Unknown Call -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-id">#3</div>
+                </div>
+                <h2 class="card-title">Unknown Call</h2>
+                <p class="card-summary">Test recording - "Hello? Hello?"</p>
+
+                <div class="card-tags">
+                    <span class="tag">test</span>
+                </div>
+
+                <div class="card-footer">
+                    <a href="idea-3-unknown-call.md" class="card-link">View Full Idea →</a>
+                    <a href="../../voice-archive/recordings/1/" class="card-link voice-link">🎤 Voice Recording</a>
+                </div>
+            </div>
+
+            <!-- Idea 4: Concept of Walking in a Room -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-id">#4</div>
+                </div>
+                <h2 class="card-title">Concept of Walking in a Room</h2>
+                <p class="card-summary">Exploring movement and spatial awareness</p>
+
+                <div class="card-tags">
+                    <span class="tag">walking</span>
+                    <span class="tag">room</span>
+                    <span class="tag">movement</span>
+                </div>
+
+                <div class="card-footer">
+                    <a href="idea-4-concept-of-walking-in-a-room.md" class="card-link">View Full Idea →</a>
+                    <a href="../../voice-archive/recordings/3/" class="card-link voice-link">🎤 Voice Recording</a>
+                </div>
+            </div>
+
+            <!-- Idea 5: Phone or Computer Setup Inquiry -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-id">#5</div>
+                </div>
+                <h2 class="card-title">Phone or Computer Setup Inquiry</h2>
+                <p class="card-summary">Testing audio setup across devices</p>
+
+                <div class="card-tags">
+                    <span class="tag">phone</span>
+                    <span class="tag">computer</span>
+                </div>
+
+                <div class="card-footer">
+                    <a href="idea-5-phone-or-computer-setup-inquiry.md" class="card-link">View Full Idea →</a>
+                    <a href="../../voice-archive/recordings/4/" class="card-link voice-link">🎤 Voice Recording</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>📊 How This Works</strong></p>
+            <p style="margin-top: 0.5rem; opacity: 0.8;">
+                Voice memo → Whisper transcription → Ollama AI extraction → Structured docs → Published here
+            </p>
+            <p style="margin-top: 1rem;">
+                <a href="https://github.com/Soulfra/voice-archive">View on GitHub</a> |
+                <a href="../voice-archive/">Voice Archive</a> |
+                <a href="../../">Soulfra Home</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,5743 @@
+{
+  "metadata": {
+    "name": "Soulfra",
+    "version": "1.0.0",
+    "description": "AI-powered multi-domain development platform",
+    "generated_at": "2026-01-02T12:27:16.970834",
+    "root_dir": "/Users/matthewmauer/Desktop/roommate-chat/soulfra-simple",
+    "platform": "darwin",
+    "python_version": "3.13.4"
+  },
+  "routes": [
+    {
+      "path": "/test",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/system",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/test-ai-comment",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/dashboard",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr-search-gate",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr-search-gate/<brand_slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/verify-search/<token>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/gated-search",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/gated-search/<brand>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/search",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/live",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/train",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/train/predict",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/train/feedback",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/dashboard",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/me",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/me/quizzes",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/me/settings",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/me/settings/update",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/me/export",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/me/delete",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/post/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/post/<slug>/comment",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/post/<slug>/discuss",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/discussion/message",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/discussion/finalize",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/discuss/<brand_name>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/assistant/message",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/assistant/quick-actions",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/assistant/history",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/assistant/post-comment",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/narrative/start",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/narrative/answer",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/narrative/advance",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/narrative/complete/<int:session_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ollama/status",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/nudge/<username>",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/quiz-complete/<int:session_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/choose",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/simple-test",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof/narrative/<brand_slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/wiki",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/wiki/concept/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/wiki/category/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/category/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/tag/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/<slug>/export",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brands/overview",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brands/overview/update-domain",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brands",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/submit",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/submission/<int:submission_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/<slug>/rate",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/<slug>/review/<int:review_id>/helpful",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/<slug>/preview",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand/<slug>/debug",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ai-network/debug",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai/test-relevance/<int:post_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai/training-data/<username>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai/regenerate-all",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai/retrain-networks",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai/clear-comments",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai/export-debug-data",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ai-network/visualize/<model_name>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ai-network/persona/<username>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr/brand/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr/brand/<slug>/stats",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/shipyard",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/sitemap",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/sitemap/game",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/sitemap.xml",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/robots.txt",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/feed.xml",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/user/<username>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/souls",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/soul/<username>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ownership/<username>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/soul/<username>/similar",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/soul/<username>/platforms",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/soul/transform",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/s/<short_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr/faucet/<path:encoded_payload>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr/question/submit",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr/<qr_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/subscribe",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/unsubscribe",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/about",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/@docs/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/onboard",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/rankings",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/news",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/profile/<username>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/plot/<int:plot_id>/action",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/plot/react",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/plot/reactions",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/challenge/daily",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/challenge/submit",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/feeds/challenges.xml",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/feeds/challenges.json",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/feeds/catchphrases.xml",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/catchphrase/test",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/catchphrase/results",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/rotation",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/map",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/neural",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/predict-personality",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/theme",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/signup",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/login",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/login-qr",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/qr/generate",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/qr/verify/<token>",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/qr/check/<token>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/qr/dashboard",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/qr/search-gate/<token>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/signup/professional",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/logout",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/feedback",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/health",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/package-info",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/package-info/<package_name>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/add",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/quick-add",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/confirm-add",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/edit/<int:brand_id>",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/delete/<int:brand_id>",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/import",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/domains/analyze-batch",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/domains/import-batch",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/csv",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/domains/import-csv",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/import-csv",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/verify/<int:brand_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/check-verification/<int:brand_id>",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/analyze/<int:brand_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/relationships",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/domains/chat/<int:brand_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/domains/suggestions/<int:suggestion_id>/approve",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/domains/suggestions/<int:suggestion_id>/reject",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ollama/comment",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/gallery/chat",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/dm/chat",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/dm/generate-qr",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/posts",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/posts/<int:post_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/reasoning/threads",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/reasoning/threads/<int:thread_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/feedback",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/website/predict/type",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/website/predict/method",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/website/predict/parameters",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/website/missing-routes",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/website/structure",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand/predict",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand/consistency",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand/generate",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand/emoji/suggest",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand/wordmap/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand/voice/compare",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/login",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/dashboard",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/docs",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/join",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/join",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/run-builder",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/generate-digest",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/send-digest",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/train-website-model",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/train-brand-models",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/bootstrap",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/run-syndication",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/automation/publish-all",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/token-usage",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/brand-status",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand/status",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/studio",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/form-builder",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/form-builder/parse-description",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "{route}",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "{route_path}",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "{route_path}",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "{route_path}",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/subscribers",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/subscribers/export",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/subscribers/import",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/logout",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/post/new",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/import-url",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/brand/new",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/reasoning",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/status",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/code",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/code/<path:filepath>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ml",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ml/train",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ml/predict",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/i/<hash>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/showcase",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/tiers",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/proof",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/legitimacy",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/playground",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/docs",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/ai-frontend",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai-query",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/trace/<trace_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/traces",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/ai-stats",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/analytics",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/docs",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/validate-contribution",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand-arena",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/submit-idea",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/submit-idea",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/track/<tracking_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr/idea/<theme>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/generate-key",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/v1/<brand_slug>/comment",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/v1/<brand_slug>/classify",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/subscribe/freelancer",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/freelancers",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/ollama",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/set-session",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/games/share",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/review/<share_code>",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/share/<share_code>/analysis",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof/article/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof/submit",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof/results/<int:result_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof/leaderboard",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof/create-room",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/cringeproof/room/<room_code>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/hub",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/features",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/factory",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/factory/pin",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/factory/unpin",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/factory/preview/<item_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/factory/generate",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/brand-builder/start",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/brand-builder/chat",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/games",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/games/<int:game_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/games/play/2plus2",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/create/2plus2",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/submit-answer",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/games/play/dnd",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/dnd/character",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/dnd/quests",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/create/dnd",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/dnd/action",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/dnd/complete",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/trading",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/trading/limits",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/trading/inventory",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/trading/incoming",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/trading/outgoing",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/trading/offer",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/trading/accept",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/trading/reject",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/users/list",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/membership",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/membership/current",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/membership/upgrade",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/games/flag-action",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api-tester",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/keys/list",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/practice",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/practice/create",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/practice/room/<room_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/practice/room/<room_id>/join",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/practice/room/<room_id>/record",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/practice/room/<room_id>/message",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/practice/room/<room_id>/qr.png",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/user/<username>/qr-card",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/qr/display/<qr_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/widgets/embed/preview",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/widget/embed",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/learn",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/learn/review",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/learn/answer",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/start",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/start/chapter/<int:chapter_num>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/start/chat",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/start/complete-chapter",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/start/tutorial-demo",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/start/submit-quiz",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/system/health",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/system/architecture",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/theme-<domain>.css",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/blog/<domain>/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/templates/browse",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/templates/list",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/templates/read",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/templates/render",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/templates/generate-with-ollama",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/templates/deploy",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/deploy/github",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/output/<path:filepath>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/studio",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/preview",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/master",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/tier-0/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/tier-1/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/tier-2/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/tier-3/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/tier-4/<path:filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/status",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/studio/save-draft",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/studio/publish",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/studio/magic-publish",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/posts/recent",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/content/manager",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/content/list",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/content/read",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/content/delete",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/master-control",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/homebrew-lab",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/sync-live",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/debug/mirror/<brand>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/local-site/<brand>/",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/local-site/<brand>/<path:filepath>",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/master-control/stats",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/logs/recent",
+      "methods": [
+        "GET"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/voice-to-post",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/voice-to-debate",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/auto-deploy",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/deploy-brand",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/api/scrape",
+      "methods": [
+        "POST"
+      ],
+      "file": "app.py"
+    },
+    {
+      "path": "/admin/docs",
+      "methods": [
+        "GET"
+      ],
+      "file": "docs_routes.py"
+    },
+    {
+      "path": "/admin/docs/<filename>",
+      "methods": [
+        "GET"
+      ],
+      "file": "docs_routes.py"
+    },
+    {
+      "path": "/api/docs/search",
+      "methods": [
+        "GET"
+      ],
+      "file": "docs_routes.py"
+    },
+    {
+      "path": "/api/docs/ask",
+      "methods": [
+        "POST"
+      ],
+      "file": "docs_routes.py"
+    },
+    {
+      "path": "/admin/snippets",
+      "methods": [
+        "GET"
+      ],
+      "file": "docs_routes.py"
+    },
+    {
+      "path": "/canvas",
+      "methods": [
+        "GET"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/canvas/qr/<pairing_token>",
+      "methods": [
+        "GET"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/canvas/pair/<pairing_token>",
+      "methods": [
+        "GET"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/api/canvas/pair/status/<pairing_token>",
+      "methods": [
+        "GET"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/canvas/workspace",
+      "methods": [
+        "GET"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/api/canvas/process-idea",
+      "methods": [
+        "POST"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/api/canvas/fork-brand",
+      "methods": [
+        "POST"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/api/canvas/generate-api-key",
+      "methods": [
+        "POST"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/canvas/tracking",
+      "methods": [
+        "GET"
+      ],
+      "file": "canvas_routes.py"
+    },
+    {
+      "path": "/admin",
+      "methods": [
+        "GET"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/admin/users",
+      "methods": [
+        "GET"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/users",
+      "methods": [
+        "GET"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/users/<int:user_id>/role",
+      "methods": [
+        "POST"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/users/<int:user_id>/domains",
+      "methods": [
+        "GET"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/domains/grant",
+      "methods": [
+        "POST"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/domains/revoke",
+      "methods": [
+        "POST"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/activity",
+      "methods": [
+        "GET"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/check-access",
+      "methods": [
+        "POST"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/api/admin/my-role",
+      "methods": [
+        "GET"
+      ],
+      "file": "admin_routes.py"
+    },
+    {
+      "path": "/workflows",
+      "methods": [
+        "GET"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/api/workflows/auto-syndicate",
+      "methods": [
+        "POST"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/api/workflows/weekly-summary",
+      "methods": [
+        "POST"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/api/workflows/optimize-post",
+      "methods": [
+        "POST"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/api/workflows/schedule-publish",
+      "methods": [
+        "POST"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/api/workflows/bulk-tag",
+      "methods": [
+        "POST"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/api/workflows/run-daily",
+      "methods": [
+        "POST"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/api/workflows/run-weekly",
+      "methods": [
+        "POST"
+      ],
+      "file": "workflow_routes.py"
+    },
+    {
+      "path": "/domains",
+      "methods": [
+        "GET"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/list",
+      "methods": [
+        "GET"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/create",
+      "methods": [
+        "POST"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/preview",
+      "methods": [
+        "POST"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/scrape-live",
+      "methods": [
+        "POST"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/chat",
+      "methods": [
+        "POST"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/files/list",
+      "methods": [
+        "POST"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/files/read",
+      "methods": [
+        "POST"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/files/save",
+      "methods": [
+        "POST"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/network/map",
+      "methods": [
+        "GET"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/domains/network",
+      "methods": [
+        "GET"
+      ],
+      "file": "web_domain_manager_routes.py"
+    },
+    {
+      "path": "/api/domains/import",
+      "methods": [
+        "GET"
+      ],
+      "file": "token_routes.py"
+    },
+    {
+      "path": "/galleries",
+      "methods": [
+        "GET"
+      ],
+      "file": "gallery_routes.py"
+    },
+    {
+      "path": "/gallery/<slug>",
+      "methods": [
+        "GET"
+      ],
+      "file": "gallery_routes.py"
+    },
+    {
+      "path": "/dm/scan",
+      "methods": [
+        "GET"
+      ],
+      "file": "gallery_routes.py"
+    },
+    {
+      "path": "/qr/track/<qr_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "gallery_routes.py"
+    },
+    {
+      "path": "/admin/canvas",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/generate/blog",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/generate/social",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/generate/product",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/generate/custom",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/generate/ai-logo",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/generate/comic",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/generate/gif",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/qr/create",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/qr/download/<short_code>",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/qr/list",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/v/<short_code>",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/admin/images",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/images/<int:image_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/admin/templates",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/templates/save",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/templates/<int:template_id>",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/admin/image-dashboard",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/qr/create",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/qr/chat/<short_code>",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/qr/chat/<short_code>/messages",
+      "methods": [
+        "GET"
+      ],
+      "file": "image_admin_routes.py"
+    },
+    {
+      "path": "/api/qr/chat/<short_code>/send",
+      "methods": [
+        "POST"
+      ],
+      "file": "image_admin_routes.py"
+    }
+  ],
+  "tools": [
+    {
+      "name": "api-debug-helper",
+      "file": "api-debug-helper.py",
+      "executable": true,
+      "description": "API DEBUG HELPER"
+    },
+    {
+      "name": "membership_system",
+      "file": "membership_system.py",
+      "executable": false,
+      "description": "Stripe Membership System - Brand Building SaaS"
+    },
+    {
+      "name": "creative_onboarding",
+      "file": "creative_onboarding.py",
+      "executable": false,
+      "description": "Creative Onboarding - Alternative Ways to Join"
+    },
+    {
+      "name": "db_helpers",
+      "file": "db_helpers.py",
+      "executable": false,
+      "description": "Database Helper Functions for Full Platform"
+    },
+    {
+      "name": "docs_routes",
+      "file": "docs_routes.py",
+      "executable": false,
+      "description": "Flask routes for documentation browser"
+    },
+    {
+      "name": "canvas_routes",
+      "file": "canvas_routes.py",
+      "executable": false,
+      "description": "Canvas Routes - Netflix-Style Entry & Workspace"
+    },
+    {
+      "name": "build",
+      "file": "build.py",
+      "executable": false,
+      "description": "Static Site Builder - OSS Style for GitHub Pages"
+    },
+    {
+      "name": "interactive_onboarding",
+      "file": "interactive_onboarding.py",
+      "executable": false,
+      "description": "Interactive Domain Onboarding - Anki-style acceptance loop"
+    },
+    {
+      "name": "automation_workflows",
+      "file": "automation_workflows.py",
+      "executable": false,
+      "description": "Blog Network Automation Workflows"
+    },
+    {
+      "name": "inspect-live-site",
+      "file": "inspect-live-site.py",
+      "executable": true,
+      "description": "LIVE SITE INSPECTOR"
+    },
+    {
+      "name": "ollama_domain_analyzer",
+      "file": "ollama_domain_analyzer.py",
+      "executable": false,
+      "description": "Ollama Domain Analyzer - Intelligent domain analysis"
+    },
+    {
+      "name": "template_components",
+      "file": "template_components.py",
+      "executable": false,
+      "description": "Template Components - Reusable navigation and UI elements"
+    },
+    {
+      "name": "voice_pipeline",
+      "file": "voice_pipeline.py",
+      "executable": false,
+      "description": "Voice Pipeline - Voice Memo \u2192 Transcription \u2192 @Route"
+    },
+    {
+      "name": "comment_to_post",
+      "file": "comment_to_post.py",
+      "executable": true,
+      "description": "Comment to Post - Expand AI Comments Into Full Blog Posts"
+    },
+    {
+      "name": "formula_engine",
+      "file": "formula_engine.py",
+      "executable": false,
+      "description": "Universal Formula Engine"
+    },
+    {
+      "name": "github_repo_creator",
+      "file": "github_repo_creator.py",
+      "executable": false,
+      "description": "GitHub Repo Auto-Creator"
+    },
+    {
+      "name": "widget_router",
+      "file": "widget_router.py",
+      "executable": true,
+      "description": "Widget Router - Browser-in-Browser iframe Routing System"
+    },
+    {
+      "name": "qr_auto_generate",
+      "file": "qr_auto_generate.py",
+      "executable": true,
+      "description": "QR Auto-Generate - Automatic QR Code Generation for Posts"
+    },
+    {
+      "name": "cleanup_fake_domains",
+      "file": "cleanup_fake_domains.py",
+      "executable": false,
+      "description": "Clean up fake test domains from database"
+    },
+    {
+      "name": "plugin_loader",
+      "file": "plugin_loader.py",
+      "executable": false,
+      "description": "Plugin Loader - Hot-Reload Modular Feature System"
+    },
+    {
+      "name": "image_composer",
+      "file": "image_composer.py",
+      "executable": false,
+      "description": "Image Composer - Professional Layer-Based Image Composition"
+    },
+    {
+      "name": "SIMPLE_DEMO",
+      "file": "SIMPLE_DEMO.py",
+      "executable": true,
+      "description": "SIMPLE DEMO - Proves the entire Soulfra flow works"
+    },
+    {
+      "name": "generator_routes",
+      "file": "generator_routes.py",
+      "executable": false,
+      "description": "Generator Routes - Chat Interface for Unified Content Generation"
+    },
+    {
+      "name": "api_image_generator",
+      "file": "api_image_generator.py",
+      "executable": false,
+      "description": "API Image Generator - Cloud AI Image Generation (No Local Downloads)"
+    },
+    {
+      "name": "domain_researcher",
+      "file": "domain_researcher.py",
+      "executable": false,
+      "description": "Domain Researcher - AI-powered domain analysis"
+    },
+    {
+      "name": "context_manager",
+      "file": "context_manager.py",
+      "executable": false,
+      "description": "Context Manager - Query Allocation & Reasoning Router"
+    },
+    {
+      "name": "chapter_version_control",
+      "file": "chapter_version_control.py",
+      "executable": false,
+      "description": "Chapter Version Control - \"Git for CalRiven\""
+    },
+    {
+      "name": "draw_routes",
+      "file": "draw_routes.py",
+      "executable": false,
+      "description": "Draw Routes - Mobile-friendly drawing interface with OCR learning"
+    },
+    {
+      "name": "deployment_ladder",
+      "file": "deployment_ladder.py",
+      "executable": false,
+      "description": "Deployment Ladder - Climb from localhost to production step-by-step"
+    },
+    {
+      "name": "hello_world",
+      "file": "hello_world.py",
+      "executable": true,
+      "description": "Hello World - Soulfra Complete Flow"
+    },
+    {
+      "name": "token_purchase_system",
+      "file": "token_purchase_system.py",
+      "executable": false,
+      "description": "Token Purchase System - Pay-as-you-go model"
+    },
+    {
+      "name": "ai_image_generator",
+      "file": "ai_image_generator.py",
+      "executable": false,
+      "description": "AI Image Generator - Stable Diffusion Integration"
+    },
+    {
+      "name": "brand_ai_orchestrator",
+      "file": "brand_ai_orchestrator.py",
+      "executable": false,
+      "description": "Brand AI Orchestrator - Manages Cast of Neural Network Characters"
+    },
+    {
+      "name": "config",
+      "file": "config.py",
+      "executable": false,
+      "description": "Soulfra Configuration System"
+    },
+    {
+      "name": "ollama_client",
+      "file": "ollama_client.py",
+      "executable": false,
+      "description": "Ollama HTTP API Client for Flask"
+    },
+    {
+      "name": "build_from_scratch",
+      "file": "build_from_scratch.py",
+      "executable": true,
+      "description": "Build From Scratch - Step-by-Step Proof"
+    },
+    {
+      "name": "ollama_auto_commenter",
+      "file": "ollama_auto_commenter.py",
+      "executable": false,
+      "description": "Ollama Auto-Commenter - AI Comment Generation Engine"
+    },
+    {
+      "name": "avatar_generator",
+      "file": "avatar_generator.py",
+      "executable": false,
+      "description": "Pixel Art Avatar Generator for Soulfra"
+    },
+    {
+      "name": "admin_routes",
+      "file": "admin_routes.py",
+      "executable": false,
+      "description": "Flask routes for admin dashboard"
+    },
+    {
+      "name": "tribunal_token_test",
+      "file": "tribunal_token_test.py",
+      "executable": false,
+      "description": "Soulfra Tribunal - 3-Domain Token Purchase Testing System"
+    },
+    {
+      "name": "business_schemas",
+      "file": "business_schemas.py",
+      "executable": false,
+      "description": "Business Schemas - JSON Schemas for Business Documents"
+    },
+    {
+      "name": "url_shortener",
+      "file": "url_shortener.py",
+      "executable": false,
+      "description": "URL Shortener for Soulfra - Marketing & Ads Ready!"
+    },
+    {
+      "name": "dns_setup_guide",
+      "file": "dns_setup_guide.py",
+      "executable": false,
+      "description": "DNS Setup Guide for Soulfra"
+    },
+    {
+      "name": "generate_fake_domains",
+      "file": "generate_fake_domains.py",
+      "executable": false,
+      "description": "Generate 200 realistic fake domain names for testing"
+    },
+    {
+      "name": "image_dataset",
+      "file": "image_dataset.py",
+      "executable": false,
+      "description": "Image Dataset - PyTorch Dataset for Image Management"
+    },
+    {
+      "name": "export_brand_filesystem",
+      "file": "export_brand_filesystem.py",
+      "executable": false,
+      "description": "Export Brand to Filesystem"
+    },
+    {
+      "name": "nudge_system",
+      "file": "nudge_system.py",
+      "executable": false,
+      "description": "Nudge System - Facebook Poke Style Interactions"
+    },
+    {
+      "name": "audit_database",
+      "file": "audit_database.py",
+      "executable": false,
+      "description": "Database Audit Script"
+    },
+    {
+      "name": "publish_everywhere",
+      "file": "publish_everywhere.py",
+      "executable": true,
+      "description": "Publish Everywhere - Cross-post from one database to all platforms"
+    },
+    {
+      "name": "llm_router",
+      "file": "llm_router.py",
+      "executable": false,
+      "description": "LLM Router - Pure Python + stdlib"
+    },
+    {
+      "name": "soulfra_assistant",
+      "file": "soulfra_assistant.py",
+      "executable": false,
+      "description": "Soulfra Universal AI Assistant - Command Router"
+    },
+    {
+      "name": "progression_system",
+      "file": "progression_system.py",
+      "executable": false,
+      "description": "Progression System - Track user advancement from Anonymous \u2192 Super User"
+    },
+    {
+      "name": "batch_import_posts",
+      "file": "batch_import_posts.py",
+      "executable": false,
+      "description": "Batch Import Posts from CSV/Excel"
+    },
+    {
+      "name": "story_modes_system",
+      "file": "story_modes_system.py",
+      "executable": false,
+      "description": "Story Modes System - Multiple AI Personalities for Same Story Content"
+    },
+    {
+      "name": "theme_compiler",
+      "file": "theme_compiler.py",
+      "executable": false,
+      "description": "Universal Theme Compiler"
+    },
+    {
+      "name": "migrate_stpetepros",
+      "file": "migrate_stpetepros.py",
+      "executable": false,
+      "description": "Add StPetePros tables to database"
+    },
+    {
+      "name": "debug_lab",
+      "file": "debug_lab.py",
+      "executable": false,
+      "description": "Debug Lab - Interactive Learning Environment"
+    },
+    {
+      "name": "publisher_routes",
+      "file": "publisher_routes.py",
+      "executable": false,
+      "description": "Publisher Routes - Export content to domains and push to GitHub"
+    },
+    {
+      "name": "github_faucet",
+      "file": "github_faucet.py",
+      "executable": false,
+      "description": "GitHub Faucet - Generate API Keys from GitHub OAuth"
+    },
+    {
+      "name": "keyring_unlocks",
+      "file": "keyring_unlocks.py",
+      "executable": false,
+      "description": "Keyring Unlock System - Runescape-Style Permanent Feature Unlocks"
+    },
+    {
+      "name": "migrate_blog_network",
+      "file": "migrate_blog_network.py",
+      "executable": false,
+      "description": "Blog Network Migration Script"
+    },
+    {
+      "name": "watch_folder",
+      "file": "watch_folder.py",
+      "executable": false,
+      "description": "Folder Watcher - Auto-Import Files"
+    },
+    {
+      "name": "simple_emailer",
+      "file": "simple_emailer.py",
+      "executable": false,
+      "description": "Simple Emailer - Send emails without complexity"
+    },
+    {
+      "name": "profile_builder",
+      "file": "profile_builder.py",
+      "executable": false,
+      "description": "Profile Builder - Analyze Quiz Answers \u2192 Build Personality \u2192 Assign AI Friend"
+    },
+    {
+      "name": "qr_unified",
+      "file": "qr_unified.py",
+      "executable": false,
+      "description": "Unified QR Factory - Single Entry Point for All QR Systems"
+    },
+    {
+      "name": "soulfra_dark_story",
+      "file": "soulfra_dark_story.py",
+      "executable": false,
+      "description": "Soulfra Dark Story Generator"
+    },
+    {
+      "name": "interactive_docs",
+      "file": "interactive_docs.py",
+      "executable": false,
+      "description": "Interactive Docs - DocuSign for Onboarding/Training"
+    },
+    {
+      "name": "one_command_live",
+      "file": "one_command_live.py",
+      "executable": true,
+      "description": "One Command Live - Make Everything Work in ONE Command"
+    },
+    {
+      "name": "business_qr",
+      "file": "business_qr.py",
+      "executable": false,
+      "description": "Business QR Generator - Embed Full JSON Data in QR Codes"
+    },
+    {
+      "name": "workflow_routes",
+      "file": "workflow_routes.py",
+      "executable": false,
+      "description": "Flask routes for automation workflows"
+    },
+    {
+      "name": "database",
+      "file": "database.py",
+      "executable": false,
+      "description": "Database - SQLite (Zero Config)"
+    },
+    {
+      "name": "ascii_player",
+      "file": "ascii_player.py",
+      "executable": false,
+      "description": "ASCII Movie Player - Pure Python Stdlib"
+    },
+    {
+      "name": "query_templates",
+      "file": "query_templates.py",
+      "executable": false,
+      "description": "Query Templates - Database query helper for platform stats"
+    },
+    {
+      "name": "prompt_templates",
+      "file": "prompt_templates.py",
+      "executable": false,
+      "description": "Prompt Templates - Brand-Specific Image Generation Prompts"
+    },
+    {
+      "name": "url_to_blog",
+      "file": "url_to_blog.py",
+      "executable": false,
+      "description": "URL to Blog - ONE COMMAND to create complete multimedia blog posts"
+    },
+    {
+      "name": "model_trainer",
+      "file": "model_trainer.py",
+      "executable": false,
+      "description": "Model Trainer - Fine-tune Stable Diffusion on Brand Imagery"
+    },
+    {
+      "name": "init_qr_database",
+      "file": "init_qr_database.py",
+      "executable": false,
+      "description": "Initialize QR authentication database table"
+    },
+    {
+      "name": "web_domain_manager_routes",
+      "file": "web_domain_manager_routes.py",
+      "executable": false,
+      "description": "Web Domain Manager Routes"
+    },
+    {
+      "name": "dm_via_qr",
+      "file": "dm_via_qr.py",
+      "executable": false,
+      "description": "DM via QR - In-Person Direct Messaging System"
+    },
+    {
+      "name": "kangaroo_court_routes",
+      "file": "kangaroo_court_routes.py",
+      "executable": false,
+      "description": "Kangaroo Court Routes - Simple Group Voice Chat with AI Judge"
+    },
+    {
+      "name": "migrate_onboarding_system",
+      "file": "migrate_onboarding_system.py",
+      "executable": false,
+      "description": "Database Migration - Creative Onboarding System"
+    },
+    {
+      "name": "demo_user_journey",
+      "file": "demo_user_journey.py",
+      "executable": false,
+      "description": "END-TO-END USER JOURNEY DEMO"
+    },
+    {
+      "name": "post_to_quiz",
+      "file": "post_to_quiz.py",
+      "executable": false,
+      "description": "Post to Quiz Generator - Auto-generate Quizzes from Blog Posts"
+    },
+    {
+      "name": "generate_manifest",
+      "file": "generate_manifest.py",
+      "executable": true,
+      "description": "System Manifest Generator"
+    },
+    {
+      "name": "multi_part_qr",
+      "file": "multi_part_qr.py",
+      "executable": true,
+      "description": "Multi-Part QR Code Generator - Stackable QR Codes (Like Floppy Disks)"
+    },
+    {
+      "name": "content_pipeline",
+      "file": "content_pipeline.py",
+      "executable": false,
+      "description": "Content Pipeline - Complete File Processing Flow"
+    },
+    {
+      "name": "create_blog_post_offline",
+      "file": "create_blog_post_offline.py",
+      "executable": false,
+      "description": "Offline Blog Post Creator - PROOF IT WORKS!"
+    },
+    {
+      "name": "train_context_networks",
+      "file": "train_context_networks.py",
+      "executable": false,
+      "description": "Train 4 Context-Specific Neural Networks"
+    },
+    {
+      "name": "ocr_extractor",
+      "file": "ocr_extractor.py",
+      "executable": false,
+      "description": "OCR Text Extractor - Extract Text from Images"
+    },
+    {
+      "name": "voice_domain_creator_routes",
+      "file": "voice_domain_creator_routes.py",
+      "executable": false,
+      "description": "Voice Domain Creator Routes - Ollama-Powered Domain Generator"
+    },
+    {
+      "name": "full_flow_demo",
+      "file": "full_flow_demo.py",
+      "executable": true,
+      "description": "Full Flow Demo - Interactive Walkthrough"
+    },
+    {
+      "name": "import_domains_csv",
+      "file": "import_domains_csv.py",
+      "executable": true,
+      "description": "Import domains from domains-master.csv into database"
+    },
+    {
+      "name": "voice_input",
+      "file": "voice_input.py",
+      "executable": false,
+      "description": "Voice Input System - Offline-First Audio Handling"
+    },
+    {
+      "name": "install_ai",
+      "file": "install_ai.py",
+      "executable": false,
+      "description": "AI Dependencies Installer - One-Click Setup"
+    },
+    {
+      "name": "websocket_server",
+      "file": "websocket_server.py",
+      "executable": false,
+      "description": "WebSocket Server - Real-Time Updates for Soulfra"
+    },
+    {
+      "name": "qr_faucet",
+      "file": "qr_faucet.py",
+      "executable": false,
+      "description": "QR Faucet - Transform JSON into Website Content (Zero Dependencies)"
+    },
+    {
+      "name": "generate_pwa_icons",
+      "file": "generate_pwa_icons.py",
+      "executable": false,
+      "description": "Generate PWA icons for Practice Rooms"
+    },
+    {
+      "name": "verify_image",
+      "file": "verify_image.py",
+      "executable": false,
+      "description": "Image Verification Tool - Verify Image Authenticity via QR Codes"
+    },
+    {
+      "name": "PROOF_IT_ALL_WORKS",
+      "file": "PROOF_IT_ALL_WORKS.py",
+      "executable": false,
+      "description": "PROOF IT ALL WORKS - Automated Platform Test Suite"
+    },
+    {
+      "name": "api_routes",
+      "file": "api_routes.py",
+      "executable": false,
+      "description": "API Routes - Domain Distribution System"
+    },
+    {
+      "name": "user_pairing",
+      "file": "user_pairing.py",
+      "executable": false,
+      "description": "User Pairing System - Spotify Blend-style Account Pairing"
+    },
+    {
+      "name": "inspect-local-system",
+      "file": "inspect-local-system.py",
+      "executable": true,
+      "description": "LOCAL SYSTEM INSPECTOR"
+    },
+    {
+      "name": "template_orchestrator",
+      "file": "template_orchestrator.py",
+      "executable": false,
+      "description": "Template Orchestrator - Multi-Output Template System"
+    },
+    {
+      "name": "voice_routes",
+      "file": "voice_routes.py",
+      "executable": false,
+      "description": "Voice Routes - Flask Blueprint for Voice Recording"
+    },
+    {
+      "name": "init_voice_memos_federation",
+      "file": "init_voice_memos_federation.py",
+      "executable": false,
+      "description": "Voice Memos Federation - Database Schema"
+    },
+    {
+      "name": "shortcuts_integration",
+      "file": "shortcuts_integration.py",
+      "executable": false,
+      "description": "Mac Shortcuts Integration"
+    },
+    {
+      "name": "content_transformer",
+      "file": "content_transformer.py",
+      "executable": false,
+      "description": "Content Transformer - The Missing Piece"
+    },
+    {
+      "name": "start",
+      "file": "start.py",
+      "executable": true,
+      "description": "Soulfra Start - Wordle Easy Mode"
+    },
+    {
+      "name": "image_metadata",
+      "file": "image_metadata.py",
+      "executable": false,
+      "description": "Image Metadata - Professional EXIF Embedding"
+    },
+    {
+      "name": "qr_image_overlay",
+      "file": "qr_image_overlay.py",
+      "executable": false,
+      "description": "QR Image Overlay - Embed QR Codes in Generated Images"
+    },
+    {
+      "name": "init_learning_cards_for_user",
+      "file": "init_learning_cards_for_user.py",
+      "executable": false,
+      "description": "Initialize Learning Cards for User"
+    },
+    {
+      "name": "avatar_auto_attach",
+      "file": "avatar_auto_attach.py",
+      "executable": true,
+      "description": "Avatar Auto-Attach - Automatic Avatar Generation & Attachment"
+    },
+    {
+      "name": "content_brand_detector",
+      "file": "content_brand_detector.py",
+      "executable": false,
+      "description": "Content Brand Detector - Auto-Create Brands from Content"
+    },
+    {
+      "name": "token_routes",
+      "file": "token_routes.py",
+      "executable": false,
+      "description": "Token Purchase Routes - Flask Integration"
+    },
+    {
+      "name": "business_routes",
+      "file": "business_routes.py",
+      "executable": false,
+      "description": "Business Routes - Flask Routes for Business Dashboard"
+    },
+    {
+      "name": "folder_router",
+      "file": "folder_router.py",
+      "executable": false,
+      "description": "Folder Router - @brand Routing System"
+    },
+    {
+      "name": "qr_user_profile",
+      "file": "qr_user_profile.py",
+      "executable": false,
+      "description": "User Profile QR Codes - Scan to Visit Someone's Page"
+    },
+    {
+      "name": "practice_room",
+      "file": "practice_room.py",
+      "executable": false,
+      "description": "Practice Rooms - QR + Voice + ASCII + Chat Integration"
+    },
+    {
+      "name": "domain_onboarding",
+      "file": "domain_onboarding.py",
+      "executable": false,
+      "description": "Domain Onboarding - Full automated workflow"
+    },
+    {
+      "name": "status_routes",
+      "file": "status_routes.py",
+      "executable": false,
+      "description": "Status Routes - System visibility and navigation dashboard"
+    },
+    {
+      "name": "qr_learning_session",
+      "file": "qr_learning_session.py",
+      "executable": false,
+      "description": "QR + Learning Integration Demo"
+    },
+    {
+      "name": "wiki_concepts",
+      "file": "wiki_concepts.py",
+      "executable": false,
+      "description": "Wiki Concepts System - Knowledge Base for Soulfra"
+    },
+    {
+      "name": "extract_snippets",
+      "file": "extract_snippets.py",
+      "executable": true,
+      "description": "Extract Code Snippets from Documentation"
+    },
+    {
+      "name": "install_cross_platform",
+      "file": "install_cross_platform.py",
+      "executable": false,
+      "description": "Cross-Platform Installer - Auto-detect Package Manager"
+    },
+    {
+      "name": "chapter_tutorials",
+      "file": "chapter_tutorials.py",
+      "executable": false,
+      "description": "Chapter Tutorials - Interactive Learning Content for Each Chapter"
+    },
+    {
+      "name": "image_workflow",
+      "file": "image_workflow.py",
+      "executable": false,
+      "description": "Image Workflow - Complete End-to-End Pipeline"
+    },
+    {
+      "name": "neural_network",
+      "file": "neural_network.py",
+      "executable": false,
+      "description": "Neural Network from Scratch"
+    },
+    {
+      "name": "merge_test_to_main",
+      "file": "merge_test_to_main.py",
+      "executable": false,
+      "description": "OPTIONAL: Merge successful test domains from soulfra-test.db to soulfra.db"
+    },
+    {
+      "name": "api_server",
+      "file": "api_server.py",
+      "executable": false,
+      "description": "Soulfra API Server - Dynamic Features for Static Sites"
+    },
+    {
+      "name": "start_demo",
+      "file": "start_demo.py",
+      "executable": false,
+      "description": "Quick Start Demo - Prove Practice Rooms Work FROM YOUR PHONE"
+    },
+    {
+      "name": "url_to_content",
+      "file": "url_to_content.py",
+      "executable": false,
+      "description": "URL to Content Scraper - Extract structured content from any URL"
+    },
+    {
+      "name": "widget_qr_bridge",
+      "file": "widget_qr_bridge.py",
+      "executable": false,
+      "description": "Widget QR Bridge - Connect Chatbox Widget to QR Code System"
+    },
+    {
+      "name": "event_hooks",
+      "file": "event_hooks.py",
+      "executable": false,
+      "description": "Event Hooks - Wire Systems Together"
+    },
+    {
+      "name": "user_workspace",
+      "file": "user_workspace.py",
+      "executable": false,
+      "description": "User Personal Workspace"
+    },
+    {
+      "name": "ollama_discussion",
+      "file": "ollama_discussion.py",
+      "executable": false,
+      "description": "Ollama Discussion Helper - Interactive AI Research & Comment Generation"
+    },
+    {
+      "name": "build_all",
+      "file": "build_all.py",
+      "executable": false,
+      "description": "Build All Sites - One Command, Multiple Websites"
+    },
+    {
+      "name": "whisper_transcriber",
+      "file": "whisper_transcriber.py",
+      "executable": false,
+      "description": "Whisper Transcriber - Local AI Transcription"
+    },
+    {
+      "name": "auto_deploy_domain",
+      "file": "auto_deploy_domain.py",
+      "executable": false,
+      "description": "End-to-End Domain Automation"
+    },
+    {
+      "name": "voice_capsule_engine",
+      "file": "voice_capsule_engine.py",
+      "executable": false,
+      "description": "Voice Capsule Engine - Question Rotation Logic"
+    },
+    {
+      "name": "domain_manager",
+      "file": "domain_manager.py",
+      "executable": false,
+      "description": "Domain Manager - Load and manage your 200+ domains"
+    },
+    {
+      "name": "neural_soul_scorer",
+      "file": "neural_soul_scorer.py",
+      "executable": false,
+      "description": "Neural Soul Scorer - AI \"Soul\" Ratings for Content"
+    },
+    {
+      "name": "init_knowledge_graph",
+      "file": "init_knowledge_graph.py",
+      "executable": false,
+      "description": "Knowledge Graph - Background Learning System"
+    },
+    {
+      "name": "domain_chatroom",
+      "file": "domain_chatroom.py",
+      "executable": false,
+      "description": "Domain Chatroom - Prove It Works"
+    },
+    {
+      "name": "deploy_github",
+      "file": "deploy_github.py",
+      "executable": false,
+      "description": "GitHub Pages Deployer - Push Static Sites to GitHub"
+    },
+    {
+      "name": "brand_builder",
+      "file": "brand_builder.py",
+      "executable": false,
+      "description": "Brand Builder - Conversational Brand Creation with Ollama"
+    },
+    {
+      "name": "procedural_media",
+      "file": "procedural_media.py",
+      "executable": false,
+      "description": "Procedural Media Generator - Create Blog Images from Scratch"
+    },
+    {
+      "name": "generate_test_csv",
+      "file": "generate_test_csv.py",
+      "executable": false,
+      "description": "Generate test CSV files with realistic domain data"
+    },
+    {
+      "name": "manage_subscribers",
+      "file": "manage_subscribers.py",
+      "executable": true,
+      "description": "Subscriber Management System - One database, all platforms"
+    },
+    {
+      "name": "app",
+      "file": "app.py",
+      "executable": false,
+      "description": "Flask App - Development Server"
+    },
+    {
+      "name": "qr_analytics",
+      "file": "qr_analytics.py",
+      "executable": false,
+      "description": "QR Analytics - Lineage Trees & Device/Location Analytics"
+    },
+    {
+      "name": "qr_to_ascii",
+      "file": "qr_to_ascii.py",
+      "executable": false,
+      "description": "QR Code to ASCII Converter - Pure Python Stdlib"
+    },
+    {
+      "name": "init_simple_voice",
+      "file": "init_simple_voice.py",
+      "executable": false,
+      "description": "Simple Voice - Just a table to store recordings"
+    },
+    {
+      "name": "blog_syndication",
+      "file": "blog_syndication.py",
+      "executable": false,
+      "description": "Blog Syndication System"
+    },
+    {
+      "name": "url_to_email",
+      "file": "url_to_email.py",
+      "executable": false,
+      "description": "URL to Email - THE MAGIC COMMAND"
+    },
+    {
+      "name": "unified_generator",
+      "file": "unified_generator.py",
+      "executable": false,
+      "description": "Unified Content Generator - The ONE System That Ties Everything Together"
+    },
+    {
+      "name": "verify_mvp_integration",
+      "file": "verify_mvp_integration.py",
+      "executable": false,
+      "description": "Verify QR Analytics MVP Integration"
+    },
+    {
+      "name": "theme_builder",
+      "file": "theme_builder.py",
+      "executable": false,
+      "description": "Theme Builder - Customer Theme System for Building Blogs from Scratch"
+    },
+    {
+      "name": "notifications",
+      "file": "notifications.py",
+      "executable": false,
+      "description": "Notification System - Real-time notifications with bell icon and badge"
+    },
+    {
+      "name": "canvas_integration",
+      "file": "canvas_integration.py",
+      "executable": false,
+      "description": "Canvas Integration - The Glue Code"
+    },
+    {
+      "name": "narrative_cringeproof",
+      "file": "narrative_cringeproof.py",
+      "executable": false,
+      "description": "Narrative Cringeproof - Story-Driven Game Engine"
+    },
+    {
+      "name": "anki_learning_system",
+      "file": "anki_learning_system.py",
+      "executable": false,
+      "description": "Anki-Style Spaced Repetition Learning System"
+    },
+    {
+      "name": "launcher",
+      "file": "launcher.py",
+      "executable": false,
+      "description": "Soulfra GUI Launcher"
+    },
+    {
+      "name": "qr_gallery_system",
+      "file": "qr_gallery_system.py",
+      "executable": false,
+      "description": "QR Gallery System - Enhanced QR Codes as Interactive Galleries"
+    },
+    {
+      "name": "pseo_generator",
+      "file": "pseo_generator.py",
+      "executable": true,
+      "description": "pSEO Generator - Programmatic SEO Landing Page Mass Generator"
+    },
+    {
+      "name": "send_post_email",
+      "file": "send_post_email.py",
+      "executable": false,
+      "description": "Send Post as Email - Test email generation"
+    },
+    {
+      "name": "navigation",
+      "file": "navigation.py",
+      "executable": false,
+      "description": "Navigation System - Enhanced Menu with Docs, Notifications, and User Context"
+    },
+    {
+      "name": "force_claude_write",
+      "file": "force_claude_write.py",
+      "executable": true,
+      "description": "Force Claude to write a blog post from terminal"
+    },
+    {
+      "name": "device_auth",
+      "file": "device_auth.py",
+      "executable": false,
+      "description": "Device Authentication System"
+    },
+    {
+      "name": "install",
+      "file": "install.py",
+      "executable": false,
+      "description": "Soulfra Installation Wizard"
+    },
+    {
+      "name": "gallery_routes",
+      "file": "gallery_routes.py",
+      "executable": false,
+      "description": "Gallery Routes - Flask routes for QR galleries and DM scanning"
+    },
+    {
+      "name": "ad_injector",
+      "file": "ad_injector.py",
+      "executable": true,
+      "description": "Ad Injector - Google AdSense Auto-Injection System"
+    },
+    {
+      "name": "vanity_qr",
+      "file": "vanity_qr.py",
+      "executable": false,
+      "description": "Vanity QR Codes - Branded QR Code Generation"
+    },
+    {
+      "name": "image_to_ascii",
+      "file": "image_to_ascii.py",
+      "executable": false,
+      "description": "Image to ASCII Converter - Pure Python Stdlib"
+    },
+    {
+      "name": "voice_encryption",
+      "file": "voice_encryption.py",
+      "executable": false,
+      "description": "Voice Memo Encryption - AES-256 Encryption for Federated Voice Memos"
+    },
+    {
+      "name": "train_topic_networks",
+      "file": "train_topic_networks.py",
+      "executable": false,
+      "description": "Train Topic-Specific Neural Networks"
+    },
+    {
+      "name": "preview_server",
+      "file": "preview_server.py",
+      "executable": false,
+      "description": "Local Preview Server for Domain Repos"
+    },
+    {
+      "name": "voice_capsule_routes",
+      "file": "voice_capsule_routes.py",
+      "executable": false,
+      "description": "Voice Capsule Routes - QR Scan to Question Flow"
+    },
+    {
+      "name": "ssh_tunnel",
+      "file": "ssh_tunnel.py",
+      "executable": true,
+      "description": "SSH Tunnel - FREE Public Hosting (No ngrok Needed!)"
+    },
+    {
+      "name": "enrich_content",
+      "file": "enrich_content.py",
+      "executable": false,
+      "description": "Content Enricher - Add Procedural Media to Blog Posts"
+    },
+    {
+      "name": "chat_routes",
+      "file": "chat_routes.py",
+      "executable": false,
+      "description": "Unified Chat Routes - ONE Interface for All Chat Systems"
+    },
+    {
+      "name": "image_admin_routes",
+      "file": "image_admin_routes.py",
+      "executable": false,
+      "description": "Image Admin Routes - Flask Routes for Professional Image Management"
+    },
+    {
+      "name": "payment_integrations",
+      "file": "payment_integrations.py",
+      "executable": false,
+      "description": "Payment Integrations - Stripe, Square, QuickBooks Connectors"
+    },
+    {
+      "name": "admin_system",
+      "file": "admin_system.py",
+      "executable": false,
+      "description": "User Admin System"
+    },
+    {
+      "name": "qr_auth",
+      "file": "qr_auth.py",
+      "executable": false,
+      "description": "QR Code Authentication System"
+    },
+    {
+      "name": "advanced_qr",
+      "file": "advanced_qr.py",
+      "executable": false,
+      "description": "Advanced QR Code Generation - 2025/2026 Modern Features"
+    },
+    {
+      "name": "brand_ai_persona_generator",
+      "file": "brand_ai_persona_generator.py",
+      "executable": false,
+      "description": "Brand AI Persona Generator - Auto-create AI character for every brand!"
+    },
+    {
+      "name": "tutorial_builder",
+      "file": "tutorial_builder.py",
+      "executable": false,
+      "description": "GeeksForGeeks-Style Tutorial Builder - OFFLINE LEARNING SYSTEM"
+    },
+    {
+      "name": "init_voice_capsules",
+      "file": "init_voice_capsules.py",
+      "executable": false,
+      "description": "Voice Identity Time Capsule System - Database Initialization"
+    },
+    {
+      "name": "export_static",
+      "file": "export_static.py",
+      "executable": false,
+      "description": "Static Site Exporter - Export Flask to GitHub Pages"
+    },
+    {
+      "name": "voice_federation_routes",
+      "file": "voice_federation_routes.py",
+      "executable": false,
+      "description": "Voice Federation Routes - Federated Voice Memo System"
+    },
+    {
+      "name": "ollama_docs_qa",
+      "file": "ollama_docs_qa.py",
+      "executable": true,
+      "description": "Ollama Documentation Q&A"
+    },
+    {
+      "name": "content_generator",
+      "file": "content_generator.py",
+      "executable": false,
+      "description": "Content Generator - Unified Content Creation Interface"
+    },
+    {
+      "name": "query_by_tier",
+      "file": "query_by_tier.py",
+      "executable": false,
+      "description": "Query Domains by Tier - Database Extraction Helper"
+    },
+    {
+      "name": "verify_import",
+      "file": "verify_import.py",
+      "executable": false,
+      "description": "CSV Import Verification Tool"
+    },
+    {
+      "name": "qr_voice_integration",
+      "file": "qr_voice_integration.py",
+      "executable": false,
+      "description": "QR + Voice Integration - Attach Voice Memos to QR Code Scans"
+    },
+    {
+      "name": "publish_ipfs",
+      "file": "publish_ipfs.py",
+      "executable": true,
+      "description": "IPFS Publishing - Decentralized hosting for Soulfra"
+    },
+    {
+      "name": "network_diagram",
+      "file": "network_diagram.py",
+      "executable": false,
+      "description": "Network Diagram Generator - Visual representation of Soulfra's network stack"
+    },
+    {
+      "name": "brand_creator",
+      "file": "brand_creator.py",
+      "executable": false,
+      "description": "Brand Creator - Create brands in database from Ollama analysis"
+    },
+    {
+      "name": "migrate_chat_transcripts",
+      "file": "migrate_chat_transcripts.py",
+      "executable": false,
+      "description": "Database migration: Add chat transcripts table"
+    },
+    {
+      "name": "import_domains_simple",
+      "file": "import_domains_simple.py",
+      "executable": true,
+      "description": "Simple Domain Import - Just paste domain names, Ollama does the rest!"
+    },
+    {
+      "name": "subdomain_router",
+      "file": "subdomain_router.py",
+      "executable": false,
+      "description": "Subdomain Router"
+    },
+    {
+      "name": "init_kangaroo_court",
+      "file": "init_kangaroo_court.py",
+      "executable": false,
+      "description": "Kangaroo Court - Database Schema"
+    },
+    {
+      "name": "ai_host",
+      "file": "ai_host.py",
+      "executable": false,
+      "description": "AI Host - Narrative Game Master"
+    },
+    {
+      "name": "onboarding_routes",
+      "file": "onboarding_routes.py",
+      "executable": false,
+      "description": "Onboarding Routes - Flask Blueprint"
+    },
+    {
+      "name": "file_importer",
+      "file": "file_importer.py",
+      "executable": false,
+      "description": "File Importer - Multi-Format Content Import System"
+    },
+    {
+      "name": "studio_api",
+      "file": "studio_api.py",
+      "executable": false,
+      "description": "Studio API - Backend Routes for Visual Development Studio"
+    },
+    {
+      "name": "simple_voice_routes",
+      "file": "simple_voice_routes.py",
+      "executable": false,
+      "description": "Simple Voice Routes - JUST RECORD AND SAVE"
+    },
+    {
+      "name": "setup_test_database",
+      "file": "setup_test_database.py",
+      "executable": false,
+      "description": "OPTIONAL: Create separate test database for isolated testing"
+    },
+    {
+      "name": "qr_events",
+      "file": "qr_events.py",
+      "executable": false,
+      "description": "QR Event System - Event-Driven Automated QR Generation"
+    },
+    {
+      "name": "user_data_export",
+      "file": "user_data_export.py",
+      "executable": false,
+      "description": "User Data Export - GDPR/SOC2 Compliance"
+    },
+    {
+      "name": "rotation_helpers",
+      "file": "rotation_helpers.py",
+      "executable": false,
+      "description": "Rotation Helpers"
+    },
+    {
+      "name": "soulfra_client",
+      "file": "soulfra_client.py",
+      "executable": false,
+      "description": "Soulfra Python Client Library"
+    },
+    {
+      "name": "knowledge_extractor",
+      "file": "knowledge_extractor.py",
+      "executable": false,
+      "description": "Knowledge Extractor - Background Learning System"
+    },
+    {
+      "name": "pixel_utils",
+      "file": "pixel_utils.py",
+      "executable": false,
+      "description": "Pixel Art Utilities for Soulfra"
+    },
+    {
+      "name": "license_manager",
+      "file": "license_manager.py",
+      "executable": false,
+      "description": "Soulfra License & API Key Manager"
+    },
+    {
+      "name": "qr_card_printer",
+      "file": "qr_card_printer.py",
+      "executable": false,
+      "description": "QR Card Printer - Generate Printable Trading Cards for Soulfra Dark"
+    },
+    {
+      "name": "make_it_automatic",
+      "file": "make_it_automatic.py",
+      "executable": true,
+      "description": "Make It Automatic - Soulfra Content Faucet Orchestrator"
+    },
+    {
+      "name": "init_business_db",
+      "file": "init_business_db.py",
+      "executable": false,
+      "description": "Initialize Business QR Database Tables"
+    }
+  ],
+  "domains": [
+    {
+      "domain": "howtocookathome.com",
+      "category": "cooking",
+      "tagline": "Simple recipes for home cooks \ud83c\udf73",
+      "source": "domains.txt"
+    },
+    {
+      "domain": "soulfra.com",
+      "category": "tech",
+      "tagline": "Self-documenting development platform",
+      "source": "domains.txt"
+    },
+    {
+      "domain": "deathtodata.com",
+      "category": "privacy",
+      "tagline": "Privacy-first data protection tools",
+      "source": "domains.txt"
+    },
+    {
+      "domain": "calriven.com",
+      "category": "tech",
+      "tagline": "Technical excellence and code quality",
+      "source": "domains.txt"
+    }
+  ],
+  "databases": {
+    "test_integration.db": {
+      "file": "test_integration.db",
+      "size_bytes": 0,
+      "tables": {},
+      "total_tables": 0
+    },
+    "soulfra.db": {
+      "file": "soulfra.db",
+      "size_bytes": 3092480,
+      "tables": {
+        "game_sessions": {
+          "row_count": 12
+        },
+        "sqlite_sequence": {
+          "row_count": 78
+        },
+        "game_state": {
+          "row_count": 28
+        },
+        "game_actions": {
+          "row_count": 17
+        },
+        "cross_platform_players": {
+          "row_count": 1
+        },
+        "verified_proofs": {
+          "row_count": 0
+        },
+        "qr_game_portals": {
+          "row_count": 0
+        },
+        "users": {
+          "row_count": 16
+        },
+        "posts": {
+          "row_count": 36
+        },
+        "comments": {
+          "row_count": 1
+        },
+        "messages": {
+          "row_count": 0
+        },
+        "notifications": {
+          "row_count": 0
+        },
+        "subscribers": {
+          "row_count": 2
+        },
+        "discussion_messages": {
+          "row_count": 2
+        },
+        "schema_migrations": {
+          "row_count": 16
+        },
+        "reasoning_threads": {
+          "row_count": 0
+        },
+        "reasoning_steps": {
+          "row_count": 0
+        },
+        "categories": {
+          "row_count": 6
+        },
+        "tags": {
+          "row_count": 5
+        },
+        "post_categories": {
+          "row_count": 0
+        },
+        "post_tags": {
+          "row_count": 0
+        },
+        "qr_codes": {
+          "row_count": 4
+        },
+        "qr_scans": {
+          "row_count": 24
+        },
+        "images": {
+          "row_count": 2
+        },
+        "soul_history": {
+          "row_count": 0
+        },
+        "url_shortcuts": {
+          "row_count": 0
+        },
+        "reputation": {
+          "row_count": 2
+        },
+        "contribution_logs": {
+          "row_count": 0
+        },
+        "ml_models": {
+          "row_count": 0
+        },
+        "predictions": {
+          "row_count": 0
+        },
+        "feedback": {
+          "row_count": 0
+        },
+        "brands": {
+          "row_count": 8
+        },
+        "products": {
+          "row_count": 5
+        },
+        "brand_posts": {
+          "row_count": 40
+        },
+        "template_versions": {
+          "row_count": 3
+        },
+        "template_tests": {
+          "row_count": 0
+        },
+        "domain_contexts": {
+          "row_count": 12
+        },
+        "domain_rotation_state": {
+          "row_count": 3
+        },
+        "plots": {
+          "row_count": 0
+        },
+        "plot_activities": {
+          "row_count": 0
+        },
+        "referrals": {
+          "row_count": 0
+        },
+        "plot_reactions": {
+          "row_count": 0
+        },
+        "color_challenges": {
+          "row_count": 0
+        },
+        "challenge_submissions": {
+          "row_count": 0
+        },
+        "game_seasons": {
+          "row_count": 0
+        },
+        "season_rankings": {
+          "row_count": 0
+        },
+        "catchphrases": {
+          "row_count": 6
+        },
+        "catchphrase_reactions": {
+          "row_count": 0
+        },
+        "hub_messages": {
+          "row_count": 0
+        },
+        "hub_routing_log": {
+          "row_count": 0
+        },
+        "hub_classifications": {
+          "row_count": 0
+        },
+        "forum_categories": {
+          "row_count": 4
+        },
+        "forum_threads": {
+          "row_count": 0
+        },
+        "forum_posts": {
+          "row_count": 0
+        },
+        "irc_channels": {
+          "row_count": 2
+        },
+        "irc_messages": {
+          "row_count": 0
+        },
+        "relay_configs": {
+          "row_count": 1
+        },
+        "game_shares": {
+          "row_count": 0
+        },
+        "game_reviews": {
+          "row_count": 0
+        },
+        "review_analysis": {
+          "row_count": 0
+        },
+        "share_notifications": {
+          "row_count": 0
+        },
+        "review_questions": {
+          "row_count": 7
+        },
+        "anonymous_sessions": {
+          "row_count": 0
+        },
+        "user_connections": {
+          "row_count": 0
+        },
+        "connection_blends": {
+          "row_count": 0
+        },
+        "brand_licenses": {
+          "row_count": 3
+        },
+        "discussion_sessions": {
+          "row_count": 7
+        },
+        "memberships": {
+          "row_count": 2
+        },
+        "items": {
+          "row_count": 12
+        },
+        "inventory": {
+          "row_count": 3
+        },
+        "trades": {
+          "row_count": 1
+        },
+        "trade_limits": {
+          "row_count": 1
+        },
+        "quests": {
+          "row_count": 5
+        },
+        "quest_progress": {
+          "row_count": 0
+        },
+        "character_snapshots": {
+          "row_count": 2
+        },
+        "aging_milestones": {
+          "row_count": 6
+        },
+        "brand_sops": {
+          "row_count": 0
+        },
+        "neural_networks": {
+          "row_count": 4
+        },
+        "game_state_snapshots": {
+          "row_count": 0
+        },
+        "narrative_sessions": {
+          "row_count": 47
+        },
+        "concepts": {
+          "row_count": 1
+        },
+        "licenses": {
+          "row_count": 1
+        },
+        "api_keys": {
+          "row_count": 1
+        },
+        "api_usage": {
+          "row_count": 0
+        },
+        "user_unlocks": {
+          "row_count": 5
+        },
+        "practice_rooms": {
+          "row_count": 15
+        },
+        "tutorials": {
+          "row_count": 1
+        },
+        "learning_cards": {
+          "row_count": 12
+        },
+        "learning_progress": {
+          "row_count": 12
+        },
+        "learning_sessions": {
+          "row_count": 15
+        },
+        "review_history": {
+          "row_count": 0
+        },
+        "learning_paths": {
+          "row_count": 0
+        },
+        "path_cards": {
+          "row_count": 0
+        },
+        "qr_faucets": {
+          "row_count": 2
+        },
+        "neural_ratings": {
+          "row_count": 4
+        },
+        "soul_scores": {
+          "row_count": 1
+        },
+        "dm_channels": {
+          "row_count": 1
+        },
+        "dm_messages": {
+          "row_count": 0
+        },
+        "template_outputs": {
+          "row_count": 8
+        },
+        "qr_galleries": {
+          "row_count": 1
+        },
+        "gallery_chats": {
+          "row_count": 4
+        },
+        "user_learning_progress": {
+          "row_count": 1
+        },
+        "user_neural_networks": {
+          "row_count": 0
+        },
+        "chapter_interactions": {
+          "row_count": 1
+        },
+        "chapter_completions": {
+          "row_count": 1
+        },
+        "brand_assets": {
+          "row_count": 0
+        },
+        "visual_templates": {
+          "row_count": 0
+        },
+        "published_images": {
+          "row_count": 0
+        },
+        "chapter_quiz_attempts": {
+          "row_count": 0
+        },
+        "vanity_qr_codes": {
+          "row_count": 16
+        },
+        "chapter_snapshots": {
+          "row_count": 7
+        },
+        "chapter_diffs": {
+          "row_count": 0
+        },
+        "user_chapter_forks": {
+          "row_count": 0
+        },
+        "chapter_version_views": {
+          "row_count": 0
+        },
+        "chapter_merge_requests": {
+          "row_count": 0
+        },
+        "canvas_pairing": {
+          "row_count": 153
+        },
+        "qr_chat_transcripts": {
+          "row_count": 4
+        },
+        "drawings": {
+          "row_count": 0
+        },
+        "training_images": {
+          "row_count": 0
+        },
+        "verification_results": {
+          "row_count": 0
+        },
+        "training_sessions": {
+          "row_count": 0
+        },
+        "training_contributions": {
+          "row_count": 0
+        },
+        "oauth_states": {
+          "row_count": 4
+        },
+        "creative_challenges": {
+          "row_count": 0
+        },
+        "challenge_attempts": {
+          "row_count": 0
+        },
+        "file_routes": {
+          "row_count": 0
+        },
+        "voice_inputs": {
+          "row_count": 1
+        },
+        "voice_qr_attachments": {
+          "row_count": 0
+        },
+        "practice_room_participants": {
+          "row_count": 1
+        },
+        "practice_room_recordings": {
+          "row_count": 1
+        },
+        "unified_content": {
+          "row_count": 4
+        },
+        "affiliate_codes": {
+          "row_count": 4
+        },
+        "affiliate_clicks": {
+          "row_count": 0
+        },
+        "professionals": {
+          "row_count": 0
+        },
+        "professional_reviews": {
+          "row_count": 0
+        },
+        "loyalty_points": {
+          "row_count": 0
+        },
+        "skill_certifications": {
+          "row_count": 0
+        },
+        "domain_relationships": {
+          "row_count": 4
+        },
+        "network_posts": {
+          "row_count": 0
+        },
+        "domain_files": {
+          "row_count": 0
+        },
+        "user_roles": {
+          "row_count": 0
+        },
+        "domain_permissions": {
+          "row_count": 0
+        },
+        "admin_activity_log": {
+          "row_count": 0
+        },
+        "qr_auth_tokens": {
+          "row_count": 1
+        },
+        "devices": {
+          "row_count": 1
+        },
+        "deployments": {
+          "row_count": 1
+        },
+        "search_tokens": {
+          "row_count": 8
+        },
+        "search_sessions": {
+          "row_count": 0
+        },
+        "package_pings": {
+          "row_count": 4
+        },
+        "domain_conversations": {
+          "row_count": 0
+        },
+        "domain_suggestions": {
+          "row_count": 0
+        },
+        "voice_questions": {
+          "row_count": 48
+        },
+        "voice_responses": {
+          "row_count": 0
+        },
+        "voice_identities": {
+          "row_count": 0
+        },
+        "domain_question_rotations": {
+          "row_count": 0
+        },
+        "user_question_schedule": {
+          "row_count": 0
+        },
+        "voice_memos": {
+          "row_count": 0
+        },
+        "voice_memo_access_log": {
+          "row_count": 0
+        },
+        "federation_peers": {
+          "row_count": 4
+        },
+        "kangaroo_submissions": {
+          "row_count": 6
+        },
+        "kangaroo_users": {
+          "row_count": 2
+        },
+        "kangaroo_votes": {
+          "row_count": 0
+        },
+        "knowledge_entities": {
+          "row_count": 0
+        },
+        "knowledge_topics": {
+          "row_count": 1
+        },
+        "knowledge_relationships": {
+          "row_count": 0
+        },
+        "knowledge_domain_mapping": {
+          "row_count": 0
+        },
+        "knowledge_user_profile": {
+          "row_count": 1
+        },
+        "knowledge_extraction_log": {
+          "row_count": 1
+        },
+        "simple_voice_recordings": {
+          "row_count": 0
+        },
+        "purchases": {
+          "row_count": 4
+        },
+        "token_usage": {
+          "row_count": 2
+        }
+      },
+      "total_tables": 171
+    },
+    "database.db": {
+      "file": "database.db",
+      "size_bytes": 73728,
+      "tables": {
+        "chapter_snapshots": {
+          "row_count": 0
+        },
+        "sqlite_sequence": {
+          "row_count": 0
+        },
+        "chapter_diffs": {
+          "row_count": 0
+        },
+        "user_chapter_forks": {
+          "row_count": 0
+        },
+        "chapter_version_views": {
+          "row_count": 0
+        },
+        "chapter_merge_requests": {
+          "row_count": 0
+        }
+      },
+      "total_tables": 6
+    }
+  },
+  "services": {
+    "ollama": {
+      "status": "running",
+      "port": 11434,
+      "url": "http://localhost:11434"
+    },
+    "flask_main": {
+      "status": "stopped",
+      "port": 5001
+    }
+  },
+  "files": {
+    "markdown": 192,
+    "python": 237,
+    "html": 3,
+    "css": 0,
+    "javascript": 1,
+    "json": 9,
+    "total": 442
+  },
+  "documentation": [
+    {
+      "file": "OLLAMA_SIMPLE_SETUP.md",
+      "size_bytes": 5845,
+      "starred": false
+    },
+    {
+      "file": "REAL-SOULFRA.md",
+      "size_bytes": 14417,
+      "starred": false
+    },
+    {
+      "file": "federation_protocol.md",
+      "size_bytes": 13251,
+      "starred": false
+    },
+    {
+      "file": "CSV-IMPORT-QUICKSTART.md",
+      "size_bytes": 6725,
+      "starred": true
+    },
+    {
+      "file": "COMPLETE-DEPLOY-SYSTEM.md",
+      "size_bytes": 16926,
+      "starred": false
+    },
+    {
+      "file": "SYSTEM-AUDIT.md",
+      "size_bytes": 12862,
+      "starred": false
+    },
+    {
+      "file": "DEPLOYMENT-GUIDE.md",
+      "size_bytes": 9126,
+      "starred": false
+    },
+    {
+      "file": "HOW-TO-USE-TARGETING.md",
+      "size_bytes": 3563,
+      "starred": false
+    },
+    {
+      "file": "DOCKER-SETUP.md",
+      "size_bytes": 9271,
+      "starred": false
+    },
+    {
+      "file": "API_DOCUMENTATION.md",
+      "size_bytes": 8260,
+      "starred": false
+    },
+    {
+      "file": "PLATFORM_ARCHITECTURE.md",
+      "size_bytes": 18287,
+      "starred": false
+    },
+    {
+      "file": "SIMPLE-WORKFLOW-EXPLAINED.md",
+      "size_bytes": 13742,
+      "starred": false
+    },
+    {
+      "file": "SELF_HOSTING.md",
+      "size_bytes": 12032,
+      "starred": false
+    },
+    {
+      "file": "MAGIC-PUBLISH-READY.md",
+      "size_bytes": 3061,
+      "starred": true
+    },
+    {
+      "file": "ARCHITECTURE-CLARIFIED.md",
+      "size_bytes": 14640,
+      "starred": false
+    },
+    {
+      "file": "TESTING-QUICKSTART.md",
+      "size_bytes": 5927,
+      "starred": true
+    },
+    {
+      "file": "CENTRAL_PLATFORM.md",
+      "size_bytes": 10388,
+      "starred": false
+    },
+    {
+      "file": "SELF_HOSTED_EMAIL.md",
+      "size_bytes": 14970,
+      "starred": false
+    },
+    {
+      "file": "WEB_DOMAIN_MANAGER_README.md",
+      "size_bytes": 6528,
+      "starred": false
+    },
+    {
+      "file": "QUICK-REFERENCE.md",
+      "size_bytes": 3386,
+      "starred": false
+    },
+    {
+      "file": "DEPLOYMENT_PROOF.md",
+      "size_bytes": 29555,
+      "starred": true
+    },
+    {
+      "file": "TEMPLATE-BROWSER-GUIDE.md",
+      "size_bytes": 7289,
+      "starred": true
+    },
+    {
+      "file": "HOW_IT_ALL_WORKS.md",
+      "size_bytes": 13451,
+      "starred": false
+    },
+    {
+      "file": "WHAT-YOURE-RUNNING.md",
+      "size_bytes": 14213,
+      "starred": false
+    },
+    {
+      "file": "COMPLETION_SUMMARY.md",
+      "size_bytes": 9914,
+      "starred": false
+    },
+    {
+      "file": "NETWORK_ACCESS_SIMPLE.md",
+      "size_bytes": 11009,
+      "starred": false
+    },
+    {
+      "file": "FIXES-PART2.md",
+      "size_bytes": 8464,
+      "starred": true
+    },
+    {
+      "file": "START-HERE.md",
+      "size_bytes": 3249,
+      "starred": true
+    },
+    {
+      "file": "QR_COMPLETE_SUMMARY.md",
+      "size_bytes": 13207,
+      "starred": false
+    },
+    {
+      "file": "WHATS-WORKING-WHATS-NOT.md",
+      "size_bytes": 12475,
+      "starred": false
+    },
+    {
+      "file": "CLOUD_DEPLOYMENT.md",
+      "size_bytes": 7921,
+      "starred": false
+    },
+    {
+      "file": "INTEGRATION_COMPLETE.md",
+      "size_bytes": 8603,
+      "starred": false
+    },
+    {
+      "file": "TOKEN-PURCHASE-GUIDE.md",
+      "size_bytes": 14415,
+      "starred": false
+    },
+    {
+      "file": "DOMAIN-IMPORT-QUICKSTART.md",
+      "size_bytes": 8220,
+      "starred": true
+    },
+    {
+      "file": "DEPLOYMENT-CHECKLIST.md",
+      "size_bytes": 10064,
+      "starred": true
+    },
+    {
+      "file": "TEMPLATE_ORGANIZATION.md",
+      "size_bytes": 9619,
+      "starred": false
+    },
+    {
+      "file": "TRIBUNAL-PROOF.md",
+      "size_bytes": 15779,
+      "starred": false
+    },
+    {
+      "file": "READTHEDOCS_ARCHITECTURE.md",
+      "size_bytes": 10902,
+      "starred": false
+    },
+    {
+      "file": "WHAT-ACTUALLY-WORKS.md",
+      "size_bytes": 12410,
+      "starred": false
+    },
+    {
+      "file": "DOMAIN-MANAGER-BUILT.md",
+      "size_bytes": 7458,
+      "starred": false
+    },
+    {
+      "file": "DOMAIN-ROUTING-GUIDE.md",
+      "size_bytes": 18936,
+      "starred": false
+    },
+    {
+      "file": "SOULFRA_COMPLETE_ARCHITECTURE.md",
+      "size_bytes": 18092,
+      "starred": false
+    },
+    {
+      "file": "CONVERSATIONAL-DOMAIN-INTELLIGENCE.md",
+      "size_bytes": 11652,
+      "starred": false
+    },
+    {
+      "file": "EMBEDDABLE_WIDGET.md",
+      "size_bytes": 15180,
+      "starred": false
+    },
+    {
+      "file": "SYSTEM-ARCHITECTURE.md",
+      "size_bytes": 14110,
+      "starred": false
+    },
+    {
+      "file": "OSS-STRATEGY.md",
+      "size_bytes": 11871,
+      "starred": false
+    },
+    {
+      "file": "NO-TRAINING-NEEDED.md",
+      "size_bytes": 12897,
+      "starred": false
+    },
+    {
+      "file": "SELFHOSTED_STACK.md",
+      "size_bytes": 20878,
+      "starred": false
+    },
+    {
+      "file": "BUSINESS_QR_README.md",
+      "size_bytes": 6363,
+      "starred": false
+    },
+    {
+      "file": "QR_SYSTEMS_MAP.md",
+      "size_bytes": 14770,
+      "starred": false
+    },
+    {
+      "file": "HONEST-WORKFLOW.md",
+      "size_bytes": 10948,
+      "starred": false
+    },
+    {
+      "file": "ANKI_LEARNING_API_DOCS.md",
+      "size_bytes": 23149,
+      "starred": false
+    },
+    {
+      "file": "QR_SYSTEM_READY.md",
+      "size_bytes": 6389,
+      "starred": false
+    },
+    {
+      "file": "AUTOMATION-AUDIT.md",
+      "size_bytes": 8421,
+      "starred": false
+    },
+    {
+      "file": "CANVAS_SYSTEM.md",
+      "size_bytes": 10920,
+      "starred": false
+    },
+    {
+      "file": "DEBUG-MAGIC-PUBLISH.md",
+      "size_bytes": 7683,
+      "starred": true
+    },
+    {
+      "file": "TEST-QR-LOGIN-NOW.md",
+      "size_bytes": 8882,
+      "starred": false
+    },
+    {
+      "file": "ENCRYPTION_TIERS.md",
+      "size_bytes": 12370,
+      "starred": false
+    },
+    {
+      "file": "UNIFIED-SYSTEM.md",
+      "size_bytes": 14685,
+      "starred": false
+    },
+    {
+      "file": "START_HERE.md",
+      "size_bytes": 14408,
+      "starred": true
+    },
+    {
+      "file": "CORE-VS-CRUFT.md",
+      "size_bytes": 12857,
+      "starred": false
+    },
+    {
+      "file": "READY-TO-TEST.md",
+      "size_bytes": 7042,
+      "starred": true
+    },
+    {
+      "file": "SYSTEM-ARCHITECTURE-MAP.md",
+      "size_bytes": 13128,
+      "starred": true
+    },
+    {
+      "file": "SYSTEM_MAP.md",
+      "size_bytes": 16864,
+      "starred": false
+    },
+    {
+      "file": "WHATS-WORKING-NOW.md",
+      "size_bytes": 10168,
+      "starred": false
+    },
+    {
+      "file": "AUTOMATION_COMPLETE.md",
+      "size_bytes": 5987,
+      "starred": false
+    },
+    {
+      "file": "hello_world_blog.md",
+      "size_bytes": 7055,
+      "starred": true
+    },
+    {
+      "file": "INTEGRATION_MAP.md",
+      "size_bytes": 14691,
+      "starred": false
+    },
+    {
+      "file": "WHAT_ACTUALLY_WORKS.md",
+      "size_bytes": 7579,
+      "starred": false
+    },
+    {
+      "file": "REAL-DEPLOYMENT.md",
+      "size_bytes": 12466,
+      "starred": false
+    },
+    {
+      "file": "QUICKSTART.md",
+      "size_bytes": 12087,
+      "starred": true
+    },
+    {
+      "file": "WIRED-UP-SUMMARY.md",
+      "size_bytes": 9726,
+      "starred": false
+    },
+    {
+      "file": "WHAT-THIS-ACTUALLY-DOES.md",
+      "size_bytes": 6486,
+      "starred": false
+    },
+    {
+      "file": "QR_SYSTEMS_COMPARISON.md",
+      "size_bytes": 10453,
+      "starred": false
+    },
+    {
+      "file": "HOWTOCOOKATHOME_DEPLOY.md",
+      "size_bytes": 27389,
+      "starred": false
+    },
+    {
+      "file": "QUICKSTART_OFFLINE.md",
+      "size_bytes": 12606,
+      "starred": true
+    },
+    {
+      "file": "ADVANCED_QR_FEATURES.md",
+      "size_bytes": 8938,
+      "starred": true
+    },
+    {
+      "file": "DOMAINS-EXPLAINED.md",
+      "size_bytes": 13260,
+      "starred": false
+    },
+    {
+      "file": "DATABASE_AUDIT.md",
+      "size_bytes": 3835,
+      "starred": false
+    },
+    {
+      "file": "REVIEW_PAGE_HOW_IT_WORKS.md",
+      "size_bytes": 15632,
+      "starred": false
+    },
+    {
+      "file": "EVERYTHING-YOU-HAVE.md",
+      "size_bytes": 8076,
+      "starred": false
+    },
+    {
+      "file": "SIMPLE-IMPORT-GUIDE.md",
+      "size_bytes": 6918,
+      "starred": false
+    },
+    {
+      "file": "PUBLISH-TO-PIP.md",
+      "size_bytes": 15385,
+      "starred": false
+    },
+    {
+      "file": "SIMPLE_START.md",
+      "size_bytes": 6364,
+      "starred": true
+    },
+    {
+      "file": "LIVE-SITE-DIAGNOSTIC.md",
+      "size_bytes": 8542,
+      "starred": false
+    },
+    {
+      "file": "README_QUICK_START.md",
+      "size_bytes": 12826,
+      "starred": true
+    },
+    {
+      "file": "OSS-PACKAGE-SYSTEM.md",
+      "size_bytes": 9296,
+      "starred": false
+    },
+    {
+      "file": "ARCHITECTURE-VISUAL.md",
+      "size_bytes": 31192,
+      "starred": false
+    },
+    {
+      "file": "ARCHITECTURE_EXPLAINED.md",
+      "size_bytes": 13772,
+      "starred": false
+    },
+    {
+      "file": "LAUNCHER_GUIDE.md",
+      "size_bytes": 12696,
+      "starred": false
+    },
+    {
+      "file": "SSL-FIX-GUIDE.md",
+      "size_bytes": 7649,
+      "starred": false
+    },
+    {
+      "file": "LOCALHOST_TESTING_GUIDE.md",
+      "size_bytes": 14795,
+      "starred": false
+    },
+    {
+      "file": "THE-TRUTH.md",
+      "size_bytes": 9787,
+      "starred": false
+    },
+    {
+      "file": "FIXES-COMPLETED.md",
+      "size_bytes": 10586,
+      "starred": false
+    },
+    {
+      "file": "WHAT_WORKS.md",
+      "size_bytes": 8133,
+      "starred": false
+    },
+    {
+      "file": "FEDERATED-VOICE-MEMOS.md",
+      "size_bytes": 15415,
+      "starred": false
+    },
+    {
+      "file": "THEME_BUILDER_GUIDE.md",
+      "size_bytes": 13895,
+      "starred": false
+    },
+    {
+      "file": "AI_SETUP.md",
+      "size_bytes": 6738,
+      "starred": false
+    },
+    {
+      "file": "SELF_SUSTAINING_CONTENT_LOOP_DONE.md",
+      "size_bytes": 17430,
+      "starred": false
+    },
+    {
+      "file": "MULTI_TIER_COMPLETE.md",
+      "size_bytes": 12908,
+      "starred": false
+    },
+    {
+      "file": "PORT_GUIDE.md",
+      "size_bytes": 10836,
+      "starred": false
+    },
+    {
+      "file": "README_LAN.md",
+      "size_bytes": 7836,
+      "starred": false
+    },
+    {
+      "file": "FAUCET_AUTOMATION_DONE.md",
+      "size_bytes": 17144,
+      "starred": false
+    },
+    {
+      "file": "DEMO_INSTRUCTIONS.md",
+      "size_bytes": 2840,
+      "starred": false
+    },
+    {
+      "file": "DOMAIN-CONFIG.md",
+      "size_bytes": 8905,
+      "starred": false
+    },
+    {
+      "file": "SYSTEM-COMPLETE.md",
+      "size_bytes": 11200,
+      "starred": false
+    },
+    {
+      "file": "STPETEPROS_INTEGRATION_PLAN.md",
+      "size_bytes": 17437,
+      "starred": false
+    },
+    {
+      "file": "QR_FLOW_PROOF.md",
+      "size_bytes": 13790,
+      "starred": false
+    },
+    {
+      "file": "EMAIL_SYSTEM_SETUP.md",
+      "size_bytes": 4040,
+      "starred": false
+    },
+    {
+      "file": "SOULFRA-FOUNDATION.md",
+      "size_bytes": 17975,
+      "starred": false
+    },
+    {
+      "file": "QR_ANALYTICS_MVP_COMPLETE.md",
+      "size_bytes": 13613,
+      "starred": false
+    },
+    {
+      "file": "MULTI-DOMAIN-TARGETING-COMPLETE.md",
+      "size_bytes": 30706,
+      "starred": false
+    },
+    {
+      "file": "NEURAL_TRAINING_VISION.md",
+      "size_bytes": 7129,
+      "starred": false
+    },
+    {
+      "file": "UNIVERSAL-THEMING-PROGRESS.md",
+      "size_bytes": 10615,
+      "starred": false
+    },
+    {
+      "file": "WORDLE_EASY_MODE_COMPLETE.md",
+      "size_bytes": 14033,
+      "starred": false
+    },
+    {
+      "file": "SYSTEM_EXPLAINED.md",
+      "size_bytes": 3204,
+      "starred": false
+    },
+    {
+      "file": "TEXT_ONLY_SUBMISSION.md",
+      "size_bytes": 10827,
+      "starred": false
+    },
+    {
+      "file": "WHY-CHAT-BUTTONS-MISSING.md",
+      "size_bytes": 5179,
+      "starred": false
+    },
+    {
+      "file": "QR_CODE_GUIDE.md",
+      "size_bytes": 10675,
+      "starred": false
+    },
+    {
+      "file": "DEPLOYMENT.md",
+      "size_bytes": 9647,
+      "starred": false
+    },
+    {
+      "file": "AUTO-BUILD-FROM-DOMAINS-TXT.md",
+      "size_bytes": 15129,
+      "starred": false
+    },
+    {
+      "file": "GITHUB_PAGES_SETUP.md",
+      "size_bytes": 12272,
+      "starred": false
+    },
+    {
+      "file": "END-TO-END-GUIDE.md",
+      "size_bytes": 16430,
+      "starred": false
+    },
+    {
+      "file": "VOICE-MEMOS-WORKING-NOW.md",
+      "size_bytes": 8166,
+      "starred": false
+    },
+    {
+      "file": "DOMAIN-PORTFOLIO-STRATEGY.md",
+      "size_bytes": 24635,
+      "starred": false
+    },
+    {
+      "file": "IT-WORKS.md",
+      "size_bytes": 3016,
+      "starred": false
+    },
+    {
+      "file": "MAC-SHORTCUTS-SETUP.md",
+      "size_bytes": 6305,
+      "starred": false
+    },
+    {
+      "file": "MODERNIZATION-COMPLETE.md",
+      "size_bytes": 13545,
+      "starred": false
+    },
+    {
+      "file": "SIMPLE-PUBLISHING-WORKFLOW.md",
+      "size_bytes": 6672,
+      "starred": false
+    },
+    {
+      "file": "ROOMMATE-NETWORK-ACCESS-PLAN.md",
+      "size_bytes": 10628,
+      "starred": false
+    },
+    {
+      "file": "TEMPLATE_DATA_FLOW.md",
+      "size_bytes": 19390,
+      "starred": false
+    },
+    {
+      "file": "SYSTEM-AUDIT-REPORT.md",
+      "size_bytes": 18950,
+      "starred": false
+    },
+    {
+      "file": "PHONE_TESTING_GUIDE.md",
+      "size_bytes": 7440,
+      "starred": false
+    },
+    {
+      "file": "ARCHITECTURE-EXPLAINED.md",
+      "size_bytes": 11689,
+      "starred": false
+    },
+    {
+      "file": "SYSTEM_ARCHITECTURE.md",
+      "size_bytes": 8166,
+      "starred": false
+    },
+    {
+      "file": "QR-GATED-SEARCH.md",
+      "size_bytes": 3815,
+      "starred": false
+    },
+    {
+      "file": "API-GATEWAY.md",
+      "size_bytes": 17510,
+      "starred": false
+    },
+    {
+      "file": "START-HERE-IPHONE.md",
+      "size_bytes": 4272,
+      "starred": true
+    },
+    {
+      "file": "TEST-CSV-IMPORT.md",
+      "size_bytes": 7641,
+      "starred": false
+    },
+    {
+      "file": "SOP.md",
+      "size_bytes": 14887,
+      "starred": false
+    },
+    {
+      "file": "NEXT-STEPS.md",
+      "size_bytes": 9788,
+      "starred": false
+    },
+    {
+      "file": "BRAND_ONBOARDING.md",
+      "size_bytes": 12084,
+      "starred": false
+    },
+    {
+      "file": "QR_TO_SIGNUP_FLOW.md",
+      "size_bytes": 14592,
+      "starred": false
+    },
+    {
+      "file": "REMIX_GUIDE.md",
+      "size_bytes": 17332,
+      "starred": false
+    },
+    {
+      "file": "PITCH_DECK.md",
+      "size_bytes": 7703,
+      "starred": false
+    },
+    {
+      "file": "IMAGE_SYSTEM_README.md",
+      "size_bytes": 9199,
+      "starred": true
+    },
+    {
+      "file": "URL-FIX-GUIDE.md",
+      "size_bytes": 10662,
+      "starred": false
+    },
+    {
+      "file": "VOICE_WORKFLOW.md",
+      "size_bytes": 12393,
+      "starred": false
+    },
+    {
+      "file": "NETWORK_GUIDE.md",
+      "size_bytes": 21013,
+      "starred": false
+    },
+    {
+      "file": "PROOF-OF-IMPORT.md",
+      "size_bytes": 5592,
+      "starred": false
+    },
+    {
+      "file": "CREATIVE_ONBOARDING_FLOW.md",
+      "size_bytes": 15907,
+      "starred": false
+    },
+    {
+      "file": "SIMPLE-TEST-NOW.md",
+      "size_bytes": 8405,
+      "starred": false
+    },
+    {
+      "file": "PROOF_INTEGRATION.md",
+      "size_bytes": 10786,
+      "starred": false
+    },
+    {
+      "file": "HIDDEN-FILES-EXPLAINED.md",
+      "size_bytes": 10208,
+      "starred": false
+    },
+    {
+      "file": "FULL-INTEGRATION-GUIDE.md",
+      "size_bytes": 20896,
+      "starred": false
+    },
+    {
+      "file": "connection_map.md",
+      "size_bytes": 16527,
+      "starred": false
+    },
+    {
+      "file": "OSS-SIMPLIFIED.md",
+      "size_bytes": 15447,
+      "starred": false
+    },
+    {
+      "file": "PROVE-IT-WORKS.md",
+      "size_bytes": 13167,
+      "starred": false
+    },
+    {
+      "file": "TRINITY-SETUP.md",
+      "size_bytes": 14469,
+      "starred": false
+    },
+    {
+      "file": "MULTI_TIER_ARCHITECTURE_READY.md",
+      "size_bytes": 10182,
+      "starred": false
+    },
+    {
+      "file": "OCR_IMPLEMENTATION_GUIDE.md",
+      "size_bytes": 24441,
+      "starred": false
+    },
+    {
+      "file": "SYSTEMS-CONNECTED.md",
+      "size_bytes": 7431,
+      "starred": false
+    },
+    {
+      "file": "README_STATIC_CHAT.md",
+      "size_bytes": 13932,
+      "starred": false
+    },
+    {
+      "file": "DEPLOY-WORKFLOW.md",
+      "size_bytes": 9242,
+      "starred": false
+    },
+    {
+      "file": "SYSTEM-STATUS.md",
+      "size_bytes": 9696,
+      "starred": true
+    },
+    {
+      "file": "START-HERE-CLARITY.md",
+      "size_bytes": 6216,
+      "starred": true
+    },
+    {
+      "file": "LAUNCH_GUIDE.md",
+      "size_bytes": 8113,
+      "starred": false
+    },
+    {
+      "file": "COMPLETE_FLOW_DEMO_DONE.md",
+      "size_bytes": 10201,
+      "starred": false
+    },
+    {
+      "file": "SOCIAL_NETWORK_VISION.md",
+      "size_bytes": 12403,
+      "starred": true
+    },
+    {
+      "file": "IPHONE-TEST-GUIDE.md",
+      "size_bytes": 5924,
+      "starred": false
+    },
+    {
+      "file": "INTEGRATION-MAP.md",
+      "size_bytes": 14781,
+      "starred": false
+    },
+    {
+      "file": "GITHUB-URL-MAP.md",
+      "size_bytes": 11881,
+      "starred": false
+    },
+    {
+      "file": "DOMAIN-EXTENSIONS-EXPLAINED.md",
+      "size_bytes": 11318,
+      "starred": false
+    },
+    {
+      "file": "SIMPLIFY-AND-PURGE.md",
+      "size_bytes": 15533,
+      "starred": false
+    },
+    {
+      "file": "TESTING-STRATEGY.md",
+      "size_bytes": 9247,
+      "starred": false
+    },
+    {
+      "file": "NGROK_SETUP.md",
+      "size_bytes": 5671,
+      "starred": false
+    },
+    {
+      "file": "HOMEBREW-LAB.md",
+      "size_bytes": 17512,
+      "starred": false
+    },
+    {
+      "file": "MOBILE_QR_TEST.md",
+      "size_bytes": 12763,
+      "starred": false
+    },
+    {
+      "file": "README-MASTER-CONTROL.md",
+      "size_bytes": 10571,
+      "starred": false
+    },
+    {
+      "file": "LOCAL-AUTH-GUIDE.md",
+      "size_bytes": 10911,
+      "starred": false
+    },
+    {
+      "file": "QUICK_START.md",
+      "size_bytes": 4758,
+      "starred": true
+    },
+    {
+      "file": "FOLDER-STRUCTURE.md",
+      "size_bytes": 7897,
+      "starred": false
+    },
+    {
+      "file": "OSS_DEPLOYMENT_QUICKSTART.md",
+      "size_bytes": 8932,
+      "starred": true
+    },
+    {
+      "file": "STATIC_DEPLOYMENT.md",
+      "size_bytes": 9646,
+      "starred": false
+    },
+    {
+      "file": "HOW-EVERYTHING-WORKS.md",
+      "size_bytes": 14077,
+      "starred": false
+    },
+    {
+      "file": "CLAUDE_API_INTEGRATION.md",
+      "size_bytes": 6554,
+      "starred": false
+    },
+    {
+      "file": "MULTI-DOMAIN-TARGETING.md",
+      "size_bytes": 2395,
+      "starred": false
+    },
+    {
+      "file": "FORMULA-ENGINE-README.md",
+      "size_bytes": 8465,
+      "starred": false
+    },
+    {
+      "file": "DEPLOYMENT-SIMPLIFIED.md",
+      "size_bytes": 13615,
+      "starred": false
+    },
+    {
+      "file": "WHATS-WORKING.md",
+      "size_bytes": 12299,
+      "starred": false
+    },
+    {
+      "file": "DIRECTORY-CLEANUP.md",
+      "size_bytes": 9642,
+      "starred": false
+    }
+  ]
+}

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra - Your AI Workspace</title>
+    <style>
+        /* Navigation Header Styles */
+        .site-header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .site-header .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .site-logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .site-nav {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .site-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+            font-size: 1.05em;
+        }
+
+        .site-nav a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .site-header .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .site-nav {
+                justify-content: center;
+                gap: 15px;
+            }
+        }
+
+        /* Page Content Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header .tagline {
+            font-size: 1.4em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        /* QR Code Section */
+        .qr-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .qr-section h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .qr-section p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .qr-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .qr-code {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+        }
+
+        .qr-instructions {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        .qr-instructions div {
+            margin: 10px 0;
+        }
+
+        /* Paths Section */
+        .paths-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .path-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 35px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .path-card:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .path-icon {
+            font-size: 4em;
+            flex-shrink: 0;
+        }
+
+        .path-content {
+            flex: 1;
+        }
+
+        .path-content h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .path-content p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .path-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 12px;
+            font-size: 0.95em;
+            opacity: 0.8;
+        }
+
+        .path-meta span {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 12px;
+            border-radius: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            font-size: 1.05em;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .status-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .path-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .qr-container {
+            animation: pulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="/" class="site-logo">
+                🌙 Soulfra
+            </a>
+
+            <nav class="site-nav">
+                <a href="/cringeproof/narrative/soulfra">🎮 Play Game</a>
+                <a href="/chat">💬 Chat</a>
+                <a href="/learn">🎓 Learn</a>
+                <a href="/draw">✏️ Draw</a>
+                <a href="/canvas">🎨 Canvas</a>
+                <a href="/dashboard">📚 Content</a>
+                <a href="/galleries">🖼️ Galleries</a>
+                <a href="/status" class="nav-button">🔧 Status</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="header">
+            <h1>🌙 Soulfra</h1>
+            <p class="tagline">Your AI workspace. Ideas → Reality.</p>
+        </div>
+
+        <div class="main-grid">
+            <!-- QR Code Entry -->
+            <div class="qr-section">
+                <h2>📱 Scan to Enter</h2>
+                <p>Netflix-style pairing. Your phone becomes the key.</p>
+
+                <div class="qr-container">
+                    <img src="{{ qr_url }}" alt="Entry QR Code" class="qr-code" id="entryQR">
+                </div>
+
+                <div class="qr-instructions">
+                    <div><strong>1.</strong> Open your phone camera</div>
+                    <div><strong>2.</strong> Scan the QR code above</div>
+                    <div><strong>3.</strong> Your workspace opens here</div>
+                </div>
+
+                <p style="font-size: 0.9em; margin-top: 20px; opacity: 0.7;">
+                    Expires in 5 minutes • Refreshes automatically
+                </p>
+            </div>
+
+            <!-- Alternative Paths -->
+            <div class="paths-section">
+                <a href="/cringeproof/narrative/soulfra" class="path-card">
+                    <div class="path-icon">🌙</div>
+                    <div class="path-content">
+                        <h3>Play Narrative Game</h3>
+                        <p>Interactive stories with AI hosts. Choose Soulfra, CalRiven, or DeathToData. Answer questions, unlock chapters, build your neural network.</p>
+                        <div class="path-meta">
+                            <span>🎮 Interactive</span>
+                            <span>🤖 AI Host</span>
+                            <span>🏆 Unlocks</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/dashboard" class="path-card">
+                    <div class="path-icon">📚</div>
+                    <div class="path-content">
+                        <h3>Explore Content</h3>
+                        <p>Browse blogs, tutorials, and ideas. Read about building with AI, privacy, architecture. No signup required.</p>
+                        <div class="path-meta">
+                            <span>📖 Blog</span>
+                            <span>🧪 Tutorials</span>
+                            <span>💡 Ideas</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/learn" class="path-card">
+                    <div class="path-icon">🎓</div>
+                    <div class="path-content">
+                        <h3>Start Learning</h3>
+                        <p>7 chapters to build your neural network. Learn by doing. Complete all chapters → unlock API access & brand forking.</p>
+                        <div class="path-meta">
+                            <span>📊 7 Chapters</span>
+                            <span>🔓 Unlocks</span>
+                            <span>🚀 API Keys</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+                <a href="/draw">✏️ Draw & Learn</a>
+                <a href="/canvas">Canvas Workspace</a>
+                <a href="/canvas/tracking">View Your Data</a>
+                <a href="/galleries">QR Galleries</a>
+                <a href="/simple-test">System Test</a>
+                <a href="/brands/overview">Brands</a>
+            </div>
+        </div>
+
+        <a href="/status" class="status-badge" style="text-decoration: none; color: white;">
+            ✓ System Active • {{ session_status }} • Click for Status
+        </a>
+    </div>
+
+    <!-- Site Footer -->
+    <footer style="margin-top: 60px; padding: 40px 20px 20px; border-top: 2px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.2); text-align: center;">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 20px; opacity: 0.8;">
+                <a href="/cringeproof/narrative/soulfra" style="color: white; text-decoration: none;">🎮 Play Game</a>
+                <a href="/learn" style="color: white; text-decoration: none;">🎓 Learn</a>
+                <a href="/draw" style="color: white; text-decoration: none;">✏️ Draw</a>
+                <a href="/canvas" style="color: white; text-decoration: none;">🎨 Canvas</a>
+                <a href="/galleries" style="color: white; text-decoration: none;">🖼️ Galleries</a>
+                <a href="/status" style="color: white; text-decoration: none;">🔧 Status</a>
+                <a href="/sitemap.xml" style="color: white; text-decoration: none;">Sitemap</a>
+            </div>
+            <p style="opacity: 0.7; font-size: 0.95em;">&copy; 2025 Soulfra. Your AI workspace. Ideas → Reality.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Auto-redirect on successful pairing
+        const pairingToken = "{{ pairing_token }}";
+
+        function checkPairingStatus() {
+            fetch(`/api/canvas/pair/status/${pairingToken}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'paired') {
+                        window.location.href = data.redirect;
+                    } else if (data.status === 'expired') {
+                        // Refresh QR code
+                        location.reload();
+                    } else {
+                        // Still pending
+                        setTimeout(checkPairingStatus, 2000);
+                    }
+                })
+                .catch(err => {
+                    setTimeout(checkPairingStatus, 2000);
+                });
+        }
+
+        // Start polling
+        setTimeout(checkPairingStatus, 2000);
+
+        // Auto-refresh QR after 4.5 minutes (before 5 min expiry)
+        setTimeout(() => {
+            location.reload();
+        }, 270000);
+    </script>
+</body>
+</html>

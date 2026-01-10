@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <title>Soulfra Products</title>
+    <link>https://soulfra.com/products</link>
+    <description>Privacy-focused products and APIs</description>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 22 Dec 2025 04:39:08 GMT</lastBuildDate>
+    <item>
+      <title>Soulfra: Soulfra Sticker</title>
+      <link>https://soulfra.com/products/soulfra-merch-0cf229</link>
+      <description>Logo sticker (blue/green) | $5.00 | Identity &amp; Security</description>
+      <guid isPermaLink="false">SOULFRA-MERCH-0CF229</guid>
+      <pubDate>Mon, 22 Dec 2025 04:34:16 GMT</pubDate>
+      <category>merch</category>
+    </item>
+  </channel>
+</rss>

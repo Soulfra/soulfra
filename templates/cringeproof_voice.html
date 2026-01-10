@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CringeProof - Voice Only</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #1a0f1f 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff4444, #ff8844);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .proximity-status {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .proximity-status.connected {
+            border-color: #66ff66;
+            background: rgba(102, 255, 102, 0.1);
+        }
+
+        .proximity-indicator {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .proximity-text {
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        .proximity-text.connected {
+            color: #66ff66;
+        }
+
+        .voice-portal {
+            background: rgba(255,255,255,0.05);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .record-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 auto 30px;
+            display: block;
+            box-shadow: 0 10px 40px rgba(255, 68, 68, 0.4);
+        }
+
+        .record-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .record-btn:active {
+            transform: scale(0.95);
+        }
+
+        .record-btn.recording {
+            background: linear-gradient(135deg, #ff0000 0%, #990000 100%);
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.8);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .status {
+            font-size: 16px;
+            margin: 20px 0;
+            min-height: 30px;
+            color: #aaa;
+        }
+
+        .status.success {
+            color: #66ff66;
+        }
+
+        .status.error {
+            color: #ff4444;
+        }
+
+        .live-wall {
+            margin-top: 50px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .wall-header {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #aaa;
+        }
+
+        .memo-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .memo-card:hover {
+            border-color: #ff4444;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .memo-time {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .memo-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .memo-words {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .word-tag {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff6666;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+            height: 30px;
+        }
+
+        .wordmap-viz {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .wordmap-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #aaa;
+        }
+
+        .word-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .word-bubble {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .word-bubble:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .word-bubble.size-1 { font-size: 12px; opacity: 0.6; }
+        .word-bubble.size-2 { font-size: 14px; opacity: 0.7; }
+        .word-bubble.size-3 { font-size: 16px; opacity: 0.8; }
+        .word-bubble.size-4 { font-size: 18px; opacity: 0.9; }
+        .word-bubble.size-5 { font-size: 20px; opacity: 1; }
+
+        .qr-hint {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .qr-hint a {
+            color: #ff6666;
+            text-decoration: none;
+        }
+
+        /* Drag and Drop Upload Zone */
+        .upload-zone {
+            background: rgba(255,255,255,0.05);
+            border: 3px dashed #333;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover {
+            border-color: #ff6666;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .upload-zone.dragover {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.2);
+            transform: scale(1.02);
+        }
+
+        .upload-zone-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-zone-text {
+            color: #aaa;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .upload-zone-hint {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .upload-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .preview-card {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .preview-card.ai-generated {
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+
+        .preview-card.phone-camera {
+            border-color: #00ffff;
+        }
+
+        .preview-card.screenshot {
+            border-color: #ffaa00;
+        }
+
+        .preview-thumbnail {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .preview-info {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .preview-source {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .source-ai { background: rgba(255, 0, 255, 0.3); color: #ff66ff; }
+        .source-camera { background: rgba(0, 255, 255, 0.3); color: #66ffff; }
+        .source-screenshot { background: rgba(255, 170, 0, 0.3); color: #ffaa66; }
+
+        .upload-progress {
+            margin-top: 15px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .upload-progress.active {
+            display: block;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ff8844);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        #fileInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">CringeProof</div>
+        <div class="tagline">Authentic voices. No bullshit.</div>
+    </div>
+
+    <div class="proximity-status" id="proximityStatus">
+        <div class="proximity-indicator" id="proximityIcon">📡</div>
+        <div class="proximity-text" id="proximityText">Scanning for nearby portals...</div>
+    </div>
+
+    <div class="voice-portal">
+        <h2 style="margin-bottom: 30px; color: #aaa;">Say Something Real</h2>
+
+        <button id="recordBtn" class="record-btn">TAP<br>TO<br>SPEAK</button>
+
+        <div id="status" class="status"></div>
+
+        <div class="qr-hint">
+            📱 On iPhone? Scan the QR code in <a href="https://github.com/Soulfra/soulfra#-pair-your-iphone">README</a>
+        </div>
+    </div>
+
+    <!-- Drag & Drop Upload Zone -->
+    <div class="voice-portal" style="margin-top: 30px;">
+        <h2 style="margin-bottom: 20px; color: #aaa;">Or Drop Media</h2>
+
+        <div id="uploadZone" class="upload-zone">
+            <div class="upload-zone-icon">📸</div>
+            <div class="upload-zone-text">Drag photos or videos here</div>
+            <div class="upload-zone-hint">Or tap to browse • Detects AI, screenshots, camera photos</div>
+        </div>
+
+        <input type="file" id="fileInput" multiple accept="image/*,video/*" />
+
+        <div id="uploadProgress" class="upload-progress">
+            <div id="uploadProgressBar" class="upload-progress-bar"></div>
+        </div>
+
+        <div id="uploadPreviews" class="upload-previews"></div>
+    </div>
+
+    <!-- Live Wall - Recent voice memos -->
+    <div class="live-wall">
+        <div class="wall-header">🔴 Live Wall</div>
+        <div id="memosContainer">
+            <!-- Memos will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Collective Wordmap -->
+    <div class="wordmap-viz">
+        <div class="wordmap-title">📊 Collective Voice</div>
+        <div id="wordCloud" class="word-cloud">
+            <!-- Word cloud will be rendered here -->
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        const recordBtn = document.getElementById('recordBtn');
+        const status = document.getElementById('status');
+        const memosContainer = document.getElementById('memosContainer');
+        const wordCloud = document.getElementById('wordCloud');
+        const proximityStatus = document.getElementById('proximityStatus');
+        const proximityIcon = document.getElementById('proximityIcon');
+        const proximityText = document.getElementById('proximityText');
+
+        // Check proximity (same WiFi detection)
+        async function checkProximity() {
+            try {
+                const response = await fetch('/api/simple-voice/list');
+                const data = await response.json();
+
+                if (data.success && data.files.length > 0) {
+                    // Connected - has access to backend
+                    proximityStatus.classList.add('connected');
+                    proximityIcon.textContent = '✨';
+                    proximityText.textContent = 'Portal Open';
+                    proximityText.classList.add('connected');
+                } else {
+                    proximityIcon.textContent = '📡';
+                    proximityText.textContent = 'Connected - No memos yet';
+                }
+            } catch (error) {
+                // Not connected
+                proximityIcon.textContent = '❌';
+                proximityText.textContent = 'No portal detected';
+            }
+        }
+
+        // Voice recording
+        recordBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        await saveRecording(audioBlob);
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordBtn.textContent = 'SPEAKING...';
+                    recordBtn.classList.add('recording');
+                    status.textContent = '🔴 Recording your truth...';
+                    status.className = 'status';
+
+                } catch (error) {
+                    status.textContent = `❌ ${error.message}`;
+                    status.className = 'status error';
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                recordBtn.textContent = 'TAP\nTO\nSPEAK';
+                recordBtn.classList.remove('recording');
+                status.textContent = '💾 Processing...';
+            }
+        });
+
+        async function saveRecording(blob) {
+            const formData = new FormData();
+            formData.append('audio', blob, 'voice.webm');
+
+            try {
+                const response = await fetch('/api/simple-voice/save', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.textContent = '✅ Posted to wall!';
+                    status.className = 'status success';
+
+                    // Reload wall
+                    setTimeout(() => {
+                        loadWall();
+                        loadWordmap();
+                    }, 1000);
+                } else {
+                    status.textContent = `❌ ${data.error}`;
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                status.textContent = `❌ ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        // Load live wall feed
+        async function loadWall() {
+            try {
+                const response = await fetch('/api/wall/feed?domain=cringeproof.com&limit=10');
+                const data = await response.json();
+
+                if (data.success && data.memos.length > 0) {
+                    memosContainer.innerHTML = data.memos.map(memo => `
+                        <div class="memo-card">
+                            <div class="memo-time">${memo.time_ago}</div>
+                            <div class="memo-text">${memo.excerpt}</div>
+                            <div class="memo-words">
+                                ${memo.top_words.map(word => `<span class="word-tag">${word}</span>`).join('')}
+                            </div>
+                            <audio controls src="${memo.audio_url}"></audio>
+                        </div>
+                    `).join('');
+                } else {
+                    memosContainer.innerHTML = '<div style="text-align: center; color: #666; padding: 40px;">No voices yet. Be the first to speak.</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load wall:', error);
+            }
+        }
+
+        // Load collective wordmap
+        async function loadWordmap() {
+            try {
+                const response = await fetch('/api/wall/feed?domain=cringeproof.com');
+                const data = await response.json();
+
+                if (data.success && data.wordmap.top_words.length > 0) {
+                    const topWords = data.wordmap.top_words.slice(0, 20);
+                    const maxCount = topWords[0][1];
+
+                    wordCloud.innerHTML = topWords.map(([word, count]) => {
+                        const size = Math.ceil((count / maxCount) * 5);
+                        return `<div class="word-bubble size-${size}">${word}</div>`;
+                    }).join('');
+                } else {
+                    wordCloud.innerHTML = '<div style="color: #666;">Building collective voice...</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load wordmap:', error);
+            }
+        }
+
+        // Auto-refresh wall every 30 seconds
+        setInterval(() => {
+            loadWall();
+            loadWordmap();
+        }, 30000);
+
+        // Initial load
+        checkProximity();
+        loadWall();
+        loadWordmap();
+
+        // Check proximity every 5 seconds
+        setInterval(checkProximity, 5000);
+
+        // Auto-launch camera if on mobile (forward-facing only)
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            autoLaunchCamera();
+        }
+
+        async function autoLaunchCamera() {
+            try {
+                // Request camera access (environment-facing for sky detection)
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment'  // Back camera (not selfie)
+                    },
+                    audio: false
+                });
+
+                // Create hidden video element to show camera preview
+                const videoPreview = document.createElement('video');
+                videoPreview.srcObject = stream;
+                videoPreview.autoplay = true;
+                videoPreview.playsInline = true;
+                videoPreview.style.cssText = `
+                    position: fixed;
+                    top: 80px;
+                    right: 20px;
+                    width: 150px;
+                    height: 200px;
+                    border-radius: 15px;
+                    border: 2px solid #66ff66;
+                    z-index: 1000;
+                    box-shadow: 0 4px 20px rgba(102, 255, 102, 0.3);
+                `;
+                document.body.appendChild(videoPreview);
+
+                // Add capture button overlay
+                const captureBtn = document.createElement('button');
+                captureBtn.textContent = '📸';
+                captureBtn.style.cssText = `
+                    position: fixed;
+                    top: 290px;
+                    right: 60px;
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 50%;
+                    border: none;
+                    background: linear-gradient(135deg, #ff4444, #cc0000);
+                    font-size: 32px;
+                    cursor: pointer;
+                    z-index: 1001;
+                    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.5);
+                `;
+                document.body.appendChild(captureBtn);
+
+                // Capture photo when button clicked
+                captureBtn.addEventListener('click', () => {
+                    captureSkyPhoto(videoPreview);
+                });
+
+            } catch (error) {
+                console.log('Camera access denied or unavailable:', error);
+            }
+        }
+
+        function captureSkyPhoto(video) {
+            // Create canvas to capture frame
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+
+            // Calculate sky score (more blue = higher score)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const skyScore = calculateSkyScore(imageData);
+
+            // Convert to blob and upload
+            canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append('file', blob, `sky_${skyScore.toFixed(2)}_${Date.now()}.jpg`);
+
+                try {
+                    const response = await fetch('/api/intake', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        status.textContent = `✅ Sky captured! Score: ${skyScore.toFixed(2)}`;
+                        status.className = 'status success';
+
+                        // Reload wall
+                        setTimeout(() => {
+                            loadWall();
+                            loadWordmap();
+                        }, 1000);
+                    }
+                } catch (error) {
+                    status.textContent = `❌ ${error.message}`;
+                    status.className = 'status error';
+                }
+            }, 'image/jpeg', 0.9);
+        }
+
+        function calculateSkyScore(imageData) {
+            // Simple sky detection: more blue = more sky
+            const data = imageData.data;
+            let blueTotal = 0;
+            let pixelCount = 0;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+
+                // Blue dominance = likely sky
+                if (b > r && b > g && b > 150) {
+                    blueTotal += b;
+                    pixelCount++;
+                }
+            }
+
+            // Return score 0-100
+            const avgBlue = pixelCount > 0 ? blueTotal / pixelCount : 0;
+            return Math.min(100, (pixelCount / (data.length / 4)) * 100);
+        }
+
+        // ===== DRAG & DROP UPLOAD =====
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const uploadProgressBar = document.getElementById('uploadProgressBar');
+        const uploadPreviews = document.getElementById('uploadPreviews');
+
+        // Click to browse
+        uploadZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag & drop handlers
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            handleFiles(files);
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            handleFiles(files);
+        });
+
+        async function handleFiles(files) {
+            // Filter for images and videos only
+            const mediaFiles = files.filter(file =>
+                file.type.startsWith('image/') || file.type.startsWith('video/')
+            );
+
+            if (mediaFiles.length === 0) {
+                status.textContent = '⚠️ Please upload images or videos only';
+                status.className = 'status error';
+                return;
+            }
+
+            // Upload each file
+            for (const file of mediaFiles) {
+                await uploadFile(file);
+            }
+        }
+
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Show progress
+            uploadProgress.classList.add('active');
+            uploadProgressBar.style.width = '0%';
+
+            try {
+                // Simulate progress (since we can't track real upload progress easily)
+                const progressInterval = setInterval(() => {
+                    const currentWidth = parseInt(uploadProgressBar.style.width);
+                    if (currentWidth < 90) {
+                        uploadProgressBar.style.width = (currentWidth + 10) + '%';
+                    }
+                }, 100);
+
+                const response = await fetch('/api/intake', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                clearInterval(progressInterval);
+                uploadProgressBar.style.width = '100%';
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Create preview card
+                    createPreview(file, data);
+
+                    // Hide progress after delay
+                    setTimeout(() => {
+                        uploadProgress.classList.remove('active');
+                        uploadProgressBar.style.width = '0%';
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Upload failed');
+                }
+            } catch (error) {
+                uploadProgress.classList.remove('active');
+                status.textContent = `❌ ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        function createPreview(file, uploadData) {
+            const preview = document.createElement('div');
+            preview.className = 'preview-card';
+
+            // Detect source from upload metadata
+            const source = uploadData.source || 'unknown';
+            if (source === 'ai-generated') preview.classList.add('ai-generated');
+            if (source === 'phone-camera') preview.classList.add('phone-camera');
+            if (source === 'screenshot') preview.classList.add('screenshot');
+
+            // Create thumbnail
+            const thumbnail = document.createElement('img');
+            thumbnail.className = 'preview-thumbnail';
+            thumbnail.src = URL.createObjectURL(file);
+
+            // Source badge
+            const sourceBadge = document.createElement('div');
+            sourceBadge.className = 'preview-source';
+            if (source === 'ai-generated') {
+                sourceBadge.className += ' source-ai';
+                sourceBadge.textContent = '🤖 AI Generated';
+            } else if (source === 'phone-camera') {
+                sourceBadge.className += ' source-camera';
+                sourceBadge.textContent = '📱 Camera';
+            } else if (source === 'screenshot') {
+                sourceBadge.className += ' source-screenshot';
+                sourceBadge.textContent = '📸 Screenshot';
+            } else {
+                sourceBadge.textContent = '❓ Unknown';
+            }
+
+            // Info
+            const info = document.createElement('div');
+            info.className = 'preview-info';
+            info.textContent = `${uploadData.input_type} • ${uploadData.routed_to}`;
+
+            preview.appendChild(thumbnail);
+            preview.appendChild(info);
+            preview.appendChild(sourceBadge);
+
+            uploadPreviews.insertBefore(preview, uploadPreviews.firstChild);
+
+            // Reload wall to show new submission
+            setTimeout(() => {
+                loadWall();
+                loadWordmap();
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

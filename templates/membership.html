@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}Membership - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+
+  <header style="text-align: center; margin-bottom: 3rem;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">💎 Membership Tiers</h1>
+    <p style="color: #666; font-size: 1.1rem;">
+      Unlock more trades, inventory, and exclusive quests • Powered by Stripe • No crypto!
+    </p>
+  </header>
+
+  <!-- Current Membership Card -->
+  <div id="current-membership" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 3rem; text-align: center;">
+    <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Your Current Tier</div>
+    <div id="current-tier" style="font-size: 2.5rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem;">Loading...</div>
+    <div id="current-status" style="opacity: 0.9;">Checking status...</div>
+  </div>
+
+  <!-- Pricing Tiers -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+
+    <!-- Free Tier -->
+    <div class="tier-card" style="border: 3px solid #e0e0e0;">
+      <div class="tier-header" style="background: #6b7280; color: white; padding: 2rem; text-align: center;">
+        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Free</h3>
+        <div style="font-size: 3rem; font-weight: 600; margin-bottom: 0.25rem;">$0</div>
+        <div style="opacity: 0.9;">Forever</div>
+      </div>
+      <div style="padding: 2rem;">
+        <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0;">
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Basic account features
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            10 item inventory
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            1 trade per day
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Access to basic quests
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Play all games
+          </li>
+        </ul>
+        <button disabled style="width: 100%; background: #e0e0e0; color: #999; padding: 1rem; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: not-allowed;">
+          Current Tier
+        </button>
+      </div>
+    </div>
+
+    <!-- Premium Tier -->
+    <div class="tier-card" style="border: 3px solid #667eea; position: relative;">
+      <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #667eea; color: white; padding: 0.25rem 1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">
+        POPULAR
+      </div>
+      <div class="tier-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; text-align: center;">
+        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Premium</h3>
+        <div style="font-size: 3rem; font-weight: 600; margin-bottom: 0.25rem;">$5</div>
+        <div style="opacity: 0.9;">per month</div>
+      </div>
+      <div style="padding: 2rem;">
+        <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0;">
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            <strong>Unlimited inventory</strong>
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            <strong>10 trades per day</strong>
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Access to all quests
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Priority AI judging
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Early access to features
+          </li>
+        </ul>
+        <button id="upgrade-premium-btn" onclick="upgradeTier('premium')" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s;">
+          Upgrade to Premium
+        </button>
+      </div>
+    </div>
+
+    <!-- Pro Tier -->
+    <div class="tier-card" style="border: 3px solid #f59e0b;">
+      <div class="tier-header" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 2rem; text-align: center;">
+        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Pro</h3>
+        <div style="font-size: 3rem; font-weight: 600; margin-bottom: 0.25rem;">$10</div>
+        <div style="opacity: 0.9;">per month</div>
+      </div>
+      <div style="padding: 2rem;">
+        <ul style="list-style: none; padding: 0; margin: 0 0 2rem 0;">
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            <strong>Unlimited everything</strong>
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            <strong>Unlimited trades</strong>
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Exclusive legendary quests
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Custom AI personas
+          </li>
+          <li style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #10b981; margin-right: 0.5rem;">✓</span>
+            Discord/community access
+          </li>
+        </ul>
+        <button id="upgrade-pro-btn" onclick="upgradeTier('pro')" style="width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1rem; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s;">
+          Upgrade to Pro
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Features Comparison -->
+  <div style="background: #f9f9f9; padding: 2rem; border-radius: 12px; margin-bottom: 3rem;">
+    <h2 style="text-align: center; font-size: 1.8rem; margin-bottom: 2rem;">Feature Comparison</h2>
+
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead style="background: #667eea; color: white;">
+        <tr>
+          <th style="padding: 1rem; text-align: left;">Feature</th>
+          <th style="padding: 1rem; text-align: center;">Free</th>
+          <th style="padding: 1rem; text-align: center;">Premium</th>
+          <th style="padding: 1rem; text-align: center;">Pro</th>
+        </tr>
+      </thead>
+      <tbody style="background: white;">
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+          <td style="padding: 1rem; font-weight: 500;">Inventory Slots</td>
+          <td style="padding: 1rem; text-align: center;">10</td>
+          <td style="padding: 1rem; text-align: center;">Unlimited</td>
+          <td style="padding: 1rem; text-align: center;">Unlimited</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+          <td style="padding: 1rem; font-weight: 500;">Trades per Day</td>
+          <td style="padding: 1rem; text-align: center;">1</td>
+          <td style="padding: 1rem; text-align: center;">10</td>
+          <td style="padding: 1rem; text-align: center;">Unlimited</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+          <td style="padding: 1rem; font-weight: 500;">Available Quests</td>
+          <td style="padding: 1rem; text-align: center;">Basic</td>
+          <td style="padding: 1rem; text-align: center;">All</td>
+          <td style="padding: 1rem; text-align: center;">All + Exclusive</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+          <td style="padding: 1rem; font-weight: 500;">AI Judging Priority</td>
+          <td style="padding: 1rem; text-align: center;">Standard</td>
+          <td style="padding: 1rem; text-align: center;">Priority</td>
+          <td style="padding: 1rem; text-align: center;">Instant</td>
+        </tr>
+        <tr>
+          <td style="padding: 1rem; font-weight: 500;">Community Access</td>
+          <td style="padding: 1rem; text-align: center;">—</td>
+          <td style="padding: 1rem; text-align: center;">—</td>
+          <td style="padding: 1rem; text-align: center;">✓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FAQ -->
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Frequently Asked Questions</h2>
+
+    <div style="max-width: 800px; margin: 0 auto; text-align: left;">
+      <details style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer;">
+        <summary style="font-weight: 600; font-size: 1.1rem;">Can I cancel anytime?</summary>
+        <p style="color: #666; margin-top: 1rem;">Yes! All memberships are month-to-month. Cancel anytime through your account settings or Stripe dashboard.</p>
+      </details>
+
+      <details style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer;">
+        <summary style="font-weight: 600; font-size: 1.1rem;">What happens to my items if I downgrade?</summary>
+        <p style="color: #666; margin-top: 1rem;">Your items are safe! If you downgrade, you'll keep all items earned. You just won't be able to pick up new items until you're under your tier's inventory limit.</p>
+      </details>
+
+      <details style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer;">
+        <summary style="font-weight: 600; font-size: 1.1rem;">Is there any crypto or blockchain involved?</summary>
+        <p style="color: #666; margin-top: 1rem;">Absolutely not! We use traditional Stripe payments. No NFTs, no crypto wallets, no blockchain. Just clean database-driven gameplay.</p>
+      </details>
+
+      <details style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer;">
+        <summary style="font-weight: 600; font-size: 1.1rem;">Can I gift a membership to someone?</summary>
+        <p style="color: #666; margin-top: 1rem;">Coming soon! We're working on gift subscriptions and referral rewards.</p>
+      </details>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .tier-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .tier-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  button:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  details summary {
+    transition: color 0.2s;
+  }
+
+  details[open] summary {
+    color: #667eea;
+  }
+</style>
+
+<script>
+  let currentTier = 'free';
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadMembership();
+  });
+
+  function loadMembership() {
+    fetch('/api/membership/current')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          currentTier = data.tier;
+          document.getElementById('current-tier').textContent = data.tier;
+          document.getElementById('current-status').textContent = `Status: ${data.status}`;
+
+          // Disable current tier button
+          if (currentTier === 'premium') {
+            document.getElementById('upgrade-premium-btn').disabled = true;
+            document.getElementById('upgrade-premium-btn').textContent = 'Current Tier';
+            document.getElementById('upgrade-premium-btn').style.background = '#e0e0e0';
+            document.getElementById('upgrade-premium-btn').style.color = '#999';
+          } else if (currentTier === 'pro') {
+            document.getElementById('upgrade-pro-btn').disabled = true;
+            document.getElementById('upgrade-pro-btn').textContent = 'Current Tier';
+            document.getElementById('upgrade-pro-btn').style.background = '#e0e0e0';
+            document.getElementById('upgrade-pro-btn').style.color = '#999';
+
+            document.getElementById('upgrade-premium-btn').disabled = true;
+            document.getElementById('upgrade-premium-btn').textContent = 'Downgrade Available';
+            document.getElementById('upgrade-premium-btn').style.opacity = '0.6';
+          }
+        }
+      });
+  }
+
+  function upgradeTier(tier) {
+    if (currentTier === tier) {
+      alert('You are already on this tier!');
+      return;
+    }
+
+    if (confirm(`Upgrade to ${tier.toUpperCase()} tier?`)) {
+      // Create Stripe checkout session
+      fetch('/api/membership/upgrade', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ tier: tier })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.checkout_url) {
+          // Redirect to Stripe checkout
+          window.location.href = data.checkout_url;
+        } else if (data.simulated) {
+          alert(`Simulated upgrade to ${tier}! (Stripe not configured in dev mode)`);
+          location.reload();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      });
+    }
+  }
+</script>
+
+{% endblock %}

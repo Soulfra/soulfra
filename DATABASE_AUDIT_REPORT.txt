@@ -1,0 +1,181 @@
+DATABASE AUDIT REPORT
+================================================================================
+
+Total tables: 168
+Used tables: 80
+Empty tables: 88
+
+TABLES WITH DATA:
+--------------------------------------------------------------------------------
+canvas_pairing                                            151 rows
+voice_questions                                            48 rows
+narrative_sessions                                         47 rows
+brand_posts                                                40 rows
+posts                                                      35 rows
+game_state                                                 28 rows
+qr_scans                                                   24 rows
+game_actions                                               17 rows
+schema_migrations                                          16 rows
+vanity_qr_codes                                            16 rows
+learning_sessions                                          15 rows
+practice_rooms                                             15 rows
+users                                                      13 rows
+domain_contexts                                            12 rows
+game_sessions                                              12 rows
+items                                                      12 rows
+learning_cards                                             12 rows
+learning_progress                                          12 rows
+template_outputs                                            8 rows
+chapter_snapshots                                           7 rows
+review_questions                                            7 rows
+aging_milestones                                            6 rows
+brands                                                      6 rows
+catchphrases                                                6 rows
+categories                                                  6 rows
+kangaroo_submissions                                        6 rows
+search_tokens                                               6 rows
+products                                                    5 rows
+quests                                                      5 rows
+tags                                                        5 rows
+user_unlocks                                                5 rows
+affiliate_codes                                             4 rows
+discussion_sessions                                         4 rows
+domain_relationships                                        4 rows
+federation_peers                                            4 rows
+forum_categories                                            4 rows
+gallery_chats                                               4 rows
+neural_networks                                             4 rows
+neural_ratings                                              4 rows
+package_pings                                               4 rows
+qr_chat_transcripts                                         4 rows
+qr_codes                                                    4 rows
+unified_content                                             4 rows
+brand_licenses                                              3 rows
+domain_rotation_state                                       3 rows
+inventory                                                   3 rows
+template_versions                                           3 rows
+character_snapshots                                         2 rows
+discussion_messages                                         2 rows
+images                                                      2 rows
+irc_channels                                                2 rows
+kangaroo_users                                              2 rows
+memberships                                                 2 rows
+qr_faucets                                                  2 rows
+reputation                                                  2 rows
+subscribers                                                 2 rows
+api_keys                                                    1 rows
+chapter_completions                                         1 rows
+chapter_interactions                                        1 rows
+comments                                                    1 rows
+concepts                                                    1 rows
+cross_platform_players                                      1 rows
+deployments                                                 1 rows
+devices                                                     1 rows
+dm_channels                                                 1 rows
+knowledge_extraction_log                                    1 rows
+knowledge_topics                                            1 rows
+knowledge_user_profile                                      1 rows
+licenses                                                    1 rows
+practice_room_participants                                  1 rows
+practice_room_recordings                                    1 rows
+qr_auth_tokens                                              1 rows
+qr_galleries                                                1 rows
+relay_configs                                               1 rows
+soul_scores                                                 1 rows
+trade_limits                                                1 rows
+trades                                                      1 rows
+tutorials                                                   1 rows
+user_learning_progress                                      1 rows
+voice_inputs                                                1 rows
+
+
+EMPTY TABLES:
+--------------------------------------------------------------------------------
+admin_activity_log
+affiliate_clicks
+anonymous_sessions
+api_usage
+brand_assets
+brand_sops
+catchphrase_reactions
+challenge_attempts
+challenge_submissions
+chapter_diffs
+chapter_merge_requests
+chapter_quiz_attempts
+chapter_version_views
+color_challenges
+connection_blends
+contribution_logs
+creative_challenges
+dm_messages
+domain_conversations
+domain_files
+domain_permissions
+domain_question_rotations
+domain_suggestions
+drawings
+feedback
+file_routes
+forum_posts
+forum_threads
+game_reviews
+game_seasons
+game_shares
+game_state_snapshots
+hub_classifications
+hub_messages
+hub_routing_log
+irc_messages
+kangaroo_votes
+knowledge_domain_mapping
+knowledge_entities
+knowledge_relationships
+learning_paths
+loyalty_points
+messages
+ml_models
+network_posts
+notifications
+oauth_states
+path_cards
+plot_activities
+plot_reactions
+plots
+post_categories
+post_tags
+predictions
+professional_reviews
+professionals
+published_images
+qr_game_portals
+quest_progress
+reasoning_steps
+reasoning_threads
+referrals
+review_analysis
+review_history
+search_sessions
+season_rankings
+share_notifications
+simple_voice_recordings
+skill_certifications
+soul_history
+template_tests
+training_contributions
+training_images
+training_sessions
+url_shortcuts
+user_chapter_forks
+user_connections
+user_neural_networks
+user_question_schedule
+user_roles
+verification_results
+verified_proofs
+visual_templates
+voice_identities
+voice_memo_access_log
+voice_memos
+voice_qr_attachments
+voice_responses

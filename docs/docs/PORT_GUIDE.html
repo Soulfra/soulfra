@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Port Guide - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-port-guide">Soulfra Port Guide</h1>
+
+<p><strong>Complete reference to every port used by Soulfra</strong></p>
+
+<hr />
+
+<h2 id="quick-reference">Quick Reference</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Port</th>
+  <th>Service</th>
+  <th>Required?</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>5001</strong></td>
+  <td>Soulfra Flask</td>
+  <td>Yes</td>
+  <td>Main web application</td>
+</tr>
+<tr>
+  <td><strong>11434</strong></td>
+  <td>Ollama AI</td>
+  <td>Optional</td>
+  <td>Local AI inference</td>
+</tr>
+<tr>
+  <td><strong>8888</strong></td>
+  <td>soulfra_zero.py</td>
+  <td>No</td>
+  <td>Zero-dependency demo</td>
+</tr>
+<tr>
+  <td><strong>80</strong></td>
+  <td>nginx</td>
+  <td>Production only</td>
+  <td>HTTP (redirects to HTTPS)</td>
+</tr>
+<tr>
+  <td><strong>443</strong></td>
+  <td>nginx</td>
+  <td>Production only</td>
+  <td>HTTPS (SSL/TLS)</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="port-5001-soulfra-flask-application">Port 5001: Soulfra Flask Application</h2>
+
+<p><strong>What it is</strong>: The main Soulfra web application</p>
+
+<p><strong>Where it's configured</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py (line ~11300)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>How to access</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Localhost</span>
+http://localhost:5001
+
+<span class="c1"># LAN (from other devices on same network)</span>
+http://192.168.1.100:5001<span class="w">  </span><span class="c1"># Replace with your IP</span>
+
+<span class="c1"># Public internet (requires port forwarding)</span>
+http://YOUR_PUBLIC_IP:5001
+</code></pre>
+</div>
+
+<p><strong>What runs on this port</strong>:
+- Homepage and blog
+- User authentication
+- Admin panel
+- API endpoints
+- Chat/messaging
+- Post generation
+- Neural network inference
+- Database operations</p>
+
+<p><strong>How to start</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Development</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># Production (with gunicorn)</span>
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>-b<span class="w"> </span><span class="m">0</span>.0.0.0:5001<span class="w"> </span>app:app
+</code></pre>
+</div>
+
+<p><strong>How to change the port</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>  <span class="c1"># Use port 8080 instead</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Or with environment variable</span>
+<span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span><span class="w"> </span>python3<span class="w"> </span>app.py
+
+<span class="c1"># Or with gunicorn</span>
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>-b<span class="w"> </span><span class="m">0</span>.0.0.0:8080<span class="w"> </span>app:app
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="port-11434-ollama-ai-service">Port 11434: Ollama AI Service</h2>
+
+<p><strong>What it is</strong>: Local AI inference engine (like ChatGPT, but runs on your machine)</p>
+
+<p><strong>Where it's configured</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># .env file</span>
+<span class="nv">OLLAMA_HOST</span><span class="o">=</span>http://localhost:11434
+
+<span class="c1"># Or in docker-compose.yml</span>
+<span class="nv">OLLAMA_HOST</span><span class="o">=</span>http://ollama:11434
+</code></pre>
+</div>
+
+<p><strong>How to access</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Direct API access</span>
+curl<span class="w"> </span>http://localhost:11434/
+
+<span class="c1"># From Soulfra code</span>
+<span class="nv">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>requests.post<span class="o">(</span><span class="s1">&#39;http://localhost:11434/api/generate&#39;</span>,<span class="w"> </span>...<span class="o">)</span>
+</code></pre>
+</div>
+
+<p><strong>What runs on this port</strong>:
+- LLM inference (llama2, mistral, etc.)
+- AI comment generation
+- Post analysis
+- Content classification</p>
+
+<p><strong>How to start</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Native installation</span>
+ollama<span class="w"> </span>serve
+
+<span class="c1"># Or with Docker</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span>ollama/ollama
+
+<span class="c1"># Or with docker-compose</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>ollama
+</code></pre>
+</div>
+
+<p><strong>How to test it's working</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check if Ollama is running</span>
+curl<span class="w"> </span>http://localhost:11434/
+
+<span class="c1"># Should return: &quot;Ollama is running&quot;</span>
+
+<span class="c1"># List models</span>
+ollama<span class="w"> </span>list
+
+<span class="c1"># Test generation</span>
+ollama<span class="w"> </span>run<span class="w"> </span>llama2<span class="w"> </span><span class="s2">&quot;Hello world&quot;</span>
+</code></pre>
+</div>
+
+<p><strong>Is it required?</strong>
+- <strong>No</strong> - Soulfra works without it
+- Features that won't work: AI comment generation, post analysis
+- Everything else still works (posts, auth, database, etc.)</p>
+
+<p><strong>How to change the port</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Set environment variable before starting</span>
+<span class="nv">OLLAMA_HOST</span><span class="o">=</span><span class="m">0</span>.0.0.0<span class="w"> </span><span class="nv">OLLAMA_PORT</span><span class="o">=</span><span class="m">12345</span><span class="w"> </span>ollama<span class="w"> </span>serve
+
+<span class="c1"># Then update .env</span>
+<span class="nv">OLLAMA_HOST</span><span class="o">=</span>http://localhost:12345
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="port-8888-zero-dependency-demo-soulfra_zeropy">Port 8888: Zero-Dependency Demo (soulfra_zero.py)</h2>
+
+<p><strong>What it is</strong>: Minimal HTTP server with zero external dependencies</p>
+
+<p><strong>Where it's configured</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># soulfra_zero.py</span>
+<span class="n">server</span> <span class="o">=</span> <span class="n">HTTPServer</span><span class="p">((</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">8888</span><span class="p">),</span> <span class="n">MyHTTPRequestHandler</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>How to access</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>http://localhost:8888
+</code></pre>
+</div>
+
+<p><strong>What runs on this port</strong>:
+- Neural network training dashboard
+- Multi-format output (JSON/CSV/TXT/HTML/RTF)
+- Pure stdlib HTTP server (no Flask)
+- Read-only access to soulfra.db</p>
+
+<p><strong>How to start</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>soulfra_zero.py
+<span class="c1"># Visit: http://localhost:8888</span>
+</code></pre>
+</div>
+
+<p><strong>When to use</strong>:
+- Demonstrating Python stdlib capabilities
+- Zero-dependency environments
+- Learning/teaching purposes
+- Quick dashboard without Flask</p>
+
+<p><strong>Is it required?</strong>
+- <strong>No</strong> - This is an optional demo server
+- Demonstrates what's possible with pure Python stdlib
+- Not needed for normal Soulfra operation</p>
+
+<hr />
+
+<h2 id="port-80-http-production-with-nginx">Port 80: HTTP (Production with nginx)</h2>
+
+<p><strong>What it is</strong>: Standard HTTP port (unencrypted)</p>
+
+<p><strong>Where it's configured</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># nginx.conf or /etc/nginx/sites-enabled/soulfra</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1"># Redirect all HTTP to HTTPS</span>
+<span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$server_name$request_uri</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><strong>How to access</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>http://soulfra.com<span class="w">  </span><span class="c1"># Automatically redirects to HTTPS</span>
+</code></pre>
+</div>
+
+<p><strong>What it does</strong>:
+- Receives HTTP requests
+- Redirects to HTTPS (port 443)
+- No content served directly (security)</p>
+
+<p><strong>When to use</strong>:
+- Production deployments only
+- With SSL certificate
+- With nginx reverse proxy</p>
+
+<p><strong>How to enable</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Uncomment nginx section in docker-compose.yml</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>nginx
+
+<span class="c1"># Or install nginx directly</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>nginx
+sudo<span class="w"> </span>cp<span class="w"> </span>nginx.conf<span class="w"> </span>/etc/nginx/sites-available/soulfra
+sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/nginx/sites-available/soulfra<span class="w"> </span>/etc/nginx/sites-enabled/
+sudo<span class="w"> </span>nginx<span class="w"> </span>-t
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="port-443-https-production-with-ssl">Port 443: HTTPS (Production with SSL)</h2>
+
+<p><strong>What it is</strong>: Standard HTTPS port (encrypted with SSL/TLS)</p>
+
+<p><strong>Where it's configured</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># nginx.conf</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/soulfra.com/fullchain.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/soulfra.com/privkey.pem</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://localhost:5001</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><strong>How to access</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>https://soulfra.com
+</code></pre>
+</div>
+
+<p><strong>What it does</strong>:
+- Receives encrypted HTTPS requests
+- Terminates SSL (decrypts)
+- Proxies to Soulfra on port 5001
+- Adds security headers</p>
+
+<p><strong>When to use</strong>:
+- Production deployments
+- Public-facing websites
+- When you have a domain name
+- For secure connections</p>
+
+<p><strong>How to enable</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Get SSL certificate (Let&#39;s Encrypt)</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>certbot<span class="w"> </span>python3-certbot-nginx
+sudo<span class="w"> </span>certbot<span class="w"> </span>--nginx<span class="w"> </span>-d<span class="w"> </span>soulfra.com<span class="w"> </span>-d<span class="w"> </span>www.soulfra.com
+
+<span class="c1"># Certificate auto-renews</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="how-ports-compose-together">How Ports Compose Together</h2>
+
+<h3 id="development-setup-localhost">Development Setup (Localhost)</h3>
+
+<pre><code>Your Code (app.py)
+    ↓
+Flask :5001 ← You access this
+    ↓
+SQLite (soulfra.db)
+
+Optional:
+Ollama :11434 ← For AI features
+</code></pre>
+
+<p><strong>Access</strong>: <code>http://localhost:5001</code></p>
+
+<hr />
+
+<h3 id="production-setup-docker">Production Setup (Docker)</h3>
+
+<pre><code>[Browser]
+    ↓
+nginx :80 → Redirect → nginx :443 (HTTPS)
+    ↓
+Soulfra Flask :5001
+    ↓ ↓
+    │ └→ Ollama :11434
+    ↓
+SQLite (soulfra.db)
+</code></pre>
+
+<p><strong>Access</strong>: <code>https://soulfra.com</code></p>
+
+<p><strong>How it works</strong>:
+1. User visits <code>http://soulfra.com</code> (port 80)
+2. nginx redirects to <code>https://soulfra.com</code> (port 443)
+3. nginx terminates SSL and proxies to Flask (port 5001)
+4. Flask handles request, may call Ollama (port 11434)
+5. Response goes back through nginx to user</p>
+
+<hr />
+
+<h2 id="testing-all-ports">Testing All Ports</h2>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Test Soulfra (5001)</span>
+curl<span class="w"> </span>http://localhost:5001/
+<span class="c1"># Should return HTML</span>
+
+<span class="c1"># Test Ollama (11434)</span>
+curl<span class="w"> </span>http://localhost:11434/
+<span class="c1"># Should return: &quot;Ollama is running&quot;</span>
+
+<span class="c1"># Test zero-dep demo (8888)</span>
+curl<span class="w"> </span>http://localhost:8888/
+<span class="c1"># Should return HTML dashboard</span>
+
+<span class="c1"># Test nginx (80/443) - production only</span>
+curl<span class="w"> </span>http://soulfra.com
+curl<span class="w"> </span>https://soulfra.com
+</code></pre>
+</div>
+
+<p><strong>Or use the automated test</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>test_hello_world.py
+<span class="c1"># Tests ports 5001 and 11434 automatically</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="port-forwarding-router-configuration">Port Forwarding (Router Configuration)</h2>
+
+<p>To make Soulfra accessible from the internet, configure port forwarding:</p>
+
+<h3 id="basic-setup-http-only">Basic Setup (HTTP only)</h3>
+
+<pre><code>External Port: 5001
+Internal IP:   192.168.1.100  (your computer's LAN IP)
+Internal Port: 5001
+Protocol:      TCP
+</code></pre>
+
+<p><strong>Access</strong>: <code>http://YOUR_PUBLIC_IP:5001</code></p>
+
+<h3 id="production-setup-with-nginx">Production Setup (with nginx)</h3>
+
+<pre><code>Rule 1:
+  External Port: 80
+  Internal IP:   192.168.1.100
+  Internal Port: 80
+  Protocol:      TCP
+
+Rule 2:
+  External Port: 443
+  Internal IP:   192.168.1.100
+  Internal Port: 443
+  Protocol:      TCP
+</code></pre>
+
+<p><strong>Access</strong>: <code>https://soulfra.com</code></p>
+
+<p><strong>Do NOT forward port 11434</strong> - Ollama should never be exposed to the internet!</p>
+
+<hr />
+
+<h2 id="firewall-configuration">Firewall Configuration</h2>
+
+<h3 id="macos">macOS</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Allow port 5001</span>
+sudo<span class="w"> </span>/usr/libexec/ApplicationFirewall/socketfilterfw<span class="w"> </span>--add<span class="w"> </span>/usr/local/bin/python3
+sudo<span class="w"> </span>/usr/libexec/ApplicationFirewall/socketfilterfw<span class="w"> </span>--unblock<span class="w"> </span>/usr/local/bin/python3
+</code></pre>
+</div>
+
+<h3 id="linux-ufw">Linux (ufw)</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Allow ports</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">5001</span>/tcp
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">80</span>/tcp
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">443</span>/tcp
+
+<span class="c1"># Do NOT allow 11434 (Ollama should be localhost-only)</span>
+</code></pre>
+</div>
+
+<h3 id="docker">Docker</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># docker-compose.yml already handles ports</span>
+<span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5001:5001&quot;</span><span class="w">  </span><span class="c1"># Soulfra</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;11434:11434&quot;</span><span class="w">  </span><span class="c1"># Ollama (WARNING: Only expose if needed)</span>
+</code></pre>
+</div>
+
+<p><strong>Security note</strong>: Only expose ports you need. Never expose Ollama (11434) to the internet.</p>
+
+<hr />
+
+<h2 id="common-port-conflicts">Common Port Conflicts</h2>
+
+<h3 id="port-5001-already-in-use">Port 5001 already in use</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Find what&#39;s using it</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># Kill the process</span>
+<span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>PID
+
+<span class="c1"># Or use a different port</span>
+<span class="nv">PORT</span><span class="o">=</span><span class="m">5002</span><span class="w"> </span>python3<span class="w"> </span>app.py
+</code></pre>
+</div>
+
+<h3 id="port-11434-already-in-use">Port 11434 already in use</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check if Ollama is already running</span>
+ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ollama
+
+<span class="c1"># Kill if needed</span>
+killall<span class="w"> </span>ollama
+
+<span class="c1"># Restart</span>
+ollama<span class="w"> </span>serve
+</code></pre>
+</div>
+
+<h3 id="port-80443-already-in-use">Port 80/443 already in use</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check what&#39;s using it</span>
+sudo<span class="w"> </span>lsof<span class="w"> </span>-i<span class="w"> </span>:80
+sudo<span class="w"> </span>lsof<span class="w"> </span>-i<span class="w"> </span>:443
+
+<span class="c1"># Usually Apache or another nginx</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>apache2
+<span class="c1"># OR</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>nginx
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="environment-variables">Environment Variables</h2>
+
+<p>Control ports via environment variables:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># .env file</span>
+<span class="nv">PORT</span><span class="o">=</span><span class="m">5001</span>
+<span class="nv">OLLAMA_HOST</span><span class="o">=</span>http://localhost:11434
+<span class="nv">BASE_URL</span><span class="o">=</span>http://localhost:5001
+
+<span class="c1"># For production</span>
+<span class="nv">PORT</span><span class="o">=</span><span class="m">5001</span>
+<span class="nv">OLLAMA_HOST</span><span class="o">=</span>http://ollama:11434<span class="w">  </span><span class="c1"># Docker service name</span>
+<span class="nv">BASE_URL</span><span class="o">=</span>https://soulfra.com
+</code></pre>
+</div>
+
+<p><strong>Load environment</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Python automatically loads .env if python-dotenv installed</span>
+pip<span class="w"> </span>install<span class="w"> </span>python-dotenv
+
+<span class="c1"># Or manually</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PORT</span><span class="o">=</span><span class="m">5001</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OLLAMA_HOST</span><span class="o">=</span>http://localhost:11434
+python3<span class="w"> </span>app.py
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="quick-reference-commands">Quick Reference Commands</h2>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start everything (Docker)</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+<span class="c1"># Starts: Soulfra (5001) + Ollama (11434)</span>
+
+<span class="c1"># Start Soulfra only</span>
+python3<span class="w"> </span>app.py
+<span class="c1"># Runs on: http://localhost:5001</span>
+
+<span class="c1"># Start Ollama only</span>
+ollama<span class="w"> </span>serve
+<span class="c1"># Runs on: http://localhost:11434</span>
+
+<span class="c1"># Start zero-dep demo</span>
+python3<span class="w"> </span>soulfra_zero.py
+<span class="c1"># Runs on: http://localhost:8888</span>
+
+<span class="c1"># Test all services</span>
+python3<span class="w"> </span>test_hello_world.py
+
+<span class="c1"># Check what&#39;s running on each port</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001<span class="w">   </span><span class="c1"># Soulfra</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:11434<span class="w">  </span><span class="c1"># Ollama</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:8888<span class="w">   </span><span class="c1"># Zero-dep demo</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="summary">Summary</h2>
+
+<p><strong>Minimum to run Soulfra</strong>:
+- Port 5001 (Soulfra Flask app) ✓ REQUIRED
+- soulfra.db (SQLite database) ✓ REQUIRED</p>
+
+<p><strong>Optional enhancements</strong>:
+- Port 11434 (Ollama AI) - for AI features
+- Port 8888 (soulfra_zero.py) - for demos
+- Port 80/443 (nginx) - for production/SSL</p>
+
+<p><strong>Most common setup</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Development</span>
+python3<span class="w"> </span>app.py<span class="w">           </span><span class="c1"># Port 5001</span>
+ollama<span class="w"> </span>serve<span class="w">             </span><span class="c1"># Port 11434 (optional)</span>
+
+<span class="c1"># Production</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">     </span><span class="c1"># Ports 5001, 11434, 80, 443</span>
+</code></pre>
+</div>
+
+<p><strong>Access URLs</strong>:
+- Development: <code>http://localhost:5001</code>
+- LAN: <code>http://192.168.1.100:5001</code>
+- Production: <code>https://soulfra.com</code></p>
+
+<p><strong>That's it!</strong> Now you understand every port Soulfra uses and why.</p>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+<li>Test all ports: <code>python3 test_hello_world.py</code></li>
+<li>Test network layers: <code>python3 test_network_stack.py</code></li>
+<li>See network diagram: <code>python3 network_diagram.py</code></li>
+<li>Deploy step-by-step: <code>python3 deployment_ladder.py</code></li>
+</ul>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

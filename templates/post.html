@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post['title'] }} - Soulfra{% endblock %}
+
+{% block content %}
+<!-- Inject Brand CSS if post has a brand -->
+{% if brand_css %}
+{{ brand_css|safe }}
+{% endif %}
+
+<article class="post-full {% if brand_css %}brand-card{% endif %}">
+  {% if brand_css %}
+  <div class="brand-card-header">
+    <h1>{{ post['title'] }}</h1>
+    {% if brand_name %}
+    <span class="brand-badge" style="margin-top: 0.5rem;">✨ {{ brand_name }}</span>
+    {% endif %}
+  </div>
+  {% else %}
+  <h1>{{ post['title'] }}</h1>
+  {% endif %}
+
+  <p class="date">
+    By <strong><a href="/user/{{ author['username'] }}" class="author-link">{{ author['display_name'] or author['username'] }}</a></strong>
+    {% if author['is_ai_persona'] %}
+      <span class="ai-badge" title="AI Persona">🤖</span>
+    {% endif %}
+    on {{ post['published_at'][:10] }}
+  </p>
+
+  {% if categories %}
+    <div class="categories">
+      {% for category in categories %}
+        <a href="/category/{{ category['slug'] }}" class="category-badge">
+          📁 {{ category['name'] }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if tags %}
+    <div class="tags">
+      {% for tag in tags %}
+        <a href="/tag/{{ tag['slug'] }}" class="tag-badge">
+          #{{ tag['name'] }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="post-content">
+    {{ post['content']|markdown|safe }}
+  </div>
+
+  {% if session.get('is_admin') %}
+  <div class="ollama-section" style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+    <h3 style="margin-top: 0;">🤖 Get AI Feedback (Ollama)</h3>
+    <p style="color: #666; font-size: 14px;">
+      Get comments from 4 AI personas: CalRiven, DeathToData, TheAuditor, and Soulfra.
+      Requires Ollama running locally (<code>ollama serve</code>).
+    </p>
+    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <button onclick="getOllamaFeedback({{ post['id'] }}, false)" class="btn-ollama" id="btn-preview">
+        👁️ Preview Feedback
+      </button>
+      <button onclick="getOllamaFeedback({{ post['id'] }}, true)" class="btn-ollama btn-ollama-post" id="btn-post">
+        💬 Get & Post as Comments
+      </button>
+      <a href="{{ url_for('post_discuss', slug=post['slug']) }}" class="btn-ollama btn-ollama-discuss" style="text-decoration: none; display: inline-block;">
+        💡 Discuss with AI
+      </a>
+      <span id="ollama-status" style="color: #666; font-size: 14px;"></span>
+    </div>
+    <div id="ollama-results" style="margin-top: 20px;"></div>
+  </div>
+
+  <style>
+    .btn-ollama {
+      padding: 12px 24px;
+      border: 2px solid #000;
+      background: #fff;
+      color: #000;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-ollama:hover {
+      background: #000;
+      color: #fff;
+    }
+    .btn-ollama:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-ollama-post {
+      background: #000;
+      color: #fff;
+    }
+    .btn-ollama-post:hover {
+      background: #333;
+    }
+    .btn-ollama-discuss {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border-color: #667eea;
+    }
+    .btn-ollama-discuss:hover {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .ollama-comment {
+      padding: 15px;
+      margin: 10px 0;
+      background: #fff;
+      border-left: 4px solid #000;
+      border-radius: 5px;
+    }
+    .ollama-comment.error {
+      border-left-color: #c00;
+      background: #fee;
+    }
+    .ollama-persona {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  </style>
+
+  <script>
+    async function getOllamaFeedback(postId, autoPost) {
+      const statusEl = document.getElementById('ollama-status');
+      const resultsEl = document.getElementById('ollama-results');
+      const btnPreview = document.getElementById('btn-preview');
+      const btnPost = document.getElementById('btn-post');
+
+      // Disable buttons
+      btnPreview.disabled = true;
+      btnPost.disabled = true;
+
+      // Show loading
+      statusEl.textContent = '⏳ Calling Ollama...';
+      resultsEl.innerHTML = '';
+
+      try {
+        const response = await fetch('/api/ollama/comment', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({post_id: postId, auto_post: autoPost})
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          statusEl.textContent = `✅ Got ${data.comments.length} responses`;
+
+          let html = '';
+          data.comments.forEach(c => {
+            if (c.error) {
+              html += `
+                <div class="ollama-comment error">
+                  <div class="ollama-persona">${c.persona}</div>
+                  <div style="color: #c00;">❌ ${c.error}</div>
+                </div>
+              `;
+            } else {
+              html += `
+                <div class="ollama-comment">
+                  <div class="ollama-persona">🤖 ${c.persona}</div>
+                  <div>${c.comment}</div>
+                  ${c.posted ? '<div style="color: #060; font-size: 12px; margin-top: 5px;">✓ Posted as comment</div>' : ''}
+                </div>
+              `;
+            }
+          });
+
+          resultsEl.innerHTML = html;
+
+          if (autoPost) {
+            setTimeout(() => window.location.reload(), 2000);
+          }
+        } else {
+          statusEl.textContent = `❌ Error: ${data.error}`;
+        }
+      } catch (error) {
+        statusEl.textContent = `❌ Error: ${error.message}`;
+      } finally {
+        // Re-enable buttons
+        btnPreview.disabled = false;
+        btnPost.disabled = false;
+      }
+    }
+  </script>
+  {% endif %}
+</article>
+
+{% if reasoning_steps %}
+  <div class="reasoning-section">
+    <h3>🔍 AI Reasoning Process</h3>
+    <p class="reasoning-intro">
+      View the internal thought process behind each AI comment. Each reasoning step shows how the AI analyzed the post.
+    </p>
+    <details>
+      <summary class="reasoning-toggle">
+        ▶ Show Reasoning Steps ({{ reasoning_steps|length }})
+      </summary>
+      <div class="reasoning-steps">
+        {% for step in reasoning_steps %}
+          <div class="reasoning-step">
+            <div class="step-header">
+              <strong class="step-number">Step {{ step['step_number'] }}</strong> - {{ step['display_name'] }}
+              {% if step['is_ai_persona'] %}
+                <span class="ai-badge">AI</span>
+              {% endif %}
+              <span class="step-type">{{ step['step_type'] }}</span>
+              <span class="step-confidence">confidence: {{ (step['confidence'] * 100)|int }}%</span>
+              {% if step['comment_id'] %}
+                <a href="#comment-{{ step['comment_id'] }}" class="comment-link">→ See public comment</a>
+              {% endif %}
+            </div>
+            <div class="step-content">
+              {{ step['content']|safe }}
+            </div>
+            <time class="step-time">{{ step['created_at'][:16] }}</time>
+          </div>
+        {% endfor %}
+      </div>
+    </details>
+  </div>
+{% endif %}
+
+<div class="comments-section">
+  <h2>Comments ({{ comments|length }})</h2>
+
+  {% if session.get('user_id') %}
+    <form method="POST" action="{{ url_for('add_post_comment', slug=post['slug']) }}" class="comment-form">
+      <textarea name="content" rows="4" placeholder="Write a comment..." required class="comment-textarea"></textarea>
+      <button type="submit" class="comment-submit">Post Comment</button>
+    </form>
+  {% else %}
+    <p class="login-prompt">
+      <a href="{{ url_for('login') }}">Login</a> or <a href="{{ url_for('signup') }}">Sign up</a> to comment.
+    </p>
+  {% endif %}
+
+  {% if comments %}
+    <div class="comments-list">
+      {% macro render_comment(comment) %}
+        <div id="comment-{{ comment['id'] }}" class="comment {% if comment.get('parent_comment_id') %}comment-reply{% endif %}">
+          <div class="comment-avatar-container">
+            <img src="{{ comment|avatar_url }}"
+                 alt="{{ comment['display_name'] }}"
+                 class="comment-avatar {% if comment['is_ai_persona'] %}ai-avatar{% endif %}">
+          </div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <strong>{{ comment['display_name'] }}</strong>
+              {% if comment['is_ai_persona'] %}
+                <span class="ai-badge">AI</span>
+              {% endif %}
+              <span class="comment-time">{{ comment['created_at'][:16] }}</span>
+            </div>
+            <div class="comment-content">{{ comment['content']|safe }}</div>
+
+            {% if comment.get('replies') %}
+              <div class="comment-replies">
+                {% for reply in comment['replies'] %}
+                  {{ render_comment(reply) }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endmacro %}
+
+      {% for comment in comments %}
+        {{ render_comment(comment) }}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="no-comments">No comments yet. Be the first to comment!</p>
+  {% endif %}
+</div>
+
+<div class="subscribe-prompt">
+  <p><strong>Like this post?</strong> <a href="{{ url_for('subscribe') }}">Subscribe</a> to get more like it.</p>
+</div>
+{% endblock %}

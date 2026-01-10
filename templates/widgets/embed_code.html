@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Embed Code Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .widget-selector {
+            margin-bottom: 30px;
+        }
+
+        .widget-selector label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .widget-option {
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .widget-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .widget-option.selected {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        .widget-option .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .widget-option .name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .widget-option .district {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .code-box {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #764ba2;
+        }
+
+        .copy-button.copied {
+            background: #48bb78;
+        }
+
+        .preview-box {
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .preview-box h3 {
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .preview-box iframe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .option-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .option-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎠 Widget Embed Code Generator</h1>
+            <p>Choose a widget and copy the embed code for your site</p>
+        </div>
+
+        <div class="card">
+            <div class="widget-selector">
+                <label>Select Widget</label>
+                <div class="widget-grid" id="widgetGrid">
+                    {% for widget in widgets %}
+                    <div class="widget-option {{ 'selected' if widget.id == widget_id else '' }}"
+                         data-widget-id="{{ widget.id }}"
+                         onclick="selectWidget('{{ widget.id }}')">
+                        <div class="icon" style="color: {{ widget.color }};">
+                            {% if widget.id == 'universe' %}🌌
+                            {% elif widget.id == 'arena' %}⚔️
+                            {% elif widget.id == 'marketplace' %}🏪
+                            {% elif widget.id == 'immersion' %}🎨
+                            {% else %}🎮
+                            {% endif %}
+                        </div>
+                        <div class="name">{{ widget.name }}</div>
+                        <div class="district">{{ widget.district }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="options">
+                <div class="option-group">
+                    <label>Width</label>
+                    <input type="text" id="widthInput" value="100%" onchange="updateEmbedCode()">
+                </div>
+                <div class="option-group">
+                    <label>Height</label>
+                    <input type="text" id="heightInput" value="600px" onchange="updateEmbedCode()">
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; color: #2d3748; margin-bottom: 15px;">
+                    EMBED CODE (Copy & Paste)
+                </label>
+                <div class="code-box">
+                    <button class="copy-button" onclick="copyCode()">Copy</button>
+                    <code id="embedCode">{{ iframe_code }}</code>
+                </div>
+            </div>
+
+            <div class="preview-box">
+                <h3>📱 Live Preview</h3>
+                <div id="previewContainer">
+                    <iframe src="/widget/carousel?start_widget={{ widget_id }}" width="600" height="400"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h2 style="margin-bottom: 20px;">✨ How It Works</h2>
+            <p style="color: #4a5568; line-height: 1.8;">
+                Copy the embed code above and paste it into your website's HTML. <br>
+                The widget carousel will automatically rotate through experiences. <br>
+                All user interactions are logged to <code>training_contributions</code> for AI training.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentWidget = '{{ widget_id }}';
+
+        function selectWidget(widgetId) {
+            currentWidget = widgetId;
+
+            // Update selected state
+            document.querySelectorAll('.widget-option').forEach(el => {
+                el.classList.toggle('selected', el.dataset.widgetId === widgetId);
+            });
+
+            updateEmbedCode();
+        }
+
+        function updateEmbedCode() {
+            const width = document.getElementById('widthInput').value;
+            const height = document.getElementById('heightInput').value;
+
+            const embedCode = `<iframe src="${window.location.origin}/widget/carousel?start_widget=${currentWidget}&auto_rotate=true" width="${width}" height="${height}" frameborder="0" allow="microphone; camera; autoplay"></iframe>`;
+
+            document.getElementById('embedCode').textContent = embedCode;
+
+            // Update preview
+            document.getElementById('previewContainer').innerHTML =
+                `<iframe src="/widget/carousel?start_widget=${currentWidget}" width="${width.replace('%', 'px') || '600px'}" height="${height}"></iframe>`;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('embedCode').textContent;
+            const button = document.querySelector('.copy-button');
+
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

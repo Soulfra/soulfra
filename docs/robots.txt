@@ -1,0 +1,18 @@
+# robots.txt for soulfra.com
+# Identity & Security Platform
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://soulfra.com/sitemap.xml
+
+# Allow all search engines to index everything
+# This site contains public documentation and blog content
+
+# Crawl-delay (be nice to our servers)
+Crawl-delay: 1
+
+# Block specific user-agents if needed (none for now)
+# User-agent: BadBot
+# Disallow: /

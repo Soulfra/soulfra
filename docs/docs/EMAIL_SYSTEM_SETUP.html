@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email System Setup - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="email-system-setup">Email System Setup</h1>
+
+<p><strong>Get Soulfra newsletters working with SMTP</strong></p>
+
+<hr />
+
+<h2 id="quick-setup-gmail-smtp">Quick Setup (Gmail SMTP)</h2>
+
+<h3 id="1-get-gmail-app-password">1. Get Gmail App Password</h3>
+
+<pre><code>1. Go to Google Account settings
+2. Security → 2-Step Verification → App passwords
+3. Generate app password for "Mail"
+4. Copy the 16-character password
+</code></pre>
+
+<h3 id="2-create-config_secretspy">2. Create config_secrets.py</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># config_secrets.py (git-ignored)</span>
+<span class="n">SMTP_HOST</span> <span class="o">=</span> <span class="s1">&#39;smtp.gmail.com&#39;</span>
+<span class="n">SMTP_PORT</span> <span class="o">=</span> <span class="mi">587</span>
+<span class="n">SMTP_USER</span> <span class="o">=</span> <span class="s1">&#39;your-email@gmail.com&#39;</span>
+<span class="n">SMTP_PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;your-app-password&#39;</span>  <span class="c1"># 16-char from step 1</span>
+<span class="n">FROM_EMAIL</span> <span class="o">=</span> <span class="s1">&#39;noreply@soulfra.com&#39;</span>
+<span class="n">FROM_NAME</span> <span class="o">=</span> <span class="s1">&#39;Soulfra Newsletter&#39;</span>
+</code></pre>
+</div>
+
+<h3 id="3-update-send_newsletterpy">3. Update send_newsletter.py</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">smtplib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">email.mime.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">MIMEText</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">email.mime.multipart</span><span class="w"> </span><span class="kn">import</span> <span class="n">MIMEMultipart</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config_secrets</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_newsletter</span><span class="p">(</span><span class="n">brand_slug</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send newsletter to brand subscribers&quot;&quot;&quot;</span>
+
+    <span class="c1"># Get post details</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;soulfra.db&#39;</span><span class="p">)</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT title, content FROM posts WHERE id = ?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">post_id</span><span class="p">,))</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+    <span class="c1"># Get subscribers</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT email FROM subscribers WHERE confirmed = 1 AND unsubscribed_at IS NULL&quot;</span><span class="p">)</span>
+    <span class="n">subscribers</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+    <span class="c1"># Create email</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEMultipart</span><span class="p">(</span><span class="s1">&#39;alternative&#39;</span><span class="p">)</span>
+    <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;New post: </span><span class="si">{</span><span class="n">post</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;From&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">FROM_NAME</span><span class="si">}</span><span class="s2"> &lt;</span><span class="si">{</span><span class="n">FROM_EMAIL</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="c1"># HTML email</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;html&gt;</span>
+<span class="s2">      &lt;body&gt;</span>
+<span class="s2">        &lt;h1&gt;</span><span class="si">{</span><span class="n">post</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/h1&gt;</span>
+<span class="s2">        &lt;p&gt;</span><span class="si">{</span><span class="n">post</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="mi">200</span><span class="p">]</span><span class="si">}</span><span class="s2">...&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;&lt;a href=&quot;http://soulfra.com/post/</span><span class="si">{</span><span class="n">post_id</span><span class="si">}</span><span class="s2">&quot;&gt;Read full post →&lt;/a&gt;&lt;/p&gt;</span>
+<span class="s2">      &lt;/body&gt;</span>
+<span class="s2">    &lt;/html&gt;</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">MIMEText</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s1">&#39;html&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Send to each subscriber</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span><span class="n">SMTP_HOST</span><span class="p">,</span> <span class="n">SMTP_PORT</span><span class="p">)</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">starttls</span><span class="p">()</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">SMTP_USER</span><span class="p">,</span> <span class="n">SMTP_PASSWORD</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">subscribers</span><span class="p">:</span>
+        <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;To&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Sent to </span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">server</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># Usage</span>
+<span class="n">send_newsletter</span><span class="p">(</span><span class="s1">&#39;deathtodata&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="alternative-sendgrid">Alternative: SendGrid</h2>
+
+<p>Easier for high volume:</p>
+
+<div class="codehilite">
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>sendgrid
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sendgrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">SendGridAPIClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sendgrid.helpers.mail</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mail</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_with_sendgrid</span><span class="p">(</span><span class="n">to_email</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">html_content</span><span class="p">):</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">Mail</span><span class="p">(</span>
+        <span class="n">from_email</span><span class="o">=</span><span class="s1">&#39;noreply@soulfra.com&#39;</span><span class="p">,</span>
+        <span class="n">to_emails</span><span class="o">=</span><span class="n">to_email</span><span class="p">,</span>
+        <span class="n">subject</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span>
+        <span class="n">html_content</span><span class="o">=</span><span class="n">html_content</span>
+    <span class="p">)</span>
+
+    <span class="n">sg</span> <span class="o">=</span> <span class="n">SendGridAPIClient</span><span class="p">(</span><span class="s1">&#39;YOUR_SENDGRID_API_KEY&#39;</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">202</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="auto-send-on-post-creation">Auto-Send on Post Creation</h2>
+
+<p>Add to app.py:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/posts/create&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_post</span><span class="p">():</span>
+    <span class="c1"># ... create post logic ...</span>
+
+    <span class="n">post_id</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span>
+
+    <span class="c1"># Auto-send newsletter</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;send_newsletter&#39;</span><span class="p">):</span>
+        <span class="n">send_newsletter</span><span class="p">(</span><span class="n">brand_slug</span><span class="p">,</span> <span class="n">post_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;post_id&#39;</span><span class="p">:</span> <span class="n">post_id</span><span class="p">})</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="weekly-digest">Weekly Digest</h2>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># weekly_digest.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">schedule</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">send_weekly_digest</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send weekly digest of all new posts&quot;&quot;&quot;</span>
+    <span class="c1"># Get posts from last 7 days</span>
+    <span class="c1"># Group by brand</span>
+    <span class="c1"># Send one email per brand</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Run every Monday at 9am</span>
+<span class="n">schedule</span><span class="o">.</span><span class="n">every</span><span class="p">()</span><span class="o">.</span><span class="n">monday</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="s2">&quot;09:00&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">send_weekly_digest</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">schedule</span><span class="o">.</span><span class="n">run_pending</span><span class="p">()</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3600</span><span class="p">)</span>  <span class="c1"># Check every hour</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="email-templates">Email Templates</h2>
+
+<p>Create <code>templates/emails/</code>:</p>
+
+<p><strong>newsletter.html:</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="nt">body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">font-family</span><span class="p">:</span><span class="w"> </span><span class="kc">sans-serif</span><span class="p">;</span><span class="w"> </span><span class="k">max-width</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kc">auto</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nt">h1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#667eea</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">.</span><span class="nc">cta</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">background</span><span class="p">:</span><span class="w"> </span><span class="mh">#667eea</span><span class="p">;</span><span class="w"> </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="kc">white</span><span class="p">;</span><span class="w"> </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="kt">px</span><span class="w"> </span><span class="mi">24</span><span class="kt">px</span><span class="p">;</span><span class="w"> </span><span class="k">text-decoration</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>{{ brand_name }} Newsletter<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ post_title }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ post_excerpt }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ post_url }}&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;cta&quot;</span><span class="p">&gt;</span>Read Full Post →<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">hr</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;&lt;</span><span class="nt">small</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ unsubscribe_url }}&quot;</span><span class="p">&gt;</span>Unsubscribe<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">small</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="test">Test</h2>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>send_newsletter.py<span class="w"> </span>--test
+<span class="c1"># Sends test email to YOUR_EMAIL</span>
+</code></pre>
+</div>
+
+<p>That's it! Emails working.</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

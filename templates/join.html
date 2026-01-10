@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Soulfra - Developers & Contributors</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 32px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #555;
+            margin-bottom: 16px;
+        }
+
+        .benefits {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .benefit-icon {
+            font-size: 1.5rem;
+        }
+
+        .benefit-text h3 {
+            color: #667eea;
+            margin-bottom: 4px;
+            font-size: 1.1rem;
+        }
+
+        .benefit-text p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        form {
+            background: #f9f9f9;
+            padding: 32px;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: scale(1.02);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            border-color: #667eea;
+            background: #f5f5ff;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: #f9f9f9;
+            padding: 0 16px;
+            position: relative;
+            color: #888;
+        }
+
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Join Soulfra</h1>
+        <p class="subtitle">Developers, contributors, and enthusiasts welcome</p>
+
+        <div class="section">
+            <h2>Why Join?</h2>
+            <div class="benefits">
+                <div class="benefit">
+                    <div class="benefit-icon">🔑</div>
+                    <div class="benefit-text">
+                        <h3>API Access</h3>
+                        <p>Get your own API key to build with Soulfra's tribunal system and token infrastructure</p>
+                    </div>
+                </div>
+
+                <div class="benefit">
+                    <div class="benefit-icon">🪙</div>
+                    <div class="benefit-text">
+                        <h3>Free Tokens</h3>
+                        <p>New developers get 100 free tokens to test the platform</p>
+                    </div>
+                </div>
+
+                <div class="benefit">
+                    <div class="benefit-icon">📚</div>
+                    <div class="benefit-text">
+                        <h3>Early Access</h3>
+                        <p>Be first to try new features and vote on roadmap decisions</p>
+                    </div>
+                </div>
+
+                <div class="benefit">
+                    <div class="benefit-icon">🤝</div>
+                    <div class="benefit-text">
+                        <h3>Community</h3>
+                        <p>Join Discord, contribute to GitHub, shape the future of decentralized brands</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-message" class="success-message">
+            ✅ Welcome to Soulfra! Check your email for API key and next steps.
+        </div>
+
+        <!-- Local Auth (Primary) -->
+        <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid #667eea;">
+            <h3 style="margin-top: 0; color: #667eea;">✅ Local Authentication (No External Dependencies)</h3>
+            <p style="color: #555; margin-bottom: 16px;">Already have an account? Log in with your username and password:</p>
+            <a href="/login" class="btn" style="text-decoration: none; display: inline-block;">🔐 Log In to Existing Account</a>
+            <p style="color: #666; font-size: 0.9em; margin-top: 12px;">No account yet? Sign up with email below ↓</p>
+        </div>
+
+        <form id="join-form">
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required minlength="8">
+                <small style="color: #666;">Minimum 8 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="interest">What are you interested in?</label>
+                <select id="interest" name="interest">
+                    <option value="">Select one</option>
+                    <option value="api">Using the API</option>
+                    <option value="contributing">Contributing to code</option>
+                    <option value="hosting">Self-hosting Soulfra</option>
+                    <option value="tokens">Token purchase system</option>
+                    <option value="tribunal">Tribunal consensus</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="project">Tell us about your project (optional)</label>
+                <textarea id="project" name="project" placeholder="What do you want to build with Soulfra?"></textarea>
+            </div>
+
+            <button type="submit" class="btn">Create Local Account</button>
+        </form>
+
+        <!-- Optional: External OAuth -->
+        <div style="margin-top: 40px; padding-top: 40px; border-top: 2px solid #ddd;">
+            <h3 style="color: #888;">Optional: Sign in with External Account</h3>
+            <p style="color: #666; font-size: 0.9em;">If you prefer OAuth (requires setup), you can use these options:</p>
+            <div class="social-login">
+                <button type="button" class="social-btn" onclick="loginWithGitHub()" style="opacity: 0.6;">
+                    <span>🐙</span>
+                    <span>GitHub (Requires Setup)</span>
+                </button>
+                <button type="button" class="social-btn" onclick="loginWithGoogle()" style="opacity: 0.6;">
+                    <span>🔍</span>
+                    <span>Google (Coming Soon)</span>
+                </button>
+            </div>
+            <small style="color: #888;">Note: OAuth requires environment variables. See OAUTH-SETUP.md for details.</small>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('join-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                interest: document.getElementById('interest').value,
+                project: document.getElementById('project').value
+            };
+
+            try {
+                const response = await fetch('/api/join', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('success-message').style.display = 'block';
+                    document.getElementById('join-form').style.display = 'none';
+
+                    // Send welcome email in background
+                    console.log('API Key:', result.api_key);
+                } else {
+                    alert('Error: ' + (result.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error(error);
+            }
+        });
+
+        function loginWithGitHub() {
+            // Redirect to GitHub OAuth flow
+            window.location.href = '/github/connect';
+        }
+
+        function loginWithGoogle() {
+            // Google OAuth not yet implemented
+            alert('Google login coming soon! Use GitHub or email signup for now.');
+        }
+    </script>
+</body>
+</html>

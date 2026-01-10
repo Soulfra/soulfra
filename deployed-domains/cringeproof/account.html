@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sync & Transcribe - CringeProof</title>
+<meta name="description" content="Upload recordings for AI transcription (optional)">
+
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+.sync-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.status-box {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 6px 6px 0 #bdb2ff;
+    text-align: center;
+}
+
+.warning-box {
+    background: #ffe5ec;
+    border: 3px solid #ff006e;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.backend-input {
+    width: 100%;
+    padding: 1rem;
+    border: 3px solid #000;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    margin: 1rem 0;
+}
+
+.sync-btn {
+    background: #ff006e;
+    color: white;
+    border: 4px solid #000;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.25rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 6px 6px 0 #000;
+    transition: all 0.1s;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.sync-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #000;
+}
+
+.sync-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.recording-list {
+    margin-top: 2rem;
+}
+
+.recording-item {
+    background: #fff;
+    border: 3px solid #000;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.recording-item.synced {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.status {
+    font-weight: 700;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="/" class="soulfra-logo">🚫 CringeProof</a>
+        <div class="soulfra-links">
+            <a href="/">Home</a>
+            <a href="/record-simple.html">Record</a>
+            <a href="/sync.html" class="active">Sync</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <header style="text-align: center; margin: 2rem 0;">
+        <h1>📤 Sync & Transcribe</h1>
+        <p class="subtitle">Upload your offline recordings for AI transcription</p>
+    </header>
+
+    <div class="sync-container">
+        <div class="warning-box">
+            <strong>⚠️ This feature requires a backend server</strong><br>
+            CringeProof works 100% offline. This page is optional and only needed if you want AI transcription.
+        </div>
+
+        <div class="status-box">
+            <h3 style="margin-bottom: 1rem;">Backend Configuration</h3>
+            <p style="margin-bottom: 1rem; opacity: 0.8;">Enter your Flask backend URL:</p>
+
+            <input
+                type="text"
+                id="backendUrl"
+                class="backend-input"
+                placeholder="https://localhost:5001 or http://YOUR_IP:5001"
+                value="https://localhost:5001"
+            >
+
+            <button class="sync-btn" onclick="testConnection()">
+                🔌 Test Connection
+            </button>
+
+            <div id="connectionStatus" class="status"></div>
+        </div>
+
+        <div id="syncSection" style="display: none;">
+            <h2 style="margin-bottom: 1rem;">Your Offline Recordings</h2>
+            <p style="margin-bottom: 1rem; opacity: 0.8;">
+                Recordings stored in your browser. Click "Sync All" to upload for transcription.
+            </p>
+
+            <button class="sync-btn" onclick="syncAll()">
+                📤 Sync All Recordings
+            </button>
+
+            <div id="syncStatus" class="status"></div>
+
+            <div id="recordingsList" class="recording-list"></div>
+        </div>
+    </div>
+</div>
+
+<footer style="text-align: center; padding: 2rem; opacity: 0.7; margin-top: 4rem;">
+    <p><strong>Note:</strong> Your recordings are stored in your browser (IndexedDB).</p>
+    <p style="margin-top: 0.5rem;">
+        <a href="/">Home</a> |
+        <a href="/record-simple.html">Record</a> |
+        <a href="/ideas/">Ideas</a>
+    </p>
+</footer>
+
+<script>
+// IndexedDB setup (same as record-simple.html)
+let db;
+const DB_NAME = 'CringeProofVoice';
+const STORE_NAME = 'recordings';
+
+async function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                const objectStore = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+            }
+        };
+    });
+}
+
+async function testConnection() {
+    const url = document.getElementById('backendUrl').value.trim();
+    const statusEl = document.getElementById('connectionStatus');
+
+    if (!url) {
+        statusEl.textContent = '❌ Please enter a backend URL';
+        statusEl.style.color = '#ff006e';
+        return;
+    }
+
+    statusEl.textContent = '🔄 Testing connection...';
+    statusEl.style.color = '#000';
+
+    try {
+        const response = await fetch(`${url}/status`, {
+            method: 'GET',
+            mode: 'cors'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            statusEl.textContent = `✅ Connected! Server: ${data.status || 'online'}`;
+            statusEl.style.color = '#10b981';
+
+            // Show sync section
+            document.getElementById('syncSection').style.display = 'block';
+            await loadRecordings();
+        } else {
+            statusEl.textContent = `❌ Server returned ${response.status}`;
+            statusEl.style.color = '#ff006e';
+        }
+    } catch (error) {
+        console.error('Connection error:', error);
+        statusEl.textContent = `❌ Cannot connect: ${error.message}`;
+        statusEl.style.color = '#ff006e';
+    }
+}
+
+async function loadRecordings() {
+    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+        const recordings = request.result;
+        displayRecordings(recordings);
+    };
+}
+
+function displayRecordings(recordings) {
+    const container = document.getElementById('recordingsList');
+
+    if (recordings.length === 0) {
+        container.innerHTML = '<p style="text-align: center; opacity: 0.6;">No offline recordings found</p>';
+        return;
+    }
+
+    const items = recordings.map((rec, index) => {
+        const date = new Date(rec.timestamp);
+        const size = (rec.size / 1024).toFixed(1);
+        const status = rec.synced ? '✅ Synced' : '⏳ Not synced';
+        const itemClass = rec.synced ? 'synced' : '';
+
+        return `
+            <div class="recording-item ${itemClass}">
+                <strong>Recording #${index + 1}</strong> - ${status}<br>
+                <small>${date.toLocaleString()} • ${size} KB</small>
+                ${rec.transcription ? `<br><em>"${rec.transcription.substring(0, 100)}..."</em>` : ''}
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = items;
+}
+
+async function syncAll() {
+    const url = document.getElementById('backendUrl').value.trim();
+    const statusEl = document.getElementById('syncStatus');
+
+    statusEl.textContent = '📤 Syncing recordings...';
+    statusEl.style.color = '#000';
+
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    const request = store.getAll();
+
+    request.onsuccess = async () => {
+        const recordings = request.result;
+        const unsynced = recordings.filter(r => !r.synced);
+
+        if (unsynced.length === 0) {
+            statusEl.textContent = '✅ All recordings already synced!';
+            statusEl.style.color = '#10b981';
+            return;
+        }
+
+        statusEl.textContent = `📤 Uploading ${unsynced.length} recordings...`;
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const recording of unsynced) {
+            try {
+                const formData = new FormData();
+                const fileExt = recording.blob.type.includes('mp4') ? '.m4a' : '.webm';
+                formData.append('audio', recording.blob, `recording${fileExt}`);
+
+                const response = await fetch(`${url}/api/simple-voice/save`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update recording as synced
+                    const updateTx = db.transaction([STORE_NAME], 'readwrite');
+                    const updateStore = updateTx.objectStore(STORE_NAME);
+                    recording.synced = true;
+                    recording.transcription = data.transcription;
+                    recording.server_id = data.recording_id;
+                    await updateStore.put(recording);
+
+                    successCount++;
+                } else {
+                    failCount++;
+                }
+            } catch (err) {
+                console.error('Upload error:', err);
+                failCount++;
+            }
+        }
+
+        statusEl.textContent = `✅ Synced ${successCount} recordings${failCount > 0 ? `, ${failCount} failed` : ''}`;
+        statusEl.style.color = failCount > 0 ? '#ff006e' : '#10b981';
+
+        await loadRecordings();
+    };
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await initDB();
+    } catch (error) {
+        console.error('DB initialization error:', error);
+        document.getElementById('connectionStatus').textContent = '❌ Browser storage not available';
+    }
+});
+</script>
+</body>
+</html>

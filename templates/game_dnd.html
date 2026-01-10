@@ -1,0 +1,473 @@
+{% extends "base.html" %}
+
+{% block title %}D&D Campaign - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 2rem;">
+
+  <div style="margin-bottom: 2rem;">
+    <a href="{{ url_for('games_gallery') }}" style="color: #667eea; text-decoration: none; font-weight: 500;">
+      ← Back to Games
+    </a>
+  </div>
+
+  <div id="game-container">
+
+    <!-- Quest Selection State -->
+    <div id="quest-selection-state" style="display: block;">
+      <header style="text-align: center; margin-bottom: 3rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🐉</div>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">D&D Campaign</h1>
+        <p style="color: #666; font-size: 1.1rem;">
+          Choose your quest • Character ages with each adventure • Earn legendary items
+        </p>
+      </header>
+
+      <!-- Character Sheet Card -->
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem;">
+          👤 Your Character
+        </h3>
+        <div id="character-info" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏰</div>
+            <div style="opacity: 0.8; font-size: 0.9rem;">Age</div>
+            <div id="char-age" style="font-size: 1.5rem; font-weight: 600;">20</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+            <div style="opacity: 0.8; font-size: 0.9rem;">Agility</div>
+            <div id="char-agility" style="font-size: 1.5rem; font-weight: 600;">0.85</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💪</div>
+            <div style="opacity: 0.8; font-size: 0.9rem;">Strength</div>
+            <div id="char-strength" style="font-size: 1.5rem; font-weight: 600;">0.75</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧙</div>
+            <div style="opacity: 0.8; font-size: 0.9rem;">Wisdom</div>
+            <div id="char-wisdom" style="font-size: 1.5rem; font-weight: 600;">0.20</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠</div>
+            <div style="opacity: 0.8; font-size: 0.9rem;">Intelligence</div>
+            <div id="char-intelligence" style="font-size: 1.5rem; font-weight: 600;">0.60</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quest Board -->
+      <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">📜 Quest Board</h2>
+      <p style="color: #666; margin-bottom: 2rem;">
+        Each quest ages your character. Trade physical prowess for wisdom and experience!
+      </p>
+
+      <div id="quest-list" style="display: grid; gap: 1.5rem;">
+        <!-- Quests loaded via JS -->
+      </div>
+    </div>
+
+    <!-- Quest Playing State -->
+    <div id="quest-playing-state" style="display: none;">
+      <!-- Quest Header -->
+      <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+          <div>
+            <h2 id="quest-name" style="font-size: 1.8rem; margin-bottom: 0.5rem;">Quest Name</h2>
+            <div id="quest-difficulty" style="display: inline-block; background: #e8f0fe; color: #1967d2; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.9rem;">MEDIUM</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.9rem; color: #666;">Ages Character</div>
+            <div id="quest-aging" style="font-size: 1.5rem; font-weight: 600; color: #667eea;">+5 years</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Narration -->
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; min-height: 150px;">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📖</div>
+        <div id="ai-narration" style="font-size: 1.2rem; line-height: 1.6; font-style: italic;">
+          Loading quest...
+        </div>
+      </div>
+
+      <!-- Action Panel -->
+      <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">⚔️ Your Action</h3>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Action Type</label>
+          <select id="action-type" style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+            <option value="attack">⚔️ Attack</option>
+            <option value="cast_spell">✨ Cast Spell</option>
+            <option value="use_item">🧪 Use Item</option>
+            <option value="investigate">🔍 Investigate</option>
+            <option value="talk">💬 Talk/Negotiate</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Describe Your Action</label>
+          <textarea id="action-description"
+                    placeholder="e.g., 'Attack the goblin with my sword', 'Cast fireball at the dragon', 'Try to negotiate with the bandit'"
+                    style="width: 100%; min-height: 100px; padding: 0.75rem; font-size: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+
+        <button id="submit-action-btn"
+                onclick="submitAction()"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.1rem; font-weight: 600; padding: 1rem 2.5rem; border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.2s; width: 100%;">
+          Take Action
+        </button>
+      </div>
+
+      <!-- Complete Quest Button -->
+      <div style="text-align: center;">
+        <button id="complete-quest-btn"
+                onclick="completeQuest()"
+                style="background: #10b981; color: white; font-size: 1.1rem; font-weight: 600; padding: 1rem 2.5rem; border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.2s;">
+          🎉 Complete Quest & Claim Rewards
+        </button>
+      </div>
+    </div>
+
+    <!-- Quest Complete State -->
+    <div id="quest-complete-state" style="display: none;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="font-size: 6rem; margin-bottom: 1rem;">🎉</div>
+        <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Quest Completed!</h2>
+        <p style="color: #666; font-size: 1.1rem;">Your character has aged and grown stronger</p>
+      </div>
+
+      <!-- Aging Summary -->
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center;">⏰ Character Aging</h3>
+        <div style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">
+          <span id="age-before">20</span> → <span id="age-after">25</span> years old
+          <div style="font-size: 1rem; opacity: 0.9; margin-top: 0.5rem;">(+<span id="years-aged">5</span> years)</div>
+        </div>
+
+        <div id="attribute-changes" style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px;">
+          <!-- Attribute changes loaded via JS -->
+        </div>
+      </div>
+
+      <!-- Items Earned -->
+      <div style="background: white; border-radius: 12px; padding: 2.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center;">🎁 Loot Earned</h3>
+        <div id="items-earned" style="display: grid; gap: 1rem;">
+          <!-- Items loaded via JS -->
+        </div>
+      </div>
+
+      <!-- Rewards Summary -->
+      <div style="background: #f9f9f9; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; text-align: center;">
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✨</div>
+            <div style="color: #666; font-size: 0.9rem;">XP Earned</div>
+            <div id="xp-earned" style="font-size: 1.5rem; font-weight: 600; color: #667eea;">0</div>
+          </div>
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⭐</div>
+            <div style="color: #666; font-size: 0.9rem;">Reputation</div>
+            <div id="reputation-earned" style="font-size: 1.5rem; font-weight: 600; color: #667eea;">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soul Pack Update -->
+      <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
+        <h3 style="font-size: 1.3rem; margin-bottom: 1rem;">🧬 Soul Pack Updated!</h3>
+        <p style="opacity: 0.9; margin-bottom: 1rem;">Your Soul has evolved from this quest. Expertise increased!</p>
+        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.95rem;">
+          expertise['dnd']++<br>
+          expertise['combat']++<br>
+          character_age = <span id="soul-age">25</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button onclick="chooseNewQuest()"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.1rem; font-weight: 600; padding: 1rem 2rem; border: none; border-radius: 8px; cursor: pointer;">
+          Choose New Quest
+        </button>
+        <a href="{{ url_for('games_gallery') }}"
+           style="background: #e0e0e0; color: #333; font-size: 1.1rem; font-weight: 600; padding: 1rem 2rem; border: none; border-radius: 8px; text-decoration: none; display: inline-block;">
+          Back to Games
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+  button:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .quest-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: white;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .quest-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .difficulty-easy { background: #dcfce7; color: #166534; }
+  .difficulty-medium { background: #fef3c7; color: #92400e; }
+  .difficulty-hard { background: #fee2e2; color: #991b1b; }
+  .difficulty-legendary { background: #e9d5ff; color: #6b21a8; }
+
+  .rarity-common { color: #6b7280; }
+  .rarity-uncommon { color: #10b981; }
+  .rarity-rare { color: #3b82f6; }
+  .rarity-epic { color: #a855f7; }
+  .rarity-legendary { color: #f59e0b; font-weight: 600; }
+</style>
+
+<script>
+  let currentGameId = null;
+  let currentQuestSlug = null;
+  let userId = {{ user_id }};
+
+  // Load character and quests on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    loadCharacter();
+    loadQuests();
+  });
+
+  function loadCharacter() {
+    fetch('/api/games/dnd/character')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          const char = data.character;
+          document.getElementById('char-age').textContent = char.age;
+          document.getElementById('char-agility').textContent = char.attributes.agility.toFixed(2);
+          document.getElementById('char-strength').textContent = char.attributes.strength.toFixed(2);
+          document.getElementById('char-wisdom').textContent = char.attributes.wisdom.toFixed(2);
+          document.getElementById('char-intelligence').textContent = char.attributes.intelligence.toFixed(2);
+        }
+      });
+  }
+
+  function loadQuests() {
+    fetch('/api/games/dnd/quests')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          renderQuests(data.quests);
+        }
+      });
+  }
+
+  function renderQuests(quests) {
+    const questList = document.getElementById('quest-list');
+    questList.innerHTML = '';
+
+    quests.forEach(quest => {
+      const card = document.createElement('div');
+      card.className = 'quest-card';
+      card.onclick = () => startQuest(quest.slug);
+
+      const difficultyClass = `difficulty-${quest.difficulty}`;
+      const itemCount = quest.rewards.items ? quest.rewards.items.length : 0;
+
+      card.innerHTML = `
+        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+          <div style="flex: 1;">
+            <h3 style="font-size: 1.4rem; margin-bottom: 0.5rem;">${quest.name}</h3>
+            <span class="${difficultyClass}" style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">
+              ${quest.difficulty}
+            </span>
+          </div>
+          <div style="text-align: right;">
+            <div style="color: #667eea; font-weight: 600; font-size: 1.2rem;">+${quest.aging_years} years</div>
+            <div style="color: #666; font-size: 0.85rem;">Character Ages</div>
+          </div>
+        </div>
+        <p style="color: #666; margin-bottom: 1rem; line-height: 1.5;">${quest.description}</p>
+        <div style="display: flex; gap: 1.5rem; font-size: 0.9rem; color: #666;">
+          <div>🎁 ${itemCount} items</div>
+          <div>✨ ${quest.rewards.xp || 0} XP</div>
+          <div>⭐ ${quest.rewards.reputation || 0} rep</div>
+          <div>⏰ ~${quest.estimated_minutes} min</div>
+        </div>
+      `;
+
+      questList.appendChild(card);
+    });
+  }
+
+  function startQuest(questSlug) {
+    currentQuestSlug = questSlug;
+
+    // Create game session
+    fetch('/api/games/create/dnd', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ quest_slug: questSlug })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        currentGameId = data.game_id;
+
+        // Show quest playing state
+        document.getElementById('quest-selection-state').style.display = 'none';
+        document.getElementById('quest-playing-state').style.display = 'block';
+
+        // Set quest info
+        document.getElementById('quest-name').textContent = data.quest.name;
+        document.getElementById('quest-difficulty').textContent = data.quest.difficulty.toUpperCase();
+        document.getElementById('quest-aging').textContent = `+${data.quest.aging_years} years`;
+        document.getElementById('ai-narration').textContent = data.narration;
+      } else {
+        alert('Error starting quest: ' + data.error);
+      }
+    });
+  }
+
+  function submitAction() {
+    const actionType = document.getElementById('action-type').value;
+    const actionDesc = document.getElementById('action-description').value.trim();
+
+    if (!actionDesc) {
+      alert('Please describe your action!');
+      return;
+    }
+
+    // Disable button
+    const btn = document.getElementById('submit-action-btn');
+    btn.disabled = true;
+    btn.textContent = 'AI Judging...';
+
+    fetch('/api/games/dnd/action', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        game_id: currentGameId,
+        action_type: actionType,
+        action_description: actionDesc
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        // Update narration
+        document.getElementById('ai-narration').textContent = data.narration;
+
+        // Clear action
+        document.getElementById('action-description').value = '';
+
+        // Re-enable button
+        btn.disabled = false;
+        btn.textContent = 'Take Action';
+      } else {
+        alert('Error: ' + data.error);
+        btn.disabled = false;
+        btn.textContent = 'Take Action';
+      }
+    });
+  }
+
+  function completeQuest() {
+    if (!confirm('Complete this quest and claim rewards? Your character will age!')) {
+      return;
+    }
+
+    fetch('/api/games/dnd/complete', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        game_id: currentGameId,
+        quest_slug: currentQuestSlug
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        showCompletionScreen(data);
+      } else {
+        alert('Error: ' + data.error);
+      }
+    });
+  }
+
+  function showCompletionScreen(data) {
+    // Hide quest playing
+    document.getElementById('quest-playing-state').style.display = 'none';
+
+    // Show completion
+    document.getElementById('quest-complete-state').style.display = 'block';
+
+    // Set aging info
+    document.getElementById('age-before').textContent = data.age_before;
+    document.getElementById('age-after').textContent = data.age_after;
+    document.getElementById('years-aged').textContent = data.years_aged;
+    document.getElementById('soul-age').textContent = data.age_after;
+
+    // Render attribute changes
+    const attrsDiv = document.getElementById('attribute-changes');
+    let attrsHTML = '';
+    for (const [attr, change] of Object.entries(data.attribute_changes)) {
+      const symbol = change.delta > 0 ? '▲' : change.delta < 0 ? '▼' : '=';
+      const color = change.delta > 0 ? '#10b981' : change.delta < 0 ? '#ef4444' : '#666';
+
+      attrsHTML += `
+        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <span>${attr.charAt(0).toUpperCase() + attr.slice(1)}</span>
+          <span>
+            ${change.before.toFixed(2)} → ${change.after.toFixed(2)}
+            <span style="color: ${color}; margin-left: 0.5rem;">${symbol} ${Math.abs(change.delta).toFixed(2)}</span>
+          </span>
+        </div>
+      `;
+    }
+    attrsDiv.innerHTML = attrsHTML;
+
+    // Render items
+    const itemsDiv = document.getElementById('items-earned');
+    itemsDiv.innerHTML = '';
+    data.items_earned.forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f9f9f9; border-radius: 8px;';
+      itemDiv.innerHTML = `
+        <div>
+          <span style="font-weight: 600; font-size: 1.1rem;">${item.name}</span>
+          <span class="rarity-${item.rarity}" style="margin-left: 0.5rem; font-size: 0.9rem; text-transform: uppercase;">${item.rarity}</span>
+        </div>
+        <div style="font-size: 1.2rem; font-weight: 600; color: #667eea;">x${item.quantity}</div>
+      `;
+      itemsDiv.appendChild(itemDiv);
+    });
+
+    // Set rewards
+    document.getElementById('xp-earned').textContent = data.xp_earned;
+    document.getElementById('reputation-earned').textContent = data.reputation_earned;
+  }
+
+  function chooseNewQuest() {
+    // Reload page
+    location.reload();
+  }
+</script>
+
+{% endblock %}

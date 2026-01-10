@@ -1,0 +1,30 @@
+[Desktop Entry]
+# Soulfra Desktop Entry for Linux
+# Install: cp Soulfra.desktop ~/.local/share/applications/
+
+Name=Soulfra
+GenericName=Ghost Writing Platform
+Comment=AI-powered blog and content management system
+Icon=/path/to/soulfra-simple/icon.png
+Exec=/path/to/soulfra-simple/start_soulfra.sh
+Terminal=true
+Type=Application
+Categories=Development;WebDevelopment;Network;
+Keywords=blog;cms;ai;ghost;writing;content;
+StartupNotify=true
+MimeType=text/html;text/markdown;
+
+# Actions menu (right-click)
+Actions=OpenGUI;OpenBrowser;StopServer;
+
+[Desktop Action OpenGUI]
+Name=Open GUI Launcher
+Exec=python3 /path/to/soulfra-simple/launcher.py
+
+[Desktop Action OpenBrowser]
+Name=Open in Browser
+Exec=xdg-open http://localhost:5001
+
+[Desktop Action StopServer]
+Name=Stop Server
+Exec=pkill -f "python3 app.py"

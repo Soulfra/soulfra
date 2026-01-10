@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy - CringeProof</title>
+<meta name="description" content="How we handle your voice recordings and data">
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+.privacy-section {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 8px 8px 0 #bdb2ff;
+}
+
+.privacy-section h2 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    color: #ff006e;
+}
+
+.privacy-section h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1.5rem 0 1rem 0;
+}
+
+.privacy-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.privacy-section li {
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.privacy-section li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #ff006e;
+    font-weight: 900;
+}
+
+.highlight {
+    background: #ffe5ec;
+    border: 3px solid #ff006e;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    font-weight: 700;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.data-table th,
+.data-table td {
+    border: 3px solid #000;
+    padding: 1rem;
+    text-align: left;
+}
+
+.data-table th {
+    background: #ff006e;
+    color: white;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.data-table tr:nth-child(even) {
+    background: #ffe5ec;
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav">
+    <div class="soulfra-nav-container">
+        <a href="https://cringeproof.com/" class="soulfra-logo">
+            🚫 CringeProof
+        </a>
+
+        <div class="soulfra-links">
+            <a href="https://cringeproof.com/ideas/">💡 Ideas</a>
+            <a href="https://cringeproof.com/">🎤 Voice Archive</a>
+            <a href="https://cringeproof.com/record.html">🎙️ Record</a>
+            <a href="https://cringeproof.com/screenshot.html">📸 Screenshot</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+<header>
+    <h1>🔒 Privacy Policy</h1>
+    <p class="subtitle">Your data, your control - zero-knowledge architecture</p>
+</header>
+
+<div class="highlight">
+    <strong>TL;DR:</strong> Your raw voice recordings and screenshots NEVER leave your device until you explicitly submit them. We use a privacy-first architecture where your local server processes everything, and only extracted insights (text) are published publicly.
+</div>
+
+<div class="privacy-section">
+    <h2>What We Collect</h2>
+
+    <table class="data-table">
+        <tr>
+            <th>Data Type</th>
+            <th>Where Stored</th>
+            <th>Who Can See It</th>
+        </tr>
+        <tr>
+            <td><strong>Voice Recordings</strong></td>
+            <td>Your local server (192.168.1.87:5001)</td>
+            <td>Only you</td>
+        </tr>
+        <tr>
+            <td><strong>Screenshots</strong></td>
+            <td>Your browser (OCR runs locally)</td>
+            <td>Only you</td>
+        </tr>
+        <tr>
+            <td><strong>Extracted Text</strong></td>
+            <td>Your local server</td>
+            <td>Only you (until published)</td>
+        </tr>
+        <tr>
+            <td><strong>Published Ideas</strong></td>
+            <td>GitHub Pages (cringeproof.com)</td>
+            <td>Public (anyone)</td>
+        </tr>
+        <tr>
+            <td><strong>Page Views</strong></td>
+            <td>GitHub's servers (automatic)</td>
+            <td>GitHub, not us</td>
+        </tr>
+    </table>
+</div>
+
+<div class="privacy-section">
+    <h2>How We Protect Your Privacy</h2>
+
+    <h3>Privacy-First Architecture</h3>
+    <ul>
+        <li><strong>Browser-Based Processing:</strong> Screenshot OCR runs 100% in your browser using Tesseract.js - images never leave your device until you click submit</li>
+        <li><strong>Local Server Control:</strong> Voice recordings are transcribed on YOUR server, not ours</li>
+        <li><strong>CORS-Only:</strong> GitHub Pages can POST to your server, but can't read your database</li>
+        <li><strong>Zero-Knowledge:</strong> We never see your raw audio files or original screenshots</li>
+    </ul>
+
+    <h3>What GitHub Pages Logs (Unavoidable)</h3>
+    <p>Since we host on GitHub Pages, GitHub automatically collects:</p>
+    <ul>
+        <li>Your IP address</li>
+        <li>Browser user agent (e.g., "Chrome on Windows")</li>
+        <li>Pages you visit</li>
+        <li>Referrer (where you came from)</li>
+        <li>Timestamp of visits</li>
+    </ul>
+
+    <p>
+        <strong>We don't control this.</strong> GitHub Pages is a free static hosting service, and this logging is part of their infrastructure.
+        See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">GitHub's Privacy Statement</a> for details.
+    </p>
+</div>
+
+<div class="privacy-section">
+    <h2>Data Flow Explained</h2>
+
+    <h3>Recording Voice Memos</h3>
+    <ol>
+        <li>You visit <strong>cringeproof.com/record.html</strong></li>
+        <li>Your browser asks for microphone permission</li>
+        <li>Audio is captured locally (MediaRecorder API)</li>
+        <li>You click "Stop Recording"</li>
+        <li>Audio is POSTed via CORS to <strong>your local server</strong> (192.168.1.87:5001)</li>
+        <li>Whisper transcribes the audio (on your server)</li>
+        <li>Ollama extracts structured insights (on your server)</li>
+        <li>Insights are saved to <strong>your SQLite database</strong></li>
+        <li>Site rebuilds and pushes <strong>only the text insights</strong> to GitHub Pages</li>
+        <li>Raw audio stays on your local server forever</li>
+    </ol>
+
+    <h3>Uploading Screenshots</h3>
+    <ol>
+        <li>You visit <strong>cringeproof.com/screenshot.html</strong></li>
+        <li>You drag-drop a screenshot</li>
+        <li>Tesseract.js runs OCR <strong>in your browser</strong> (image never uploaded)</li>
+        <li>Extracted text is shown for review</li>
+        <li>You click "Extract Insights with AI"</li>
+        <li>Text (not image) is POSTed to <strong>your local server</strong></li>
+        <li>Ollama extracts insights (on your server)</li>
+        <li>Only text insights are published to GitHub Pages</li>
+        <li>Original screenshot never leaves your device</li>
+    </ol>
+</div>
+
+<div class="privacy-section">
+    <h2>Your Rights (GDPR Compliant)</h2>
+
+    <h3>You Have the Right To:</h3>
+    <ul>
+        <li><strong>Access:</strong> See all data we have about you (it's on YOUR server, so you already have full access)</li>
+        <li><strong>Rectification:</strong> Correct any inaccurate data (edit your SQLite database)</li>
+        <li><strong>Erasure:</strong> Delete your data (delete from your local database)</li>
+        <li><strong>Portability:</strong> Export your data (SQLite export or JSON)</li>
+        <li><strong>Object:</strong> Stop processing (stop using the service)</li>
+    </ul>
+
+    <h3>How to Exercise Your Rights</h3>
+    <p>
+        Since all your raw data is stored on <strong>your own server</strong>, you have complete control:
+    </p>
+    <ul>
+        <li><strong>View data:</strong> Open <code>soulfra.db</code> in any SQLite browser</li>
+        <li><strong>Delete recordings:</strong> Delete files from your server or database</li>
+        <li><strong>Export data:</strong> Use SQLite export or <code>build_site.py</code></li>
+        <li><strong>Unpublish ideas:</strong> Remove from GitHub repo and rebuild site</li>
+    </ul>
+</div>
+
+<div class="privacy-section">
+    <h2>Cookies & Tracking</h2>
+
+    <p><strong>We use NO cookies.</strong></p>
+
+    <p>We use <code>localStorage</code> for:</p>
+    <ul>
+        <li>Saving your local server URL preference</li>
+        <li>Storing theme customization (if you use it)</li>
+    </ul>
+
+    <p>
+        localStorage stays in your browser and is never sent to any server.
+        You can clear it anytime (browser settings → Clear site data).
+    </p>
+</div>
+
+<div class="privacy-section">
+    <h2>Third-Party Services</h2>
+
+    <h3>GitHub Pages</h3>
+    <ul>
+        <li><strong>Purpose:</strong> Static site hosting</li>
+        <li><strong>What they collect:</strong> IP address, user agent, page views</li>
+        <li><strong>Privacy policy:</strong> <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement">GitHub Privacy Statement</a></li>
+    </ul>
+
+    <h3>CDN for Libraries</h3>
+    <ul>
+        <li><strong>Tesseract.js:</strong> Loaded from <code>cdn.jsdelivr.net</code> (for screenshot OCR)</li>
+        <li><strong>What they collect:</strong> May log IP addresses for CDN analytics</li>
+    </ul>
+
+    <h3>Your Local Services (You Control)</h3>
+    <ul>
+        <li><strong>Whisper:</strong> Runs on your server, no external API calls</li>
+        <li><strong>Ollama:</strong> Runs on your server, no external API calls</li>
+        <li><strong>SQLite:</strong> Local database, no cloud sync</li>
+    </ul>
+</div>
+
+<div class="privacy-section">
+    <h2>Data Retention</h2>
+
+    <h3>Published Ideas (Public)</h3>
+    <ul>
+        <li><strong>Stored:</strong> Forever on GitHub Pages (unless you delete)</li>
+        <li><strong>Accessible:</strong> Public, indexed by search engines</li>
+        <li><strong>To delete:</strong> Remove from repo and rebuild site</li>
+    </ul>
+
+    <h3>Raw Recordings (Private)</h3>
+    <ul>
+        <li><strong>Stored:</strong> On your local server</li>
+        <li><strong>Duration:</strong> Until you delete them</li>
+        <li><strong>Control:</strong> 100% yours</li>
+    </ul>
+</div>
+
+<div class="privacy-section">
+    <h2>Future: Encrypted Storage</h2>
+
+    <p>We're building client-side encryption using the Web Crypto API:</p>
+
+    <ul>
+        <li><strong>Password-based encryption:</strong> Your password derives an AES-GCM key</li>
+        <li><strong>IndexedDB storage:</strong> Encrypted recordings stored in your browser</li>
+        <li><strong>Zero-knowledge:</strong> We never see your password or decryption key</li>
+        <li><strong>Playback:</strong> Only you can decrypt with your password</li>
+    </ul>
+
+    <p>This adds an extra layer of privacy for recordings you want to keep but not publish.</p>
+</div>
+
+<div class="privacy-section">
+    <h2>Contact</h2>
+
+    <p>Questions about privacy?</p>
+
+    <ul>
+        <li><strong>GitHub:</strong> <a href="https://github.com/Soulfra/voice-archive">Soulfra/voice-archive</a></li>
+        <li><strong>Issues:</strong> <a href="https://github.com/Soulfra/voice-archive/issues">Report privacy concerns</a></li>
+    </ul>
+</div>
+
+<div class="highlight">
+    <strong>Last Updated:</strong> January 3, 2026<br>
+    <strong>Effective:</strong> Immediately
+</div>
+
+</div>
+
+<footer>
+    <p><strong>📊 Open Source & Privacy-First</strong></p>
+    <p style="margin-top: 0.5rem; opacity: 0.8;">
+        All code is open source. Audit it yourself: <a href="https://github.com/Soulfra/voice-archive">GitHub</a>
+    </p>
+    <p style="margin-top: 1.5rem;">
+        <a href="https://cringeproof.com/">Home</a> |
+        <a href="https://cringeproof.com/ideas/">Ideas</a> |
+        <a href="https://cringeproof.com/privacy.html">Privacy</a> |
+        <a href="https://github.com/Soulfra/voice-archive">GitHub</a>
+    </p>
+</footer>
+</body>
+</html>

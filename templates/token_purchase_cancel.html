@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Cancelled - Soulfra</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .cancel-container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 40px;
+      text-align: center;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .cancel-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
+    .cancel-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .cancel-message {
+      font-size: 18px;
+      color: #777;
+      margin-bottom: 30px;
+    }
+    .btn {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 10px;
+    }
+    .btn:hover {
+      background: #5568d3;
+    }
+    .btn-secondary {
+      background: #6c757d;
+    }
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <div class="cancel-container">
+    <div class="cancel-icon">❌</div>
+    <h1 class="cancel-title">Purchase Cancelled</h1>
+    <p class="cancel-message">
+      Your token purchase was cancelled. No charges were made.
+    </p>
+
+    <p>You can try again whenever you're ready!</p>
+
+    <a href="/admin/tokens" class="btn">Try Again</a>
+    <a href="/admin/domains" class="btn btn-secondary">Go to Domains</a>
+  </div>
+</body>
+</html>

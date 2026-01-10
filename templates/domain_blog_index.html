@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}{{ domain_with_emoji }} Blog - Mesh Network{% endblock %}
+
+{% block content %}
+<style>
+  .blog-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .blog-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .blog-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2.5rem;
+  }
+
+  .blog-header .subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .topic-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .topic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-color: #667eea;
+  }
+
+  .topic-card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .topic-card .frequency {
+    color: #667eea;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .topic-card .read-more {
+    color: #999;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .breadcrumb a {
+    color: #667eea;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #999;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+  }
+</style>
+
+<div class="blog-container">
+  <div class="breadcrumb">
+    <a href="/">Home</a> &gt;
+    <a href="/domains">Domains</a> &gt;
+    <a href="/{{ domain_slug }}">{{ domain_slug }}</a> &gt;
+    <strong>Blog</strong>
+  </div>
+
+  <div class="blog-header">
+    <h1>{{ domain_with_emoji }} Blog</h1>
+    <p class="subtitle">{{ description or 'Voice-powered content directory' }}</p>
+  </div>
+
+  {% if topics %}
+  <div class="topics-grid">
+    {% for topic in topics %}
+    <a href="/{{ domain_slug }}/{{ topic.slug }}" class="topic-card">
+      <h2>{{ topic.title }}</h2>
+      <div class="frequency">{{ topic.frequency }} mentions in community voice</div>
+      <div class="read-more">Read more →</div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>No topics yet</h3>
+    <p>This domain's blog will populate as the community wordmap grows</p>
+    <a href="/{{ domain_slug }}" style="color: #667eea; text-decoration: none; font-weight: 600;">Back to {{ domain_slug }} →</a>
+  </div>
+  {% endif %}
+
+  <div style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 2rem; margin-top: 2rem;">
+    <h2 style="margin: 0 0 1rem 0; font-size: 1.3rem; color: #333;">About This Directory</h2>
+    <p style="color: #666; line-height: 1.6; margin: 0.5rem 0;">
+      This blog is automatically generated from the collective voice of {{ domain.split('.')[0] }} contributors.
+      Each topic represents authentic vocabulary patterns extracted from real voice recordings.
+    </p>
+    <p style="color: #666; line-height: 1.6; margin: 0.5rem 0;">
+      <strong>How it works:</strong> Community members record voice memos. Our AI extracts their authentic vocabulary,
+      creating a living wordmap that evolves with each contribution. This blog structure emerges organically from
+      the words people actually use when talking about {{ domain.split('.')[0] }}.
+    </p>
+    <p style="color: #666; line-height: 1.6; margin: 0.5rem 0;">
+      Want to contribute? <a href="/signup" style="color: #667eea; font-weight: 600;">Join the mesh network</a> and
+      record your voice to help shape this domain's content.
+    </p>
+  </div>
+</div>
+{% endblock %}

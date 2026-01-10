@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation Browser - Soulfra</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .search-box {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 36px;
+      font-weight: bold;
+      color: #000;
+    }
+    .stat-label {
+      color: #666;
+      margin-top: 5px;
+    }
+    .category {
+      margin-bottom: 40px;
+    }
+    .category h2 {
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+    .doc-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .doc-card:hover {
+      border-color: #000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .doc-card.starred {
+      border-left: 4px solid #ffc107;
+      background: #fffef7;
+    }
+    .doc-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #000;
+    }
+    .doc-filename {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .doc-purpose {
+      color: #333;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+    .doc-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #999;
+    }
+    .search-results {
+      display: none;
+    }
+    .search-results.active {
+      display: block;
+    }
+    .ask-ollama {
+      background: #e6f2ff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .ask-ollama textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .ask-ollama button {
+      background: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .ask-ollama button:hover {
+      background: #0056b3;
+    }
+    .ollama-answer {
+      background: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 15px;
+      display: none;
+    }
+    .ollama-answer.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <h2>📚 Documentation Browser</h2>
+    <nav class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/docs">Docs</a>
+      <a href="/admin/snippets">Snippets</a>
+      <a href="/admin/studio">Studio</a>
+      <a href="/admin/logout">Logout</a>
+    </nav>
+  </div>
+
+  <div class="admin-container">
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number">{{total_docs}}</div>
+        <div class="stat-label">Total Documentation Files</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{categories|length}}</div>
+        <div class="stat-label">Categories</div>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Search documentation..." autocomplete="off">
+      <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <div class="ask-ollama">
+      <h3>🤖 Ask Ollama About Documentation</h3>
+      <textarea id="ollamaQuestion" rows="3" placeholder="Ask a question about the docs... (e.g., 'How do I test QR login?')"></textarea>
+      <button onclick="askOllama()">Ask Ollama</button>
+      <div id="ollamaAnswer" class="ollama-answer"></div>
+    </div>
+
+    <div id="categories">
+      {% for category_name, docs in categories.items() %}
+      <div class="category">
+        <h2>{{ category_name }} ({{ docs|length }})</h2>
+        <div class="doc-grid">
+          {% for doc in docs %}
+          <div class="doc-card {% if doc.is_starred %}starred{% endif %}" onclick="window.location='/admin/docs/{{ doc.filename }}'">
+            <div class="doc-title">
+              {% if doc.is_starred %}⭐ {% endif %}{{ doc.title }}
+            </div>
+            <div class="doc-filename">{{ doc.filename }}</div>
+            {% if doc.purpose %}
+            <div class="doc-purpose">{{ doc.purpose }}</div>
+            {% endif %}
+            <div class="doc-meta">
+              <span>{{ (doc.word_count / 1000)|round(1) }}K words</span>
+              <span>{{ (doc.size / 1024)|round(1) }} KB</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const categories = document.getElementById('categories');
+
+    let searchTimeout;
+
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      const query = this.value.trim();
+
+      if (query.length < 2) {
+        searchResults.classList.remove('active');
+        categories.style.display = 'block';
+        return;
+      }
+
+      searchTimeout = setTimeout(() => {
+        fetch(`/api/docs/search?q=${encodeURIComponent(query)}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.result_count === 0) {
+              searchResults.innerHTML = '<p style="padding: 20px; text-align: center; color: #999;">No results found</p>';
+            } else {
+              let html = `<h3 style="margin: 20px 0 10px 0;">Found ${data.result_count} results</h3>`;
+              data.results.forEach(result => {
+                html += `
+                  <div class="doc-card" onclick="window.location='/admin/docs/${result.filename}'">
+                    <div class="doc-title">${result.title}</div>
+                    <div class="doc-filename">${result.filename}</div>
+                    <div class="doc-meta">
+                      <span>${result.match_count} matches</span>
+                    </div>
+                  </div>
+                `;
+              });
+              searchResults.innerHTML = html;
+            }
+            searchResults.classList.add('active');
+            categories.style.display = 'none';
+          })
+          .catch(err => {
+            console.error('Search error:', err);
+          });
+      }, 300);
+    });
+
+    function askOllama() {
+      const question = document.getElementById('ollamaQuestion').value.trim();
+      const answerDiv = document.getElementById('ollamaAnswer');
+
+      if (!question) {
+        alert('Please enter a question');
+        return;
+      }
+
+      answerDiv.innerHTML = '<p>🤔 Asking Ollama...</p>';
+      answerDiv.classList.add('active');
+
+      fetch('/api/docs/ask', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({question: question})
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) {
+          answerDiv.innerHTML = `<p style="color: #d32f2f;">❌ ${data.error}</p><p>${data.suggestion || ''}</p>`;
+        } else {
+          let html = `<h4>Answer:</h4><p style="line-height: 1.6;">${data.answer}</p>`;
+          if (data.sources && data.sources.length > 0) {
+            html += `<p style="margin-top: 15px; font-size: 12px; color: #666;">Sources: ${data.sources.join(', ')}</p>`;
+          }
+          answerDiv.innerHTML = html;
+        }
+      })
+      .catch(err => {
+        answerDiv.innerHTML = '<p style="color: #d32f2f;">❌ Error asking Ollama</p>';
+        console.error('Ollama error:', err);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<rss xmlns:ns0="http://base.google.com/ns/1.0" xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+  <channel>
+    <title>Soulfra Product Catalog</title>
+    <link>https://soulfra.com</link>
+    <description>Privacy-focused products and APIs</description>
+    <item>
+      <ns0:id>SOULFRA-API-BEB19A</ns0:id>
+      <ns0:title>Privacy Score API</ns0:title>
+      <ns0:description>Privacy risk scoring endpoint</ns0:description>
+      <ns0:link>https://soulfra.com/products/soulfra-api-beb19a</ns0:link>
+      <ns0:image_link>https://soulfra.com/images/products/soulfra-api-beb19a.png</ns0:image_link>
+      <ns0:availability>out of stock</ns0:availability>
+      <ns0:price>29.00 USD</ns0:price>
+      <ns0:brand>Soulfra</ns0:brand>
+      <ns0:gtin>200186253232</ns0:gtin>
+      <ns0:condition>new</ns0:condition>
+      <ns0:google_product_category>Software</ns0:google_product_category>
+      <ns0:custom_label_0>soulfra</ns0:custom_label_0>
+      <ns0:custom_label_1>api</ns0:custom_label_1>
+      <ns0:custom_label_2>tier_1</ns0:custom_label_2>
+      <ns0:custom_label_3>Identity &amp; Security</ns0:custom_label_3>
+    </item>
+    <item>
+      <ns0:id>SOULFRA-API-B2AB85</ns0:id>
+      <ns0:title>Encryption Recommender API</ns0:title>
+      <ns0:description>Encryption algorithm recommendations</ns0:description>
+      <ns0:link>https://soulfra.com/products/soulfra-api-b2ab85</ns0:link>
+      <ns0:image_link>https://soulfra.com/images/products/soulfra-api-b2ab85.png</ns0:image_link>
+      <ns0:availability>out of stock</ns0:availability>
+      <ns0:price>29.00 USD</ns0:price>
+      <ns0:brand>Soulfra</ns0:brand>
+      <ns0:gtin>200180814736</ns0:gtin>
+      <ns0:condition>new</ns0:condition>
+      <ns0:google_product_category>Software</ns0:google_product_category>
+      <ns0:custom_label_0>soulfra</ns0:custom_label_0>
+      <ns0:custom_label_1>api</ns0:custom_label_1>
+      <ns0:custom_label_2>tier_1</ns0:custom_label_2>
+      <ns0:custom_label_3>Identity &amp; Security</ns0:custom_label_3>
+    </item>
+  </channel>
+</rss>

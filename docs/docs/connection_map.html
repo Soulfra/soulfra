@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Connection Map - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-connection-map">Soulfra Connection Map</h1>
+
+<p><strong>Complete reference of WHERE each network connection point is located</strong></p>
+
+<p>This document shows the exact files, lines, configs, and settings where each layer of the network stack connects to the next. Use this as a reference when debugging connectivity issues or understanding the flow.</p>
+
+<hr />
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ol>
+<li><a href="#1-python--operating-system">Python ↔ Operating System</a></li>
+<li><a href="#2-flask--http-server">Flask ↔ HTTP Server</a></li>
+<li><a href="#3-server--network-interfaces">Server ↔ Network Interfaces</a></li>
+<li><a href="#4-lan--router">LAN ↔ Router</a></li>
+<li><a href="#5-router--internet">Router ↔ Internet</a></li>
+<li><a href="#6-dns--domain">DNS ↔ Domain</a></li>
+<li><a href="#7-application--configuration">Application ↔ Configuration</a></li>
+</ol>
+
+<hr />
+
+<h2 id="1-python-operating-system">1. Python ↔ Operating System</h2>
+
+<p><strong>Where</strong>: <code>app.py</code> (bottom of file)</p>
+
+<p><strong>Connection Point</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>What Happens</strong>:
+- Python's <code>socket</code> library creates a socket
+- Socket binds to OS network layer
+- OS allocates port 5001 to Python process
+- OS network stack handles TCP/IP</p>
+
+<p><strong>File Path</strong>: <code>app.py:~line 2000</code> (end of file)</p>
+
+<p><strong>How to Verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check if Python has bound to port</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># Should show:</span>
+<span class="c1"># COMMAND   PID  USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME</span>
+<span class="c1"># Python  12345  user    3u  IPv4  xxxxxx      0t0  TCP *:5001 (LISTEN)</span>
+</code></pre>
+</div>
+
+<p><strong>How to Change</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Change port</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>  <span class="c1"># Use port 8080 instead</span>
+
+<span class="c1"># Bind to localhost only</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>  <span class="c1"># No LAN access</span>
+
+<span class="c1"># Bind to all interfaces (recommended)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>  <span class="c1"># LAN access enabled</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="2-flask-http-server">2. Flask ↔ HTTP Server</h2>
+
+<p><strong>Where</strong>: <code>app.py</code> (route definitions)</p>
+
+<p><strong>Connection Points</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/admin&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">admin</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;admin.html&#39;</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/v1/&lt;brand&gt;/posts&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_post</span><span class="p">(</span><span class="n">brand</span><span class="p">):</span>
+    <span class="c1"># API endpoint</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">})</span>
+</code></pre>
+</div>
+
+<p><strong>What Happens</strong>:
+- Flask maps URL paths → Python functions
+- HTTP requests become function calls
+- Function returns become HTTP responses
+- Templates rendered to HTML</p>
+
+<p><strong>File Path</strong>: <code>app.py:~line 100-1900</code> (throughout file)</p>
+
+<p><strong>How to Verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Test route directly</span>
+curl<span class="w"> </span>http://localhost:5001/
+curl<span class="w"> </span>http://localhost:5001/admin
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:5001/api/v1/test/posts
+</code></pre>
+</div>
+
+<p><strong>How to Add Routes</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/new-page&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">new_page</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;new.html&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="3-server-network-interfaces">3. Server ↔ Network Interfaces</h2>
+
+<p><strong>Where</strong>: <code>app.py</code> + OS network configuration</p>
+
+<p><strong>Critical Setting</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+        <span class="o">^^^^^^^^^^^^</span>
+        <span class="n">This</span> <span class="ow">is</span> <span class="n">CRITICAL</span><span class="err">!</span>
+</code></pre>
+</div>
+
+<p><strong>What Each Host Value Means</strong>:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Host Value</th>
+  <th>Meaning</th>
+  <th>Access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>127.0.0.1</code></td>
+  <td>Localhost only</td>
+  <td>Only this computer</td>
+</tr>
+<tr>
+  <td><code>0.0.0.0</code></td>
+  <td>All interfaces</td>
+  <td>Localhost + LAN + Public IP</td>
+</tr>
+<tr>
+  <td><code>192.168.1.100</code></td>
+  <td>Specific interface</td>
+  <td>Only that network interface</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Network Interfaces</strong> (OS level):</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># View network interfaces (Mac/Linux)</span>
+ifconfig
+
+<span class="c1"># Common interfaces:</span>
+<span class="c1"># lo0       127.0.0.1    Loopback (localhost)</span>
+<span class="c1"># en0       192.168.1.x  WiFi</span>
+<span class="c1"># en1       192.168.1.y  Ethernet</span>
+</code></pre>
+</div>
+
+<p><strong>Connection Map</strong>:</p>
+
+<pre><code>host='0.0.0.0' → Binds to:
+  ├─ 127.0.0.1:5001      (localhost)
+  ├─ 192.168.1.100:5001  (LAN IP)
+  └─ [any other IPs]
+</code></pre>
+
+<p><strong>How to Verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Test localhost</span>
+curl<span class="w"> </span>http://localhost:5001
+
+<span class="c1"># Test LAN IP (find yours with: ifconfig)</span>
+curl<span class="w"> </span>http://192.168.1.100:5001
+
+<span class="c1"># From another computer on same network</span>
+curl<span class="w"> </span>http://192.168.1.100:5001
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="4-lan-router">4. LAN ↔ Router</h2>
+
+<p><strong>Where</strong>: Local network topology (physical/wireless)</p>
+
+<p><strong>Connection Flow</strong>:</p>
+
+<pre><code>Your Computer (192.168.1.100:5001)
+    ↓
+WiFi/Ethernet
+    ↓
+Router (192.168.1.1)
+</code></pre>
+
+<p><strong>How to Verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Find your LAN IP</span>
+ifconfig<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;inet &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="m">127</span>.0.0.1
+
+<span class="c1"># 2. Find your router (gateway)</span>
+netstat<span class="w"> </span>-nr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>default
+
+<span class="c1"># 3. Test connectivity</span>
+ping<span class="w"> </span><span class="m">192</span>.168.1.1<span class="w">  </span><span class="c1"># Router should respond</span>
+
+<span class="c1"># 4. Access from another device on LAN</span>
+<span class="c1"># On your phone (connected to same WiFi):</span>
+<span class="c1"># Visit: http://192.168.1.100:5001</span>
+</code></pre>
+</div>
+
+<p><strong>Troubleshooting</strong>:</p>
+
+<p>If LAN access doesn't work:</p>
+
+<ol>
+<li><p><strong>Check firewall</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Mac</span>
+sudo<span class="w"> </span>/usr/libexec/ApplicationFirewall/socketfilterfw<span class="w"> </span>--getglobalstate
+
+<span class="c1"># Linux</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>status
+</code></pre>
+</div></li>
+<li><p><strong>Check host binding</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># In app.py - must be 0.0.0.0</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div></li>
+<li><p><strong>Restart server</strong> after changing host setting</p></li>
+</ol>
+
+<hr />
+
+<h2 id="5-router-internet">5. Router ↔ Internet</h2>
+
+<p><strong>Where</strong>: Router admin panel (usually http://192.168.1.1)</p>
+
+<p><strong>Port Forwarding Configuration</strong>:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Setting</th>
+  <th>Value</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>External Port</strong></td>
+  <td>5001</td>
+  <td>Port visible to internet</td>
+</tr>
+<tr>
+  <td><strong>Internal IP</strong></td>
+  <td>192.168.1.100</td>
+  <td>Your computer's LAN IP</td>
+</tr>
+<tr>
+  <td><strong>Internal Port</strong></td>
+  <td>5001</td>
+  <td>Port on your computer</td>
+</tr>
+<tr>
+  <td><strong>Protocol</strong></td>
+  <td>TCP</td>
+  <td>(not UDP)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Common Router Admin URLs</strong>:
+- Generic: http://192.168.1.1 or http://192.168.0.1
+- Netgear: http://routerlogin.net
+- TP-Link: http://tplinkwifi.net
+- Linksys: http://myrouter.local</p>
+
+<p><strong>Connection Flow</strong>:</p>
+
+<pre><code>Internet Request
+  ↓
+Your Public IP (e.g., 207.190.100.103:5001)
+  ↓
+Router receives request
+  ↓
+Router checks port forwarding rules
+  ↓
+Router forwards to: 192.168.1.100:5001
+  ↓
+Your computer receives request
+</code></pre>
+
+<p><strong>How to Verify</strong>:</p>
+
+<ol>
+<li><p><strong>Get your public IP</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>curl<span class="w"> </span>https://api.ipify.org
+</code></pre>
+</div></li>
+<li><p><strong>Test from external network</strong>:</p>
+
+<ul>
+<li>Use phone cellular data (NOT WiFi)</li>
+<li>Visit: http://YOUR<em>PUBLIC</em>IP:5001</li>
+</ul></li>
+<li><p><strong>Use online port checker</strong>:</p>
+
+<ul>
+<li>Visit: https://www.yougetsignal.com/tools/open-ports/</li>
+<li>Enter your public IP and port 5001</li>
+</ul></li>
+</ol>
+
+<p><strong>Common Issues</strong>:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Issue</th>
+  <th>Cause</th>
+  <th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Port closed</td>
+  <td>Forwarding not configured</td>
+  <td>Add port forwarding rule</td>
+</tr>
+<tr>
+  <td>Wrong internal IP</td>
+  <td>Computer IP changed (DHCP)</td>
+  <td>Set static IP or update rule</td>
+</tr>
+<tr>
+  <td>ISP blocks port</td>
+  <td>Some ISPs block common ports</td>
+  <td>Try different port (e.g., 8080)</td>
+</tr>
+<tr>
+  <td>Router firewall</td>
+  <td>WAN firewall enabled</td>
+  <td>Allow inbound on port 5001</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="6-dns-domain">6. DNS ↔ Domain</h2>
+
+<p><strong>Where</strong>: Domain registrar's control panel (GoDaddy, Namecheap, etc.)</p>
+
+<p><strong>Required DNS Records</strong>:</p>
+
+<pre><code>Type    Name    Value                  TTL
+────────────────────────────────────────────
+A       @       207.190.100.103        600
+A       www     207.190.100.103        600
+CNAME   www     yourdomain.com         3600
+TXT     @       soulfra-verify-xxxxx   3600
+</code></pre>
+
+<p><strong>What Each Record Does</strong>:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Record Type</th>
+  <th>Purpose</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>A</strong></td>
+  <td>Maps domain → IP</td>
+  <td><code>soulfra.com → 207.190.100.103</code></td>
+</tr>
+<tr>
+  <td><strong>CNAME</strong></td>
+  <td>Maps subdomain → domain</td>
+  <td><code>www → soulfra.com</code></td>
+</tr>
+<tr>
+  <td><strong>TXT</strong></td>
+  <td>Verification token</td>
+  <td><code>soulfra-verify-abc123</code></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Connection Flow</strong>:</p>
+
+<pre><code>User types: http://soulfra.com
+    ↓
+Browser queries DNS
+    ↓
+DNS server looks up A record
+    ↓
+A record returns: 207.190.100.103
+    ↓
+Browser connects to: 207.190.100.103:80
+    ↓
+(Rest of chain: Router → LAN → Server)
+</code></pre>
+
+<p><strong>How to Configure</strong>:</p>
+
+<ol>
+<li><p><strong>Generate DNS records</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>dns_setup_guide.py
+</code></pre>
+</div></li>
+<li><p><strong>Add to registrar</strong>:</p>
+
+<ul>
+<li>Log in to GoDaddy/Namecheap/etc.</li>
+<li>Find "DNS Management" or "DNS Records"</li>
+<li>Add each record as shown</li>
+<li>Save changes</li>
+</ul></li>
+<li><p><strong>Wait for propagation</strong>: 5-60 minutes</p></li>
+<li><p><strong>Verify DNS</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check if domain resolves</span>
+host<span class="w"> </span>soulfra.com
+
+<span class="c1"># Should show:</span>
+<span class="c1"># soulfra.com has address 207.190.100.103</span>
+
+<span class="c1"># Or use:</span>
+dig<span class="w"> </span>soulfra.com<span class="w"> </span>+short
+</code></pre>
+</div></li>
+</ol>
+
+<hr />
+
+<h2 id="7-application-configuration">7. Application ↔ Configuration</h2>
+
+<p><strong>Where</strong>: <code>.env</code> file</p>
+
+<p><strong>Environment Variables</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># .env file</span>
+<span class="nv">DOMAIN</span><span class="o">=</span>soulfra.com
+<span class="nv">BASE_URL</span><span class="o">=</span>http://soulfra.com
+<span class="nv">PORT</span><span class="o">=</span><span class="m">5001</span>
+</code></pre>
+</div>
+
+<p><strong>How These Are Used</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># In app.py or config.py:</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">DOMAIN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DOMAIN&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">)</span>
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;BASE_URL&#39;</span><span class="p">,</span> <span class="s1">&#39;http://localhost:5001&#39;</span><span class="p">)</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PORT&#39;</span><span class="p">,</span> <span class="mi">5001</span><span class="p">))</span>
+
+<span class="c1"># Used in templates for generating links:</span>
+<span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;{{ BASE_URL }}/admin&quot;</span><span class="o">&gt;</span><span class="n">Admin</span> <span class="n">Panel</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+
+<span class="c1"># Used in API responses:</span>
+<span class="p">{</span>
+  <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://soulfra.com/posts/123&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;share_link&quot;</span><span class="p">:</span> <span class="s2">&quot;http://soulfra.com/share/abc&quot;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><strong>File Path</strong>: <code>.env</code> (root directory)</p>
+
+<p><strong>How to Change</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Edit .env file</span>
+nano<span class="w"> </span>.env
+
+<span class="c1"># Or create if doesn&#39;t exist</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>.env<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<span class="s">DOMAIN=mysite.com</span>
+<span class="s">BASE_URL=http://mysite.com</span>
+<span class="s">PORT=5001</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Restart server to apply changes</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="visual-connection-map">Visual Connection Map</h2>
+
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│ USER'S BROWSER                                               │
+│ http://soulfra.com/admin                                     │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ [6] DNS LOOKUP                                               │
+│ WHERE: Domain registrar (GoDaddy, Namecheap)                │
+│ FILE:  DNS A record                                          │
+│ VALUE: soulfra.com → 207.190.100.103                         │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ [5] INTERNET → PUBLIC IP                                     │
+│ WHERE: Internet routing                                      │
+│ VALUE: 207.190.100.103:5001                                  │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ [4] ROUTER PORT FORWARDING                                   │
+│ WHERE: Router admin panel (192.168.1.1)                      │
+│ CONFIG: WAN:5001 → 192.168.1.100:5001                        │
+│ FILE:  Router's forwarding table                             │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ [3] LAN → YOUR COMPUTER                                      │
+│ WHERE: Local network                                         │
+│ VALUE: 192.168.1.100:5001                                    │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ [2] OS NETWORK STACK → PYTHON                                │
+│ WHERE: app.py (line ~2000)                                   │
+│ CODE:  app.run(host='0.0.0.0', port=5001)                    │
+│ VALUE: Binds Python to all network interfaces                │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ [1] FLASK ROUTE → FUNCTION                                   │
+│ WHERE: app.py (throughout)                                   │
+│ CODE:  @app.route('/admin')                                  │
+│        def admin():                                          │
+│            return render_template('admin.html')              │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ RESPONSE GENERATED                                           │
+│ HTML page sent back through same chain (reverse)             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<hr />
+
+<h2 id="quick-reference-files-settings">Quick Reference: Files &amp; Settings</h2>
+
+<table>
+<thead>
+<tr>
+  <th>What You Want To Change</th>
+  <th>Where To Find It</th>
+  <th>How To Change It</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Port number</strong></td>
+  <td><code>app.py</code> line ~2000</td>
+  <td><code>app.run(port=5001)</code></td>
+</tr>
+<tr>
+  <td><strong>LAN access</strong></td>
+  <td><code>app.py</code> line ~2000</td>
+  <td><code>app.run(host='0.0.0.0')</code></td>
+</tr>
+<tr>
+  <td><strong>Domain name</strong></td>
+  <td><code>.env</code></td>
+  <td><code>DOMAIN=yoursite.com</code></td>
+</tr>
+<tr>
+  <td><strong>Base URL</strong></td>
+  <td><code>.env</code></td>
+  <td><code>BASE_URL=http://yoursite.com</code></td>
+</tr>
+<tr>
+  <td><strong>Routes (pages)</strong></td>
+  <td><code>app.py</code> throughout</td>
+  <td><code>@app.route('/page')</code></td>
+</tr>
+<tr>
+  <td><strong>Port forwarding</strong></td>
+  <td>Router admin panel</td>
+  <td>External → Internal mapping</td>
+</tr>
+<tr>
+  <td><strong>DNS records</strong></td>
+  <td>Domain registrar</td>
+  <td>A record, CNAME, TXT</td>
+</tr>
+<tr>
+  <td><strong>Server type</strong></td>
+  <td><code>soulfra.service</code></td>
+  <td><code>gunicorn</code> vs <code>python3 app.py</code></td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="testing-each-connection-point">Testing Each Connection Point</h2>
+
+<p>Use these commands to test each layer:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># [1] Test Flask routes</span>
+curl<span class="w"> </span>http://localhost:5001/
+curl<span class="w"> </span>http://localhost:5001/admin
+
+<span class="c1"># [2] Test OS binding</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># [3] Test LAN access (replace with your IP)</span>
+curl<span class="w"> </span>http://192.168.1.100:5001
+
+<span class="c1"># [4] Test router (from phone cellular data)</span>
+curl<span class="w"> </span>http://YOUR_PUBLIC_IP:5001
+
+<span class="c1"># [5] Test DNS resolution</span>
+host<span class="w"> </span>yourdomain.com
+dig<span class="w"> </span>yourdomain.com
+
+<span class="c1"># [6] Test full domain access</span>
+curl<span class="w"> </span>http://yourdomain.com
+
+<span class="c1"># Or run automated tests:</span>
+python3<span class="w"> </span>test_network_stack.py
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="common-connection-issues">Common Connection Issues</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Symptom</th>
+  <th>Failed Connection</th>
+  <th>Check This</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>"Connection refused" on localhost</td>
+  <td>Python ↔ OS</td>
+  <td>Server not running? <code>python3 app.py</code></td>
+</tr>
+<tr>
+  <td>Works localhost, not LAN</td>
+  <td>Server ↔ Network</td>
+  <td><code>host='0.0.0.0'</code> in app.py?</td>
+</tr>
+<tr>
+  <td>Works LAN, not public IP</td>
+  <td>Router ↔ Internet</td>
+  <td>Port forwarding configured?</td>
+</tr>
+<tr>
+  <td>Domain doesn't resolve</td>
+  <td>DNS ↔ Domain</td>
+  <td>A record added? Wait for propagation</td>
+</tr>
+<tr>
+  <td>Resolves but won't load</td>
+  <td>Full chain</td>
+  <td>Port forwarding + server running?</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="production-deployment-checklist">Production Deployment Checklist</h2>
+
+<p>When deploying to production, verify these connection points:</p>
+
+<ul>
+<li>[ ] <strong>app.py</strong>: <code>host='0.0.0.0', port=5001</code></li>
+<li>[ ] <strong>.env</strong>: <code>DOMAIN=yourdomain.com</code> set correctly</li>
+<li>[ ] <strong>.env</strong>: <code>BASE_URL=https://yourdomain.com</code> (with HTTPS)</li>
+<li>[ ] <strong>DNS</strong>: A record pointing to public IP</li>
+<li>[ ] <strong>Router</strong>: Port forwarding configured (or cloud provider security group)</li>
+<li>[ ] <strong>Server</strong>: Running with <code>systemctl status soulfra</code> (or PM2, Docker, etc.)</li>
+<li>[ ] <strong>Firewall</strong>: Allows port 5001 (or 80/443 for HTTP/HTTPS)</li>
+<li>[ ] <strong>SSL</strong>: Certificate installed for HTTPS (Let's Encrypt, Cloudflare)</li>
+</ul>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+<li><strong>Test your setup</strong>: <code>python3 test_network_stack.py</code></li>
+<li><strong>Visualize topology</strong>: <code>python3 network_diagram.py</code></li>
+<li><strong>Interactive validation</strong>: <code>./tier_validator.sh</code></li>
+<li><strong>Step-by-step deployment</strong>: <code>python3 deployment_ladder.py</code> (coming next)</li>
+</ol>
+
+<hr />
+
+<p><strong>Need help?</strong> Run the automated diagnostic:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>test_network_stack.py<span class="w"> </span>--verbose
+</code></pre>
+</div>
+
+<p>This will show you exactly which connection point is failing and how to fix it.</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

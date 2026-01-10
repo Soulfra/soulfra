@@ -1,0 +1,586 @@
+{% extends "base.html" %}
+
+{% block title %}Trading - Soulfra{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+
+  <header style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔄 Trading Post</h1>
+    <p style="color: #666; font-size: 1.1rem;">
+      Exchange items with other players • No crypto • Database-driven trades
+    </p>
+  </header>
+
+  <!-- Trade Limits Card -->
+  <div id="trade-limits-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.25rem;">Your Membership</div>
+        <div id="user-tier" style="font-size: 1.3rem; font-weight: 600; text-transform: capitalize;">Loading...</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.25rem;">Trades Remaining Today</div>
+        <div id="trades-remaining" style="font-size: 1.8rem; font-weight: 600;">-</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="border-bottom: 2px solid #e0e0e0; margin-bottom: 2rem;">
+    <div style="display: flex; gap: 0.5rem;">
+      <button class="tab-btn active" onclick="showTab('inventory')">
+        🎒 My Inventory
+      </button>
+      <button class="tab-btn" onclick="showTab('incoming')">
+        📨 Incoming (<span id="incoming-count">0</span>)
+      </button>
+      <button class="tab-btn" onclick="showTab('outgoing')">
+        📤 Outgoing
+      </button>
+      <button class="tab-btn" onclick="showTab('create')">
+        ➕ Create Trade
+      </button>
+    </div>
+  </div>
+
+  <!-- My Inventory Tab -->
+  <div id="tab-inventory" class="tab-content">
+    <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Your Inventory</h2>
+    <div id="inventory-grid" style="display: grid; gap: 1rem;">
+      <!-- Loaded via JS -->
+    </div>
+  </div>
+
+  <!-- Incoming Trades Tab -->
+  <div id="tab-incoming" class="tab-content" style="display: none;">
+    <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Incoming Trade Offers</h2>
+    <div id="incoming-trades">
+      <!-- Loaded via JS -->
+    </div>
+  </div>
+
+  <!-- Outgoing Trades Tab -->
+  <div id="tab-outgoing" class="tab-content" style="display: none;">
+    <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Your Trade Offers</h2>
+    <div id="outgoing-trades">
+      <!-- Loaded via JS -->
+    </div>
+  </div>
+
+  <!-- Create Trade Tab -->
+  <div id="tab-create" class="tab-content" style="display: none;">
+    <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Create New Trade Offer</h2>
+
+    <div style="background: #f9f9f9; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.75rem;">Trade With User</label>
+
+        <!-- Quick search with @mentions -->
+        <div style="position: relative;">
+          <input type="text"
+                 id="trade-recipient-search"
+                 placeholder="Type @username or search..."
+                 style="width: 100%; padding: 0.75rem; padding-left: 2.5rem; font-size: 1rem; border: 2px solid #e0e0e0; border-radius: 8px;"
+                 onkeyup="searchUsers(event)">
+          <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: #667eea;">@</span>
+
+          <!-- Autocomplete dropdown -->
+          <div id="user-autocomplete" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid #667eea; border-radius: 0 0 8px 8px; max-height: 200px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+          💡 Like Discord/X! Type @username to quick-select a user
+        </div>
+
+        <input type="hidden" id="trade-recipient" value="">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <!-- You Offer -->
+        <div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #667eea;">You Offer</h3>
+          <div style="background: white; padding: 1.5rem; border-radius: 8px; min-height: 200px;">
+            <select id="offer-item" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border: 2px solid #e0e0e0; border-radius: 6px;">
+              <option value="">Select item...</option>
+            </select>
+            <input type="number" id="offer-quantity" min="1" value="1" placeholder="Quantity" style="width: 100%; padding: 0.5rem; margin-bottom: 0.75rem; border: 2px solid #e0e0e0; border-radius: 6px;">
+            <button onclick="addOfferedItem()" style="background: #667eea; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+              Add Item
+            </button>
+
+            <div id="offered-items-list" style="margin-top: 1rem;">
+              <!-- Offered items -->
+            </div>
+          </div>
+        </div>
+
+        <!-- You Want -->
+        <div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #10b981;">You Want</h3>
+          <div style="background: white; padding: 1.5rem; border-radius: 8px; min-height: 200px;">
+            <input type="number" id="request-item-id" placeholder="Item ID" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border: 2px solid #e0e0e0; border-radius: 6px;">
+            <input type="number" id="request-quantity" min="1" value="1" placeholder="Quantity" style="width: 100%; padding: 0.5rem; margin-bottom: 0.75rem; border: 2px solid #e0e0e0; border-radius: 6px;">
+            <button onclick="addRequestedItem()" style="background: #10b981; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+              Add Item
+            </button>
+
+            <div id="requested-items-list" style="margin-top: 1rem;">
+              <!-- Requested items -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <button onclick="submitTrade()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 1.2rem; font-weight: 600; padding: 1rem 3rem; border: none; border-radius: 8px; cursor: pointer;">
+          📤 Send Trade Offer
+        </button>
+      </div>
+    </div>
+
+    <div style="background: #fffbeb; border: 1px solid #fbbf24; padding: 1rem; border-radius: 8px; color: #92400e;">
+      <strong>💡 Tip:</strong> Look at another user's inventory to see their item IDs, or ask them what they have!
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .tab-btn {
+    background: transparent;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .tab-btn:hover {
+    color: #667eea;
+  }
+
+  .tab-btn.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+  }
+
+  .item-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+
+  .item-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  }
+
+  .trade-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .rarity-common { color: #6b7280; }
+  .rarity-uncommon { color: #10b981; }
+  .rarity-rare { color: #3b82f6; }
+  .rarity-epic { color: #a855f7; }
+  .rarity-legendary { color: #f59e0b; font-weight: 600; }
+</style>
+
+<script>
+  let userId = {{ user_id }};
+  let inventory = [];
+  let offeredItems = [];
+  let requestedItems = [];
+  let allUsers = [];  // Store all users for @mention autocomplete
+
+  document.addEventListener('DOMContentLoaded', function() {
+    loadTradeLimits();
+    loadInventory();
+    loadIncomingTrades();
+    loadOutgoingTrades();
+    loadUsers();
+
+    // Close autocomplete when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#trade-recipient-search') && !e.target.closest('#user-autocomplete')) {
+        document.getElementById('user-autocomplete').style.display = 'none';
+      }
+    });
+  });
+
+  function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+    // Show selected tab
+    document.getElementById(`tab-${tabName}`).style.display = 'block';
+    event.target.classList.add('active');
+  }
+
+  function loadTradeLimits() {
+    fetch('/api/trading/limits')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('user-tier').textContent = data.tier;
+          document.getElementById('trades-remaining').textContent = data.trades_remaining;
+        }
+      });
+  }
+
+  function loadInventory() {
+    fetch('/api/trading/inventory')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          inventory = data.inventory;
+          renderInventory(data.inventory);
+          updateOfferSelect(data.inventory);
+        }
+      });
+  }
+
+  function renderInventory(items) {
+    const grid = document.getElementById('inventory-grid');
+
+    if (items.length === 0) {
+      grid.innerHTML = '<p style="color: #666; text-align: center; padding: 3rem;">Your inventory is empty. Complete quests to earn items!</p>';
+      return;
+    }
+
+    grid.innerHTML = items.map(item => `
+      <div class="item-card">
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+          <div style="flex: 1;">
+            <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">${item.name}</h3>
+            <div class="rarity-${item.rarity}" style="font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.75rem;">
+              ${item.rarity}
+            </div>
+            <div style="color: #666; font-size: 0.9rem;">Type: ${item.item_type}</div>
+            ${item.earned_from ? `<div style="color: #999; font-size: 0.85rem; margin-top: 0.5rem;">From: ${item.earned_from}</div>` : ''}
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 2rem; font-weight: 600; color: #667eea;">x${item.quantity}</div>
+            <div style="font-size: 0.85rem; color: #666;">Item ID: ${item.item_id}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function updateOfferSelect(items) {
+    const select = document.getElementById('offer-item');
+    select.innerHTML = '<option value="">Select item...</option>' +
+      items.map(item => `<option value="${item.item_id}">${item.name} (x${item.quantity})</option>`).join('');
+  }
+
+  function loadIncomingTrades() {
+    fetch('/api/trading/incoming')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('incoming-count').textContent = data.trades.length;
+          renderIncomingTrades(data.trades);
+        }
+      });
+  }
+
+  function renderIncomingTrades(trades) {
+    const container = document.getElementById('incoming-trades');
+
+    if (trades.length === 0) {
+      container.innerHTML = '<p style="color: #666; text-align: center; padding: 3rem;">No incoming trade offers</p>';
+      return;
+    }
+
+    container.innerHTML = trades.map(trade => `
+      <div class="trade-card">
+        <div style="margin-bottom: 1.5rem;">
+          <strong style="font-size: 1.1rem;">From: ${trade.from_username}</strong>
+          <div style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">${new Date(trade.created_at).toLocaleString()}</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+          <div>
+            <h4 style="margin-bottom: 0.75rem; color: #667eea;">They Offer:</h4>
+            ${trade.offered_items.map(item => `
+              <div style="background: #f9f9f9; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                <span class="rarity-${item.rarity}">${item.name}</span> x${item.quantity}
+              </div>
+            `).join('')}
+          </div>
+          <div>
+            <h4 style="margin-bottom: 0.75rem; color: #10b981;">They Want:</h4>
+            ${trade.requested_items.map(item => `
+              <div style="background: #f9f9f9; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                <span class="rarity-${item.rarity}">${item.name}</span> x${item.quantity}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button onclick="acceptTrade(${trade.trade_id})" style="flex: 1; background: #10b981; color: white; padding: 0.75rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            ✅ Accept Trade
+          </button>
+          <button onclick="rejectTrade(${trade.trade_id})" style="flex: 1; background: #ef4444; color: white; padding: 0.75rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            ❌ Reject
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function loadOutgoingTrades() {
+    fetch('/api/trading/outgoing')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          renderOutgoingTrades(data.trades);
+        }
+      });
+  }
+
+  function renderOutgoingTrades(trades) {
+    const container = document.getElementById('outgoing-trades');
+
+    if (trades.length === 0) {
+      container.innerHTML = '<p style="color: #666; text-align: center; padding: 3rem;">No outgoing trades</p>';
+      return;
+    }
+
+    container.innerHTML = trades.map(trade => {
+      const statusColors = {
+        'pending': '#f59e0b',
+        'accepted': '#10b981',
+        'rejected': '#ef4444'
+      };
+
+      return `
+        <div class="trade-card">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+            <div>
+              <strong style="font-size: 1.1rem;">To: ${trade.to_username}</strong>
+              <div style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">${new Date(trade.created_at).toLocaleString()}</div>
+            </div>
+            <div style="background: ${statusColors[trade.status]}; color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; text-transform: uppercase; font-size: 0.9rem;">
+              ${trade.status}
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+              <h4 style="margin-bottom: 0.75rem; color: #667eea;">You Offered:</h4>
+              ${trade.offered_items.map(item => `
+                <div style="background: #f9f9f9; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                  <span class="rarity-${item.rarity}">${item.name}</span> x${item.quantity}
+                </div>
+              `).join('')}
+            </div>
+            <div>
+              <h4 style="margin-bottom: 0.75rem; color: #10b981;">You Requested:</h4>
+              ${trade.requested_items.map(item => `
+                <div style="background: #f9f9f9; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                  <span class="rarity-${item.rarity}">${item.name}</span> x${item.quantity}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function loadUsers() {
+    fetch('/api/users/list')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          allUsers = data.users.filter(u => u.id !== userId);
+        }
+      });
+  }
+
+  function searchUsers(event) {
+    const searchTerm = document.getElementById('trade-recipient-search').value.toLowerCase();
+    const autocomplete = document.getElementById('user-autocomplete');
+
+    if (!searchTerm || searchTerm.length < 1) {
+      autocomplete.style.display = 'none';
+      return;
+    }
+
+    // Remove @ symbol if present
+    const cleanTerm = searchTerm.replace('@', '');
+
+    // Filter users
+    const matches = allUsers.filter(u =>
+      u.username.toLowerCase().includes(cleanTerm)
+    ).slice(0, 5);  // Max 5 results
+
+    if (matches.length === 0) {
+      autocomplete.style.display = 'none';
+      return;
+    }
+
+    // Show autocomplete
+    autocomplete.innerHTML = matches.map(u => `
+      <div onclick="selectUser(${u.id}, '${u.username}')"
+           style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background 0.2s;"
+           onmouseover="this.style.background='#f9f9f9'"
+           onmouseout="this.style.background='white'">
+        <strong>@${u.username}</strong>
+      </div>
+    `).join('');
+
+    autocomplete.style.display = 'block';
+
+    // Select on Enter
+    if (event.key === 'Enter' && matches.length > 0) {
+      selectUser(matches[0].id, matches[0].username);
+    }
+  }
+
+  function selectUser(id, username) {
+    document.getElementById('trade-recipient').value = id;
+    document.getElementById('trade-recipient-search').value = '@' + username;
+    document.getElementById('user-autocomplete').style.display = 'none';
+  }
+
+  function addOfferedItem() {
+    const itemId = parseInt(document.getElementById('offer-item').value);
+    const quantity = parseInt(document.getElementById('offer-quantity').value);
+
+    if (!itemId || !quantity) {
+      alert('Select item and quantity!');
+      return;
+    }
+
+    const item = inventory.find(i => i.item_id === itemId);
+    if (!item) return;
+
+    offeredItems.push({ item_id: itemId, quantity: quantity, name: item.name, rarity: item.rarity });
+    renderOfferedItems();
+  }
+
+  function addRequestedItem() {
+    const itemId = parseInt(document.getElementById('request-item-id').value);
+    const quantity = parseInt(document.getElementById('request-quantity').value);
+
+    if (!itemId || !quantity) {
+      alert('Enter item ID and quantity!');
+      return;
+    }
+
+    requestedItems.push({ item_id: itemId, quantity: quantity });
+    renderRequestedItems();
+  }
+
+  function renderOfferedItems() {
+    document.getElementById('offered-items-list').innerHTML = offeredItems.map((item, idx) => `
+      <div style="background: #f0f0f0; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; display: flex; justify-content: space-between;">
+        <span class="rarity-${item.rarity}">${item.name} x${item.quantity}</span>
+        <button onclick="offeredItems.splice(${idx}, 1); renderOfferedItems();" style="background: #ef4444; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Remove</button>
+      </div>
+    `).join('');
+  }
+
+  function renderRequestedItems() {
+    document.getElementById('requested-items-list').innerHTML = requestedItems.map((item, idx) => `
+      <div style="background: #f0f0f0; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; display: flex; justify-content: space-between;">
+        <span>Item ${item.item_id} x${item.quantity}</span>
+        <button onclick="requestedItems.splice(${idx}, 1); renderRequestedItems();" style="background: #ef4444; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Remove</button>
+      </div>
+    `).join('');
+  }
+
+  function submitTrade() {
+    const toUserId = parseInt(document.getElementById('trade-recipient').value);
+
+    if (!toUserId) {
+      alert('Select a recipient!');
+      return;
+    }
+
+    if (offeredItems.length === 0 || requestedItems.length === 0) {
+      alert('Add items to both sides of the trade!');
+      return;
+    }
+
+    fetch('/api/trading/offer', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        to_user_id: toUserId,
+        offered_items: offeredItems,
+        requested_items: requestedItems
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        alert('Trade offer sent!');
+        offeredItems = [];
+        requestedItems = [];
+        renderOfferedItems();
+        renderRequestedItems();
+        loadOutgoingTrades();
+        showTab('outgoing');
+      } else {
+        alert('Error: ' + data.error);
+      }
+    });
+  }
+
+  function acceptTrade(tradeId) {
+    if (!confirm('Accept this trade? Items will be exchanged!')) return;
+
+    fetch('/api/trading/accept', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ trade_id: tradeId })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        alert('Trade accepted! Items exchanged.');
+        loadInventory();
+        loadIncomingTrades();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    });
+  }
+
+  function rejectTrade(tradeId) {
+    fetch('/api/trading/reject', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ trade_id: tradeId })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        alert('Trade rejected');
+        loadIncomingTrades();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    });
+  }
+</script>
+
+{% endblock %}

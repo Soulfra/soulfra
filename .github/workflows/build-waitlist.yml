@@ -1,0 +1,75 @@
+name: Build & Deploy Waitlist
+
+# Auto-build waitlist on every push + manual trigger
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'build_waitlist.py'
+      - 'translations.json'
+      - 'soulfra.db'
+      - '.github/workflows/build-waitlist.yml'
+  workflow_dispatch:  # Manual trigger from GitHub UI
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes (update stats)
+
+jobs:
+  build-and-deploy:
+    name: Build Static Waitlist Site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Build static waitlist site
+        run: |
+          python3 build_waitlist.py
+          echo "✅ Static site built successfully"
+
+      - name: List generated files
+        run: |
+          echo "Generated files:"
+          ls -la ./output/waitlist/
+          ls -la ./output/waitlist/api/
+
+      - name: Copy to docs/ (GitHub Pages)
+        run: |
+          mkdir -p ./docs/waitlist
+          cp -r ./output/waitlist/* ./docs/waitlist/
+          echo "✅ Copied to docs/waitlist/"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/waitlist/
+          git diff --staged --quiet || git commit -m "🚀 Auto-update waitlist stats [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy summary
+        run: |
+          echo "### Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Waitlist deployed to GitHub Pages" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Total signups: $(cat ./output/waitlist/api/stats.json | grep -o '"total_signups": [0-9]*' | grep -o '[0-9]*')" >> $GITHUB_STEP_SUMMARY
+          echo "🌐 Live at: https://soulfra.github.io/waitlist" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: waitlist-static-site
+          path: ./output/waitlist/
+          retention-days: 7

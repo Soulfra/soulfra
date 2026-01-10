@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Brand - Soulfra Admin</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <style>
+    .admin-header {
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      text-decoration: underline;
+    }
+    .admin-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .post-form {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .post-form h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .form-group {
+      margin-top: 20px;
+    }
+    .post-form label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .post-form input[type="text"],
+    .post-form input[type="color"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    .post-form input[type="color"] {
+      height: 50px;
+      padding: 5px;
+      cursor: pointer;
+    }
+    .post-form input:focus {
+      outline: none;
+      border-color: #000;
+    }
+    .help-text {
+      font-size: 13px;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .button-group {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .btn-publish {
+      background: #000;
+      color: #fff;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-publish:hover {
+      background: #333;
+    }
+    .btn-cancel {
+      color: #666;
+      text-decoration: none;
+      padding: 15px 20px;
+    }
+    .btn-cancel:hover {
+      color: #000;
+    }
+    .flash-messages {
+      margin-bottom: 20px;
+    }
+    .flash {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .flash.error {
+      background: #fee;
+      border: 1px solid #fcc;
+      color: #c00;
+    }
+    .flash.success {
+      background: #efe;
+      border: 1px solid #cfc;
+      color: #060;
+    }
+    .color-preview {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 5px;
+    }
+    .color-box {
+      flex: 1;
+      height: 60px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+  </style>
+  <script>
+    function updateColorPreview() {
+      const primary = document.getElementById('color_primary').value;
+      const secondary = document.getElementById('color_secondary').value;
+      const accent = document.getElementById('color_accent').value;
+
+      document.getElementById('preview-primary').style.background = primary;
+      document.getElementById('preview-secondary').style.background = secondary;
+      document.getElementById('preview-accent').style.background = accent;
+    }
+
+    function generateSlug() {
+      const name = document.getElementById('name').value;
+      const slug = name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim();
+      document.getElementById('slug').value = slug;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateColorPreview();
+      document.getElementById('color_primary').addEventListener('input', updateColorPreview);
+      document.getElementById('color_secondary').addEventListener('input', updateColorPreview);
+      document.getElementById('color_accent').addEventListener('input', updateColorPreview);
+      document.getElementById('name').addEventListener('input', generateSlug);
+    });
+  </script>
+</head>
+<body>
+
+<div class="admin-header">
+  <div>
+    <strong>Soulfra Admin</strong>
+  </div>
+  <nav class="admin-nav">
+    <a href="/">← Home</a>
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/logout">Logout</a>
+  </nav>
+</div>
+
+<div class="admin-container">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="post-form">
+    <h2>🎨 Create New Brand</h2>
+    <p style="color: #666; margin-bottom: 25px;">
+      Set up a new brand with custom colors, domain, and style. Each brand gets its own static site.
+    </p>
+
+    <form method="POST">
+      <div class="form-row">
+        <div>
+          <label for="name">Brand Name *</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="My Awesome Brand"
+            value="{{ name or '' }}"
+            autofocus
+          >
+          <div class="help-text">The display name of your brand</div>
+        </div>
+
+        <div>
+          <label for="slug">Slug *</label>
+          <input
+            type="text"
+            id="slug"
+            name="slug"
+            required
+            placeholder="my-awesome-brand"
+            value="{{ slug or '' }}"
+            pattern="[a-z0-9\-]+"
+          >
+          <div class="help-text">URL-friendly identifier (auto-generated)</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="tagline">Tagline</label>
+        <input
+          type="text"
+          id="tagline"
+          name="tagline"
+          placeholder="A short description of what this brand is about"
+          value="{{ tagline or '' }}"
+        >
+        <div class="help-text">Brief description shown in meta tags</div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label for="domain">Domain</label>
+          <input
+            type="text"
+            id="domain"
+            name="domain"
+            placeholder="mybrand.com"
+            value="{{ domain or '' }}"
+          >
+          <div class="help-text">Your custom domain (optional)</div>
+        </div>
+
+        <div>
+          <label for="category">Category</label>
+          <input
+            type="text"
+            id="category"
+            name="category"
+            placeholder="e.g., cooking, tech, lifestyle"
+            value="{{ category or '' }}"
+          >
+          <div class="help-text">Content category or niche</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="emoji">Emoji</label>
+        <input
+          type="text"
+          id="emoji"
+          name="emoji"
+          placeholder="🍳"
+          value="{{ emoji or '' }}"
+          maxlength="4"
+        >
+        <div class="help-text">Brand emoji (optional)</div>
+      </div>
+
+      <div class="form-group">
+        <label>Brand Colors</label>
+        <div class="form-row">
+          <div>
+            <label for="color_primary">Primary</label>
+            <input
+              type="color"
+              id="color_primary"
+              name="color_primary"
+              value="{{ color_primary or '#FF6B35' }}"
+            >
+          </div>
+
+          <div>
+            <label for="color_secondary">Secondary</label>
+            <input
+              type="color"
+              id="color_secondary"
+              name="color_secondary"
+              value="{{ color_secondary or '#F7931E' }}"
+            >
+          </div>
+
+          <div>
+            <label for="color_accent">Accent</label>
+            <input
+              type="color"
+              id="color_accent"
+              name="color_accent"
+              value="{{ color_accent or '#C1272D' }}"
+            >
+          </div>
+        </div>
+
+        <div class="color-preview">
+          <div id="preview-primary" class="color-box">Primary</div>
+          <div id="preview-secondary" class="color-box">Secondary</div>
+          <div id="preview-accent" class="color-box">Accent</div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn-publish">✨ Create Brand</button>
+        <a href="/admin" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <div style="margin-top: 40px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+    <h3 style="margin-top: 0;">🚀 What Happens Next</h3>
+    <ol style="line-height: 1.8;">
+      <li><strong>Brand Created:</strong> Your brand is saved to the database</li>
+      <li><strong>Import Content:</strong> Use /admin/import-url to add blog posts from any URL</li>
+      <li><strong>Export Static Site:</strong> Run <code>python3 export_static.py --brand {slug}</code></li>
+      <li><strong>Deploy:</strong> Push to GitHub Pages or any static host</li>
+    </ol>
+    <p style="color: #666; font-size: 14px; margin-top: 15px;">
+      <strong>Note:</strong> Each brand gets its own output directory and can be deployed independently.
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>

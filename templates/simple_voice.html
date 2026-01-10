@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Recorder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+
+        .record-btn {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: none;
+            background: #ff4444;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 auto 30px;
+            display: block;
+        }
+
+        .record-btn:active {
+            transform: scale(0.95);
+        }
+
+        .record-btn.recording {
+            background: #ff0000;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .status {
+            font-size: 18px;
+            margin: 20px 0;
+            min-height: 30px;
+        }
+
+        .saved-files {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .saved-files h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .file-item {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            font-weight: bold;
+            color: #66ff66;
+        }
+
+        .file-size {
+            color: #888;
+            font-size: 14px;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: #ff4444;
+        }
+
+        .success {
+            color: #66ff66;
+        }
+
+        /* Domain Dashboard Section */
+        .domain-dashboard {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+            border: 2px solid #333;
+        }
+
+        .domain-handle {
+            font-size: 28px;
+            font-weight: bold;
+            color: #66ff66;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .sync-btn {
+            background: linear-gradient(135deg, #4444ff 0%, #6666ff 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .sync-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(68, 68, 255, 0.4);
+        }
+
+        .qr-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-modal-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #66ff66;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .qr-modal h2 {
+            color: #66ff66;
+            margin-bottom: 20px;
+        }
+
+        .qr-code-img {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .qr-code-img img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .close-modal {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .unlock-progress {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #66ff66;
+        }
+
+        .unlock-progress h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #888;
+        }
+
+        .unlock-stats {
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .domain-card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 2px solid #333;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .domain-card:hover {
+            border-color: #66ff66;
+            transform: translateY(-2px);
+        }
+
+        .domain-card.primary {
+            border-color: #66ff66;
+            background: #1a2a1a;
+        }
+
+        .domain-tier {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .domain-name {
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+
+        .domain-ownership {
+            color: #66ff66;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .domain-meta {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Idea Board Section */
+        .idea-board {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .idea-input-section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .domain-select {
+            width: 100%;
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            cursor: pointer;
+        }
+
+        .domain-select:focus {
+            outline: none;
+            border-color: #66ff66;
+        }
+
+        .idea-filter-section {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .idea-filter-section label {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .domain-filter {
+            flex: 1;
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            cursor: pointer;
+        }
+
+        .domain-filter:focus {
+            outline: none;
+            border-color: #66ff66;
+        }
+
+        .idea-input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .idea-input:focus {
+            outline: none;
+            border-color: #66ff66;
+        }
+
+        .save-idea-btn {
+            width: 100%;
+            padding: 12px;
+            background: #66ff66;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-idea-btn:hover {
+            background: #55ee55;
+            transform: translateY(-1px);
+        }
+
+        .ideas-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .idea-item {
+            background: #2a2a2a;
+            border-left: 4px solid #66ff66;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .idea-rank {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border: 2px solid #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: #1a1a1a;
+        }
+
+        .idea-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #66ff66;
+            margin-bottom: 8px;
+            padding-left: 24px;
+        }
+
+        .idea-text {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .idea-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+            padding-top: 10px;
+            border-top: 1px solid #444;
+        }
+
+        .domain-badge {
+            display: inline-block;
+            background: #3a3a3a;
+            color: #66ff66;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .idea-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .idea-btn {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .idea-btn-expand {
+            background: #4444ff;
+            color: white;
+        }
+
+        .idea-btn-merge {
+            background: #ff4444;
+            color: white;
+        }
+
+        .idea-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Voice Recorder</h1>
+
+        <!-- Domain Dashboard -->
+        <div id="domainDashboard" class="domain-dashboard" style="display: none;">
+            <div class="domain-handle" id="userHandle">@loading...</div>
+
+            <button class="sync-btn" onclick="showSyncQR()">📱 Sync to Phone</button>
+
+            <div class="unlock-progress">
+                <h3>📊 Unlock Progress</h3>
+                <div class="unlock-stats" id="unlockStats">Loading...</div>
+            </div>
+
+            <h3 style="margin: 15px 0 10px 0; font-size: 18px; color: #888;">💎 Your Domains</h3>
+            <div id="domainsList">
+                <!-- Domain cards will be added here -->
+            </div>
+        </div>
+
+        <div id="httpsWarning" style="display: none; background: #ff4444; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            ⚠️ Direct recording requires HTTPS. Use file upload below instead.
+        </div>
+
+        <button id="recordBtn" class="record-btn">TAP TO RECORD</button>
+
+        <div style="margin: 30px 0; text-align: center; color: #888;">OR</div>
+
+        <input type="file" id="fileInput" accept="audio/*" style="display: none;">
+        <button onclick="document.getElementById('fileInput').click()" style="width: 100%; padding: 15px; background: #4444ff; color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; margin-bottom: 20px;">
+            📁 UPLOAD VOICE FILE
+        </button>
+
+        <!-- IRC/Usenet Auto-Post Option -->
+        <div style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" id="postToChannelCheckbox" checked style="width: 20px; height: 20px; cursor: pointer;">
+                <span style="font-size: 14px;">
+                    📨 Auto-post to IRC/Usenet channel <br>
+                    <small style="opacity: 0.7; font-size: 12px;">Your voice will be transcribed and posted to the relevant channel (alt.soulfra.voice, alt.cringeproof.ideas, etc.)</small>
+                </span>
+            </label>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <!-- Idea Board Section -->
+        <div class="idea-board">
+            <h2>💡 Idea Board (All Roommates)</h2>
+
+            <div class="idea-input-section">
+                <select id="domainSelect" class="domain-select">
+                    <option value="">🌐 All Domains</option>
+                </select>
+                <input type="text" id="ideaInput" class="idea-input" placeholder="Type an idea (no voice needed)..." />
+                <button onclick="saveIdea()" class="save-idea-btn">💾 SAVE IDEA</button>
+            </div>
+
+            <div class="idea-filter-section">
+                <label for="domainFilter">Filter by domain:</label>
+                <select id="domainFilter" class="domain-filter" onchange="filterIdeasByDomain()">
+                    <option value="">🌐 All Domains</option>
+                </select>
+            </div>
+
+            <div id="ideasList" class="ideas-list">
+                <!-- Top 10 ideas will be added here -->
+            </div>
+        </div>
+
+        <div id="savedFiles" class="saved-files">
+            <h2>Saved Recordings</h2>
+            <!-- Files will be added here -->
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        const recordBtn = document.getElementById('recordBtn');
+        const status = document.getElementById('status');
+        const savedFiles = document.getElementById('savedFiles');
+        const fileInput = document.getElementById('fileInput');
+        const httpsWarning = document.getElementById('httpsWarning');
+
+        // Check if getUserMedia is available
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            recordBtn.disabled = true;
+            recordBtn.textContent = 'HTTPS REQUIRED';
+            httpsWarning.style.display = 'block';
+        }
+
+        recordBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        await saveRecording(audioBlob);
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordBtn.textContent = 'TAP TO STOP';
+                    recordBtn.classList.add('recording');
+                    status.textContent = '🔴 Recording...';
+                    status.className = 'status';
+
+                } catch (error) {
+                    status.textContent = `❌ Error: ${error.message}`;
+                    status.className = 'status error';
+                    httpsWarning.style.display = 'block';
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                recordBtn.textContent = 'TAP TO RECORD';
+                recordBtn.classList.remove('recording');
+                status.textContent = '💾 Saving...';
+            }
+        });
+
+        // Handle file upload
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            status.textContent = '💾 Uploading...';
+            status.className = 'status';
+
+            await saveRecording(file);
+        });
+
+        async function saveRecording(blob) {
+            const formData = new FormData();
+            formData.append('audio', blob, 'recording.webm');
+
+            // Add IRC/Usenet auto-post option
+            const postToChannel = document.getElementById('postToChannelCheckbox').checked;
+            formData.append('post_to_channel', postToChannel ? 'true' : 'false');
+
+            try {
+                const response = await fetch('/api/simple-voice/save', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    let statusText = '✅ Saved!';
+                    if (data.transcription) {
+                        statusText += ' (Transcribed)';
+                    }
+                    if (data.message_posted) {
+                        statusText += ` 📨 Posted to ${data.message_posted.channel}`;
+                    }
+                    status.textContent = statusText;
+                    status.className = 'status success';
+
+                    // Add to saved files list
+                    addSavedFile(data.file_id, data.filename, data.size, blob, data.transcription);
+
+                    // Auto-extract ideas from transcription
+                    if (data.transcription) {
+                        extractIdeasFromTranscript(data.transcription, data.file_id);
+                    }
+                } else {
+                    status.textContent = `❌ Save failed: ${data.error}`;
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                status.textContent = `❌ Upload error: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        function addSavedFile(fileId, filename, size, blob, transcription) {
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'file-item';
+
+            const audioUrl = URL.createObjectURL(blob);
+
+            let transcriptHTML = '';
+            if (transcription) {
+                transcriptHTML = `<div style="margin-top: 10px; padding: 10px; background: #1a1a1a; border-radius: 5px; color: #ccc; font-size: 14px;">
+                    <strong>📝 Transcript:</strong><br>${transcription}
+                </div>`;
+            }
+
+            let chatButton = '';
+            if (transcription) {
+                chatButton = `<button onclick="startVoiceChat(${fileId})"
+                    style="background: #4444ff; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; margin-left: 15px; font-size: 14px;">
+                    💬 Chat about this
+                </button>`;
+            }
+
+            fileDiv.innerHTML = `
+                <div class="file-name">📄 ${filename}</div>
+                <div class="file-size">${(size / 1024).toFixed(2)} KB
+                    <a href="/api/simple-voice/download/${fileId}"
+                       style="color: #66ff66; margin-left: 15px; text-decoration: none;">
+                        ⬇️ Download
+                    </a>
+                    ${chatButton}
+                </div>
+                <audio controls src="${audioUrl}"></audio>
+                ${transcriptHTML}
+            `;
+
+            savedFiles.appendChild(fileDiv);
+        }
+
+        // Start chat from voice recording
+        async function startVoiceChat(recordingId) {
+            try {
+                const response = await fetch('/api/voice-to-chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ recording_id: recordingId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Redirect to chat page
+                    window.location.href = data.chat_url;
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                alert(`Failed to start chat: ${error.message}`);
+            }
+        }
+
+        // Load existing files on page load
+        async function loadSavedFiles() {
+            try {
+                const response = await fetch('/api/simple-voice/list');
+                const data = await response.json();
+
+                if (data.success && data.files.length > 0) {
+                    data.files.forEach(file => {
+                        const fileDiv = document.createElement('div');
+                        fileDiv.className = 'file-item';
+
+                        let transcriptHTML = '';
+                        if (file.transcription) {
+                            transcriptHTML = `<div style="margin-top: 10px; padding: 10px; background: #1a1a1a; border-radius: 5px; color: #ccc; font-size: 14px;">
+                                <strong>📝 Transcript:</strong><br>${file.transcription}
+                            </div>`;
+                        }
+
+                        let chatButton = '';
+                        if (file.transcription) {
+                            chatButton = `<button onclick="startVoiceChat(${file.id})"
+                                style="background: #4444ff; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; margin-left: 15px; font-size: 14px;">
+                                💬 Chat about this
+                            </button>`;
+                        }
+
+                        fileDiv.innerHTML = `
+                            <div class="file-name">📄 ${file.filename}</div>
+                            <div class="file-size">${(file.size / 1024).toFixed(2)} KB • ${new Date(file.created_at).toLocaleString()}
+                                <a href="/api/simple-voice/download/${file.id}"
+                                   style="color: #66ff66; margin-left: 15px; text-decoration: none;">
+                                    ⬇️ Download
+                                </a>
+                                ${chatButton}
+                            </div>
+                            <audio controls src="/api/simple-voice/play/${file.id}"></audio>
+                            ${transcriptHTML}
+                        `;
+
+                        savedFiles.appendChild(fileDiv);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to load files:', error);
+            }
+        }
+
+        //  Idea Board Functions
+        async function saveIdea() {
+            const ideaInput = document.getElementById('ideaInput');
+            const domainSelect = document.getElementById('domainSelect');
+            const ideaText = ideaInput.value.trim();
+            const selectedDomain = domainSelect.value;
+
+            if (!ideaText) {
+                status.textContent = '⚠️ Type an idea first';
+                status.className = 'status error';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/ideas/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: ideaText, domain: selectedDomain || null })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.textContent = '✅ Idea saved!';
+                    status.className = 'status success';
+                    ideaInput.value = '';
+                    await loadIdeas();
+                } else {
+                    status.textContent = `❌ Failed: ${data.error}`;
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                status.textContent = `❌ Error: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        async function extractIdeasFromTranscript(transcription, recordingId) {
+            try {
+                const response = await fetch('/api/ideas/extract', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        transcription: transcription,
+                        recording_id: recordingId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.ideas_count > 0) {
+                    status.textContent = `✅ Extracted ${data.ideas_count} ideas from voice!`;
+                    await loadIdeas();
+                }
+            } catch (error) {
+                console.error('Idea extraction failed:', error);
+            }
+        }
+
+        async function loadIdeas(domainFilter = null) {
+            try {
+                const url = domainFilter ? `/api/ideas/list?domain=${domainFilter}` : '/api/ideas/list';
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    renderIdeas(data.ideas);
+                }
+            } catch (error) {
+                console.error('Failed to load ideas:', error);
+            }
+        }
+
+        function renderIdeas(ideas) {
+            const ideasList = document.getElementById('ideasList');
+
+            if (!ideas || ideas.length === 0) {
+                ideasList.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">No ideas yet. Type one above or record voice!</div>';
+                return;
+            }
+
+            // Top 10 ideas only
+            const topIdeas = ideas.slice(0, 10);
+
+            ideasList.innerHTML = topIdeas.map((idea, index) => {
+                const domainBadge = idea.domain ? `<span class="domain-badge">${idea.domain}</span>` : '';
+                return `
+                <div class="idea-item" data-id="${idea.id}">
+                    <div class="idea-rank">${index + 1}</div>
+                    <div class="idea-title" id="title-${idea.id}" contenteditable="false">${idea.title || 'Idea #' + idea.id}</div>
+                    <div class="idea-text" id="text-${idea.id}" contenteditable="false">${idea.text}</div>
+                    <div class="idea-meta">
+                        <span>Score: ${idea.score || 50}/100 • by ${idea.username || 'Anonymous'}${domainBadge}</span>
+                        <div class="idea-actions">
+                            <button onclick="toggleEdit(${idea.id})" class="idea-btn" id="edit-btn-${idea.id}" style="background: #ffa500;">Edit</button>
+                            <button onclick="expandIdea(${idea.id})" class="idea-btn idea-btn-expand">Expand</button>
+                            <button onclick="mergeIdea(${idea.id})" class="idea-btn idea-btn-merge">Merge</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function toggleEdit(ideaId) {
+            const titleEl = document.getElementById(`title-${ideaId}`);
+            const textEl = document.getElementById(`text-${ideaId}`);
+            const btnEl = document.getElementById(`edit-btn-${ideaId}`);
+
+            const isEditing = titleEl.getAttribute('contenteditable') === 'true';
+
+            if (isEditing) {
+                // Save changes
+                const title = titleEl.textContent.trim();
+                const text = textEl.textContent.trim();
+
+                fetch('/api/ideas/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea_id: ideaId, title, text })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        status.textContent = '✅ Idea updated!';
+                        status.className = 'status success';
+                        titleEl.setAttribute('contenteditable', 'false');
+                        textEl.setAttribute('contenteditable', 'false');
+                        btnEl.textContent = 'Edit';
+                        btnEl.style.background = '#ffa500';
+                    } else {
+                        status.textContent = '❌ Update failed';
+                        status.className = 'status error';
+                    }
+                });
+            } else {
+                // Enable editing
+                titleEl.setAttribute('contenteditable', 'true');
+                textEl.setAttribute('contenteditable', 'true');
+                titleEl.style.border = '2px dashed #ffa500';
+                textEl.style.border = '2px dashed #ffa500';
+                btnEl.textContent = 'Save';
+                btnEl.style.background = '#00ff00';
+                titleEl.focus();
+            }
+        }
+
+        async function expandIdea(ideaId) {
+            status.textContent = '🤖 AI expanding idea...';
+            status.className = 'status';
+
+            try {
+                const response = await fetch('/api/ideas/expand', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea_id: ideaId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.textContent = '✅ Idea expanded!';
+                    status.className = 'status success';
+                    await loadIdeas();
+                } else {
+                    status.textContent = `❌ ${data.error}`;
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                status.textContent = `❌ Error: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        async function mergeIdea(ideaId) {
+            status.textContent = '🔄 Finding similar ideas...';
+            status.className = 'status';
+
+            try {
+                const response = await fetch('/api/ideas/merge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea_id: ideaId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.textContent = `✅ Merged ${data.merged_count} similar ideas!`;
+                    status.className = 'status success';
+                    await loadIdeas();
+                } else {
+                    status.textContent = '⚠️ No similar ideas to merge';
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                status.textContent = `❌ Error: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+
+        // Domain functions
+        async function loadDomains() {
+            try {
+                const response = await fetch('/api/domains/list');
+                const data = await response.json();
+
+                if (data.success) {
+                    const domainSelect = document.getElementById('domainSelect');
+                    const domainFilter = document.getElementById('domainFilter');
+
+                    // Populate both dropdowns
+                    data.domains.forEach(domain => {
+                        const option1 = document.createElement('option');
+                        option1.value = domain.domain;
+                        option1.textContent = domain.name || domain.domain;
+                        domainSelect.appendChild(option1);
+
+                        const option2 = document.createElement('option');
+                        option2.value = domain.domain;
+                        option2.textContent = domain.name || domain.domain;
+                        domainFilter.appendChild(option2);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to load domains:', error);
+            }
+        }
+
+        function filterIdeasByDomain() {
+            const domainFilter = document.getElementById('domainFilter');
+            const selectedDomain = domainFilter.value;
+            loadIdeas(selectedDomain || null);
+        }
+
+        // Load user's domain dashboard
+        async function loadDomainDashboard() {
+            try {
+                const response = await fetch('/api/domains/my-domains');
+                const data = await response.json();
+
+                if (data.success) {
+                    const dashboard = document.getElementById('domainDashboard');
+                    const handleEl = document.getElementById('userHandle');
+                    const unlockStatsEl = document.getElementById('unlockStats');
+                    const domainsListEl = document.getElementById('domainsList');
+
+                    // Show dashboard
+                    dashboard.style.display = 'block';
+
+                    // Set handle
+                    handleEl.textContent = data.handle || '@user';
+
+                    // Set unlock stats
+                    const unlockStatus = data.unlock_status;
+                    const statsHTML = `
+                        📝 Questions: ${unlockStatus.stats.questions || 0}<br>
+                        💡 Ideas: ${unlockStatus.stats.ideas || 0}<br>
+                        🎙️ Recordings: ${unlockStatus.stats.recordings || 0}<br>
+                        ${unlockStatus.can_unlock ?
+                            `<br><strong style="color: #66ff66;">✨ You can unlock ${unlockStatus.unlocks_available} more domain(s)!</strong>` :
+                            `<br>Next unlock: ${Object.entries(unlockStatus.next_threshold).map(([k,v]) => `${v} more ${k}`).join(', ')}`
+                        }
+                    `;
+                    unlockStatsEl.innerHTML = statsHTML;
+
+                    // Set domains
+                    const tierEmojis = {
+                        'legendary': '🟡',
+                        'epic': '🟠',
+                        'rare': '🟣',
+                        'uncommon': '🔵',
+                        'common': '🟢'
+                    };
+
+                    domainsListEl.innerHTML = data.domains.map(d => {
+                        const isPrimary = data.primary_domain && d.domain === data.primary_domain.domain;
+                        const tierEmoji = tierEmojis[d.tier] || '⚪';
+                        return `
+                            <div class="domain-card ${isPrimary ? 'primary' : ''}"
+                                 onclick="setPrimaryDomain('${d.domain}')">
+                                <span class="domain-tier">${tierEmoji}</span>
+                                <span class="domain-name">${d.domain_slug}</span>
+                                ${isPrimary ? '<span style="color: #66ff66; margin-left: 10px;">★ Primary</span>' : ''}
+                                <div class="domain-ownership">${d.ownership_percentage.toFixed(1)}% ownership</div>
+                                <div class="domain-meta">${d.tier} tier | unlocked: ${new Date(d.unlock_date).toLocaleDateString()}</div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    console.error('Failed to load domain dashboard:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading domain dashboard:', error);
+            }
+        }
+
+        // Set primary domain (handle)
+        async function setPrimaryDomain(domain) {
+            try {
+                const response = await fetch('/api/domains/set-primary', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({domain})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Reload dashboard to show new primary
+                    loadDomainDashboard();
+                    alert(`✅ Primary domain set to ${data.handle}`);
+                } else {
+                    alert(`❌ Failed: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error setting primary domain:', error);
+                alert('❌ Error setting primary domain');
+            }
+        }
+
+        // Load on page load
+        loadDomainDashboard();
+        loadDomains();
+        loadIdeas();
+        loadSavedFiles();
+
+        // Session Sync Functions
+        async function showSyncQR() {
+            try {
+                const response = await fetch('/api/session/generate-qr');
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show modal with QR code
+                    const modal = document.getElementById('qrModal');
+                    const qrImg = document.getElementById('qrCodeImage');
+                    const expiryText = document.getElementById('qrExpiry');
+
+                    qrImg.src = data.qr_code;
+                    expiryText.textContent = `Expires in ${data.expires_in} seconds`;
+
+                    modal.style.display = 'flex';
+
+                    // Auto-close after expiry
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, data.expires_in * 1000);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Sync error:', error);
+                alert('Failed to generate sync QR code');
+            }
+        }
+
+        function closeSyncModal() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+    </script>
+
+    <!-- QR Sync Modal -->
+    <div id="qrModal" class="qr-modal">
+        <div class="qr-modal-content">
+            <h2>📱 Scan to Sync Session</h2>
+            <p style="color: #888; font-size: 14px; margin-bottom: 10px;">
+                Scan this QR code with your phone to sync your session
+            </p>
+            <div class="qr-code-img">
+                <img id="qrCodeImage" src="" alt="QR Code" />
+            </div>
+            <p id="qrExpiry" style="color: #ff6666; font-size: 12px;"></p>
+            <button class="close-modal" onclick="closeSyncModal()">Close</button>
+        </div>
+    </div>
+</body>
+</html>

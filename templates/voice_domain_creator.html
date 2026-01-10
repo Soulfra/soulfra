@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Domain Creator - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        #status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        #status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        #status.loading {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        #questionsSection {
+            display: none;
+        }
+
+        .question-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-item .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .question-item .question-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .question-item .tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .question-item .tag {
+            background: #e0e0e0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .question-item textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-height: 80px;
+        }
+
+        #successSection {
+            display: none;
+            text-align: center;
+        }
+
+        #successSection .qr-code {
+            margin: 20px 0;
+        }
+
+        #successSection .qr-code img {
+            max-width: 300px;
+            border: 4px solid #667eea;
+            border-radius: 12px;
+        }
+
+        #successSection .url-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        #templatesSection {
+            margin-top: 20px;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .template-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .template-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .template-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .template-card .meta {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .template-card .sample {
+            font-style: italic;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ Voice Domain Creator</h1>
+            <p>Create custom question sets for voice identity time capsules</p>
+        </header>
+
+        <div id="status"></div>
+
+        <!-- Step 1: Domain Details Form -->
+        <div class="card" id="formSection">
+            <h2>1. Domain Details</h2>
+
+            <div class="form-group">
+                <label for="domainSlug">Domain Slug *</label>
+                <input type="text" id="domainSlug" placeholder="myproductivity" pattern="[a-z0-9_-]+" required>
+                <small style="color: #666;">Lowercase letters, numbers, hyphens, underscores only</small>
+            </div>
+
+            <div class="form-group">
+                <label for="displayName">Display Name *</label>
+                <input type="text" id="displayName" placeholder="My Productivity Journey" required>
+            </div>
+
+            <div class="form-group">
+                <label for="theme">Theme / Description *</label>
+                <textarea id="theme" placeholder="Questions about daily productivity habits, wins, challenges, and growth" required></textarea>
+                <small style="color: #666;">This guides Ollama in generating questions</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="vibe">Target Vibe</label>
+                    <select id="vibe">
+                        <option value="thoughtful">Thoughtful</option>
+                        <option value="motivational">Motivational</option>
+                        <option value="introspective">Introspective</option>
+                        <option value="playful">Playful</option>
+                        <option value="raw">Raw / Honest</option>
+                        <option value="vulnerable">Vulnerable</option>
+                        <option value="ambitious">Ambitious</option>
+                        <option value="contemplative">Contemplative</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rotationPeriod">Rotation Period</label>
+                    <select id="rotationPeriod">
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly" selected>Monthly</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="numQuestions">Number of Questions</label>
+                    <input type="number" id="numQuestions" value="12" min="4" max="52">
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Expected Duration (seconds)</label>
+                    <input type="number" id="duration" value="90" min="30" max="300">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button onclick="generateQuestions()">🤖 Generate Questions with Ollama</button>
+                <button class="secondary" onclick="showTemplates()">📋 Browse Templates</button>
+            </div>
+        </div>
+
+        <!-- Templates Browser -->
+        <div class="card" id="templatesSection" style="display: none;">
+            <h2>📋 Available Templates</h2>
+            <p style="margin-bottom: 15px; color: #666;">Clone an existing domain as a starting point</p>
+            <div class="template-grid" id="templateGrid"></div>
+            <button class="secondary" onclick="hideTemplates()" style="margin-top: 20px;">← Back to Form</button>
+        </div>
+
+        <!-- Step 2: Review & Edit Questions -->
+        <div class="card" id="questionsSection">
+            <h2>2. Review & Edit Questions</h2>
+            <p style="margin-bottom: 20px; color: #666;">Edit any questions before saving</p>
+            <div id="questionsList"></div>
+
+            <div class="btn-group">
+                <button onclick="saveDomain()">💾 Save Domain</button>
+                <button class="secondary" onclick="backToForm()">← Back to Form</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div class="card" id="successSection">
+            <h2>🎉 Domain Created!</h2>
+            <p id="successMessage" style="margin: 20px 0; font-size: 1.1rem;"></p>
+
+            <div class="qr-code">
+                <img id="qrCodeImage" src="" alt="QR Code">
+            </div>
+
+            <div class="url-box">
+                <strong>QR URL:</strong><br>
+                <span id="qrUrl"></span>
+            </div>
+
+            <div class="btn-group" style="justify-content: center;">
+                <button onclick="window.location.href = document.getElementById('qrUrl').textContent">
+                    📱 Test Question Flow
+                </button>
+                <button class="secondary" onclick="resetForm()">
+                    ➕ Create Another Domain
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let generatedQuestions = [];
+
+        function showStatus(message, type = 'loading') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = type;
+            statusEl.style.display = 'block';
+        }
+
+        function hideStatus() {
+            document.getElementById('status').style.display = 'none';
+        }
+
+        async function generateQuestions() {
+            const theme = document.getElementById('theme').value.trim();
+            const vibe = document.getElementById('vibe').value;
+            const numQuestions = parseInt(document.getElementById('numQuestions').value);
+            const rotationPeriod = document.getElementById('rotationPeriod').value;
+
+            if (!theme) {
+                showStatus('Please enter a theme', 'error');
+                return;
+            }
+
+            showStatus('🤖 Ollama is generating questions... This may take 30-60 seconds', 'loading');
+
+            try {
+                const response = await fetch('/api/domain/generate-questions', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({theme, vibe, num_questions: numQuestions, rotation_period: rotationPeriod})
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    showStatus('Error: ' + data.error, 'error');
+                    return;
+                }
+
+                generatedQuestions = data.questions;
+                displayQuestions();
+                hideStatus();
+
+                // Scroll to questions section
+                document.getElementById('questionsSection').scrollIntoView({behavior: 'smooth'});
+
+            } catch (error) {
+                showStatus('Network error: ' + error.message, 'error');
+            }
+        }
+
+        function displayQuestions() {
+            const container = document.getElementById('questionsList');
+            container.innerHTML = '';
+
+            generatedQuestions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'question-item';
+                div.innerHTML = `
+                    <div class="question-header">
+                        <div class="question-number">${index + 1}</div>
+                        <div class="tags">
+                            <span class="tag">${q.category}</span>
+                            <span class="tag">${q.vibe}</span>
+                        </div>
+                    </div>
+                    <textarea id="question_${index}" data-index="${index}">${q.question_text}</textarea>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('questionsSection').style.display = 'block';
+        }
+
+        async function saveDomain() {
+            const domainSlug = document.getElementById('domainSlug').value.trim().toLowerCase();
+            const displayName = document.getElementById('displayName').value.trim();
+            const theme = document.getElementById('theme').value.trim();
+            const rotationPeriod = document.getElementById('rotationPeriod').value;
+            const duration = parseInt(document.getElementById('duration').value);
+
+            // Validate
+            if (!domainSlug || !/^[a-z0-9_-]+$/.test(domainSlug)) {
+                showStatus('Invalid domain slug. Use only lowercase letters, numbers, hyphens, and underscores.', 'error');
+                return;
+            }
+
+            // Collect edited questions
+            const questions = [];
+            for (let i = 0; i < generatedQuestions.length; i++) {
+                const textarea = document.getElementById(`question_${i}`);
+                questions.push({
+                    question_text: textarea.value.trim(),
+                    category: generatedQuestions[i].category,
+                    vibe: generatedQuestions[i].vibe,
+                    rotation_order: i + 1
+                });
+            }
+
+            showStatus('💾 Saving domain to database...', 'loading');
+
+            try {
+                const response = await fetch('/api/domain/save', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        domain_slug: domainSlug,
+                        display_name: displayName,
+                        theme: theme,
+                        rotation_period: rotationPeriod,
+                        expected_duration_seconds: duration,
+                        questions: questions
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    showStatus('Error: ' + data.error, 'error');
+                    return;
+                }
+
+                // Show success
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('questionsSection').style.display = 'none';
+                document.getElementById('successSection').style.display = 'block';
+                document.getElementById('successMessage').textContent =
+                    `Domain "${data.display_name}" created with ${data.num_questions} questions!`;
+                document.getElementById('qrCodeImage').src = data.qr_code_image;
+                document.getElementById('qrUrl').textContent = data.qr_code_url;
+
+                hideStatus();
+
+                // Scroll to success
+                document.getElementById('successSection').scrollIntoView({behavior: 'smooth'});
+
+            } catch (error) {
+                showStatus('Network error: ' + error.message, 'error');
+            }
+        }
+
+        async function showTemplates() {
+            showStatus('Loading templates...', 'loading');
+
+            try {
+                const response = await fetch('/api/domain/templates');
+                const data = await response.json();
+
+                const grid = document.getElementById('templateGrid');
+                grid.innerHTML = '';
+
+                data.templates.forEach(template => {
+                    const card = document.createElement('div');
+                    card.className = 'template-card';
+                    card.onclick = () => cloneTemplate(template.domain);
+                    card.innerHTML = `
+                        <h3>${template.domain}</h3>
+                        <div class="meta">
+                            ${template.num_questions} questions • ${template.rotation_period}
+                        </div>
+                        <div class="sample">"${template.sample_question}"</div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('templatesSection').style.display = 'block';
+                hideStatus();
+
+            } catch (error) {
+                showStatus('Error loading templates: ' + error.message, 'error');
+            }
+        }
+
+        function hideTemplates() {
+            document.getElementById('templatesSection').style.display = 'none';
+            document.getElementById('formSection').style.display = 'block';
+        }
+
+        async function cloneTemplate(sourceDomain) {
+            const newSlug = prompt(`Enter a new domain slug to clone "${sourceDomain}":`, sourceDomain + '-copy');
+            if (!newSlug) return;
+
+            showStatus('Cloning template...', 'loading');
+
+            try {
+                const response = await fetch('/api/domain/clone', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        source_domain: sourceDomain,
+                        new_domain_slug: newSlug
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    showStatus('Error: ' + data.error, 'error');
+                    return;
+                }
+
+                // Fill form with cloned data
+                document.getElementById('domainSlug').value = data.new_domain_slug;
+                document.getElementById('rotationPeriod').value = data.rotation_period;
+                document.getElementById('duration').value = data.expected_duration_seconds;
+
+                generatedQuestions = data.questions;
+                displayQuestions();
+
+                hideTemplates();
+                hideStatus();
+
+                document.getElementById('questionsSection').scrollIntoView({behavior: 'smooth'});
+
+            } catch (error) {
+                showStatus('Error cloning template: ' + error.message, 'error');
+            }
+        }
+
+        function backToForm() {
+            document.getElementById('questionsSection').style.display = 'none';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function resetForm() {
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('questionsSection').style.display = 'none';
+            document.getElementById('successSection').style.display = 'none';
+            document.getElementById('domainSlug').value = '';
+            document.getElementById('displayName').value = '';
+            document.getElementById('theme').value = '';
+            generatedQuestions = [];
+            hideStatus();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    </script>
+</body>
+</html>

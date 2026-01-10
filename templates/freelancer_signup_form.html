@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Signup - Get Your API Key | Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .info-box h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-box li {
+            margin-bottom: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .brand-option {
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .brand-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .brand-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .brand-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .brand-desc {
+            font-size: 13px;
+            color: #666;
+            margin-left: 28px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Join Soulfra API</h1>
+        <p class="subtitle">Get instant access to brand AI personas and neural networks</p>
+
+        <div class="info-box">
+            <h3>What you'll get:</h3>
+            <ul>
+                <li>Free API key with 100 calls/day</li>
+                <li>Access to AI comment generation</li>
+                <li>Neural network text classification</li>
+                <li>Email-to-comment conversion</li>
+                <li>Real-time API analytics</li>
+            </ul>
+        </div>
+
+        <form method="POST" action="/subscribe/freelancer">
+            <div class="form-group">
+                <label for="name">
+                    Name (optional)
+                </label>
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Your name"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">
+                    Email <span class="required">*</span>
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="you@example.com"
+                    required
+                >
+                <p class="help-text">
+                    We'll send your API key to this email
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Choose Your Brand <span class="required">*</span>
+                </label>
+                <p class="help-text" style="margin-bottom: 12px;">
+                    Free tier gives you access to one brand AI. Upgrade to Pro for all brands.
+                </p>
+
+                <label class="brand-option">
+                    <input type="radio" name="brand_slug" value="calriven" checked>
+                    <span class="brand-label">💻 CalRiven</span>
+                    <div class="brand-desc">Technical wizard, builds privacy tools and developer platforms</div>
+                </label>
+
+                <label class="brand-option">
+                    <input type="radio" name="brand_slug" value="privacy-guard">
+                    <span class="brand-label">🔒 Privacy Guard</span>
+                    <div class="brand-desc">Privacy advocate, fights for data rights and encryption</div>
+                </label>
+
+                <label class="brand-option">
+                    <input type="radio" name="brand_slug" value="theauditor">
+                    <span class="brand-label">⚖️ The Auditor</span>
+                    <div class="brand-desc">Validation expert, analyzes claims and verifies facts</div>
+                </label>
+
+                <label class="brand-option">
+                    <input type="radio" name="brand_slug" value="ocean-dreams">
+                    <span class="brand-label">🌊 Ocean Dreams</span>
+                    <div class="brand-desc">Creative visionary, inspires with art and storytelling</div>
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                🎉 Get My API Key
+            </button>
+        </form>
+
+        <p style="text-align: center; margin-top: 20px; color: #999; font-size: 13px;">
+            Already have an account? <a href="/login" style="color: #667eea;">Sign in</a>
+        </p>
+    </div>
+</body>
+</html>

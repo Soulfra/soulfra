@@ -1,0 +1,585 @@
+{% extends "base.html" %}
+
+{% block title %}Brand Builder: {{ brand['name'] }} - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+.brand-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  padding: 2rem 1rem;
+}
+
+@media (max-width: 1024px) {
+  .brand-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.brand-context {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-height: 600px;
+  overflow-y: auto;
+  position: sticky;
+  top: 2rem;
+  color: white;
+}
+
+.brand-context h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.brand-context h3 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+  color: #FFE66D;
+}
+
+.brand-name {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.persona-btn {
+  padding: 0.75rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.persona-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.persona-btn.active {
+  background: rgba(255, 230, 109, 0.3);
+  border-color: #FFE66D;
+}
+
+.brand-workspace {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.brand-workspace h1 {
+  margin-top: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2rem;
+}
+
+.discussion-thread {
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 1rem;
+  height: 500px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.message {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.user {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin-left: auto;
+  text-align: right;
+}
+
+.message.ai {
+  background: #f3e5f5;
+  border-left: 4px solid #764ba2;
+}
+
+.message.system {
+  background: #fff3e0;
+  border-left: 4px solid #ff9800;
+  font-family: monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+
+.message.draft {
+  background: linear-gradient(135deg, #4ECDC4, #44A08D);
+  color: white;
+  border-left: 4px solid #2e7d32;
+  max-width: 100%;
+}
+
+.message-header {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  opacity: 0.9;
+}
+
+.message-content {
+  line-height: 1.5;
+}
+
+.input-area {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input-area input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.input-area button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #4ECDC4, #44A08D);
+  color: white;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+}
+
+.commands-help {
+  background: #f9f9f9;
+  border-left: 4px solid #667eea;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.commands-help h4 {
+  margin-top: 0;
+  color: #667eea;
+}
+
+.commands-help code {
+  background: #f5f5f5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.status-indicator {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.status-indicator.online {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-indicator.offline {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.brand-intro {
+  background: linear-gradient(135deg, #FFE66D, #FFAB40);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.brand-intro h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+.brand-intro p {
+  color: #555;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+</style>
+
+<div class="brand-container">
+  <!-- Left sidebar: Brand context -->
+  <div class="brand-context">
+    <h2>🎨 Brand Builder</h2>
+    <div class="brand-name">{{ brand['name'] }}</div>
+
+    <h3>🤖 AI Personas</h3>
+    <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">
+      Get multi-perspective feedback from 4 expert AI personas:
+    </p>
+    <div class="persona-grid">
+      <div class="persona-btn {% if session_details['persona_name'] == 'calriven' %}active{% endif %}"
+           onclick="switchPersona('calriven')"
+           title="Technical expert focused on implementation, architecture, and scalability. Helps with technical feasibility and engineering decisions.">
+        🔧 CalRiven<br><small>Technical</small>
+      </div>
+      <div class="persona-btn {% if session_details['persona_name'] == 'deathtodata' %}active{% endif %}"
+           onclick="switchPersona('deathtodata')"
+           title="Privacy and data security specialist. Ensures compliance, data protection, and ethical data handling practices.">
+        🔒 DeathToData<br><small>Privacy</small>
+      </div>
+      <div class="persona-btn {% if session_details['persona_name'] == 'theauditor' %}active{% endif %}"
+           onclick="switchPersona('theauditor')"
+           title="Quality assurance and validation expert. Reviews decisions for consistency, completeness, and alignment with goals.">
+        ✅ TheAuditor<br><small>Validation</small>
+      </div>
+      <div class="persona-btn {% if session_details['persona_name'] == 'soulfra' %}active{% endif %}"
+           onclick="switchPersona('soulfra')"
+           title="Security and risk management specialist. Identifies vulnerabilities, threats, and ensures robust security practices.">
+        🛡️ Soulfra<br><small>Security</small>
+      </div>
+    </div>
+
+    <h3>ℹ️ Session Info</h3>
+    <p style="font-size: 0.85rem; opacity: 0.9;">
+      Session ID: {{ session_id }}<br>
+      Status: {{ session_details['status'] }}<br>
+      Messages: <span id="messageCount">{{ messages|length }}</span>
+    </p>
+
+    <h3>💡 What to Discuss</h3>
+    <ul style="font-size: 0.85rem; opacity: 0.9; line-height: 1.6; padding-left: 1.25rem;">
+      <li>Brand identity & values</li>
+      <li>Target audience</li>
+      <li>Messaging & positioning</li>
+      <li>Visual identity</li>
+      <li>Content strategy</li>
+      <li>Franchise model</li>
+    </ul>
+  </div>
+
+  <!-- Main workspace: Discussion thread -->
+  <div class="brand-workspace">
+    <h1>💬 {{ brand['name'] }} Strategy</h1>
+
+    <div class="brand-intro">
+      <h3>✨ Collaborative Brand Building</h3>
+      <p>
+        Discuss your brand with 4 expert AI personas. Ask questions, debate ideas, and refine your brand strategy.
+        When ready, finalize your discussion into an SOP or content draft.
+      </p>
+    </div>
+
+    <div id="ollamaStatus" class="status-indicator offline">⚫ Ollama: Checking...</div>
+
+    <div class="commands-help">
+      <h4>💡 Available Commands</h4>
+      <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+        <li><code>/persona &lt;name&gt;</code> - Switch AI persona (calriven, deathtodata, theauditor, soulfra)</li>
+        <li><code>/finalize</code> - Generate SOP document from discussion</li>
+      </ul>
+    </div>
+
+    <div id="discussionThread" class="discussion-thread">
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="message {{ msg['sender'] }}">
+            <div class="message-header">
+              {% if msg['sender'] == 'user' %}You
+              {% elif msg['sender'] == 'ai' %}AI ({{ session_details['persona_name']|title }})
+              {% elif msg['sender'] == 'system' %}System
+              {% elif msg['sender'] == 'draft' %}📝 Brand SOP Draft
+              {% endif %}
+            </div>
+            <div class="message-content">{{ msg['content'] }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="message system">
+          <div class="message-content">
+👋 Welcome to Brand Builder for "{{ brand['name'] }}"!
+
+Start by asking questions like:
+- "What should our brand values be?"
+- "Who is our target audience?"
+- "How should we position ourselves?"
+
+Use /persona to switch between AI experts, or type naturally to chat!
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="input-area">
+      <input type="text"
+             id="messageInput"
+             placeholder="Ask about brand strategy, values, positioning..."
+             onkeypress="if(event.key === 'Enter') sendMessage()">
+      <button class="btn-primary" onclick="sendMessage()">Send</button>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn-success" onclick="finalizeDiscussion()">✨ Finalize SOP</button>
+      <button class="btn-secondary" onclick="location.href='/brands'">📚 View All Brands</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SESSION_ID = {{ session_id }};
+let currentPersona = '{{ session_details["persona_name"] }}';
+
+// Check Ollama status on load
+async function checkOllamaStatus() {
+  try {
+    const response = await fetch('http://localhost:11434/api/tags', { method: 'GET' });
+    if (response.ok) {
+      document.getElementById('ollamaStatus').className = 'status-indicator online';
+      document.getElementById('ollamaStatus').textContent = '🟢 Ollama: Connected';
+    }
+  } catch (error) {
+    document.getElementById('ollamaStatus').className = 'status-indicator offline';
+    document.getElementById('ollamaStatus').textContent = '⚫ Ollama: Not Connected (start with: ollama serve)';
+  }
+}
+
+// Send message or command
+async function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const content = input.value.trim();
+  if (!content) return;
+
+  // Add user message to UI immediately
+  addMessage('user', content);
+  input.value = '';
+
+  // Show loading
+  const loadingId = addMessage('ai', '⏳ Thinking...');
+
+  try {
+    const response = await fetch('/api/discussion/message', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        session_id: SESSION_ID,
+        content: content
+      })
+    });
+
+    const data = await response.json();
+
+    // Remove loading message
+    removeMessage(loadingId);
+
+    if (data.success) {
+      if (data.is_command) {
+        // Show command result
+        addMessage('system', data.result);
+      } else {
+        // Show AI response
+        addMessage('ai', data.ai_response);
+      }
+
+      // Update message count
+      updateMessageCount();
+    } else {
+      addMessage('system', `❌ Error: ${data.error}`);
+    }
+  } catch (error) {
+    removeMessage(loadingId);
+    addMessage('system', `❌ Error: ${error.message}`);
+  }
+
+  scrollToBottom();
+}
+
+// Finalize discussion into SOP
+async function finalizeDiscussion() {
+  if (!confirm('Generate Brand SOP document from this discussion?')) return;
+
+  const loadingId = addMessage('draft', '⏳ Generating Brand SOP...');
+
+  try {
+    const response = await fetch('/api/discussion/finalize', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        session_id: SESSION_ID,
+        auto_post: false
+      })
+    });
+
+    const data = await response.json();
+
+    removeMessage(loadingId);
+
+    if (data.success) {
+      addMessage('draft', data.draft_comment);
+      scrollToBottom();
+
+      // Show download/save options
+      if (confirm('✅ SOP Generated! Download as file?')) {
+        downloadSOP(data.draft_comment);
+      }
+    } else {
+      addMessage('system', `❌ Error: ${data.error}`);
+    }
+  } catch (error) {
+    removeMessage(loadingId);
+    addMessage('system', `❌ Error: ${error.message}`);
+  }
+}
+
+// Download SOP as text file
+function downloadSOP(content) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${('{{ brand["name"] }}'.replace(/\s+/g, '_'))}_SOP.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Switch persona
+function switchPersona(personaName) {
+  currentPersona = personaName;
+
+  // Update UI
+  document.querySelectorAll('.persona-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.closest('.persona-btn').classList.add('active');
+
+  // Send command
+  sendMessage(`/persona ${personaName}`);
+}
+
+// UI helpers
+function addMessage(sender, content) {
+  const thread = document.getElementById('discussionThread');
+  const messageId = 'msg-' + Date.now();
+
+  const messageDiv = document.createElement('div');
+  messageDiv.id = messageId;
+  messageDiv.className = `message ${sender}`;
+
+  let senderLabel = sender;
+  if (sender === 'user') senderLabel = 'You';
+  else if (sender === 'ai') senderLabel = `AI (${currentPersona.charAt(0).toUpperCase() + currentPersona.slice(1)})`;
+  else if (sender === 'system') senderLabel = 'System';
+  else if (sender === 'draft') senderLabel = '📝 Brand SOP Draft';
+
+  messageDiv.innerHTML = `
+    <div class="message-header">${senderLabel}</div>
+    <div class="message-content">${content}</div>
+  `;
+
+  thread.appendChild(messageDiv);
+  return messageId;
+}
+
+function removeMessage(messageId) {
+  const msg = document.getElementById(messageId);
+  if (msg) msg.remove();
+}
+
+function scrollToBottom() {
+  const thread = document.getElementById('discussionThread');
+  thread.scrollTop = thread.scrollHeight;
+}
+
+function updateMessageCount() {
+  const thread = document.getElementById('discussionThread');
+  const count = thread.querySelectorAll('.message').length;
+  document.getElementById('messageCount').textContent = count;
+}
+
+// Initialize
+checkOllamaStatus();
+scrollToBottom();
+</script>
+
+{% endblock %}

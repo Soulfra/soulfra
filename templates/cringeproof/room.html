@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cringeproof Multiplayer Room - {{ room_code }}</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .room-code-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .room-code {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #667eea;
+            letter-spacing: 3px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        .copy-code-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .copy-code-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h3 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-list {
+            list-style: none;
+        }
+
+        .player-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-item.host {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+        }
+
+        .player-icon {
+            font-size: 1.5em;
+        }
+
+        .player-name {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .player-status {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .game-area {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            min-height: 500px;
+        }
+
+        .game-area h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-instructions {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .game-instructions h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .game-instructions ol {
+            margin-left: 20px;
+            line-height: 1.8;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .chat-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-panel h3 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-user {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .message-text {
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .message.system {
+            background: linear-gradient(135deg, #FFE66D, #FFAB40);
+            color: #333;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+        }
+
+        .results-comparison {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            text-align: center;
+        }
+
+        .result-card.winner {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            border: none;
+        }
+
+        .result-score {
+            font-size: 3em;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .result-player {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-panel {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .room-code {
+                font-size: 1.8em;
+            }
+
+            .game-area {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Multiplayer Cringeproof</h1>
+            <p style="font-size: 1.2em; opacity: 0.95;">Play with friends on your WiFi!</p>
+        </div>
+
+        <div class="room-code-card">
+            <h3 style="color: #666; margin-bottom: 10px;">Room Code</h3>
+            <div class="room-code" id="room-code">{{ room_code }}</div>
+            <p style="color: #888; margin: 10px 0 15px;">Share this code with friends to let them join!</p>
+            <button class="copy-code-btn" onclick="copyRoomCode()">📋 Copy Room Code</button>
+        </div>
+
+        <div class="main-grid">
+            <!-- Left Sidebar: Players -->
+            <div class="sidebar">
+                <h3>👥 Players</h3>
+                <ul class="player-list" id="player-list">
+                    <li class="player-item host">
+                        <span class="player-icon">👑</span>
+                        <span class="player-name">{{ room.host_name }}</span>
+                        <span class="player-status">Host</span>
+                    </li>
+                    <!-- Dynamic players will be added here via WebSocket -->
+                </ul>
+                <p style="color: #888; font-size: 0.9em; margin-top: 15px;">
+                    Waiting for players to join...
+                </p>
+            </div>
+
+            <!-- Center: Game Area -->
+            <div class="game-area">
+                <h2>🎯 Ready to Play?</h2>
+
+                <div class="game-instructions">
+                    <h3>How to Play:</h3>
+                    <ol>
+                        <li>Share the room code with your friends</li>
+                        <li>Once everyone joins, click "Play Game" below</li>
+                        <li>Answer 7 questions honestly</li>
+                        <li>Return here to see results and chat!</li>
+                        <li>Compare scores and discuss your archetypes</li>
+                    </ol>
+                </div>
+
+                <a href="/cringeproof" class="action-btn">🎮 Play Cringeproof</a>
+
+                <!-- Results Comparison (shown after game completion) -->
+                <div class="results-comparison" id="results-comparison">
+                    <h3 style="text-align: center; margin: 25px 0 20px; color: #333;">📊 Results Comparison</h3>
+                    <div class="comparison-grid" id="comparison-grid">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Chat -->
+            <div class="chat-panel">
+                <h3>💬 Room Chat</h3>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message system">
+                        <div class="message-text">Welcome to room {{ room_code }}! Chat with your friends here.</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." onkeypress="handleChatKeypress(event)">
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/cringeproof" style="color: white; text-decoration: none; font-size: 1.2em; font-weight: 600;">← Back to Game</a>
+        </div>
+    </div>
+
+    <script>
+        // WebSocket connection
+        const socket = io();
+        const roomCode = "{{ room_code }}";
+        const username = "{{ username }}";
+
+        // Join room on connect
+        socket.on('connect', function() {
+            console.log('Connected to WebSocket');
+            socket.emit('join_cringeproof_room', {
+                room_code: roomCode,
+                username: username
+            });
+        });
+
+        // Handle player joined event
+        socket.on('player_joined', function(data) {
+            console.log('Player joined:', data);
+            addSystemMessage(`${data.username} joined the room`);
+            updatePlayerList(data.players);
+        });
+
+        // Handle player left event
+        socket.on('player_left', function(data) {
+            console.log('Player left:', data);
+            addSystemMessage(`${data.username} left the room`);
+            updatePlayerList(data.players);
+        });
+
+        // Handle chat message
+        socket.on('room_message', function(data) {
+            console.log('Message received:', data);
+            addChatMessage(data.username, data.message);
+        });
+
+        // Handle game results
+        socket.on('game_result_shared', function(data) {
+            console.log('Game result shared:', data);
+            addResultCard(data.username, data.score, data.archetype);
+        });
+
+        function copyRoomCode() {
+            const code = document.getElementById('room-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function updatePlayerList(players) {
+            const playerList = document.getElementById('player-list');
+            // Keep host, update rest
+            const hostItem = playerList.querySelector('.host');
+            playerList.innerHTML = '';
+            playerList.appendChild(hostItem);
+
+            players.forEach(player => {
+                const li = document.createElement('li');
+                li.className = 'player-item';
+                li.innerHTML = `
+                    <span class="player-icon">🎮</span>
+                    <span class="player-name">${player.username}</span>
+                    <span class="player-status">Online</span>
+                `;
+                playerList.appendChild(li);
+            });
+        }
+
+        function addSystemMessage(text) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system';
+            messageDiv.innerHTML = `<div class="message-text">${text}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addChatMessage(user, text) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <div class="message-user">${user}</div>
+                <div class="message-text">${text}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+
+            if (message) {
+                socket.emit('send_room_message', {
+                    room_code: roomCode,
+                    username: username,
+                    message: message
+                });
+                input.value = '';
+            }
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addResultCard(playerName, score, archetype) {
+            const resultsDiv = document.getElementById('results-comparison');
+            const gridDiv = document.getElementById('comparison-grid');
+
+            resultsDiv.style.display = 'block';
+
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.innerHTML = `
+                <div class="result-player">${playerName}</div>
+                <div class="result-score">${score}%</div>
+                ${archetype ? `<div style="font-size: 1.1em; margin-top: 10px;">🎭 ${archetype}</div>` : ''}
+            `;
+            gridDiv.appendChild(card);
+
+            // Highlight winner (lowest score = least cringe)
+            const allCards = gridDiv.querySelectorAll('.result-card');
+            if (allCards.length > 1) {
+                let lowestScore = Infinity;
+                let winnerCard = null;
+                allCards.forEach(c => {
+                    const scoreText = c.querySelector('.result-score').textContent;
+                    const scoreValue = parseInt(scoreText);
+                    if (scoreValue < lowestScore) {
+                        lowestScore = scoreValue;
+                        winnerCard = c;
+                    }
+                });
+                if (winnerCard) {
+                    allCards.forEach(c => c.classList.remove('winner'));
+                    winnerCard.classList.add('winner');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

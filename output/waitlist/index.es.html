@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanzamiento de Dominios Soulfra - Únete a la Lista de Espera</title>
+    <meta name="description" content="Únete a la lista de espera. Acelera el lanzamiento. Sé el primero.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .lang-switcher a {
+            color: white;
+            text-decoration: none;
+            margin: 0 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .lang-switcher a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .lang-switcher a.active {
+            background: rgba(255,255,255,0.3);
+            font-weight: bold;
+        }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .total-signups {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .domains-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .domain-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .domain-card.launched {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4CAF50;
+        }
+
+        .domain-card.rank-1 {
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .domain-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .domain-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .rank-badge {
+            background: #ffd700;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .signup-count {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #ffd700;
+        }
+
+        .countdown {
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .letter-slots {
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #45a049;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .domains-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switcher">
+        <a href="index.html" class="">EN</a>
+        <a href="index.es.html" class="active">ES</a>
+        <a href="index.ja.html" class="">JA</a>
+        <a href="index.zh.html" class="">ZH</a>
+        <a href="index.fr.html" class="">FR</a>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>🚀 Lanzamiento de Dominios Soulfra</h1>
+            <p class="tagline">Únete a la lista de espera. Acelera el lanzamiento. Sé el primero.</p>
+        </header>
+
+        <div class="stats-bar">
+            <h2>Total de Inscripciones en Todos los Dominios</h2>
+            <div class="total-signups">10</div>
+        </div>
+
+        <div class="domains-grid">
+
+            <div class="domain-card rank-1 ">
+                <div class="domain-header">
+                    <div class="domain-name">calriven</div>
+                    <div class="rank-badge">#1</div>
+                </div>
+
+                <div class="signup-count">4 inscripciones</div>
+
+                <div class="countdown">90 días hasta el lanzamiento</div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0.4444444444444444%"></div>
+                </div>
+
+                <div class="letter-slots">
+                    22/26 espacios restantes
+                </div>
+
+                <a href="https://soulfra.github.io/waitlist" class="cta-button">Unirse a Lista de Espera</a>
+            </div>
+
+            <div class="domain-card  ">
+                <div class="domain-header">
+                    <div class="domain-name">deathtodata</div>
+                    <div class="rank-badge">#2</div>
+                </div>
+
+                <div class="signup-count">3 inscripciones</div>
+
+                <div class="countdown">90 días hasta el lanzamiento</div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0.33333333333333337%"></div>
+                </div>
+
+                <div class="letter-slots">
+                    23/26 espacios restantes
+                </div>
+
+                <a href="https://soulfra.github.io/waitlist" class="cta-button">Unirse a Lista de Espera</a>
+            </div>
+
+            <div class="domain-card  ">
+                <div class="domain-header">
+                    <div class="domain-name">soulfra</div>
+                    <div class="rank-badge">#3</div>
+                </div>
+
+                <div class="signup-count">2 inscripciones</div>
+
+                <div class="countdown">90 días hasta el lanzamiento</div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0.2222222222222222%"></div>
+                </div>
+
+                <div class="letter-slots">
+                    24/26 espacios restantes
+                </div>
+
+                <a href="https://soulfra.github.io/waitlist" class="cta-button">Unirse a Lista de Espera</a>
+            </div>
+
+            <div class="domain-card  ">
+                <div class="domain-header">
+                    <div class="domain-name">cringeproof</div>
+                    <div class="rank-badge">#4</div>
+                </div>
+
+                <div class="signup-count">1 inscripciones</div>
+
+                <div class="countdown">90 días hasta el lanzamiento</div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0.1111111111111111%"></div>
+                </div>
+
+                <div class="letter-slots">
+                    25/26 espacios restantes
+                </div>
+
+                <a href="https://soulfra.github.io/waitlist" class="cta-button">Unirse a Lista de Espera</a>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>Cada 10 inscripciones = -1 día hasta el lanzamiento</p>
+            <p>900+ inscripciones = Lanzamiento Instantáneo 🚀</p>
+            <p>Solo 26 espacios por dominio (A-Z)</p>
+            <p style="margin-top: 20px;">Last updated: 2026-01-09T13:28:16</p>
+        </div>
+    </div>
+</body>
+</html>

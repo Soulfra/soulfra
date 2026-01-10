@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Soulfra Newsletter</title>
+    <link>https://soulfra.github.io</link>
+    <description>AI, privacy, and the future</description>
+    <language>en-us</language>
+    
+        <item>
+          <title>Test Post</title>
+          <link>https://soulfra.github.io/post/test-post.html</link>
+          <description>This is a test post....</description>
+          <pubDate>2025-12-19 16:28:35.931283</pubDate>
+          <guid>https://soulfra.github.io/post/test-post.html</guid>
+        </item>
+        
+  </channel>
+</rss>

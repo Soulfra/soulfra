@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <!-- Web Clip for Voice Recorder -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webClip.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.soulfra.voice-recorder</string>
+            <key>PayloadUUID</key>
+            <string>B7C3A8D4-5E2F-4A3B-9C1D-6F8E2A4B5C7D</string>
+            <key>PayloadDisplayName</key>
+            <string>Soulfra Voice</string>
+            <key>PayloadDescription</key>
+            <string>Quick access to voice recorder</string>
+            <key>URL</key>
+            <string>https://soulfra.local:5001/voice</string>
+            <key>Label</key>
+            <string>Voice</string>
+            <key>IsRemovable</key>
+            <true/>
+            <key>Icon</key>
+            <data>
+            <!-- Base64 encoded icon would go here -->
+            </data>
+            <key>Precomposed</key>
+            <false/>
+        </dict>
+
+        <!-- Web Clip for Suggestion Box -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webClip.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.soulfra.suggestions</string>
+            <key>PayloadUUID</key>
+            <string>A2B4C6D8-E1F3-4A5B-7C8D-9E0F1A2B3C4D</string>
+            <key>PayloadDisplayName</key>
+            <string>Soulfra Suggestions</string>
+            <key>PayloadDescription</key>
+            <string>View your voice suggestions</string>
+            <key>URL</key>
+            <string>https://soulfra.local:5001/suggestion-box</string>
+            <key>Label</key>
+            <string>Suggestions</string>
+            <key>IsRemovable</key>
+            <true/>
+        </dict>
+
+        <!-- Web Clip for CalRiven -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webClip.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.soulfra.calriven</string>
+            <key>PayloadUUID</key>
+            <string>C3D5E7F9-A1B2-4C5D-6E7F-8A9B0C1D2E3F</string>
+            <key>PayloadDisplayName</key>
+            <string>CalRiven</string>
+            <key>PayloadDescription</key>
+            <string>CalRiven's data-driven ideas</string>
+            <key>URL</key>
+            <string>https://soulfra.local:5001/@calriven/suggestions</string>
+            <key>Label</key>
+            <string>CalRiven</string>
+            <key>IsRemovable</key>
+            <true/>
+        </dict>
+    </array>
+
+    <!-- Main payload properties -->
+    <key>PayloadDisplayName</key>
+    <string>Soulfra Voice Setup</string>
+    <key>PayloadIdentifier</key>
+    <string>com.soulfra.voice-setup</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>D4E6F8A0-B1C2-4D5E-7F8A-9B0C1D2E3F4A</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadDescription</key>
+    <string>Adds Soulfra voice recording shortcuts to your home screen. Requires mkcert CA certificate to be installed first.</string>
+    <key>PayloadOrganization</key>
+    <string>Soulfra</string>
+</dict>
+</plist>

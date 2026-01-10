@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Studio - Visual Development Environment</title>
+
+    <!-- Socket.IO for real-time updates -->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #e0e0e0;
+            overflow: hidden;
+        }
+
+        .studio-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 60px;
+            background: #13172b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid #2a2f45;
+        }
+
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 20px;
+        }
+
+        .sidebar-icon:hover {
+            background: #667eea;
+            transform: scale(1.1);
+        }
+
+        .sidebar-icon.active {
+            background: #667eea;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            height: 60px;
+            background: #13172b;
+            border-bottom: 1px solid #2a2f45;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background: #667eea;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Workspace */
+        .workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .panel {
+            display: none;
+            width: 100%;
+        }
+
+        .panel.active {
+            display: flex;
+        }
+
+        /* Split View */
+        .split-view {
+            display: flex;
+            width: 100%;
+            gap: 1px;
+            background: #2a2f45;
+        }
+
+        .split-pane {
+            flex: 1;
+            background: #0a0e27;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .split-pane h2 {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #667eea;
+        }
+
+        /* Canvas */
+        .canvas {
+            background: #13172b;
+            border-radius: 8px;
+            min-height: 400px;
+            position: relative;
+            border: 1px solid #2a2f45;
+        }
+
+        #neural-canvas {
+            width: 100%;
+            height: 500px;
+        }
+
+        #concept-map-canvas {
+            width: 100%;
+            height: 600px;
+        }
+
+        /* Nodes */
+        .node {
+            position: absolute;
+            background: #667eea;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: move;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            min-width: 120px;
+        }
+
+        .node:hover {
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .node-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .node-content {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: #13172b;
+            border: 1px solid #2a2f45;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .chat-message.user {
+            background: #667eea;
+            align-self: flex-end;
+        }
+
+        .chat-message.assistant {
+            background: #13172b;
+            border: 1px solid #2a2f45;
+            align-self: flex-start;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: #13172b;
+            border-top: 1px solid #2a2f45;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Code Editor */
+        .code-editor {
+            background: #13172b;
+            border: 1px solid #2a2f45;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-keyword {
+            color: #c678dd;
+        }
+
+        .code-string {
+            color: #98c379;
+        }
+
+        .code-number {
+            color: #d19a66;
+        }
+
+        .code-comment {
+            color: #5c6370;
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-indicator.connected {
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .status-indicator.disconnected {
+            background: #ef4444;
+        }
+
+        /* Toolbox */
+        .toolbox {
+            background: #13172b;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .toolbox-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #a0a0a0;
+            margin-bottom: 10px;
+        }
+
+        .tool-item {
+            padding: 10px;
+            background: #0a0e27;
+            border: 1px solid #2a2f45;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tool-item:hover {
+            background: #667eea;
+            transform: translateX(5px);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #13172b;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #13172b;
+            border: 1px solid #2a2f45;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        /* Test Runner */
+        .test-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .test-item {
+            background: #13172b;
+            border: 1px solid #2a2f45;
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .test-item:hover {
+            border-color: #667eea;
+        }
+
+        .test-item.passed {
+            border-left: 4px solid #10b981;
+        }
+
+        .test-item.failed {
+            border-left: 4px solid #ef4444;
+        }
+
+        .test-name {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .run-single-test-btn {
+            padding: 6px 12px;
+            background: #667eea;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .run-single-test-btn:hover {
+            background: #764ba2;
+        }
+
+        #test-output {
+            width: 100%;
+            height: 400px;
+            background: #0a0e27;
+            border: 1px solid #2a2f45;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #e0e0e0;
+            overflow-y: auto;
+            resize: vertical;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .test-controls .btn {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="studio-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-icon active" data-panel="neural" title="Neural Network Builder">
+                🧠
+            </div>
+            <div class="sidebar-icon" data-panel="schema" title="Schema Editor">
+                📋
+            </div>
+            <div class="sidebar-icon" data-panel="ollama" title="Ollama AI Chat">
+                🤖
+            </div>
+            <div class="sidebar-icon" data-panel="concept" title="Concept Map">
+                🗺️
+            </div>
+            <div class="sidebar-icon" data-panel="email" title="Email Builder">
+                📧
+            </div>
+            <div class="sidebar-icon" data-panel="code" title="Code Generator">
+                💻
+            </div>
+            <div class="sidebar-icon" data-panel="test" title="Test Runner">
+                🧪
+            </div>
+            <div class="sidebar-icon" data-panel="debug" title="Debug Lab">
+                🔍
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>
+                    <span class="status-indicator connected" id="ws-status"></span>
+                    Soulfra Studio
+                </h1>
+                <div class="header-actions">
+                    <button class="btn btn-success" id="save-btn">💾 Save</button>
+                    <button class="btn" id="export-btn">📤 Export Python</button>
+                    <button class="btn btn-danger" id="clear-btn">🗑️ Clear</button>
+                </div>
+            </div>
+
+            <!-- Workspace -->
+            <div class="workspace">
+                <!-- Neural Network Builder -->
+                <div class="panel active" id="panel-neural">
+                    <div class="split-view">
+                        <div class="split-pane">
+                            <h2>🧠 Neural Network Builder</h2>
+
+                            <div class="toolbox">
+                                <div class="toolbox-title">Drag Layers</div>
+                                <div class="tool-item" draggable="true" data-layer-type="input">
+                                    📥 Input Layer
+                                </div>
+                                <div class="tool-item" draggable="true" data-layer-type="hidden">
+                                    🔄 Hidden Layer
+                                </div>
+                                <div class="tool-item" draggable="true" data-layer-type="output">
+                                    📤 Output Layer
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Model Name</label>
+                                <input type="text" class="form-control" id="model-name" placeholder="my_neural_network">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" id="model-description" placeholder="What does this network do?"></textarea>
+                            </div>
+
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value" id="layer-count">0</div>
+                                    <div class="stat-label">Layers</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="param-count">0</div>
+                                    <div class="stat-label">Parameters</div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success" id="train-network-btn" style="width: 100%; margin-top: 10px;">
+                                🚀 Train Network
+                            </button>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="train-progress"></div>
+                            </div>
+                        </div>
+
+                        <div class="split-pane">
+                            <h2>Canvas</h2>
+                            <svg id="neural-canvas" class="canvas"></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schema Editor -->
+                <div class="panel" id="panel-schema">
+                    <div class="split-view">
+                        <div class="split-pane">
+                            <h2>📋 Schema / Tool Editor</h2>
+
+                            <div class="form-group">
+                                <label>Schema Type</label>
+                                <select class="form-control" id="schema-type">
+                                    <option value="pydantic">Pydantic Model</option>
+                                    <option value="jsonschema">JSON Schema</option>
+                                    <option value="openapi">OpenAPI Spec</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Schema Name</label>
+                                <input type="text" class="form-control" id="schema-name" placeholder="MySchema">
+                            </div>
+
+                            <div class="form-group">
+                                <label>JSON Definition</label>
+                                <textarea class="form-control" id="schema-json" rows="15" placeholder='{
+  "name": "string",
+  "age": "integer",
+  "email": "string"
+}'></textarea>
+                            </div>
+
+                            <button class="btn btn-success" id="validate-schema-btn" style="width: 100%;">
+                                ✅ Validate Schema
+                            </button>
+                        </div>
+
+                        <div class="split-pane">
+                            <h2>Generated Python Code</h2>
+                            <div class="code-editor" id="schema-code-output">
+                                <span class="code-comment"># Python code will appear here...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ollama Chat -->
+                <div class="panel" id="panel-ollama">
+                    <div class="chat-container">
+                        <div class="split-pane" style="flex: none; padding: 20px;">
+                            <h2>🤖 Ollama AI Chat</h2>
+                            <div class="form-group">
+                                <label>Model</label>
+                                <select class="form-control" id="ollama-model">
+                                    <option value="llama3.2:3b">Llama 3.2 (3B)</option>
+                                    <option value="llama3:8b">Llama 3 (8B)</option>
+                                    <option value="codellama">CodeLlama</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>System Prompt</label>
+                                <textarea class="form-control" id="ollama-system" rows="3" placeholder="You are a helpful assistant..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="chat-messages" id="chat-messages"></div>
+
+                        <div class="chat-input-container">
+                            <input type="text" class="form-control" id="chat-input" placeholder="Type a message..." style="flex: 1;">
+                            <button class="btn btn-success" id="send-chat-btn">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Map -->
+                <div class="panel" id="panel-concept">
+                    <div class="split-pane" style="width: 100%;">
+                        <h2>🗺️ Live Concept Map</h2>
+                        <svg id="concept-map-canvas" class="canvas"></svg>
+                    </div>
+                </div>
+
+                <!-- Email Builder -->
+                <div class="panel" id="panel-email">
+                    <div class="split-view">
+                        <div class="split-pane">
+                            <h2>📧 Email Template Builder</h2>
+
+                            <div class="form-group">
+                                <label>Brand</label>
+                                <select class="form-control" id="email-brand">
+                                    <option value="ocean-dreams">Ocean Dreams</option>
+                                    <option value="generic">Generic</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <input type="text" class="form-control" id="email-subject" placeholder="Newsletter Subject">
+                            </div>
+
+                            <div class="form-group">
+                                <label>HTML Content</label>
+                                <textarea class="form-control" id="email-html" rows="10" placeholder="<h1>Hello [Brand Name]!</h1>&#10;<p>Your email content here...</p>"></textarea>
+                            </div>
+
+                            <button class="btn btn-success" id="preview-email-btn" style="width: 100%;">
+                                👁️ Preview Email
+                            </button>
+                        </div>
+
+                        <div class="split-pane">
+                            <h2>Live Preview</h2>
+                            <div class="canvas" id="email-preview" style="background: white; color: black; padding: 20px;">
+                                <p style="color: #666;">Email preview will appear here...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Generator -->
+                <div class="panel" id="panel-code">
+                    <div class="split-view">
+                        <div class="split-pane">
+                            <h2>💻 Code Generator</h2>
+
+                            <div class="form-group">
+                                <label>Generate</label>
+                                <select class="form-control" id="code-type">
+                                    <option value="route">Flask Route</option>
+                                    <option value="model">Database Model</option>
+                                    <option value="migration">Migration Script</option>
+                                    <option value="test">Test Suite</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Configuration (JSON)</label>
+                                <textarea class="form-control" id="code-config" rows="15" placeholder='{
+  "route": "/api/example",
+  "method": "GET",
+  "returns": "json"
+}'></textarea>
+                            </div>
+
+                            <button class="btn btn-success" id="generate-code-btn" style="width: 100%;">
+                                ✨ Generate Code
+                            </button>
+                        </div>
+
+                        <div class="split-pane">
+                            <h2>Generated Code</h2>
+                            <div class="code-editor" id="generated-code-output">
+                                <span class="code-comment"># Generated code will appear here...</span>
+                            </div>
+                            <button class="btn" id="copy-code-btn" style="width: 100%; margin-top: 10px;">
+                                📋 Copy to Clipboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Runner - "how do we run all the tests" -->
+                <div class="panel" id="panel-test">
+                    <div class="split-view">
+                        <div class="split-pane">
+                            <h2>🧪 Visual Test Runner</h2>
+                            <p style="color: #a0a0a0; margin-bottom: 20px;">
+                                Zero terminal required. Run tests, auto-loop until pass.
+                            </p>
+
+                            <div class="test-controls">
+                                <button class="btn btn-success" id="run-all-tests-btn">
+                                    ▶️ Run All Tests
+                                </button>
+                                <button class="btn" id="auto-loop-btn">
+                                    🔄 Auto-Loop Until Pass
+                                </button>
+                            </div>
+
+                            <h3 style="margin-bottom: 15px; font-size: 14px; color: #a0a0a0;">Test Files</h3>
+                            <div class="test-list" id="test-list">
+                                <!-- Test files will be loaded here -->
+                                <div style="text-align: center; padding: 20px; color: #666;">
+                                    Loading tests...
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="split-pane">
+                            <h2>Live Output</h2>
+                            <textarea id="test-output" readonly placeholder="Test output will stream here in real-time..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Debug Lab - "teach how to search better" -->
+                <div class="panel" id="panel-debug">
+                    <h2>🔍 Debug Lab - Interactive Learning</h2>
+                    <p style="color: #a0a0a0; margin-bottom: 20px;">
+                        Learn debugging, log searching, and Linux commands through interactive challenges.
+                    </p>
+
+                    <!-- Tab navigation -->
+                    <div class="debug-tabs">
+                        <button class="debug-tab active" data-debug-tab="logs">📜 Live Logs</button>
+                        <button class="debug-tab" data-debug-tab="explain">🤖 Error Explainer</button>
+                        <button class="debug-tab" data-debug-tab="commands">💻 Command Teacher</button>
+                        <button class="debug-tab" data-debug-tab="challenges">🏆 Challenges</button>
+                    </div>
+
+                    <!-- Tab panels -->
+                    <div class="debug-tab-content">
+                        <!-- Live Logs Tab -->
+                        <div class="debug-panel active" id="debug-logs-panel">
+                            <div class="split-view">
+                                <div class="split-pane">
+                                    <h3>📜 Live Log Viewer</h3>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="debug-log-search" placeholder="Search pattern (grep-style regex)">
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" id="debug-log-filter">
+                                            <option value="all">All Levels</option>
+                                            <option value="error">Errors Only</option>
+                                            <option value="warning">Warnings Only</option>
+                                            <option value="info">Info Only</option>
+                                        </select>
+                                    </div>
+                                    <div class="test-controls">
+                                        <button class="btn" id="debug-refresh-logs">🔄 Refresh</button>
+                                        <button class="btn" id="debug-clear-logs">🗑️ Clear</button>
+                                    </div>
+                                    <div id="debug-log-viewer" style="height: 400px; overflow-y: auto; background: #0a0e27; border: 1px solid #2a2f45; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 12px;">
+                                        <div style="color: #666;">Logs will appear here...</div>
+                                    </div>
+                                </div>
+                                <div class="split-pane">
+                                    <h3>💻 Linux Command</h3>
+                                    <div id="debug-equivalent-command" style="background: #13172b; border: 1px solid #2a2f45; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                                        <em style="color: #a0a0a0;">Equivalent command will show here...</em>
+                                    </div>
+                                    <h3>📚 Tutorial</h3>
+                                    <div style="background: #13172b; border: 1px solid #2a2f45; padding: 15px; border-radius: 6px;">
+                                        <p><strong>How to use:</strong></p>
+                                        <ul style="color: #a0a0a0;">
+                                            <li>Search for patterns like "error" or "302"</li>
+                                            <li>Click "Explain" on any log line to get AI help</li>
+                                            <li>Filter by level to focus on specific types</li>
+                                            <li>See the Linux command that would find the same results</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Explainer Tab -->
+                        <div class="debug-panel" id="debug-explain-panel">
+                            <h3>🤖 Error Explainer (Ollama-Powered)</h3>
+                            <div class="form-group">
+                                <label>Paste error or log line:</label>
+                                <textarea class="form-control" id="debug-error-input" rows="5" placeholder="Paste your error message here..."></textarea>
+                            </div>
+                            <button class="btn btn-success" id="debug-explain-btn">🤖 Explain This Error</button>
+                            <div id="debug-explanation-result" style="margin-top: 20px;"></div>
+                        </div>
+
+                        <!-- Command Teacher Tab -->
+                        <div class="debug-panel" id="debug-commands-panel">
+                            <h3>💻 Command Teacher</h3>
+                            <p style="color: #a0a0a0;">Learn essential Linux debugging commands with interactive examples.</p>
+                            <div class="test-controls">
+                                <button class="btn" id="debug-teach-grep">🔍 Learn grep</button>
+                                <button class="btn" id="debug-teach-curl">🌐 Learn curl</button>
+                                <button class="btn" id="debug-teach-tail">📜 Learn tail</button>
+                            </div>
+                            <div id="debug-command-tutorial" style="margin-top: 20px; background: #13172b; border: 1px solid #2a2f45; padding: 20px; border-radius: 6px;">
+                                <em style="color: #a0a0a0;">Click a button above to start learning!</em>
+                            </div>
+                        </div>
+
+                        <!-- Challenges Tab -->
+                        <div class="debug-panel" id="debug-challenges-panel">
+                            <h3>🏆 Debug Challenges</h3>
+                            <p style="color: #a0a0a0;">Gamified debugging practice. Earn badges by solving real problems!</p>
+                            <div class="test-controls">
+                                <button class="btn" id="debug-challenge-prev">⬅️ Previous</button>
+                                <span id="debug-challenge-progress" style="color: #a0a0a0; padding: 0 20px;">Challenge 1 of 8</span>
+                                <button class="btn" id="debug-challenge-next">➡️ Next</button>
+                                <button class="btn btn-success" id="debug-challenge-complete">✅ Complete Challenge</button>
+                            </div>
+                            <div id="debug-challenge-view" style="margin-top: 20px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/studio.js"></script>
+    <script src="/static/js/debug_lab.js"></script>
+    <style>
+        /* Debug Lab Styles */
+        .debug-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2a2f45;
+            padding-bottom: 10px;
+        }
+        .debug-tab {
+            padding: 10px 20px;
+            background: #13172b;
+            border: none;
+            border-radius: 6px 6px 0 0;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .debug-tab:hover {
+            background: #2a2f45;
+        }
+        .debug-tab.active {
+            background: #667eea;
+        }
+        .debug-panel {
+            display: none;
+        }
+        .debug-panel.active {
+            display: block;
+        }
+        .log-line {
+            padding: 5px;
+            margin: 2px 0;
+            border-left: 3px solid #2a2f45;
+        }
+        .log-line.log-error {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .log-line.log-warning {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .log-line.log-success {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .log-timestamp {
+            color: #a0a0a0;
+            margin-right: 10px;
+        }
+        .log-explain-btn {
+            float: right;
+            padding: 2px 8px;
+            background: #667eea;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .challenge-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .challenge-level {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .challenge-level.beginner {
+            background: #10b981;
+            color: white;
+        }
+        .challenge-level.intermediate {
+            background: #f59e0b;
+            color: white;
+        }
+        .challenge-level.advanced {
+            background: #ef4444;
+            color: white;
+        }
+        .challenge-tasks {
+            background: #13172b;
+            padding: 20px 40px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .challenge-hints, .challenge-solution {
+            margin: 15px 0;
+            background: #13172b;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .command-suggestion {
+            background: #0a0e27;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+    <script>
+        // Debug Lab tab switching
+        document.querySelectorAll('.debug-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.debugTab;
+
+                // Update active tab
+                document.querySelectorAll('.debug-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Update active panel
+                document.querySelectorAll('.debug-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(`debug-${tabId}-panel`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unsubscribe - Soulfra Newsletter</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Soulfra</a>
+      <div class="nav-links">
+        <a href="/">Posts</a>
+        <a href="/about">About</a>
+        <a href="/subscribe">Subscribe</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="unsubscribe-page">
+      <h1>Unsubscribe</h1>
+
+      <p>Sorry to see you go! Click below to confirm unsubscribe.</p>
+
+      <form method="GET" action="/unsubscribe">
+        <input type="hidden" name="email" value="{{email}}">
+        <input type="hidden" name="confirm" value="yes">
+        <button type="submit">Confirm Unsubscribe</button>
+      </form>
+
+      <p><a href="/">Never mind, take me back</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Soulfra. <a href="/feed.xml">RSS</a> | <a href="/subscribe">Subscribe</a> | <a href="/admin">Admin</a></p>
+  </footer>
+</body>
+</html>

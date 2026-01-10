@@ -1,0 +1,15 @@
+# Project Configuration - Products Built Across Domains
+# Format: project_slug | primary_domain | github_repo | status | tagline
+#
+# Example:
+# cringeproof | soulfra.com | soulfra/cringeproof | active | AI consciousness narrative game
+#
+# Status: planning, building, active, archived
+# GitHub repo format: owner/repo-name
+#
+# Add your projects below:
+
+cringeproof | soulfra.com | soulfra/cringeproof | building | AI consciousness narrative game 🧠
+data-privacy-toolkit | deathtodata.com | soulfra/data-privacy-toolkit | planning | Privacy-first data management tools 🔒
+code-quality-analyzer | calriven.com | soulfra/code-quality-analyzer | planning | Automated code review and quality metrics 📊
+recipe-generator | howtocookathome.com | soulfra/recipe-generator | planning | AI-powered recipe creation from ingredients 🍳

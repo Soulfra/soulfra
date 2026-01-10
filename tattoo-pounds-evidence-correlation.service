@@ -1,0 +1,60 @@
+[Unit]
+Description=Tattoo-Pounds-Evidence-Correlation Multi-Domain Router
+Documentation=https://github.com/soulfra/soulfra-simple
+After=network.target soulfra.service
+
+[Service]
+Type=simple
+
+# User to run as
+User=%i
+Group=%i
+
+# Working directory
+WorkingDirectory=/Users/matthewmauer/Desktop/roommate-chat/soulfra-simple
+
+# Environment variables
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="FLASK_ENV=production"
+Environment="DOMAIN_ROUTER=tattoo-pounds-evidence-correlation"
+
+# Load environment from .env file
+EnvironmentFile=-/Users/matthewmauer/Desktop/roommate-chat/soulfra-simple/.env
+
+# Start the multi-domain router daemon
+# This reads from brands/*/README.md and routes requests across domains
+ExecStart=/usr/bin/python3 /Users/matthewmauer/Desktop/roommate-chat/soulfra-simple/domain_router_daemon.py \
+    --config-source=readme \
+    --domains=tattoo,pounds,evidence,correlation \
+    --mapping=tattoo:soulfra,pounds:deathtodata,evidence:calriven,correlation:cringeproof \
+    --health-check-interval=30
+
+# Health check command (every 30 seconds)
+ExecReload=/bin/kill -HUP $MAINPID
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/Users/matthewmauer/Desktop/roommate-chat/soulfra-simple
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tattoo-pounds-evidence-correlation
+
+# Service dependencies
+Wants=chat-yap-ideate-lockin.service
+PartOf=soulfra.service
+
+[Install]
+WantedBy=multi-user.target

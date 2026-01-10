@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catchphrase Testing - {{ domain_name }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.95; }
+        .content { padding: 40px 30px; }
+
+        .catchphrase-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid {{ theme_primary }};
+        }
+
+        .catchphrase-category {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .catchphrase-text {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.4;
+            margin: 20px 0;
+        }
+
+        .catchphrase-variant {
+            display: inline-block;
+            background: {{ theme_accent }};
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .reaction-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .reaction-btn {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            font-size: 2.5em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reaction-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .reaction-btn.selected {
+            border-color: {{ theme_primary }};
+            background: {{ theme_primary }};
+            transform: scale(1.15);
+        }
+
+        .reaction-label {
+            text-align: center;
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, {{ theme_primary }} 0%, {{ theme_secondary }} 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .stats h3 {
+            color: {{ theme_primary }};
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            color: {{ theme_primary }};
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid {{ theme_primary }};
+            border-radius: 6px;
+            margin: 5px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: {{ theme_primary }};
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💬 Catchphrase Testing</h1>
+            <p>Help shape {{ domain_name }}'s brand personality</p>
+        </div>
+
+        <div class="content">
+            {% if submitted %}
+            <div class="success-message">
+                ✅ Thanks for your feedback! Your reaction has been recorded.
+            </div>
+            {% endif %}
+
+            {% if catchphrase %}
+            <div class="catchphrase-card">
+                <div class="catchphrase-category">{{ catchphrase.category | upper }}</div>
+                <span class="catchphrase-variant">Variant {{ catchphrase.variant_label }}</span>
+                <div class="catchphrase-text">"{{ catchphrase.text }}"</div>
+
+                <form id="reactionForm" method="POST">
+                    <div class="reaction-buttons">
+                        <div>
+                            <button type="button" class="reaction-btn" data-reaction="love" data-emoji="😍">😍</button>
+                            <div class="reaction-label">Love it!</div>
+                        </div>
+                        <div>
+                            <button type="button" class="reaction-btn" data-reaction="like" data-emoji="👍">👍</button>
+                            <div class="reaction-label">Like</div>
+                        </div>
+                        <div>
+                            <button type="button" class="reaction-btn" data-reaction="meh" data-emoji="😐">😐</button>
+                            <div class="reaction-label">Meh</div>
+                        </div>
+                        <div>
+                            <button type="button" class="reaction-btn" data-reaction="dislike" data-emoji="👎">👎</button>
+                            <div class="reaction-label">Dislike</div>
+                        </div>
+                        <div>
+                            <button type="button" class="reaction-btn" data-reaction="cringe" data-emoji="😬">😬</button>
+                            <div class="reaction-label">Cringe</div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="catchphrase_id" value="{{ catchphrase.id }}">
+                    <input type="hidden" name="reaction_type" id="reactionType">
+                    <input type="hidden" name="reaction_emoji" id="reactionEmoji">
+
+                    <button type="submit" class="submit-btn" id="submitBtn" disabled>Submit Reaction</button>
+                </form>
+
+                {% if stats %}
+                <div class="stats">
+                    <h3>📊 Current Results</h3>
+                    <div class="stat-item">
+                        <span>Total Reactions:</span>
+                        <strong>{{ stats.total }}</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>😍 Love:</span>
+                        <strong>{{ stats.love }}%</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>👍 Like:</span>
+                        <strong>{{ stats.like }}%</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>😐 Meh:</span>
+                        <strong>{{ stats.meh }}%</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>👎 Dislike:</span>
+                        <strong>{{ stats.dislike }}%</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>😬 Cringe:</span>
+                        <strong>{{ stats.cringe }}%</strong>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <p style="text-align: center; padding: 40px; color: #666;">No catchphrases available for testing right now. Check back soon!</p>
+            {% endif %}
+
+            <div class="navigation">
+                <a href="/catchphrase/results" class="nav-link">📊 View All Results</a>
+                <a href="/" class="nav-link">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const reactionButtons = document.querySelectorAll('.reaction-btn');
+        const submitBtn = document.getElementById('submitBtn');
+        const reactionTypeInput = document.getElementById('reactionType');
+        const reactionEmojiInput = document.getElementById('reactionEmoji');
+
+        reactionButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove selected class from all buttons
+                reactionButtons.forEach(b => b.classList.remove('selected'));
+
+                // Add selected class to clicked button
+                this.classList.add('selected');
+
+                // Update hidden form fields
+                reactionTypeInput.value = this.dataset.reaction;
+                reactionEmojiInput.value = this.dataset.emoji;
+
+                // Enable submit button
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

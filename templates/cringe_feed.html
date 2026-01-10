@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CringeProof Feed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .feed-container {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .feed-item {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Canvas for real-time rendering */
+        .item-canvas {
+            width: 100%;
+            max-width: 600px;
+            height: 100vh;
+            max-height: 100vh;
+            object-fit: contain;
+        }
+
+        /* UI Overlays */
+        .vote-buttons {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            z-index: 10;
+        }
+
+        .vote-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .vote-btn:active {
+            transform: scale(0.9);
+        }
+
+        .vote-cringe {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            color: white;
+        }
+
+        .vote-based {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+        }
+
+        .vote-count {
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+
+        /* Info overlay */
+        .item-info {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            right: 120px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .article-source {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .prediction-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            background: rgba(0,0,0,0.5);
+            padding: 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Score badge */
+        .score-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            color: #ff4081;
+        }
+
+        /* Loading state */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Audio player (hidden, controlled by JS) */
+        audio {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .vote-buttons {
+                right: 10px;
+            }
+
+            .vote-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .item-info {
+                bottom: 80px;
+                right: 90px;
+            }
+
+            .article-title {
+                font-size: 1.1rem;
+            }
+
+            .prediction-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="feed-container" id="feedContainer">
+        <div class="loading">Loading feed...</div>
+    </div>
+
+    <script>
+        // State
+        let feedItems = [];
+        let currentIndex = 0;
+        let isLoading = false;
+        let hasMore = true;
+
+        // Load initial feed
+        async function loadFeed(offset = 0) {
+            if (isLoading) return;
+            isLoading = true;
+
+            try {
+                const response = await fetch(`/api/feed/items?offset=${offset}&limit=10`);
+                const data = await response.json();
+
+                feedItems = feedItems.concat(data.items);
+                hasMore = data.has_more;
+
+                renderFeed();
+            } catch (error) {
+                console.error('Error loading feed:', error);
+            }
+
+            isLoading = false;
+        }
+
+        // Render feed items
+        function renderFeed() {
+            const container = document.getElementById('feedContainer');
+            container.innerHTML = '';
+
+            feedItems.forEach((item, index) => {
+                const itemEl = createFeedItem(item, index);
+                container.appendChild(itemEl);
+            });
+
+            // Set up intersection observer for infinite scroll
+            setupInfiniteScroll();
+
+            // Play first item
+            if (feedItems.length > 0) {
+                playItem(0);
+            }
+        }
+
+        // Create feed item element
+        function createFeedItem(item, index) {
+            const div = document.createElement('div');
+            div.className = 'feed-item';
+            div.dataset.index = index;
+            div.dataset.itemId = item.id;
+
+            // Create canvas for rendering
+            const canvas = document.createElement('canvas');
+            canvas.className = 'item-canvas';
+            canvas.width = 1080;
+            canvas.height = 1920;
+            canvas.id = `canvas-${index}`;
+
+            // Score badge
+            const scoreBadge = document.createElement('div');
+            scoreBadge.className = 'score-badge';
+            const scorePercent = Math.round(item.cringeproof_score * 100);
+            scoreBadge.innerHTML = `
+                <div>CringeProof</div>
+                <div class="score-value">${scorePercent}%</div>
+            `;
+
+            // Info overlay
+            const info = document.createElement('div');
+            info.className = 'item-info';
+            info.innerHTML = `
+                <div class="article-title">${item.article.title || 'Untitled'}</div>
+                <div class="article-source">${item.article.source || 'Unknown Source'}</div>
+                <div class="prediction-text">"${item.prediction}"</div>
+            `;
+
+            // Vote buttons
+            const voteButtons = document.createElement('div');
+            voteButtons.className = 'vote-buttons';
+            voteButtons.innerHTML = `
+                <button class="vote-btn vote-cringe" onclick="vote(${item.id}, 'cringe', this)">
+                    💀
+                    <div class="vote-count">${item.votes_cringe}</div>
+                </button>
+                <button class="vote-btn vote-based" onclick="vote(${item.id}, 'based', this)">
+                    🔥
+                    <div class="vote-count">${item.votes_based}</div>
+                </button>
+            `;
+
+            // Audio element
+            const audio = document.createElement('audio');
+            audio.id = `audio-${index}`;
+            audio.src = item.audio_url;
+            audio.loop = false;
+
+            div.appendChild(canvas);
+            div.appendChild(scoreBadge);
+            div.appendChild(info);
+            div.appendChild(voteButtons);
+            div.appendChild(audio);
+
+            // Render pixel composition
+            renderPixelComposition(canvas, item);
+
+            return div;
+        }
+
+        // Render pixel composition on canvas
+        async function renderPixelComposition(canvas, item) {
+            const ctx = canvas.getContext('2d');
+
+            // Get layer data from server
+            const response = await fetch(`/api/feed/render/${item.id}`);
+            const renderData = await response.json();
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Render each layer
+            for (const layer of renderData.layers) {
+                switch(layer.type) {
+                    case 'gradient':
+                        renderGradient(ctx, layer);
+                        break;
+                    case 'text':
+                        renderText(ctx, layer);
+                        break;
+                    case 'waveform':
+                        // Placeholder waveform (real one needs audio analysis)
+                        renderWaveformPlaceholder(ctx, layer);
+                        break;
+                    case 'prediction':
+                        renderPrediction(ctx, layer);
+                        break;
+                    case 'score_badge':
+                        // Rendered as HTML overlay instead
+                        break;
+                    case 'crt_filter':
+                        applyCRTFilter(ctx, layer);
+                        break;
+                }
+            }
+        }
+
+        function renderGradient(ctx, layer) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, layer.height);
+            gradient.addColorStop(0, layer.colors[0]);
+            gradient.addColorStop(1, layer.colors[1]);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, layer.width, layer.height);
+        }
+
+        function renderText(ctx, layer) {
+            ctx.font = `${layer.font_weight} ${layer.font_size}px sans-serif`;
+            ctx.fillStyle = layer.color;
+            ctx.textAlign = 'center';
+
+            if (layer.shadow) {
+                ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+            }
+
+            // Word wrap
+            const words = layer.content.split(' ');
+            let line = '';
+            let y = layer.y;
+            const maxWidth = 900;
+
+            for (let word of words) {
+                const testLine = line + word + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && line !== '') {
+                    ctx.fillText(line, layer.width / 2, y);
+                    line = word + ' ';
+                    y += layer.font_size + 10;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, layer.width / 2, y);
+
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+        }
+
+        function renderWaveformPlaceholder(ctx, layer) {
+            // Simplified waveform visualization
+            ctx.fillStyle = layer.color;
+            const barWidth = 10;
+            const gap = 5;
+            const numBars = Math.floor(1080 / (barWidth + gap));
+
+            for (let i = 0; i < numBars; i++) {
+                const height = Math.random() * layer.height;
+                const x = i * (barWidth + gap);
+                const y = layer.y + (layer.height - height) / 2;
+                ctx.fillRect(x, y, barWidth, height);
+            }
+        }
+
+        function renderPrediction(ctx, layer) {
+            ctx.font = `${layer.font_size}px sans-serif`;
+            ctx.fillStyle = layer.color;
+            ctx.textAlign = 'center';
+
+            // Word wrap
+            const words = layer.text.split(' ');
+            let line = '';
+            let y = layer.y;
+
+            for (let word of words) {
+                const testLine = line + word + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > layer.max_width && line !== '') {
+                    ctx.fillText(line, 1080 / 2, y);
+                    line = word + ' ';
+                    y += layer.font_size + 10;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, 1080 / 2, y);
+        }
+
+        function applyCRTFilter(ctx, layer) {
+            if (layer.scanlines) {
+                // Draw scanlines
+                ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+                ctx.lineWidth = 1;
+                for (let y = 0; y < 1920; y += 2) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(1080, y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Play item (audio + animation)
+        function playItem(index) {
+            // Pause all audio
+            document.querySelectorAll('audio').forEach(a => a.pause());
+
+            // Play this item's audio
+            const audio = document.getElementById(`audio-${index}`);
+            if (audio) {
+                audio.play();
+            }
+
+            currentIndex = index;
+        }
+
+        // Vote on item
+        async function vote(itemId, voteType, button) {
+            try {
+                const response = await fetch('/api/feed/vote', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        pairing_id: itemId,
+                        vote_type: voteType
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update vote counts
+                    const parent = button.closest('.vote-buttons');
+                    parent.querySelector('.vote-cringe .vote-count').textContent = data.votes_cringe;
+                    parent.querySelector('.vote-based .vote-count').textContent = data.votes_based;
+
+                    // Update score badge
+                    const scoreBadge = button.closest('.feed-item').querySelector('.score-value');
+                    scoreBadge.textContent = Math.round(data.new_score * 100) + '%';
+
+                    // Animate button
+                    button.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        button.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            } catch (error) {
+                console.error('Vote error:', error);
+            }
+        }
+
+        // Infinite scroll
+        function setupInfiniteScroll() {
+            const container = document.getElementById('feedContainer');
+
+            container.addEventListener('scroll', () => {
+                const scrollTop = container.scrollTop;
+                const scrollHeight = container.scrollHeight;
+                const clientHeight = container.clientHeight;
+
+                // Detect current item
+                const items = document.querySelectorAll('.feed-item');
+                items.forEach((item, index) => {
+                    const rect = item.getBoundingClientRect();
+                    if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+                        if (currentIndex !== index) {
+                            playItem(index);
+                        }
+                    }
+                });
+
+                // Load more when near bottom
+                if (scrollTop + clientHeight >= scrollHeight - 1000 && hasMore && !isLoading) {
+                    loadFeed(feedItems.length);
+                }
+            });
+        }
+
+        // Initialize
+        loadFeed();
+    </script>
+</body>
+</html>

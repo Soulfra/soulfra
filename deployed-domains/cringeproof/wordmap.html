@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wordmap - CringeProof Voice Archive</title>
+<meta name="description" content="Visualize the semantic landscape of your voice archive. See what words define your ideas.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cringeproof.com/wordmap">
+<meta property="og:title" content="CringeProof Wordmap - Your Ideas Visualized">
+<meta property="og:description" content="Interactive word cloud showing the most common themes in your voice recordings.">
+<meta property="og:image" content="https://cringeproof.com/og-image.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://cringeproof.com/wordmap">
+<meta property="twitter:title" content="CringeProof Wordmap - Your Ideas Visualized">
+<meta property="twitter:description" content="Interactive word cloud showing the most common themes in your voice recordings.">
+<meta property="twitter:image" content="https://cringeproof.com/og-image.png">
+
+<link rel="stylesheet" href="./css/soulfra.css">
+<style>
+body {
+    background: #000;
+    color: #fff;
+}
+
+.wordmap-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.wordmap-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.wordmap-header h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ff006e, #bdb2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.wordmap-header p {
+    font-size: 1.25rem;
+    color: #ffe5ec;
+    opacity: 0.8;
+}
+
+.wordmap-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.domain-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #ff006e;
+    color: #ffe5ec;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.domain-btn:hover {
+    background: rgba(255, 0, 110, 0.2);
+    transform: translateY(-2px);
+}
+
+.domain-btn.active {
+    background: #ff006e;
+    color: #000;
+}
+
+#wordcloud {
+    background: linear-gradient(135deg, #1a1a2e 0%, #000 100%);
+    border: 4px solid #ff006e;
+    border-radius: 12px;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#wordcloud svg {
+    width: 100%;
+    height: 600px;
+}
+
+.word {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.word:hover {
+    opacity: 0.7;
+    transform: scale(1.1);
+}
+
+.wordmap-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #000 100%);
+    border: 3px solid #ff006e;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #ff006e;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #ffe5ec;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.loading {
+    font-size: 2rem;
+    color: #ffe5ec;
+    text-align: center;
+    padding: 4rem;
+}
+
+@media (max-width: 768px) {
+    .wordmap-header h1 {
+        font-size: 2rem;
+    }
+
+    #wordcloud svg {
+        height: 400px;
+    }
+}
+</style>
+</head>
+<body>
+<nav class="soulfra-nav" role="navigation" aria-label="Main navigation">
+    <div class="soulfra-nav-container">
+        <a href="https://cringeproof.com/" class="soulfra-logo" aria-label="CringeProof home">
+            CringeProof
+        </a>
+
+        <div class="soulfra-links">
+            <a href="https://cringeproof.com/ideas/">Ideas</a>
+            <a href="https://cringeproof.com/">Archive</a>
+            <a href="https://cringeproof.com/wordmap.html" class="active">Wordmap</a>
+            <a href="https://cringeproof.com/record.html" class="soulfra-record-btn" aria-label="Record a voice idea">Record</a>
+            <a href="https://cringeproof.com/screenshot.html">Capture</a>
+        </div>
+    </div>
+</nav>
+
+<main class="wordmap-container">
+    <header class="wordmap-header">
+        <h1>Your Voice Landscape</h1>
+        <p>Words that define your ideas, weighted by frequency across all recordings</p>
+    </header>
+
+    <div class="wordmap-controls">
+        <button class="domain-btn active" data-domain="cringeproof.com">CringeProof</button>
+        <button class="domain-btn" data-domain="soulfra.com">Soulfra</button>
+        <button class="domain-btn" data-domain="deathtodata.com">DeathToData</button>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem;">
+        <button class="domain-btn active" id="toggle-human" data-layer="human">Human Words</button>
+        <button class="domain-btn" id="toggle-llm" data-layer="llm">LLM Operations</button>
+    </div>
+
+    <div id="wordcloud">
+        <div class="loading">Loading wordmap...</div>
+    </div>
+
+    <div class="wordmap-stats">
+        <div class="stat-card">
+            <span class="stat-value" id="total-words">-</span>
+            <span class="stat-label">Unique Words</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="total-weight">-</span>
+            <span class="stat-label">Total Weight</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="top-word">-</span>
+            <span class="stat-label">Top Word</span>
+        </div>
+    </div>
+</main>
+
+<footer role="contentinfo">
+    <div style="margin-bottom: 2rem; padding: 2rem; background: #ff006e; border: 4px solid #000;">
+        <p style="font-size: 2rem; font-weight: 900; margin-bottom: 1rem;">ADD TO YOUR WORDMAP</p>
+        <p style="margin-bottom: 1.5rem;">Record more voice ideas to evolve your semantic landscape</p>
+        <a href="https://cringeproof.com/record.html" style="display: inline-block; background: #000; color: #ffe5ec; padding: 1rem 2rem; border: 3px solid #fff; text-decoration: none; font-weight: 900; text-transform: uppercase; box-shadow: 6px 6px 0 #000; transition: all 0.1s;" aria-label="Record a voice idea now">RECORD VOICE IDEA</a>
+    </div>
+
+    <p><strong>How Wordmaps Work</strong></p>
+    <p style="margin-top: 0.5rem; opacity: 0.8;">
+        Transcriptions → Word frequency analysis → Weighted visualization → Your voice's semantic DNA
+    </p>
+    <nav aria-label="Footer navigation">
+        <p style="margin-top: 1.5rem;">
+            <a href="https://github.com/Soulfra/voice-archive">GitHub</a> |
+            <a href="https://cringeproof.com/">Voice Archive</a> |
+            <a href="https://cringeproof.com/ideas/">Ideas Hub</a> |
+            <a href="https://cringeproof.com/feed.xml">RSS Feed</a> |
+            <a href="https://cringeproof.com/privacy.html">Privacy</a>
+        </p>
+    </nav>
+</footer>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.5/build/d3.layout.cloud.min.js"></script>
+<script src="./config.js"></script>
+<script src="./llm-emoji-map.js"></script>
+<script>
+let currentDomain = 'cringeproof.com';
+let currentLayer = 'human'; // 'human' or 'llm'
+
+// Fetch wordmap from backend API
+async function loadWordmap(domain) {
+    try {
+        const response = await fetch(API.DOMAIN_WORDMAP(domain));
+        const data = await response.json();
+
+        // Flask returns {wordmap: {}, contributor_count: 0, ...}
+        if (data.wordmap && Object.keys(data.wordmap).length > 0) {
+            console.log(`✅ Loaded wordmap for ${domain}:`, Object.keys(data.wordmap).length, 'words');
+            return data.wordmap;
+        } else {
+            console.warn(`No wordmap data for ${domain} yet - record voice memos to populate`);
+            return {};
+        }
+    } catch (error) {
+        console.error('Failed to load wordmap:', error);
+        console.error('Make sure Flask backend is running on https://localhost:5001');
+        // Return empty instead of fallback
+        return {};
+    }
+}
+
+// Generate LLM operations wordmap
+function generateLLMWordmap(domain) {
+    // Mock data - in production, this would come from backend
+    // Tracks which LLM operations are used for each voice memo
+    return {
+        'TRANSCRIBE_AUDIO': 15,
+        'EXTRACT_INSIGHTS': 15,
+        'FILTER_CRINGE': 15,
+        'ARCHIVE_PERMANENT': 15,
+        'IDEATE': 8,
+        'PRIORITIZE': 5,
+        'CAPTURE_CONTEXT': 3,
+        'ENCRYPT_CONTENT': 2
+    };
+}
+
+async function renderWordCloud(domain) {
+    let wordmap;
+
+    if (currentLayer === 'human') {
+        wordmap = await loadWordmap(domain);
+    } else {
+        wordmap = generateLLMWordmap(domain);
+    }
+
+    // Update stats
+    const words = Object.entries(wordmap);
+    const totalWords = words.length;
+    const totalWeight = words.reduce((sum, [_, weight]) => sum + weight, 0);
+    const topWord = words.length > 0 ? words.sort((a, b) => b[1] - a[1])[0][0] : '-';
+
+    document.getElementById('total-words').textContent = totalWords;
+    document.getElementById('total-weight').textContent = totalWeight;
+    document.getElementById('top-word').textContent = topWord;
+
+    // Prepare word cloud data
+    const wordData = Object.entries(wordmap).map(([word, weight]) => ({
+        text: word,
+        size: 10 + (weight * 5) // Scale font size
+    }));
+
+    // Clear existing SVG
+    d3.select('#wordcloud').selectAll('svg').remove();
+
+    const width = document.getElementById('wordcloud').offsetWidth;
+    const height = 600;
+
+    // Color scale
+    const color = d3.scaleLinear()
+        .domain([0, d3.max(wordData, d => d.size)])
+        .range(['#bdb2ff', '#ff006e']);
+
+    // Create word cloud layout
+    const layout = d3.layout.cloud()
+        .size([width - 100, height - 100])
+        .words(wordData)
+        .padding(8)
+        .rotate(() => ~~(Math.random() * 2) * 90)
+        .fontSize(d => d.size)
+        .on('end', draw);
+
+    layout.start();
+
+    function draw(words) {
+        d3.select('#wordcloud')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .append('g')
+            .attr('transform', `translate(${width / 2}, ${height / 2})`)
+            .selectAll('text')
+            .data(words)
+            .enter()
+            .append('text')
+            .attr('class', 'word')
+            .style('font-size', d => `${d.size}px`)
+            .style('font-family', '-apple-system, BlinkMacSystemFont, sans-serif')
+            .style('font-weight', '900')
+            .style('fill', d => color(d.size))
+            .attr('text-anchor', 'middle')
+            .attr('transform', d => `translate(${d.x}, ${d.y}) rotate(${d.rotate})`)
+            .text(d => d.text)
+            .on('click', function(event, d) {
+                showIdeasForWord(d.text);
+            });
+    }
+}
+
+async function showIdeasForWord(word) {
+    // Show loading modal
+    const modal = document.createElement('div');
+    modal.id = 'ideas-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    `;
+
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: linear-gradient(135deg, #1a1a2e 0%, #000 100%);
+        border: 4px solid #ff006e;
+        border-radius: 12px;
+        max-width: 800px;
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 2rem;
+    `;
+
+    modalContent.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 style="color: #ff006e; font-size: 2rem; margin: 0;">💡 Ideas containing "${word}"</h2>
+            <button onclick="document.getElementById('ideas-modal').remove()" style="background: #ff006e; border: none; color: #000; font-size: 2rem; font-weight: 900; cursor: pointer; width: 40px; height: 40px; border-radius: 50%;">×</button>
+        </div>
+        <div id="ideas-list">Loading...</div>
+    `;
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Fetch ideas from API
+    try {
+        const response = await fetch(`${API_URL}/api/ideas/suggest/${encodeURIComponent(word)}`);
+        const data = await response.json();
+
+        const ideasList = document.getElementById('ideas-list');
+
+        if (data.count === 0) {
+            ideasList.innerHTML = `
+                <p style="color: #ffe5ec; opacity: 0.8; text-align: center; padding: 2rem;">
+                    No ideas found containing "${word}" yet. Record more voice memos!
+                </p>
+            `;
+            return;
+        }
+
+        ideasList.innerHTML = data.ideas.map(idea => `
+            <div style="background: rgba(255, 0, 110, 0.1); border: 2px solid #ff006e; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+                <h3 style="color: #ff006e; font-size: 1.25rem; margin-bottom: 0.5rem;">
+                    ${idea.filename.replace('.webm', '').replace(/_/g, ' ')}
+                </h3>
+                <p style="color: #ffe5ec; opacity: 0.9; line-height: 1.6; margin-bottom: 0.5rem;">
+                    ${idea.transcription || 'No transcription available'}
+                </p>
+                <p style="color: #bdb2ff; font-size: 0.875rem; opacity: 0.7;">
+                    ${new Date(idea.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </p>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error('Error fetching ideas:', error);
+        document.getElementById('ideas-list').innerHTML = `
+            <p style="color: #f00; text-align: center; padding: 2rem;">
+                Error loading ideas. Make sure the API is running at ${API_URL}
+            </p>
+        `;
+    }
+}
+
+// Domain switching
+document.querySelectorAll('[data-domain]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-domain]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentDomain = this.dataset.domain;
+        renderWordCloud(currentDomain);
+    });
+});
+
+// Layer switching (Human vs LLM)
+document.getElementById('toggle-human').addEventListener('click', function() {
+    currentLayer = 'human';
+    document.getElementById('toggle-human').classList.add('active');
+    document.getElementById('toggle-llm').classList.remove('active');
+    renderWordCloud(currentDomain);
+});
+
+document.getElementById('toggle-llm').addEventListener('click', function() {
+    currentLayer = 'llm';
+    document.getElementById('toggle-llm').classList.add('active');
+    document.getElementById('toggle-human').classList.remove('active');
+    renderWordCloud(currentDomain);
+});
+
+// Initial render
+renderWordCloud(currentDomain);
+
+// Responsive resize
+window.addEventListener('resize', () => {
+    renderWordCloud(currentDomain);
+});
+</script>
+</body>
+</html>

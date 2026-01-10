@@ -1,0 +1,96 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "soulfra"
+version = "0.1.0"
+description = "Self-documenting development platform with soul-based identity tracking"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "CalRiven", email = "calriven@soulfra.com"}
+]
+keywords = [
+    "newsletter",
+    "blog",
+    "soul",
+    "identity",
+    "reasoning",
+    "ai",
+    "self-documenting",
+    "development"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Communications",
+]
+
+# Core dependencies
+dependencies = [
+    "flask>=2.0.0",
+    "pillow>=9.0.0",
+    "qrcode>=7.0",
+    "markdown>=3.3.0",
+    "bleach>=5.0.0",
+]
+
+# Optional dependencies for different use cases
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0",
+]
+postgres = [
+    "psycopg2-binary>=2.9.0",
+]
+ai = [
+    "openai>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://soulfra.com"
+Documentation = "https://docs.soulfra.com"
+Repository = "https://github.com/calriven/soulfra"
+Issues = "https://github.com/calriven/soulfra/issues"
+
+# Entry points for CLI commands
+[project.scripts]
+soulfra = "soulfra_cli:main"
+soul-commit = "soul_git:soul_commit_cli"
+soul-log = "soul_git:soul_log_cli"
+
+# Package discovery
+[tool.setuptools]
+packages = ["soulfra"]
+
+[tool.setuptools.package-data]
+soulfra = [
+    "templates/*.html",
+    "static/css/*.css",
+    "static/js/*.js",
+]
+
+# Black configuration
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+
+# Pytest configuration
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

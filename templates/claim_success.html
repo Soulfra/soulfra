@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Claimed! - CringeProof</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #000 0%, #0f1a0f 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: pop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .title {
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #66ff66, #44cc44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            color: #aaa;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .benefits {
+            background: rgba(102, 255, 102, 0.1);
+            border: 2px solid #66ff66;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .benefits-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #66ff66;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .benefit-icon {
+            font-size: 28px;
+            min-width: 40px;
+        }
+
+        .benefit-text {
+            flex: 1;
+        }
+
+        .benefit-text-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .benefit-text-desc {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #66ff66, #44cc44);
+            color: #000;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 255, 102, 0.4);
+        }
+
+        .cta-btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .cta-btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">🎉</div>
+
+        <div class="title">Account Claimed!</div>
+
+        <div class="message">
+            Your progress is now safe forever. You'll never lose your recordings, ideas, or achievements.
+        </div>
+
+        <div class="benefits">
+            <div class="benefits-title">✨ What You Get</div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">🔒</div>
+                <div class="benefit-text">
+                    <div class="benefit-text-title">Permanent Storage</div>
+                    <div class="benefit-text-desc">All your voice recordings and ideas are now backed up forever</div>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">🌐</div>
+                <div class="benefit-text">
+                    <div class="benefit-text-title">Access Anywhere</div>
+                    <div class="benefit-text-desc">Log in from any device and pick up where you left off</div>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">🚀</div>
+                <div class="benefit-text">
+                    <div class="benefit-text-title">Future Features</div>
+                    <div class="benefit-text-desc">Get early access to new features as we build them</div>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">🔑</div>
+                <div class="benefit-text">
+                    <div class="benefit-text-title">Bring Your Own Keys</div>
+                    <div class="benefit-text-desc">Add your own API keys for unlimited transcription (coming soon)</div>
+                </div>
+            </div>
+        </div>
+
+        <a href="/voice" class="cta-btn">Start Recording</a>
+        <a href="/cringeproof" class="cta-btn cta-btn-secondary">Explore Wall</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan to Search - StPetePros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .qr-box {
+            background: white;
+            border: 4px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: inline-block;
+        }
+
+        .qr-code {
+            width: 280px;
+            height: 280px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .instructions {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .instructions h3 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .instructions ol {
+            margin-left: 1.5rem;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .expires {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .powered-by {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .powered-by a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .qr-code {
+                width: 220px;
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="status-badge">🔒 Secure Search</span>
+
+        <h1>{{ brand_name or 'Search Directory' }}</h1>
+        <p class="subtitle">Scan the QR code with your phone to start searching</p>
+
+        <div class="qr-box">
+            <div class="qr-code">
+                <img src="/api/qr/search-gate/{{ token }}" alt="Scan to search" id="qr-image">
+            </div>
+        </div>
+
+        <div class="expires">
+            QR code expires in: <strong id="timer">2:00</strong>
+        </div>
+
+        <button class="refresh-btn" onclick="refreshQR()">🔄 Generate New Code</button>
+
+        <div class="instructions">
+            <h3>📱 How to use:</h3>
+            <ol>
+                <li>Open your phone camera</li>
+                <li>Point it at the QR code above</li>
+                <li>Tap the notification that appears</li>
+                <li>Start searching on your phone</li>
+            </ol>
+        </div>
+
+        <div class="powered-by">
+            Powered by <a href="https://soulfra.com" target="_blank">Soulfra</a> •
+            <a href="https://github.com/yourusername/soulfra-qr-search" target="_blank">Open Source</a>
+        </div>
+    </div>
+
+    <script>
+        let expiresAt = {{ expires_at }};
+        let timerInterval;
+
+        function updateTimer() {
+            const now = Date.now();
+            const remaining = Math.max(0, expiresAt - now);
+            const seconds = Math.floor(remaining / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+
+            document.getElementById('timer').textContent =
+                `${minutes}:${secs.toString().padStart(2, '0')}`;
+
+            if (remaining <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').textContent = 'Expired';
+                document.getElementById('qr-image').style.opacity = '0.3';
+            }
+        }
+
+        function refreshQR() {
+            window.location.reload();
+        }
+
+        // Update timer every second
+        timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // Auto-refresh when QR expires
+        setTimeout(() => {
+            const autoRefresh = confirm('QR code expired. Generate a new one?');
+            if (autoRefresh) {
+                refreshQR();
+            }
+        }, 120000); // 2 minutes
+    </script>
+</body>
+</html>

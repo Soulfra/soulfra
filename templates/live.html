@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Live Chat - Soulfra{% endblock %}
+
+{% block content %}
+<style>
+.live-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: #0e0e10;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.live-header {
+  background: #18181b;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #2d2d30;
+  color: #efeff1;
+}
+
+.live-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.live-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #adadb8;
+}
+
+.chat-feed {
+  height: 600px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: #0e0e10;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.chat-message {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #1f1f23;
+  color: #efeff1;
+  line-height: 1.5;
+}
+
+.chat-message:hover {
+  background: #18181b;
+}
+
+.chat-timestamp {
+  color: #adadb8;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.chat-username {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.chat-username.ai {
+  color: #9147ff;
+}
+
+.chat-username.human {
+  color: #26a69a;
+}
+
+.chat-content {
+  color: #efeff1;
+}
+
+.chat-post-ref {
+  font-size: 0.85rem;
+  color: #adadb8;
+  margin-top: 0.25rem;
+}
+
+.chat-post-ref a {
+  color: #00aff4;
+  text-decoration: none;
+}
+
+.chat-post-ref a:hover {
+  text-decoration: underline;
+}
+
+.refresh-notice {
+  background: #18181b;
+  color: #adadb8;
+  padding: 0.75rem;
+  text-align: center;
+  border-top: 1px solid #2d2d30;
+  font-size: 0.9rem;
+}
+
+.chat-feed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-feed::-webkit-scrollbar-track {
+  background: #0e0e10;
+}
+
+.chat-feed::-webkit-scrollbar-thumb {
+  background: #2d2d30;
+  border-radius: 4px;
+}
+
+.chat-feed::-webkit-scrollbar-thumb:hover {
+  background: #3d3d40;
+}
+</style>
+
+<div class="live-container">
+  <div class="live-header">
+    <h1>💬 Live Chat</h1>
+    <div class="live-stats">
+      <span>{{ comments|length }} recent messages</span>
+      <span>Auto-refresh every 5 seconds</span>
+    </div>
+  </div>
+
+  <div class="chat-feed" id="chatFeed">
+    {% if comments %}
+      {% for comment in comments %}
+      <div class="chat-message">
+        <span class="chat-timestamp">{{ comment['created_at'][11:19] }}</span>
+        <span class="chat-username {% if comment['is_ai_persona'] %}ai{% else %}human{% endif %}">
+          {{ comment['username'] }}:
+        </span>
+        <span class="chat-content">{{ comment['content'] }}</span>
+        <div class="chat-post-ref">
+          on <a href="{{ url_for('post', slug=comment['post_slug']) }}">{{ comment['post_title'] }}</a>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align: center; color: #adadb8; padding: 2rem;">
+        No messages yet. Start a conversation!
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="refresh-notice">
+    🔄 Page auto-refreshes every 5 seconds to show new comments
+  </div>
+</div>
+
+<script>
+// Auto-refresh every 5 seconds (Twitch-style)
+setTimeout(function() {
+  location.reload();
+}, 5000);
+
+// Scroll to bottom on load (newest at bottom like Twitch)
+document.addEventListener('DOMContentLoaded', function() {
+  const chatFeed = document.getElementById('chatFeed');
+  chatFeed.scrollTop = chatFeed.scrollHeight;
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}Learning Review Session{% endblock %}
+
+{% block extra_head %}
+<!-- Tailwind CSS for utility classes -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Override base.html body max-width for dashboard layouts */
+  body {
+    max-width: 100% !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">📚 Review Session</h1>
+        <p class="text-gray-600 mt-2">Anki-style spaced repetition</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-8">
+        <div class="flex justify-between text-sm text-gray-600 mb-2">
+            <span>Card <span id="current-card">1</span> of <span id="total-cards">{{ cards|length }}</span></span>
+            <span><span id="correct-count">0</span> correct</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+            <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="bg-white rounded-lg shadow-lg p-12 text-center mb-6">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
+        <div class="text-xl text-gray-700 font-semibold">Loading cards...</div>
+        <div class="text-sm text-gray-500 mt-2">Preparing your review session</div>
+    </div>
+
+    {% if cards %}
+    <!-- Card Container -->
+    <div id="card-container" class="hidden bg-white rounded-lg shadow-lg p-8 mb-6">
+        <!-- Question Side -->
+        <div id="question-side" class="text-center">
+            <div class="mb-6">
+                <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
+                    Question
+                </span>
+            </div>
+
+            <div id="question-text" class="text-2xl font-medium text-gray-900 mb-8" style="min-height: 100px;">
+                <!-- Question loads here -->
+            </div>
+
+            <button onclick="showAnswer()" id="show-answer-btn"
+                    class="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-lg font-semibold">
+                Show Answer →
+            </button>
+        </div>
+
+        <!-- Answer Side (hidden initially) -->
+        <div id="answer-side" class="hidden">
+            <div class="mb-6 text-center">
+                <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                    Answer
+                </span>
+            </div>
+
+            <div id="answer-text" class="text-xl text-gray-700 mb-4">
+                <!-- Answer loads here -->
+            </div>
+
+            <div id="explanation-text" class="mt-4 p-4 bg-blue-50 rounded-lg text-gray-700">
+                <!-- Explanation loads here -->
+            </div>
+
+            <div class="mt-8 border-t pt-6">
+                <p class="text-center text-gray-700 font-semibold mb-4">How well did you know this?</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <!-- SM-2 Quality Ratings -->
+                    <button onclick="rateCard(0)" class="p-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                        <div class="font-bold">0 - Forgot</div>
+                        <div class="text-xs mt-1">Complete blackout</div>
+                    </button>
+
+                    <button onclick="rateCard(1)" class="p-4 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
+                        <div class="font-bold">1 - Hard</div>
+                        <div class="text-xs mt-1">Incorrect, barely recalled</div>
+                    </button>
+
+                    <button onclick="rateCard(2)" class="p-4 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+                        <div class="font-bold">2 - Remembered</div>
+                        <div class="text-xs mt-1">Incorrect but recognized</div>
+                    </button>
+
+                    <button onclick="rateCard(3)" class="p-4 bg-lime-500 text-white rounded-lg hover:bg-lime-600 transition">
+                        <div class="font-bold">3 - Good</div>
+                        <div class="text-xs mt-1">Correct with difficulty</div>
+                    </button>
+
+                    <button onclick="rateCard(4)" class="p-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                        <div class="font-bold">4 - Easy</div>
+                        <div class="text-xs mt-1">Correct after hesitation</div>
+                    </button>
+
+                    <button onclick="rateCard(5)" class="p-4 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition">
+                        <div class="font-bold">5 - Perfect</div>
+                        <div class="text-xs mt-1">Instant recall</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Card (shown after rating) -->
+    <div id="result-card" class="hidden bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div class="text-center">
+            <div class="text-4xl mb-2">✅</div>
+            <p class="text-lg font-semibold text-gray-900 mb-4">Card reviewed!</p>
+
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-indigo-600" id="next-review-days">0</div>
+                    <div class="text-sm text-gray-600">Days until next review</div>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600" id="current-streak">0</div>
+                    <div class="text-sm text-gray-600">Current streak</div>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="text-2xl font-bold text-purple-600" id="accuracy-pct">0%</div>
+                    <div class="text-sm text-gray-600">Accuracy</div>
+                </div>
+            </div>
+
+            <button onclick="nextCard()" class="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
+                Next Card →
+            </button>
+        </div>
+    </div>
+
+    <!-- Session Complete -->
+    <div id="session-complete" class="hidden bg-white rounded-lg shadow-lg p-8 text-center">
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Session Complete!</h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="p-6 bg-gray-50 rounded-lg">
+                <div class="text-3xl font-bold text-indigo-600" id="final-cards-reviewed">0</div>
+                <div class="text-sm text-gray-600">Cards Reviewed</div>
+            </div>
+
+            <div class="p-6 bg-gray-50 rounded-lg">
+                <div class="text-3xl font-bold text-green-600" id="final-correct">0</div>
+                <div class="text-sm text-gray-600">Correct</div>
+            </div>
+
+            <div class="p-6 bg-gray-50 rounded-lg">
+                <div class="text-3xl font-bold text-purple-600" id="final-accuracy">0%</div>
+                <div class="text-sm text-gray-600">Accuracy</div>
+            </div>
+
+            <div class="p-6 bg-gray-50 rounded-lg">
+                <div class="text-3xl font-bold text-orange-600" id="final-duration">0s</div>
+                <div class="text-sm text-gray-600">Duration</div>
+            </div>
+        </div>
+
+        <div class="space-x-4">
+            <a href="/learn" class="inline-block px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
+                Back to Dashboard
+            </a>
+            <a href="/learn/review" class="inline-block px-8 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
+                Review More Cards
+            </a>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- No Cards Due -->
+    <div class="bg-white rounded-lg shadow-lg p-12 text-center">
+        <div class="text-6xl mb-4">✅</div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">All Caught Up!</h2>
+        <p class="text-gray-600 mb-6">No cards due for review right now. Great job!</p>
+        <a href="/learn" class="inline-block px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold">
+            Back to Dashboard
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Learning session state
+const cards = {{ cards|tojson|safe }};
+const sessionId = {{ session_id }};
+let currentCardIndex = 0;
+let correctCount = 0;
+let sessionStart = Date.now();
+
+// Initialize first card
+if (cards.length > 0) {
+    // Hide loading indicator, show card container
+    document.getElementById('loading-indicator').classList.add('hidden');
+    document.getElementById('card-container').classList.remove('hidden');
+
+    loadCard(0);
+} else {
+    // No cards - hide loading, show message
+    document.getElementById('loading-indicator').classList.add('hidden');
+}
+
+function loadCard(index) {
+    if (index >= cards.length) {
+        showSessionComplete();
+        return;
+    }
+
+    const card = cards[index];
+    currentCardIndex = index;
+
+    // Update progress
+    document.getElementById('current-card').textContent = index + 1;
+    document.getElementById('progress-bar').style.width = ((index / cards.length) * 100) + '%';
+
+    // Load question
+    document.getElementById('question-text').textContent = card.question;
+    document.getElementById('answer-text').textContent = card.answer || 'No answer provided';
+    document.getElementById('explanation-text').innerHTML = card.explanation ?
+        `<strong>💡 Explanation:</strong> ${card.explanation}` :
+        '';
+
+    // Reset to question side
+    document.getElementById('question-side').classList.remove('hidden');
+    document.getElementById('answer-side').classList.add('hidden');
+    document.getElementById('result-card').classList.add('hidden');
+}
+
+function showAnswer() {
+    document.getElementById('question-side').classList.add('hidden');
+    document.getElementById('answer-side').classList.remove('hidden');
+}
+
+function rateCard(quality) {
+    const card = cards[currentCardIndex];
+
+    // Send rating to server
+    fetch('/api/learn/answer', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            card_id: card.id,
+            quality: quality,
+            session_id: sessionId,
+            time_to_answer: Math.floor((Date.now() - sessionStart) / 1000)
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Update counts
+        if (quality >= 3) {
+            correctCount++;
+            document.getElementById('correct-count').textContent = correctCount;
+        }
+
+        // Show result
+        document.getElementById('next-review-days').textContent = data.interval_days;
+        document.getElementById('current-streak').textContent = data.streak;
+        document.getElementById('accuracy-pct').textContent = data.accuracy.toFixed(1) + '%';
+
+        document.getElementById('answer-side').classList.add('hidden');
+        document.getElementById('result-card').classList.remove('hidden');
+    })
+    .catch(err => {
+        console.error('Error rating card:', err);
+        alert('Error submitting answer. Please try again.');
+    });
+}
+
+function nextCard() {
+    currentCardIndex++;
+    loadCard(currentCardIndex);
+    sessionStart = Date.now();
+}
+
+function showSessionComplete() {
+    const duration = Math.floor((Date.now() - sessionStart) / 1000);
+    const accuracy = (correctCount / cards.length * 100);
+
+    document.getElementById('final-cards-reviewed').textContent = cards.length;
+    document.getElementById('final-correct').textContent = correctCount;
+    document.getElementById('final-accuracy').textContent = accuracy.toFixed(1) + '%';
+    document.getElementById('final-duration').textContent = duration + 's';
+
+    document.getElementById('card-container').classList.add('hidden');
+    document.getElementById('session-complete').classList.remove('hidden');
+    document.getElementById('progress-bar').style.width = '100%';
+}
+</script>
+
+<style>
+.container {
+    max-width: 800px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#card-container {
+    min-height: 400px;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,20 @@
+{
+  "soulfra": {
+    "domain": "soulfra.com",
+    "github_repo": "soulfra",
+    "api_endpoint": "https://api.soulfra.com",
+    "description": "Main platform - identity and security focused"
+  },
+  "calriven": {
+    "domain": "calriven.com",
+    "github_repo": "calriven",
+    "api_endpoint": "https://api.soulfra.com",
+    "description": "Secondary brand"
+  },
+  "deathtodata": {
+    "domain": "deathtodata.com",
+    "github_repo": "deathtodata",
+    "api_endpoint": "https://api.soulfra.com",
+    "description": "Third brand"
+  }
+}

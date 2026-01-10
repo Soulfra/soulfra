@@ -1,0 +1,21 @@
+<header style="background: var(--color-primary, #667eea); color: white; padding: 1rem 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <nav style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+    <a href="/" style="font-size: 1.5rem; font-weight: bold; color: white; text-decoration: none;">
+      {% if brand_emoji %}{{ brand_emoji }}{% endif %} {{ brand_name|default('Soulfra') }}
+    </a>
+    <div class="nav-links" style="display: flex; gap: 1.5rem;">
+      <a href="/" style="color: white; text-decoration: none; transition: opacity 0.2s;">Posts</a>
+      <a href="/about" style="color: white; text-decoration: none; transition: opacity 0.2s;">About</a>
+      <a href="/subscribe" style="color: white; text-decoration: none; transition: opacity 0.2s;">Subscribe</a>
+      {% if session.get('user_id') %}
+        <a href="/admin" style="color: white; text-decoration: none; transition: opacity 0.2s;">Admin</a>
+      {% endif %}
+    </div>
+  </nav>
+</header>
+
+<style>
+  .nav-links a:hover {
+    opacity: 0.8;
+  }
+</style>

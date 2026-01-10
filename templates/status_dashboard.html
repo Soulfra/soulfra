@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra System Status - Truth Map</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #333;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #666;
+        }
+        .status-item.working {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .status-item.partial {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .status-item.broken {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .badge-working {
+            background: #10b981;
+            color: white;
+        }
+        .badge-partial {
+            background: #f59e0b;
+            color: white;
+        }
+        .badge-broken {
+            background: #ef4444;
+            color: white;
+        }
+
+        .status-item h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: white;
+        }
+        .status-item p {
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+        .status-item .url {
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .status-item .backend {
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #444;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+
+        .architecture {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .architecture pre {
+            color: #10b981;
+            line-height: 1.8;
+        }
+
+        .count-badge {
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Soulfra System Status</h1>
+            <p class="subtitle">Truth Map: What's Real vs Placeholder</p>
+        </header>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="background: #10b981;"></div>
+                <span>🟢 Fully Working (Frontend + Backend)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #f59e0b;"></div>
+                <span>🟡 Frontend Only (No Backend)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #ef4444;"></div>
+                <span>🔴 Broken/Placeholder</span>
+            </div>
+        </div>
+
+        <!-- CORE TOOLS -->
+        <div class="section">
+            <h2>🚀 Core Tools <span class="count-badge">6 routes</span></h2>
+            <div class="status-grid">
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ WORKING</span>
+                    <h3>Master Navigation</h3>
+                    <p>Central hub connecting all tools and domains</p>
+                    <div class="url">GET /master</div>
+                    <div class="backend">✓ Flask route → templates/master_nav.html</div>
+                </div>
+
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ WORKING</span>
+                    <h3>Studio (Content Writer)</h3>
+                    <p>Write content for any domain with multi-AI debate</p>
+                    <div class="url">GET /studio</div>
+                    <div class="backend">✓ Flask route → templates/studio.html<br>✓ POST /api/chat/send (Ollama)</div>
+                </div>
+
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ WORKING</span>
+                    <h3>Domain Preview Server</h3>
+                    <p>Preview all 9 domains locally on ports 8001-8009</p>
+                    <div class="url">GET /preview<br>python3 preview_server.py</div>
+                    <div class="backend">✓ Flask route → preview_index.html<br>✓ Preview server: 9 domains discovered</div>
+                </div>
+
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ WORKING</span>
+                    <h3>Template Browser</h3>
+                    <p>Browse and test all HTML templates</p>
+                    <div class="url">GET /templates/browse</div>
+                    <div class="backend">✓ Flask route → templates browser</div>
+                </div>
+
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ WORKING</span>
+                    <h3>Unified Chat</h3>
+                    <p>Ollama chat interface with context</p>
+                    <div class="url">GET /chat</div>
+                    <div class="backend">✓ Flask route → chat interface<br>✓ POST /api/chat/send</div>
+                </div>
+
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ WORKING</span>
+                    <h3>Canvas / QR Tools</h3>
+                    <p>Drawing tools and QR code generation</p>
+                    <div class="url">GET /admin/canvas</div>
+                    <div class="backend">✓ Flask route → canvas interface</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER SYSTEM -->
+        <div class="section">
+            <h2>🎯 Tier System <span class="count-badge">5 tiers • 95+ HTML files</span></h2>
+            <div class="status-grid">
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ TIER 0 - FREE</span>
+                    <h3>Public Access</h3>
+                    <p>Open to everyone, no login required</p>
+                    <div class="url">GET /tier-0/index.html<br>/tier-0/welcome.html<br>/tier-0/features.html</div>
+                    <div class="backend">✓ Flask route serving public/tier-0-free/<br>✓ Files: index, welcome, features, forum, dashboard, register, profile-builder</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 TIER 1 - FAUCET</span>
+                    <h3>Token Rewards System</h3>
+                    <p>Interactive games, earn tokens, practice room</p>
+                    <div class="url">GET /tier-1/simple-demo.html<br>/tier-1/practice-room.html<br>/tier-1/games.html</div>
+                    <div class="backend">✓ Flask route serving public/tier-1-faucet/<br>⚠ Backend: faucet.db exists but /api/publisher/domains returns 500<br>✓ Files: simple-demo, claim-debate, speedtest, roast-arena, brand-survey, terminal-adventure, games, email-minigames, story-test, card-feed, party, walkie-host, story-lobby, slop-faucet</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 TIER 2 - VERIFIED</span>
+                    <h3>Verified Users</h3>
+                    <p>Voice features, teaching tools, article browser</p>
+                    <div class="url">GET /tier-2/cringeproof-voice.html<br>/tier-2/teaching-demo.html<br>/tier-2/profile.html</div>
+                    <div class="backend">✓ Flask route serving public/tier-2-verified/<br>⚠ Frontend exists, backend APIs partial<br>✓ Files: laws, teaching-demo, profile, pixel-canvas, article-browser, roast-teaching-swiper, newsletters, lakers-newsletter, lakers-mixed, redbull-mixed, article-preferences, lakers-test-newsletter, article, comic-animator, view-comic, cringeproof</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 TIER 3 - PREMIUM</span>
+                    <h3>Premium Features</h3>
+                    <p>Business explorer, appointments, podcast upload, consultants</p>
+                    <div class="url">GET /tier-3/business-explorer.html<br>/tier-3/schedule-cal-riven.html<br>/tier-3/podcast-upload.html</div>
+                    <div class="backend">✓ Flask route serving public/tier-3-premium/<br>⚠ Most features frontend-only, no backend APIs connected<br>✓ Files: franchise, businesses, simulations, consultant-chat, creator-dashboard, pipeline-dashboard, project-editor, demo-jingle, pattern-dashboard, quiz-arena, business-explorer, marketing-insights, consultant-performance, player-hub, control-panel, my-appointments, schedule-cal-riven, my-practice-sessions, innovation-onboarding, receipt-upload, my-stories, content-calendar, ideas-backlog, icon-creator, business-dashboard, podcast-upload, podcast-clip-submit, listener-profile, podcast-hub, jingle-studio, platform-hub, soulfra-api-demo, personalized-dashboard, news-judgment, writer-dashboard, newsletter-signup, unified-dashboard, manage-feeds, qr-scanner</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 TIER 4 - ADMIN</span>
+                    <h3>Admin & System Tools</h3>
+                    <p>API keys, health checks, onboarding, compliance</p>
+                    <div class="url">GET /tier-4/admin-appointments.html<br>/tier-4/api-keys.html<br>/tier-4/health-check.html</div>
+                    <div class="backend">✓ Flask route serving public/tier-4-admin/<br>⚠ Admin tools exist but need backend integration<br>✓ Files: health, violations, compliance, wave-defense, thread-view, debug-status, onboard-cal-riven, admin-appointments, verify-appointment, api-keys, test-ai-router, topic-submit, docs, test-playback, health-check, soulfra-login, api-explorer, onboarding, ingestion-monitor, validation-dashboard, inbox, idea-publisher, add-friend, voice-drop, demo-qr, onboard</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR SYSTEM -->
+        <div class="section">
+            <h2>📱 QR Code System <span class="count-badge">Physical → Digital Bridge</span></h2>
+            <div class="status-grid">
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 FRONTEND ONLY</span>
+                    <h3>QR Generator</h3>
+                    <p>Create QR codes for any URL or content</p>
+                    <div class="url">public/qr-generator.html</div>
+                    <div class="backend">⚠ Pure HTML/JS, no Flask route<br>⚠ No database storage for generated codes</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 FRONTEND ONLY</span>
+                    <h3>QR Landing Pages</h3>
+                    <p>Landing pages for QR code scans</p>
+                    <div class="url">public/qr-landing.html<br>public/qr-landing-enhanced.html<br>public/qr-signup.html<br>public/qr-chat.html</div>
+                    <div class="backend">⚠ Pure HTML, no Flask routes<br>⚠ No tracking/analytics backend</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 TIER 3</span>
+                    <h3>QR Scanner (Tier 3)</h3>
+                    <p>Scan QR codes from premium tier</p>
+                    <div class="url">GET /tier-3/qr-scanner.html</div>
+                    <div class="backend">✓ Flask route exists<br>⚠ No backend API for scan tracking</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 TIER 4</span>
+                    <h3>Demo QR (Admin)</h3>
+                    <p>Admin demo of QR system</p>
+                    <div class="url">GET /tier-4/demo-qr.html</div>
+                    <div class="backend">✓ Flask route exists<br>⚠ Demo only, no production backend</div>
+                </div>
+            </div>
+
+            <div class="architecture">
+                <pre>
+QR System Architecture (Partially Implemented):
+
+┌─────────────────┐
+│ Physical World  │
+│   Business Card │──QR Code──┐
+│   Flyer/Poster  │           │
+│   Sticker       │           ▼
+└─────────────────┘    ┌──────────────────┐
+                       │  qr-landing.html │
+                       │  (Public access) │
+                       └────────┬─────────┘
+                                │
+                ┌───────────────┴───────────────┐
+                ▼                               ▼
+        ┌─────────────┐                ┌──────────────┐
+        │ qr-signup   │                │ qr-chat      │
+        │ (Register)  │                │ (Instant AI) │
+        └─────────────┘                └──────────────┘
+
+⚠ Missing Backend:
+  - QR code database (track scans, analytics)
+  - /api/qr/create endpoint
+  - /api/qr/track endpoint
+  - User attribution system
+                </pre>
+            </div>
+        </div>
+
+        <!-- AFFILIATE NETWORK -->
+        <div class="section">
+            <h2>🌐 Affiliate Network <span class="count-badge">12 domains • Cross-linking</span></h2>
+            <div class="status-grid">
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 FRONTEND ONLY</span>
+                    <h3>Domain Affiliate Pages</h3>
+                    <p>Each domain has affiliate page linking to others</p>
+                    <div class="url">public/soulfra-affiliate.html<br>public/sellthismvp-affiliate.html<br>public/mascotrooms-affiliate.html<br>+ 9 more domains</div>
+                    <div class="backend">⚠ HTML pages exist, no Flask routes<br>⚠ No tracking/commission system<br>⚠ No analytics backend</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 FRONTEND ONLY</span>
+                    <h3>Affiliate Dashboard</h3>
+                    <p>Central dashboard for affiliate management</p>
+                    <div class="url">public/affiliate-dashboard.html</div>
+                    <div class="backend">⚠ Frontend exists, no backend API<br>⚠ No user accounts or tracking</div>
+                </div>
+            </div>
+
+            <div class="architecture">
+                <pre>
+The Soulfra Network (Affiliate System):
+
+        ┌─────────────────────────────────────┐
+        │      SOULFRA (Master Hub)           │
+        │  Flask App • API • Admin • Studio   │
+        └─────────┬───────────────────────────┘
+                  │
+        ┌─────────┴─────────┐
+        ▼                   ▼
+┌──────────────┐    ┌──────────────┐
+│ sellthismvp  │    │ mascotrooms  │
+│   :8001      │◄──►│   :8003      │
+└──────────────┘    └──────────────┘
+        │                   │
+        └───────┬───────────┘
+                ▼
+        ┌──────────────┐
+        │  calriven    │
+        │   :8004      │
+        └──────────────┘
+
+Total Network: 9 live domains + Soulfra master
+
+All domains have:
+  ✓ -affiliate.html page (public/)
+  ✓ Live preview (ports 8001-8009)
+  ✓ GitHub repos (github-repos/)
+  ⚠ No backend tracking system
+  ⚠ No commission/referral system
+                </pre>
+            </div>
+        </div>
+
+        <!-- GITHUB & PUBLISHING -->
+        <div class="section">
+            <h2>🚀 GitHub Publishing System <span class="count-badge">9 domains ready</span></h2>
+            <div class="status-grid">
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ WORKING</span>
+                    <h3>Local Domain Repos</h3>
+                    <p>All 9 domains with index.html files</p>
+                    <div class="url">github-repos/sellthismvp-site<br>github-repos/soulfra<br>github-repos/mascotrooms-site<br>+ 6 more</div>
+                    <div class="backend">✓ Preview server discovers all repos<br>✓ Serving on ports 8001-8009</div>
+                </div>
+
+                <div class="status-item broken">
+                    <span class="status-badge badge-broken">🔴 BROKEN</span>
+                    <h3>Publisher API</h3>
+                    <p>Export content to GitHub Pages</p>
+                    <div class="url">GET /api/publisher/domains<br>POST /api/publisher/export</div>
+                    <div class="backend">❌ Returns 500 error<br>⚠ Need to check app.py routes</div>
+                </div>
+
+                <div class="status-item partial">
+                    <span class="status-badge badge-partial">🟡 SCRIPTS EXIST</span>
+                    <h3>Domain Automation</h3>
+                    <p>Auto-deploy and onboarding scripts</p>
+                    <div class="url">python3 auto_deploy_domain.py<br>python3 interactive_onboarding.py<br>python3 github_repo_creator.py</div>
+                    <div class="backend">✓ Scripts exist in soulfra-simple/<br>⚠ Require GITHUB_TOKEN env var<br>⚠ Not tested recently</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATABASE STATUS -->
+        <div class="section">
+            <h2>💾 Database Status</h2>
+            <div class="status-grid">
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ EXISTS</span>
+                    <h3>Soulfra Main Database</h3>
+                    <p>Primary database for content and users</p>
+                    <div class="url">soulfra-simple/soulfra.db</div>
+                    <div class="backend">✓ SQLite database exists<br>⚠ Schema needs documentation</div>
+                </div>
+
+                <div class="status-item working">
+                    <span class="status-badge badge-working">✅ EXISTS</span>
+                    <h3>Faucet Database</h3>
+                    <p>Token rewards and game progress</p>
+                    <div class="url">soulfra-simple/faucet.db</div>
+                    <div class="backend">✓ SQLite database exists<br>⚠ Some API routes broken (500 errors)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="section" style="background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%); border-color: #667eea;">
+            <h2>📊 System Summary</h2>
+            <div class="architecture">
+                <pre>
+WHAT'S REAL (WORKING RIGHT NOW):
+
+✅ Flask Server (port 5001)
+   - Master navigation hub
+   - Studio (content writer)
+   - Chat interface
+   - Template browser
+   - Tier 0-4 file serving
+
+✅ Preview Server (ports 8001-8009)
+   - All 9 domains discoverable
+   - Accessible from laptop + iPhone (same WiFi)
+   - Live reload on file changes
+
+✅ Ollama Integration
+   - Chat working (temp 0.9 for diversity)
+   - Multi-AI debate in Studio
+
+✅ File Structure
+   - 250+ HTML files in public/
+   - Tier system organized (0-4)
+   - 9 domain repos in github-repos/
+   - 12 affiliate pages exist
+
+
+WHAT'S PARTIAL (FRONTEND ONLY):
+
+🟡 QR System
+   - Generator HTML exists
+   - Landing pages exist
+   - No backend tracking/storage
+
+🟡 Affiliate Network
+   - 12 affiliate HTML pages
+   - Dashboard exists
+   - No tracking or commission backend
+
+🟡 Tier 1-4 Features
+   - 80+ HTML files exist
+   - Many need backend APIs
+   - Database exists but routes incomplete
+
+
+WHAT'S BROKEN:
+
+🔴 Publisher API (500 errors)
+   - /api/publisher/domains
+   - /api/publisher/export
+   - Need to debug app.py
+
+🔴 Some Automation Scripts
+   - Need GITHUB_TOKEN
+   - Haven't been tested recently
+
+
+THE ANSWER TO "IS SOULFRA THE REST API?":
+
+YES - Soulfra Flask app (port 5001) IS your central API:
+  - Serves all tier HTML files
+  - Provides /api/* endpoints
+  - Master navigation hub
+  - Studio + Chat interfaces
+  - Connects to soulfra.db and faucet.db
+
+The 9 domain sites (ports 8001-8009) are:
+  - Static HTML sites (GitHub Pages ready)
+  - Can call back to Soulfra API
+  - Independent but networked via affiliate pages
+  - Preview locally before pushing to GitHub
+                </pre>
+            </div>
+        </div>
+
+        <!-- NEXT STEPS -->
+        <div class="section" style="border-color: #10b981;">
+            <h2>🎯 Recommended Next Steps</h2>
+            <ol style="color: #aaa; font-size: 1.1em; line-height: 2;">
+                <li><strong style="color: #10b981;">Fix Publisher API</strong> - Debug why /api/publisher/domains returns 500</li>
+                <li><strong style="color: #10b981;">Build QR Backend</strong> - Add /api/qr/create and /api/qr/track endpoints + database</li>
+                <li><strong style="color: #10b981;">Add Affiliate Tracking</strong> - Backend for referral links and commissions</li>
+                <li><strong style="color: #10b981;">Connect Tier APIs</strong> - Wire up backend for Tier 1-4 features</li>
+                <li><strong style="color: #10b981;">Test Automation</strong> - Run auto_deploy_domain.py with GITHUB_TOKEN</li>
+                <li><strong style="color: #10b981;">Document Databases</strong> - Map soulfra.db and faucet.db schemas</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

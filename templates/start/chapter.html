@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter {{ chapter_num }}: {{ chapter.title }} | Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+        .chapter-content {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 40px;
+            line-height: 1.8;
+        }
+        .chapter-header {
+            margin-bottom: 40px;
+        }
+        .chapter-number {
+            font-size: 1em;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #00d4ff;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        .chapter-desc {
+            color: #999;
+            font-size: 1.1em;
+        }
+        .tutorial-section {
+            margin-bottom: 40px;
+        }
+        .tutorial-step {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid #00d4ff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        .tutorial-step h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+        .tutorial-step p {
+            margin-bottom: 10px;
+        }
+        .code-example {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .code-example pre {
+            margin: 0;
+            color: #0f0;
+        }
+        .try-it-section {
+            background: rgba(123, 47, 247, 0.1);
+            border: 2px solid #7b2ff7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .try-it-section h4 {
+            color: #7b2ff7;
+            margin-bottom: 15px;
+        }
+        .try-it-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+        }
+        .try-it-btn {
+            padding: 10px 20px;
+            background: #7b2ff7;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .try-it-btn:hover {
+            background: #6a28d4;
+        }
+        .try-it-result {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            display: none;
+        }
+        .try-it-result.show {
+            display: block;
+        }
+        .try-it-result img {
+            max-width: 200px;
+            margin-top: 10px;
+        }
+        .quiz-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .quiz-question {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .quiz-question h4 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+        }
+        .quiz-option.selected {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+        }
+        .quiz-option.correct {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+        .quiz-option.incorrect {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: #ff0000;
+        }
+        .quiz-submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+        .quiz-submit-btn:hover {
+            background: #00e676;
+        }
+        .quiz-submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .quiz-results {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .quiz-results.show {
+            display: block;
+        }
+        .quiz-results.failed {
+            background: rgba(255, 136, 0, 0.1);
+            border-color: #ff8800;
+        }
+        .complete-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        .complete-btn:hover {
+            background: #00e676;
+        }
+        .complete-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .chat-panel {
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 212, 255, 0.1);
+        }
+        .chat-header h3 {
+            color: #00d4ff;
+            font-size: 1.2em;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 90%;
+        }
+        .message.user {
+            background: #00d4ff;
+            color: #000;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .message.ai {
+            background: rgba(123, 47, 247, 0.2);
+            border: 1px solid #7b2ff7;
+            align-self: flex-start;
+        }
+        .message.ai .persona {
+            font-weight: bold;
+            color: #7b2ff7;
+            margin-bottom: 5px;
+        }
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .chat-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+        .send-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .send-btn:hover {
+            background: #00b8e6;
+        }
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .chat-panel {
+                position: relative;
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chapter-content">
+            <a href="{{ url_for('start_journey') }}" class="back-link">← Back to Chapters</a>
+
+            <div class="chapter-header">
+                <div class="chapter-number">CHAPTER {{ chapter_num }}</div>
+                <h1>{{ chapter.title }}</h1>
+                <p class="chapter-desc">{{ chapter.description }}</p>
+            </div>
+
+            {% if tutorial and tutorial.get('steps') %}
+                <!-- TUTORIAL CONTENT -->
+                <div class="tutorial-section">
+                    <h2>{{ tutorial.title }}</h2>
+                    <p style="color: #999; margin-bottom: 30px;">{{ tutorial.description }}</p>
+
+                    {% for step in tutorial.steps %}
+                        <div class="tutorial-step">
+                            <h3>{{ loop.index }}. {{ step.title }}</h3>
+                            <div>{{ step.content|safe }}</div>
+
+                            {% if step.get('code_example') %}
+                                <div class="code-example">
+                                    <pre>{{ step.code_example }}</pre>
+                                </div>
+                            {% endif %}
+
+                            {% if step.get('try_it') == 'qr_generator' %}
+                                <div class="try-it-section">
+                                    <h4>🎯 Try It Yourself</h4>
+                                    <p>Enter any URL or text to generate a QR code:</p>
+                                    <input type="text" class="try-it-input" id="qrInput" placeholder="https://soulfra.com/my-page" value="https://soulfra.com/gallery">
+                                    <button class="try-it-btn" onclick="generateQR()">Generate QR Code</button>
+                                    <div class="try-it-result" id="qrResult">
+                                        <p><strong>Your QR Code:</strong></p>
+                                        <img id="qrImage" src="" alt="Generated QR Code">
+                                        <p id="qrData" style="margin-top: 10px; color: #999;"></p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- QUIZ SECTION -->
+                {% if quiz_questions %}
+                    <div class="quiz-section">
+                        <h2>📝 Chapter Quiz</h2>
+                        <p style="color: #999; margin-bottom: 20px;">Test your knowledge (need 70% to unlock next chapter)</p>
+
+                        {% for question in quiz_questions %}
+                            {% set question_index = loop.index0 %}
+                            <div class="quiz-question" data-question-index="{{ question_index }}">
+                                <h4>Question {{ loop.index }}: {{ question.question }}</h4>
+                                <div class="quiz-options">
+                                    {% for option in question.options %}
+                                        <div class="quiz-option" data-answer-index="{{ loop.index0 }}" onclick="selectAnswer({{ question_index }}, {{ loop.index0 }})">
+                                            {{ loop.index }}. {{ option }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <button class="quiz-submit-btn" id="quizSubmitBtn" onclick="submitQuiz()">Submit Quiz</button>
+
+                        <div class="quiz-results" id="quizResults">
+                            <h3 id="quizScore"></h3>
+                            <p id="quizFeedback"></p>
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% else %}
+                <!-- FALLBACK: Show basic chapter story if no tutorial -->
+                <div class="story-text">
+                    <p>{{ chapter.description }}</p>
+                    <p style="margin-top: 20px; color: #999;">Tutorial content coming soon for this chapter.</p>
+                </div>
+            {% endif %}
+
+            <button class="complete-btn" id="completeBtn" onclick="completeChapter()" {% if quiz_questions %}disabled{% endif %}>
+                ✓ Complete Chapter & Continue
+            </button>
+        </div>
+
+        <div class="chat-panel">
+            <div class="chat-header">
+                <h3>💬 Chat with {{ chapter.persona|capitalize }}</h3>
+                <p style="font-size: 0.9em; color: #999; margin-top: 5px;">
+                    Ask questions about the chapter content
+                </p>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                {% for interaction in interactions %}
+                    <div class="message user">{{ interaction.question }}</div>
+                    <div class="message ai">
+                        <div class="persona">{{ interaction.persona|capitalize }}</div>
+                        {{ interaction.answer }}
+                    </div>
+                {% endfor %}
+                {% if interactions|length == 0 %}
+                    <div class="message ai">
+                        <div class="persona">{{ chapter.persona|capitalize }}</div>
+                        Welcome. I'm here to guide you through this chapter. Ask me anything about what you're learning.
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="chat-input-area">
+                <textarea class="chat-input" id="chatInput" placeholder="Ask {{ chapter.persona|capitalize }} a question..."></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chapterNum = {{ chapter_num }};
+        const quizAnswers = {};
+        const correctAnswers = {{ quiz_questions|tojson if quiz_questions else '[]' }};
+        let quizPassed = false;
+
+        // QR Code Generator
+        async function generateQR() {
+            const input = document.getElementById('qrInput');
+            const data = input.value.trim();
+
+            if (!data) {
+                alert('Please enter some text or a URL');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/start/tutorial-demo', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({type: 'qr_generator', data: data})
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('qrImage').src = result.qr_url;
+                    document.getElementById('qrData').textContent = 'Encoded: ' + data;
+                    document.getElementById('qrResult').classList.add('show');
+                } else {
+                    alert('Error generating QR code: ' + result.error);
+                }
+            } catch (error) {
+                alert('Connection error. Please try again.');
+            }
+        }
+
+        // Quiz Functions
+        function selectAnswer(questionIndex, answerIndex) {
+            quizAnswers[questionIndex] = answerIndex;
+
+            // Visual feedback
+            const question = document.querySelectorAll('.quiz-question')[questionIndex];
+            const options = question.querySelectorAll('.quiz-option');
+
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[answerIndex].classList.add('selected');
+        }
+
+        async function submitQuiz() {
+            // Check all questions answered
+            if (Object.keys(quizAnswers).length < correctAnswers.length) {
+                alert('Please answer all questions before submitting');
+                return;
+            }
+
+            const submitBtn = document.getElementById('quizSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Grading...';
+
+            try {
+                const response = await fetch('/api/start/submit-quiz', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chapter_num: chapterNum,
+                        answers: quizAnswers
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displayQuizResults(result);
+                } else {
+                    alert('Error submitting quiz: ' + result.error);
+                }
+            } catch (error) {
+                alert('Connection error. Please try again.');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Quiz';
+        }
+
+        function displayQuizResults(result) {
+            const { score, passed, correct_answers } = result;
+
+            // Show which answers were correct/incorrect
+            document.querySelectorAll('.quiz-question').forEach((question, qIndex) => {
+                const options = question.querySelectorAll('.quiz-option');
+                const userAnswer = quizAnswers[qIndex];
+                const correctAnswer = correct_answers[qIndex];
+
+                options.forEach((opt, aIndex) => {
+                    opt.style.pointerEvents = 'none';
+                    if (aIndex === correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (aIndex === userAnswer && aIndex !== correctAnswer) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            });
+
+            // Show results banner
+            const resultsDiv = document.getElementById('quizResults');
+            const scoreText = document.getElementById('quizScore');
+            const feedbackText = document.getElementById('quizFeedback');
+
+            scoreText.textContent = `Score: ${score.toFixed(0)}% (${result.correct_count}/${result.total_questions})`;
+
+            if (passed) {
+                feedbackText.textContent = '✓ Passed! You can now complete the chapter and move on.';
+                resultsDiv.classList.remove('failed');
+                document.getElementById('completeBtn').disabled = false;
+                quizPassed = true;
+            } else {
+                feedbackText.textContent = '✗ Need 70% to pass. Review the material and try again!';
+                resultsDiv.classList.add('failed');
+                // Allow retaking quiz
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            }
+
+            resultsDiv.classList.add('show');
+        }
+
+        // Chat Functions
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Thinking...';
+
+            addMessage(question, 'user');
+            input.value = '';
+
+            try {
+                const response = await fetch('/api/start/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({chapter_num: chapterNum, question: question})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    addMessage(data.answer, 'ai', data.persona);
+                } else {
+                    addMessage('Sorry, I encountered an error: ' + data.error, 'ai', '{{ chapter.persona }}');
+                }
+            } catch (error) {
+                addMessage('Connection error. Please try again.', 'ai', '{{ chapter.persona }}');
+            }
+
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send Message';
+        }
+
+        function addMessage(text, type, persona = null) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+
+            if (type === 'ai' && persona) {
+                const personaDiv = document.createElement('div');
+                personaDiv.className = 'persona';
+                personaDiv.textContent = persona.charAt(0).toUpperCase() + persona.slice(1);
+                messageDiv.appendChild(personaDiv);
+            }
+
+            const textNode = document.createTextNode(text);
+            messageDiv.appendChild(textNode);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function completeChapter() {
+            {% if quiz_questions %}
+            if (!quizPassed) {
+                alert('Please complete and pass the quiz first (70% required)');
+                return;
+            }
+            {% endif %}
+
+            const response = await fetch('/api/start/complete-chapter', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chapter_num: chapterNum})
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                if (data.next_chapter <= 7) {
+                    window.location.href = '/start/chapter/' + data.next_chapter;
+                } else {
+                    window.location.href = '/start';
+                }
+            }
+        }
+
+        // Allow Enter to send in chat
+        document.getElementById('chatInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

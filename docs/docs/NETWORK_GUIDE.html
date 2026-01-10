@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulfra Network Guide - Documentation</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .doc-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .doc-content code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .doc-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .doc-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        .doc-content th, .doc-content td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .doc-content th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="../index.html">Soulfra Platform</a></h1>
+        <nav>
+            <a href="index.html">Docs Home</a> |
+            <a href="../index.html">Posts</a>
+        </nav>
+    </header>
+
+    <main class="doc-content">
+        <h1 id="soulfra-network-guide">Soulfra Network Guide</h1>
+
+<p><strong>Complete guide to understanding and deploying Soulfra's network stack</strong></p>
+
+<hr />
+
+<h2 id="what-this-guide-covers">What This Guide Covers</h2>
+
+<p>This guide explains:
+1. <strong>How it works</strong>: The 9-layer network stack from OS to domain
+2. <strong>Where connections are</strong>: Exact files, lines, and configs
+3. <strong>How to deploy</strong>: Step-by-step from localhost to production
+4. <strong>How to debug</strong>: Tools and techniques for troubleshooting
+5. <strong>How to prove it works</strong>: Testing each tier</p>
+
+<hr />
+
+<h2 id="the-big-picture">The Big Picture</h2>
+
+<h3 id="how-python-becomes-a-website">How Python Becomes a Website</h3>
+
+<p>Soulfra is a <strong>Python web application</strong> that composes layers all the way from code to production:</p>
+
+<pre><code>┌────────────────────────────────────────────┐
+│ Your Code (app.py)                         │  ← You write Python
+├────────────────────────────────────────────┤
+│ Flask Framework                             │  ← Converts Python → HTTP
+├────────────────────────────────────────────┤
+│ Server (Flask dev / gunicorn)              │  ← Serves HTTP requests
+├────────────────────────────────────────────┤
+│ Operating System (network stack)           │  ← TCP/IP, sockets, ports
+├────────────────────────────────────────────┤
+│ Network Interface (LAN)                    │  ← Your local network
+├────────────────────────────────────────────┤
+│ Router (NAT + port forwarding)             │  ← Gateway to internet
+├────────────────────────────────────────────┤
+│ Public Internet (ISP)                      │  ← Your public IP
+├────────────────────────────────────────────┤
+│ DNS (domain name system)                   │  ← yourdomain.com → IP
+├────────────────────────────────────────────┤
+│ User's Browser                             │  ← Sees your website
+└────────────────────────────────────────────┘
+</code></pre>
+
+<p><strong>This is exactly how ReadTheDocs, Heroku, Django, and every web platform works!</strong></p>
+
+<hr />
+
+<h2 id="the-9-layers-explained">The 9 Layers Explained</h2>
+
+<h3 id="layer-1-operating-system-network-stack">Layer 1: Operating System (Network Stack)</h3>
+
+<p><strong>What it does</strong>: Provides TCP/IP networking, port binding, sockets</p>
+
+<p><strong>Connection point</strong>: Python's <code>socket</code> library → OS kernel</p>
+
+<p><strong>File/Code</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+    <span class="c1">#        ^</span>
+    <span class="c1">#        This creates a socket and binds to OS network layer</span>
+</code></pre>
+</div>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check if Python process has bound to port 5001</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># Should show Python listening on port 5001</span>
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- Port already in use
+- No permission to bind port (ports &lt; 1024 need root)
+- OS firewall blocking port</p>
+
+<hr />
+
+<h3 id="layer-2-python-environment">Layer 2: Python Environment</h3>
+
+<p><strong>What it does</strong>: Runs the Python interpreter and loads modules</p>
+
+<p><strong>Connection point</strong>: <code>requirements.txt</code> → pip → Python modules</p>
+
+<p><strong>Files</strong>:
+- <code>requirements.txt</code> - Lists dependencies
+- <code>app.py</code> - Main application
+- Virtual environment (optional): <code>venv/</code></p>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check Python version</span>
+python3<span class="w"> </span>--version
+
+<span class="c1"># Check Flask is installed</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import flask; print(flask.__version__)&quot;</span>
+
+<span class="c1"># Test app imports</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import app; print(&#39;OK&#39;)&quot;</span>
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- Python not installed
+- Flask not installed (<code>pip3 install -r requirements.txt</code>)
+- Import errors in app.py</p>
+
+<hr />
+
+<h3 id="layer-3-flask-application">Layer 3: Flask Application</h3>
+
+<p><strong>What it does</strong>: Maps URLs to Python functions, handles HTTP</p>
+
+<p><strong>Connection point</strong>: <code>@app.route()</code> decorators → HTTP paths</p>
+
+<p><strong>File/Code</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/admin&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">admin</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;admin.html&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Test routes</span>
+curl<span class="w"> </span>http://localhost:5001/
+curl<span class="w"> </span>http://localhost:5001/admin
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- Syntax errors in route functions
+- Templates not found
+- Database connection issues</p>
+
+<hr />
+
+<h3 id="layer-4-http-server">Layer 4: HTTP Server</h3>
+
+<p><strong>What it does</strong>: Serves HTTP requests on a port</p>
+
+<p><strong>Connection point</strong>: Flask/gunicorn → Network socket</p>
+
+<p><strong>Development</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Flask development server</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>Production</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># gunicorn (recommended for production)</span>
+gunicorn<span class="w"> </span>-w<span class="w"> </span><span class="m">4</span><span class="w"> </span>-b<span class="w"> </span><span class="m">0</span>.0.0.0:5001<span class="w"> </span>app:app
+</code></pre>
+</div>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check server is responding</span>
+curl<span class="w"> </span>-I<span class="w"> </span>http://localhost:5001
+
+<span class="c1"># Should return HTTP/1.1 200 OK or similar</span>
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- Server not started
+- Crashed due to error
+- Port already in use</p>
+
+<hr />
+
+<h3 id="layer-5-network-interfaces">Layer 5: Network Interfaces</h3>
+
+<p><strong>What it does</strong>: Binds server to network interfaces (localhost, LAN, etc.)</p>
+
+<p><strong>Connection point</strong>: <code>host='0.0.0.0'</code> → Network adapters</p>
+
+<p><strong>Critical setting</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+        <span class="c1">#    ^^^^^^^^^</span>
+        <span class="c1">#    CRITICAL for LAN access!</span>
+</code></pre>
+</div>
+
+<p><strong>What each value means</strong>:</p>
+
+<table>
+<thead>
+<tr>
+  <th><code>host</code> value</th>
+  <th>Accessible from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>127.0.0.1</code></td>
+  <td>Only localhost (this computer)</td>
+</tr>
+<tr>
+  <td><code>0.0.0.0</code></td>
+  <td>Localhost + LAN + Public IP (all interfaces)</td>
+</tr>
+<tr>
+  <td><code>192.168.1.100</code></td>
+  <td>Only that specific network interface</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Network interfaces</strong> (found via <code>ifconfig</code>):
+- <code>lo0</code> / <code>lo</code> - Loopback (127.0.0.1) - localhost
+- <code>en0</code> / <code>eth0</code> - WiFi/Ethernet - LAN
+- <code>en1</code> / <code>eth1</code> - Other adapters</p>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Get your LAN IP</span>
+ifconfig<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;inet &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="m">127</span>.0.0.1
+
+<span class="c1"># Test from LAN (replace with your IP)</span>
+curl<span class="w"> </span>http://192.168.1.100:5001
+
+<span class="c1"># Test from another device on same WiFi</span>
+<span class="c1"># Open http://192.168.1.100:5001 on your phone</span>
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- <code>host='127.0.0.1'</code> → No LAN access
+- Firewall blocking local connections
+- Server not restarted after config change</p>
+
+<hr />
+
+<h3 id="layer-6-router-nat-port-forwarding">Layer 6: Router (NAT &amp; Port Forwarding)</h3>
+
+<p><strong>What it does</strong>: Routes traffic between LAN and internet</p>
+
+<p><strong>Connection point</strong>: Router port forwarding rules</p>
+
+<p><strong>Configuration</strong> (in router admin panel):</p>
+
+<pre><code>External Port:  5001
+Internal IP:    192.168.1.100
+Internal Port:  5001
+Protocol:       TCP
+</code></pre>
+
+<p><strong>How NAT works</strong>:</p>
+
+<pre><code>Internet Request → Public IP:5001
+    ↓
+Router NAT Table
+    ↓
+Forwards to → LAN IP (192.168.1.100):5001
+    ↓
+Your Computer receives request
+</code></pre>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Find router IP</span>
+netstat<span class="w"> </span>-nr<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>default
+
+<span class="c1"># Access router admin panel</span>
+<span class="c1"># Usually: http://192.168.1.1</span>
+<span class="c1"># Check port forwarding rules</span>
+
+<span class="c1"># Test from external network:</span>
+<span class="c1"># - Use phone cellular data (NOT WiFi)</span>
+<span class="c1"># - Visit: http://YOUR_PUBLIC_IP:5001</span>
+
+<span class="c1"># Or use online port checker:</span>
+<span class="c1"># - https://www.yougetsignal.com/tools/open-ports/</span>
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- Port forwarding not configured
+- Internal IP changed (use static IP)
+- ISP blocks port (try different port)
+- Router firewall blocking WAN access</p>
+
+<hr />
+
+<h3 id="layer-7-public-internet">Layer 7: Public Internet</h3>
+
+<p><strong>What it does</strong>: Routes traffic via public IP address</p>
+
+<p><strong>Connection point</strong>: ISP → Public IP</p>
+
+<p><strong>How to find your public IP</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>curl<span class="w"> </span>https://api.ipify.org
+</code></pre>
+</div>
+
+<p><strong>How it works</strong>:</p>
+
+<pre><code>User anywhere in world
+    ↓
+Types: http://207.190.100.103:5001
+    ↓
+Internet routes to your ISP
+    ↓
+ISP routes to your router (public IP)
+    ↓
+Router forwards to your computer (port forwarding)
+    ↓
+Your server responds
+</code></pre>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># From external network (phone cellular):</span>
+curl<span class="w"> </span>http://YOUR_PUBLIC_IP:5001
+
+<span class="c1"># Or use online tools:</span>
+<span class="c1"># https://www.yougetsignal.com/tools/open-ports/</span>
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- Port forwarding not working
+- ISP uses CGNAT (no public IP) - use ngrok or VPN
+- Firewall blocking
+- Dynamic IP changed</p>
+
+<hr />
+
+<h3 id="layer-8-dns-domain-name-system">Layer 8: DNS (Domain Name System)</h3>
+
+<p><strong>What it does</strong>: Translates domain names to IP addresses</p>
+
+<p><strong>Connection point</strong>: DNS A record → Public IP</p>
+
+<p><strong>DNS Records needed</strong>:</p>
+
+<pre><code>Type    Name    Value
+────────────────────────────────────────
+A       @       207.190.100.103        # yourdomain.com → IP
+A       www     207.190.100.103        # www.yourdomain.com → IP
+CNAME   www     yourdomain.com         # Alternative
+TXT     @       soulfra-verify-xxxxx   # Verification (optional)
+</code></pre>
+
+<p><strong>How DNS works</strong>:</p>
+
+<pre><code>User types: http://soulfra.com
+    ↓
+Browser queries DNS server
+    ↓
+DNS: "soulfra.com has A record → 207.190.100.103"
+    ↓
+Browser connects to 207.190.100.103
+    ↓
+(Rest of chain: router → server)
+</code></pre>
+
+<p><strong>Where to configure</strong>: Domain registrar (GoDaddy, Namecheap, etc.)</p>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Check if domain resolves</span>
+host<span class="w"> </span>yourdomain.com
+
+<span class="c1"># Should show:</span>
+<span class="c1"># yourdomain.com has address 207.190.100.103</span>
+
+<span class="c1"># Or use dig</span>
+dig<span class="w"> </span>yourdomain.com<span class="w"> </span>+short
+</code></pre>
+</div>
+
+<p><strong>How to generate records</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>dns_setup_guide.py
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- DNS records not added
+- Typo in IP address
+- DNS not propagated yet (wait 5-60 minutes)
+- TTL too high (takes longer to update)</p>
+
+<hr />
+
+<h3 id="layer-9-domain-access">Layer 9: Domain Access</h3>
+
+<p><strong>What it does</strong>: Full chain from domain to server</p>
+
+<p><strong>Connection point</strong>: All previous layers composed together</p>
+
+<p><strong>Configuration</strong> (<code>.env</code> file):</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nv">DOMAIN</span><span class="o">=</span>soulfra.com
+<span class="nv">BASE_URL</span><span class="o">=</span>http://soulfra.com
+<span class="nv">PORT</span><span class="o">=</span><span class="m">5001</span>
+</code></pre>
+</div>
+
+<p><strong>Full request flow</strong>:</p>
+
+<pre><code>1. User types: http://soulfra.com
+2. DNS lookup: soulfra.com → 207.190.100.103
+3. Internet routes to public IP
+4. Router port forwarding: 207.190.100.103:5001 → 192.168.1.100:5001
+5. LAN delivers to your computer
+6. OS network stack: port 5001 → Python process
+7. Flask receives request, routes to function
+8. Function generates HTML response
+9. Response travels back same path (reverse)
+10. User sees webpage
+</code></pre>
+
+<p><strong>How to verify</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Test full domain access</span>
+curl<span class="w"> </span>http://yourdomain.com
+
+<span class="c1"># Should return HTML of your site</span>
+</code></pre>
+</div>
+
+<p><strong>What can go wrong</strong>:
+- Any layer in the chain broken
+- DNS points to wrong IP
+- Port forwarding misconfigured
+- Server not running</p>
+
+<hr />
+
+<h2 id="the-4-tiers-of-deployment">The 4 Tiers of Deployment</h2>
+
+<p>Soulfra can work at 4 different tiers:</p>
+
+<h3 id="tier-1-localhost-only">Tier 1: Localhost Only</h3>
+
+<p><strong>Accessible from</strong>: This computer only</p>
+
+<p><strong>Configuration</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>URL</strong>: <code>http://localhost:5001</code></p>
+
+<p><strong>Use case</strong>: Development, testing</p>
+
+<p><strong>Pros</strong>: Simple, no network config needed</p>
+
+<p><strong>Cons</strong>: Can't access from other devices</p>
+
+<hr />
+
+<h3 id="tier-2-lan-access">Tier 2: LAN Access</h3>
+
+<p><strong>Accessible from</strong>: Devices on same WiFi/network</p>
+
+<p><strong>Configuration</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>URL</strong>: <code>http://192.168.1.100:5001</code> (your LAN IP)</p>
+
+<p><strong>Use case</strong>: Testing on phone/tablet, local team</p>
+
+<p><strong>Pros</strong>: Easy testing on multiple devices</p>
+
+<p><strong>Cons</strong>: Only works on same network</p>
+
+<hr />
+
+<h3 id="tier-3-public-ip">Tier 3: Public IP</h3>
+
+<p><strong>Accessible from</strong>: Anywhere on internet</p>
+
+<p><strong>Configuration</strong>:
+- Server: <code>host='0.0.0.0'</code>
+- Router: Port forwarding enabled</p>
+
+<p><strong>URL</strong>: <code>http://207.190.100.103:5001</code> (your public IP)</p>
+
+<p><strong>Use case</strong>: Quick internet deployment</p>
+
+<p><strong>Pros</strong>: Accessible from anywhere</p>
+
+<p><strong>Cons</strong>: Ugly URL, IP can change</p>
+
+<hr />
+
+<h3 id="tier-4-domain-name">Tier 4: Domain Name</h3>
+
+<p><strong>Accessible from</strong>: Anywhere via domain</p>
+
+<p><strong>Configuration</strong>:
+- Server: <code>host='0.0.0.0'</code>
+- Router: Port forwarding
+- DNS: A record configured
+- <code>.env</code>: Domain set</p>
+
+<p><strong>URL</strong>: <code>http://soulfra.com</code></p>
+
+<p><strong>Use case</strong>: Production deployment</p>
+
+<p><strong>Pros</strong>: Professional URL, persistent</p>
+
+<p><strong>Cons</strong>: Costs $10-15/year</p>
+
+<hr />
+
+<h2 id="tools-for-testing-deployment">Tools for Testing &amp; Deployment</h2>
+
+<p>We've created tools for every step of the process:</p>
+
+<h3 id="1-test_network_stackpy">1. test<em>network</em>stack.py</h3>
+
+<p><strong>Tests all 9 layers and shows what's working</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>test_network_stack.py
+</code></pre>
+</div>
+
+<p>Output:</p>
+
+<pre><code>[1/9] Operating System        ✓ PASS
+[2/9] Python Environment       ✓ PASS
+[3/9] Flask Application        ✓ PASS
+[4/9] HTTP Server              ✓ PASS
+[5/9] Nginx (Optional)         ⊘ SKIP
+[6/9] LAN Access               ✓ PASS
+[7/9] Public IP                ⊘ SKIP (requires port forwarding)
+[8/9] DNS Configuration        ⊘ SKIP (no domain)
+[9/9] Domain Access            ⊘ SKIP (no domain)
+
+✓ Passed: 5/9
+Current: TIER 2 - LAN Working
+Next: Configure router port forwarding
+</code></pre>
+
+<p><strong>When to use</strong>: Debug connectivity issues, verify setup</p>
+
+<hr />
+
+<h3 id="2-network_diagrampy">2. network_diagram.py</h3>
+
+<p><strong>Visualizes your network topology</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Full diagram with real IPs</span>
+python3<span class="w"> </span>network_diagram.py
+
+<span class="c1"># Simplified request flow</span>
+python3<span class="w"> </span>network_diagram.py<span class="w"> </span>--simple
+
+<span class="c1"># Connection points only</span>
+python3<span class="w"> </span>network_diagram.py<span class="w"> </span>--connections
+
+<span class="c1"># Live updating (refreshes every 5 sec)</span>
+python3<span class="w"> </span>network_diagram.py<span class="w"> </span>--live
+</code></pre>
+</div>
+
+<p><strong>When to use</strong>: Understand your setup, visual reference</p>
+
+<hr />
+
+<h3 id="3-tier_validatorsh">3. tier_validator.sh</h3>
+
+<p><strong>Interactive tier-by-tier validation</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>./tier_validator.sh
+</code></pre>
+</div>
+
+<p>Walks you through:
+1. Testing localhost
+2. Testing LAN access
+3. Configuring port forwarding
+4. Testing public IP
+5. Configuring DNS
+6. Testing domain</p>
+
+<p><strong>When to use</strong>: Step-by-step setup validation</p>
+
+<hr />
+
+<h3 id="4-deployment_ladderpy">4. deployment_ladder.py</h3>
+
+<p><strong>Interactive deployment from localhost → production</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start from beginning</span>
+python3<span class="w"> </span>deployment_ladder.py
+
+<span class="c1"># Start at specific rung</span>
+python3<span class="w"> </span>deployment_ladder.py<span class="w"> </span>--rung<span class="w"> </span><span class="m">3</span>
+
+<span class="c1"># Skip automated tests (faster)</span>
+python3<span class="w"> </span>deployment_ladder.py<span class="w"> </span>--skip-tests
+</code></pre>
+</div>
+
+<p>Guides you through:
+- Rung 1: Localhost setup
+- Rung 2: LAN configuration
+- Rung 3: Port forwarding
+- Rung 4: Domain setup
+- Rung 5: HTTPS/SSL info</p>
+
+<p><strong>When to use</strong>: Initial deployment, progressive setup</p>
+
+<hr />
+
+<h3 id="5-connection_mapmd">5. connection_map.md</h3>
+
+<p><strong>Reference of WHERE each connection is</strong></p>
+
+<p>Read <code>connection_map.md</code> to find:
+- Exact file and line for each layer
+- How to change each setting
+- How to verify each connection
+- Common issues and fixes</p>
+
+<p><strong>When to use</strong>: Debugging specific layers, reference</p>
+
+<hr />
+
+<h2 id="common-deployment-scenarios">Common Deployment Scenarios</h2>
+
+<h3 id="scenario-1-personal-blog-development">Scenario 1: Personal Blog (Development)</h3>
+
+<p><strong>Goal</strong>: Run locally for writing posts</p>
+
+<p><strong>Configuration</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>Access</strong>: <code>http://localhost:5001</code></p>
+
+<p><strong>Launcher</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>launcher.py<span class="w">  </span><span class="c1"># GUI launcher</span>
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 1 (Localhost)</p>
+
+<hr />
+
+<h3 id="scenario-2-personal-blog-home-server">Scenario 2: Personal Blog (Home Server)</h3>
+
+<p><strong>Goal</strong>: Access from any device in home</p>
+
+<p><strong>Configuration</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># app.py</span>
+<span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5001</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><strong>Access</strong>: <code>http://192.168.1.100:5001</code></p>
+
+<p><strong>Launcher</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>./start_soulfra.sh<span class="w">  </span><span class="c1"># Auto-start script</span>
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 2 (LAN)</p>
+
+<hr />
+
+<h3 id="scenario-3-public-website-no-domain">Scenario 3: Public Website (No Domain)</h3>
+
+<p><strong>Goal</strong>: Quick internet deployment</p>
+
+<p><strong>Requirements</strong>:
+- Server: <code>host='0.0.0.0'</code>
+- Router: Port forwarding <code>5001 → 192.168.1.100:5001</code></p>
+
+<p><strong>Access</strong>: <code>http://207.190.100.103:5001</code></p>
+
+<p><strong>Launcher</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Systemd service for auto-start</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>soulfra
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 3 (Public IP)</p>
+
+<hr />
+
+<h3 id="scenario-4-production-website-domain">Scenario 4: Production Website (Domain)</h3>
+
+<p><strong>Goal</strong>: Professional deployment</p>
+
+<p><strong>Requirements</strong>:
+- Server: <code>host='0.0.0.0'</code>
+- Router: Port forwarding
+- DNS: A record <code>soulfra.com → 207.190.100.103</code>
+- <code>.env</code>: <code>DOMAIN=soulfra.com</code></p>
+
+<p><strong>Access</strong>: <code>http://soulfra.com</code></p>
+
+<p><strong>Launcher</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Systemd + gunicorn</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>soulfra
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 4 (Domain)</p>
+
+<hr />
+
+<h3 id="scenario-5-secure-production-https">Scenario 5: Secure Production (HTTPS)</h3>
+
+<p><strong>Goal</strong>: Encrypted connections</p>
+
+<p><strong>Additional requirements</strong>:
+- SSL certificate (Let's Encrypt)
+- Nginx reverse proxy
+- Port 80 &amp; 443 forwarding</p>
+
+<p><strong>Access</strong>: <code>https://soulfra.com</code></p>
+
+<p><strong>Configuration</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># /etc/nginx/sites-enabled/soulfra</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">soulfra.com</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$server_name$request_uri</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">soulfra.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/soulfra.com/fullchain.pem</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/soulfra.com/privkey.pem</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://localhost:5001</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 4+ (Domain + HTTPS)</p>
+
+<hr />
+
+<h2 id="debugging-guide">Debugging Guide</h2>
+
+<h3 id="problem-connection-refused-on-localhost">Problem: "Connection refused" on localhost</h3>
+
+<p><strong>Layer</strong>: 1-4 (Server not running)</p>
+
+<p><strong>Check</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Is server running?</span>
+ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>python
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># Try starting</span>
+python3<span class="w"> </span>app.py
+</code></pre>
+</div>
+
+<p><strong>Fix</strong>: Start the server</p>
+
+<hr />
+
+<h3 id="problem-works-on-localhost-not-on-lan">Problem: Works on localhost, not on LAN</h3>
+
+<p><strong>Layer</strong>: 5 (Network interfaces)</p>
+
+<p><strong>Check</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># What is server bound to?</span>
+lsof<span class="w"> </span>-i<span class="w"> </span>:5001
+
+<span class="c1"># Should show *:5001 not 127.0.0.1:5001</span>
+</code></pre>
+</div>
+
+<p><strong>Fix</strong>: Change <code>host='127.0.0.1'</code> to <code>host='0.0.0.0'</code> in app.py</p>
+
+<hr />
+
+<h3 id="problem-works-on-lan-not-from-internet">Problem: Works on LAN, not from internet</h3>
+
+<p><strong>Layer</strong>: 6-7 (Port forwarding)</p>
+
+<p><strong>Check</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Router port forwarding configured?</span>
+<span class="c1"># Check router admin panel (usually 192.168.1.1)</span>
+
+<span class="c1"># Test from external:</span>
+<span class="c1"># - Use phone cellular data</span>
+<span class="c1"># - Visit http://PUBLIC_IP:5001</span>
+</code></pre>
+</div>
+
+<p><strong>Fix</strong>: Configure port forwarding in router</p>
+
+<hr />
+
+<h3 id="problem-domain-doesnt-resolve">Problem: Domain doesn't resolve</h3>
+
+<p><strong>Layer</strong>: 8 (DNS)</p>
+
+<p><strong>Check</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Does domain resolve?</span>
+host<span class="w"> </span>yourdomain.com
+
+<span class="c1"># If not, DNS not configured or not propagated</span>
+</code></pre>
+</div>
+
+<p><strong>Fix</strong>:
+1. Add A record at registrar
+2. Wait 5-60 minutes for propagation
+3. Verify with <code>host</code> command</p>
+
+<hr />
+
+<h3 id="problem-domain-resolves-but-site-wont-load">Problem: Domain resolves but site won't load</h3>
+
+<p><strong>Layer</strong>: All layers (Full chain)</p>
+
+<p><strong>Check</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Does DNS point to right IP?</span>
+host<span class="w"> </span>yourdomain.com
+<span class="c1"># Should match:</span>
+curl<span class="w"> </span>https://api.ipify.org
+
+<span class="c1"># Is port forwarding working?</span>
+<span class="c1"># Test from phone cellular</span>
+
+<span class="c1"># Is server running?</span>
+systemctl<span class="w"> </span>status<span class="w"> </span>soulfra
+</code></pre>
+</div>
+
+<p><strong>Fix</strong>: Check each layer systematically with <code>python3 test_network_stack.py</code></p>
+
+<hr />
+
+<h2 id="composition-principle">Composition Principle</h2>
+
+<p>The key insight: <strong>Each layer wraps the one below it</strong></p>
+
+<p>Like Russian nesting dolls:</p>
+
+<pre><code>Domain wraps
+  ↓
+DNS wraps
+  ↓
+Public IP wraps
+  ↓
+Router wraps
+  ↓
+LAN wraps
+  ↓
+Server wraps
+  ↓
+Flask wraps
+  ↓
+Python wraps
+  ↓
+OS
+</code></pre>
+
+<p><strong>Just like</strong>:</p>
+
+<ul>
+<li>Linux: Syscalls wrap kernel wrap hardware</li>
+<li>Docker: Containers wrap images wrap registries</li>
+<li>Git: Commits wrap trees wrap blobs</li>
+<li><strong>Soulfra</strong>: Domain wraps IP wraps server wraps Flask wraps Python</li>
+</ul>
+
+<p>This is how <strong>everything</strong> in computing works!</p>
+
+<hr />
+
+<h2 id="quick-start-recipes">Quick Start Recipes</h2>
+
+<h3 id="recipe-1-just-make-it-work-on-my-computer">Recipe 1: "Just make it work on my computer"</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Start server</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># Open browser</span>
+open<span class="w"> </span>http://localhost:5001
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 1</p>
+
+<hr />
+
+<h3 id="recipe-2-let-me-test-on-my-phone">Recipe 2: "Let me test on my phone"</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Update app.py</span>
+<span class="c1"># Change: host=&#39;127.0.0.1&#39;</span>
+<span class="c1"># To:     host=&#39;0.0.0.0&#39;</span>
+
+<span class="c1"># 2. Restart server</span>
+python3<span class="w"> </span>app.py
+
+<span class="c1"># 3. Get your IP</span>
+ifconfig<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;inet &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="m">127</span>.0.0.1
+
+<span class="c1"># 4. On phone (same WiFi):</span>
+<span class="c1"># Visit: http://192.168.1.100:5001</span>
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 2</p>
+
+<hr />
+
+<h3 id="recipe-3-deploy-to-the-internet">Recipe 3: "Deploy to the internet"</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Configure port forwarding on router:</span>
+<span class="c1">#    External: 5001 → Internal: YOUR_LAN_IP:5001</span>
+
+<span class="c1"># 2. Get public IP</span>
+curl<span class="w"> </span>https://api.ipify.org
+
+<span class="c1"># 3. Test from phone cellular data:</span>
+<span class="c1">#    http://YOUR_PUBLIC_IP:5001</span>
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 3</p>
+
+<hr />
+
+<h3 id="recipe-4-deploy-with-domain-name">Recipe 4: "Deploy with domain name"</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># 1. Complete Tier 3 (public IP working)</span>
+
+<span class="c1"># 2. Buy domain (GoDaddy, Namecheap, etc.)</span>
+
+<span class="c1"># 3. Add DNS A record:</span>
+<span class="c1">#    yourdomain.com → YOUR_PUBLIC_IP</span>
+
+<span class="c1"># 4. Update .env:</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;DOMAIN=yourdomain.com&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;BASE_URL=http://yourdomain.com&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+
+<span class="c1"># 5. Restart server</span>
+
+<span class="c1"># 6. Wait 5-60 min for DNS, then:</span>
+<span class="c1">#    http://yourdomain.com</span>
+</code></pre>
+</div>
+
+<p><strong>Tier</strong>: 4</p>
+
+<hr />
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ol>
+<li><p><strong>Test your current setup</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>test_network_stack.py
+</code></pre>
+</div></li>
+<li><p><strong>Visualize your network</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>network_diagram.py
+</code></pre>
+</div></li>
+<li><p><strong>Deploy step-by-step</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>deployment_ladder.py
+</code></pre>
+</div></li>
+<li><p><strong>Read connection reference</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>cat<span class="w"> </span>connection_map.md
+</code></pre>
+</div></li>
+<li><p><strong>Set up auto-start</strong>:</p>
+
+<div class="codehilite">
+<pre><span></span><code>cat<span class="w"> </span>LAUNCHER_GUIDE.md
+</code></pre>
+</div></li>
+</ol>
+
+<hr />
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+<li><strong>LAUNCHER_GUIDE.md</strong> - All the ways to run Soulfra</li>
+<li><strong>QUICKSTART.md</strong> - 5-minute deployment guide</li>
+<li><strong>connection_map.md</strong> - Reference of all connection points</li>
+<li><strong>dns<em>setup</em>guide.py</strong> - Generate DNS records</li>
+<li><strong>soulfra.service</strong> - Systemd service file</li>
+</ul>
+
+<hr />
+
+<h2 id="philosophy">Philosophy</h2>
+
+<p>This guide is based on a simple principle:</p>
+
+<blockquote>
+  <p><strong>Understanding WHERE connections are is more powerful than memorizing HOW they work</strong></p>
+</blockquote>
+
+<p>If you know:
+- WHERE the port is configured (<code>app.py</code> line ~2000)
+- WHERE the host is set (<code>app.run(host='0.0.0.0')</code>)
+- WHERE DNS is configured (domain registrar)
+- WHERE port forwarding is (router admin panel)</p>
+
+<p>...then you can:
+- Debug any networking issue
+- Deploy to any environment
+- Understand any web application
+- Help others with their deployments</p>
+
+<p><strong>This knowledge transfers to every web framework:</strong>
+- Django (same <code>host</code> and <code>port</code>)
+- Node.js/Express (same port forwarding)
+- Ruby on Rails (same DNS)
+- Go/Rust web servers (same principles)</p>
+
+<p><strong>You're not just learning Soulfra - you're learning how the internet works!</strong></p>
+
+<hr />
+
+<p><strong>Ready to deploy?</strong></p>
+
+<div class="codehilite">
+<pre><span></span><code>python3<span class="w"> </span>deployment_ladder.py
+</code></pre>
+</div>
+
+<p>Let's climb! 🚀</p>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to documentation</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,178 @@
+# Soulfra OSS - Theme Configuration
+#
+# Customize your Soulfra instance with your own branding
+# After editing, run: python3 deploy/apply_theme.py
+
+# =============================================================================
+# Brand Information
+# =============================================================================
+
+brand:
+  name: "Soulfra"           # Your brand name
+  tagline: "Build in Public"  # Your tagline
+  domain: "soulfra.com"      # Your domain
+  logo_url: null             # URL to your logo (optional)
+
+# =============================================================================
+# Color Scheme
+# =============================================================================
+
+colors:
+  primary: "#4a90e2"         # Primary brand color (buttons, headers)
+  secondary: "#2c3e50"       # Secondary color (nav, footers)
+  accent: "#27ae60"          # Accent color (highlights, CTAs)
+
+  # Alternative color schemes (uncomment to use):
+
+  # Purple gradient:
+  # primary: "#667eea"
+  # secondary: "#764ba2"
+  # accent: "#f093fb"
+
+  # Green/Nature:
+  # primary: "#27ae60"
+  # secondary: "#16a085"
+  # accent: "#f39c12"
+
+  # Dark mode:
+  # primary: "#2d3748"
+  # secondary: "#1a202c"
+  # accent: "#4299e1"
+
+  # Red/Energy:
+  # primary: "#e74c3c"
+  # secondary: "#c0392b"
+  # accent: "#f39c12"
+
+# =============================================================================
+# Content Settings
+# =============================================================================
+
+content:
+  posts_per_page: 10
+  enable_comments: true
+  enable_soul_ratings: true  # Show AI soul ratings
+  enable_qr_galleries: true  # Generate QR galleries
+  enable_quizzes: true       # Auto-generate quizzes
+
+# =============================================================================
+# Features
+# =============================================================================
+
+features:
+  # Multi-tier architecture features
+  neural_soul_scoring: true  # AI content quality ratings
+  qr_lineage_tracking: true  # Track QR scan chains
+  dm_via_qr: true            # In-person DM via QR scan
+  post_to_quiz: true         # Auto-generate quizzes
+
+  # Analytics
+  qr_analytics: true         # QR analytics dashboard
+  device_tracking: true      # Track device types
+  location_tracking: false   # Track location (requires IP API)
+
+  # Distribution
+  static_export: true        # Export to static HTML
+  template_orchestrator: true # Multi-output templates
+
+# =============================================================================
+# Deployment
+# =============================================================================
+
+deployment:
+  mode: "hybrid"             # Options: hybrid, all-in-one, static
+  # hybrid: Static files + Flask API
+  # all-in-one: Everything in Flask
+  # static: Static only (no Flask)
+
+  static_host: "github-pages" # Where static files are hosted
+  # Options: github-pages, vercel, netlify, custom
+
+  api_host: "railway"        # Where Flask API runs
+  # Options: railway, flyio, vps, docker, heroku
+
+# =============================================================================
+# SEO & Social
+# =============================================================================
+
+seo:
+  meta_description: "AI-powered platform where development happens in public"
+  meta_keywords: "python, sqlite, ai, neural networks, qr codes"
+  og_image: null             # OpenGraph image URL
+  twitter_handle: null       # Your Twitter handle (without @)
+
+# =============================================================================
+# Integration
+# =============================================================================
+
+integrations:
+  # Analytics
+  google_analytics: null     # Google Analytics ID (G-XXXXXXXXXX)
+  plausible: null            # Plausible domain
+
+  # Social
+  twitter_api_key: null      # For social sharing
+
+  # Email
+  smtp_host: null            # SMTP server
+  smtp_port: 587
+  smtp_user: null
+  smtp_password: null
+
+  # AI
+  openai_api_key: null       # For enhanced quiz generation
+  anthropic_api_key: null    # For Claude integration
+
+# =============================================================================
+# Advanced Settings
+# =============================================================================
+
+advanced:
+  debug_mode: false
+  rate_limiting: true
+  csrf_protection: true
+  session_timeout: 3600      # Session timeout in seconds
+  max_upload_size: 10485760  # Max upload size in bytes (10MB)
+
+  # Database
+  database_path: "soulfra.db"
+  database_backup: true
+  backup_frequency: "daily"  # daily, weekly, monthly
+
+  # Caching
+  cache_enabled: true
+  cache_timeout: 300         # Cache timeout in seconds
+
+# =============================================================================
+# Reskin Example
+# =============================================================================
+
+# Example 1: Math tutoring platform
+# brand:
+#   name: "MathMentor"
+#   tagline: "Learn Math, One Problem at a Time"
+#   domain: "mathmentor.com"
+# colors:
+#   primary: "#3498db"
+#   secondary: "#2c3e50"
+#   accent: "#e74c3c"
+
+# Example 2: Cooking blog
+# brand:
+#   name: "How to Cook at Home"
+#   tagline: "Simple Recipes for Everyday Cooking"
+#   domain: "howtocookathome.com"
+# colors:
+#   primary: "#27ae60"
+#   secondary: "#16a085"
+#   accent: "#f39c12"
+
+# Example 3: Programming challenges
+# brand:
+#   name: "CodeQuest"
+#   tagline: "Level Up Your Coding Skills"
+#   domain: "codequest.dev"
+# colors:
+#   primary: "#9b59b6"
+#   secondary: "#8e44ad"
+#   accent: "#3498db"

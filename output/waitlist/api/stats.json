@@ -1,0 +1,46 @@
+{
+  "domains": [
+    {
+      "domain_name": "calriven",
+      "is_launched": false,
+      "signups": 4,
+      "days_until": 90,
+      "launch_date": "2026-04-09T13:28:16.013477+00:00",
+      "acceleration": 0,
+      "instant_threshold": 900,
+      "progress_pct": 0.4444444444444444
+    },
+    {
+      "domain_name": "deathtodata",
+      "is_launched": false,
+      "signups": 3,
+      "days_until": 90,
+      "launch_date": "2026-04-09T13:28:16.014179+00:00",
+      "acceleration": 0,
+      "instant_threshold": 900,
+      "progress_pct": 0.33333333333333337
+    },
+    {
+      "domain_name": "soulfra",
+      "is_launched": false,
+      "signups": 2,
+      "days_until": 90,
+      "launch_date": "2026-04-09T13:28:16.012387+00:00",
+      "acceleration": 0,
+      "instant_threshold": 900,
+      "progress_pct": 0.2222222222222222
+    },
+    {
+      "domain_name": "cringeproof",
+      "is_launched": false,
+      "signups": 1,
+      "days_until": 90,
+      "launch_date": "2026-04-09T13:28:16.014690+00:00",
+      "acceleration": 0,
+      "instant_threshold": 900,
+      "progress_pct": 0.1111111111111111
+    }
+  ],
+  "total_signups": 10,
+  "updated_at": "2026-01-09T13:28:16.015152+00:00"
+}

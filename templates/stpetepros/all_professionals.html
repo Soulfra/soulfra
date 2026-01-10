@@ -1,0 +1,54 @@
+{% extends "stpetepros/base.html" %}
+
+{% block title %}All Professionals - StPetePros{% endblock %}
+
+{% block description %}Browse all verified professionals in St. Petersburg, Florida{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-slate-900 to-blue-900 text-white -mx-4 -mt-8 px-4 py-12 mb-8">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold mb-2">All Professionals</h1>
+    <p class="text-lg opacity-90">{{ total_count }} verified professionals in St. Petersburg</p>
+  </div>
+</div>
+
+{% for category, pros in categories_dict.items() %}
+<div class="mb-12">
+  <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-sky-500 pb-2">
+    {{ category.replace('_', ' ').replace('-', ' ').title() }} ({{ pros|length }})
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for pro in pros %}
+    <a href="/professional/{{ pro.id }}" class="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-xl transition-all hover:-translate-y-1 hover:border-sky-500">
+      <h3 class="text-xl font-bold text-slate-900 mb-2">{{ pro.business_name }}</h3>
+      <p class="text-slate-600 text-sm mb-3">{{ pro.bio[:120] }}{% if pro.bio|length > 120 %}...{% endif %}</p>
+
+      <div class="flex items-center gap-2 text-sm text-slate-500 mb-2">
+        <span>📍</span>
+        <span>{{ pro.city }}, {{ pro.state }}</span>
+      </div>
+
+      {% if pro.rating_avg %}
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-amber-500">★ {{ "%.1f"|format(pro.rating_avg) }}</span>
+        <span class="text-slate-400">({{ pro.rating_count or 0 }} reviews)</span>
+      </div>
+      {% endif %}
+
+      {% if pro.verified %}
+      <span class="inline-block mt-3 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">✓ Verified</span>
+      {% endif %}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+
+{% if total_count == 0 %}
+<div class="text-center py-16">
+  <p class="text-slate-500 text-xl mb-4">No professionals found</p>
+  <a href="/signup/professional" class="inline-block px-8 py-3 bg-sky-500 text-white rounded-lg font-semibold hover:bg-sky-600">Be the First to Join</a>
+</div>
+{% endif %}
+{% endblock %}

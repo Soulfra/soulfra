@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Begin Your Journey | Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #999;
+            margin-bottom: 40px;
+        }
+        .progress-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .chapter-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #e0e0e0;
+            display: block;
+        }
+        .chapter-card:hover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        .chapter-card.locked {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .chapter-card.completed {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.05);
+        }
+        .chapter-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+        .chapter-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .chapter-status {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 10px;
+        }
+        .completed-badge {
+            display: inline-block;
+            background: #00ff88;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .locked-badge {
+            display: inline-block;
+            background: #555;
+            color: #aaa;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Begin Your Journey</h1>
+        <p class="subtitle">Interactive learning through The Canvas - Build neural networks, architect consciousness</p>
+
+        <div class="progress-summary">
+            <h2>Your Progress</h2>
+            <p><strong>Current Chapter:</strong> {{ progress.current_chapter }}</p>
+            <p><strong>Chapters Completed:</strong> {{ progress.chapters_completed|length }} / 7</p>
+            {% if progress.neural_network_built %}
+            <p><strong>Neural Network:</strong> Built ✓</p>
+            {% else %}
+            <p><strong>Neural Network:</strong> Not yet built</p>
+            {% endif %}
+        </div>
+
+        <h2 style="margin-bottom: 20px;">The Chapters</h2>
+        <div class="chapters-grid">
+            {% set chapters = [
+                {'num': 1, 'title': 'The Canvas', 'desc': 'You wake up in a white canvas'},
+                {'num': 2, 'title': 'Networking', 'desc': 'How consciousness connects'},
+                {'num': 3, 'title': 'Binary', 'desc': 'Everything is reducible to choices'},
+                {'num': 4, 'title': 'The Factory', 'desc': 'The assembly line of minds'},
+                {'num': 5, 'title': 'Forking', 'desc': 'Your first neural clone'},
+                {'num': 6, 'title': 'Revealed', 'desc': 'Privacy implications emerge'},
+                {'num': 7, 'title': 'CalRiven', 'desc': 'The final architect'}
+            ] %}
+
+            {% for ch in chapters %}
+                {% set is_completed = ch.num in progress.chapters_completed %}
+                {% set is_locked = ch.num > 1 and (ch.num - 1) not in progress.chapters_completed %}
+
+                <a href="{{ url_for('start_chapter', chapter_num=ch.num) }}"
+                   class="chapter-card {% if is_completed %}completed{% endif %} {% if is_locked %}locked{% endif %}">
+                    <div class="chapter-number">Chapter {{ ch.num }}</div>
+                    <div class="chapter-title">{{ ch.title }}</div>
+                    <div class="chapter-status">{{ ch.desc }}</div>
+
+                    {% if is_completed %}
+                        <span class="completed-badge">✓ Completed</span>
+                    {% elif is_locked %}
+                        <span class="locked-badge">🔒 Locked</span>
+                    {% else %}
+                        <span class="chapter-status" style="color: #00d4ff; margin-top: 10px;">→ Begin</span>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

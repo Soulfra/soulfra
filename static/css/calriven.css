@@ -1,0 +1,85 @@
+/**
+ * Calriven Brand Theme
+ *
+ * Personality: Technical, analytical, architecture-focused
+ * Tagline: "Neural networks, Python, and deep technical dives"
+ * Colors: Purple, violet, blue
+ */
+
+:root {
+  /* Brand colors from database */
+  --brand-primary: #667eea;      /* Purple */
+  --brand-secondary: #764ba2;    /* Violet */
+  --brand-accent: #f093fb;       /* Pink/Purple */
+
+  /* Dark mode variants */
+  --brand-primary-dark: #8b9efc;
+  --brand-secondary-dark: #9468c4;
+  --brand-accent-dark: #f5a7ff;
+
+  /* Apply to theme */
+  --color-primary: var(--brand-primary);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
+}
+
+/* Brand-specific overrides */
+[data-theme="dark"] {
+  --color-primary: var(--brand-primary-dark);
+  --color-secondary: var(--brand-secondary-dark);
+  --color-accent: var(--brand-accent-dark);
+}
+
+/* Calriven-specific styling */
+.brand-calriven {
+  /* Technical, clean aesthetic */
+  font-family: 'SF Mono', 'Roboto Mono', 'Courier New', monospace;
+}
+
+.brand-calriven .header {
+  background: var(--gradient-primary);
+  border-bottom: 2px solid var(--brand-accent);
+}
+
+.brand-calriven .post-title {
+  color: var(--brand-primary);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.brand-calriven .cta-button {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 500;
+}
+
+.brand-calriven .cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Technical code styling */
+.brand-calriven code {
+  background: linear-gradient(135deg, #667eea15, #764ba215);
+  color: var(--brand-primary);
+  border-left: 3px solid var(--brand-accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.brand-calriven pre {
+  background: var(--bg-elevated);
+  border: 1px solid var(--brand-primary);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Neural network visualization colors */
+.brand-calriven .neural-viz {
+  background: var(--gradient-primary);
+  border-radius: 12px;
+  padding: 20px;
+}

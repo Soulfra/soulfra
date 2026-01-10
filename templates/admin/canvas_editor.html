@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Editor - Professional Image Composer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Tools & Layers */
+        .sidebar {
+            width: 300px;
+            background: #2a2a2a;
+            border-right: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .panel {
+            padding: 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .panel h2 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Canvas Area */
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            overflow: auto;
+            position: relative;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        #canvas {
+            border: 1px solid #555;
+            cursor: crosshair;
+            background: #fff;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        /* Properties Panel */
+        .properties {
+            width: 300px;
+            background: #2a2a2a;
+            border-left: 1px solid #444;
+            overflow-y: auto;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Tool Grid */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tool-btn {
+            padding: 12px;
+            background: #374151;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .tool-btn:hover {
+            background: #4b5563;
+        }
+
+        .tool-btn.active {
+            background: #3b82f6;
+            border-color: #60a5fa;
+        }
+
+        /* Layers List */
+        .layers-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .layer-item {
+            padding: 12px;
+            background: #374151;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .layer-item:hover {
+            background: #4b5563;
+        }
+
+        .layer-item.active {
+            background: #3b82f6;
+        }
+
+        .layer-info {
+            flex: 1;
+        }
+
+        .layer-type {
+            font-size: 12px;
+            color: #9ca3af;
+            text-transform: uppercase;
+        }
+
+        .layer-content {
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        /* Color Picker */
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .color-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            border: 2px solid #555;
+            cursor: pointer;
+        }
+
+        input[type="color"] {
+            width: 0;
+            height: 0;
+            opacity: 0;
+            position: absolute;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            background: #374151;
+            border: 1px solid #555;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Top Toolbar */
+        .toolbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #2a2a2a;
+            border-bottom: 1px solid #444;
+            padding: 12px 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: #444;
+            margin: 0 8px;
+        }
+
+        .size-input {
+            width: 80px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar - Tools & Layers -->
+    <div class="sidebar">
+        <!-- Brand Selection -->
+        <div class="panel">
+            <h2>Brand</h2>
+            <select id="brand-select">
+                <option value="soulfra">Soulfra</option>
+                <option value="cringeproof">Cringeproof</option>
+                <option value="howtocookathome">How To Cook At Home</option>
+            </select>
+        </div>
+
+        <!-- Tools -->
+        <div class="panel">
+            <h2>Tools</h2>
+            <div class="tool-grid">
+                <div class="tool-btn active" data-tool="select">
+                    <div>✋</div>
+                    Select
+                </div>
+                <div class="tool-btn" data-tool="text">
+                    <div>T</div>
+                    Text
+                </div>
+                <div class="tool-btn" data-tool="shape">
+                    <div>◼</div>
+                    Shape
+                </div>
+                <div class="tool-btn" data-tool="gradient">
+                    <div>⬒</div>
+                    Gradient
+                </div>
+                <div class="tool-btn" data-tool="qr">
+                    <div>▦</div>
+                    QR Code
+                </div>
+                <div class="tool-btn" data-tool="image">
+                    <div>🖼</div>
+                    Image
+                </div>
+            </div>
+
+            <button class="btn" id="add-layer-btn">+ Add Layer</button>
+        </div>
+
+        <!-- Layers -->
+        <div class="panel">
+            <h2>Layers</h2>
+            <div class="layers-list" id="layers-list">
+                <div class="empty-state">
+                    <h3>No layers yet</h3>
+                    <p>Add your first layer above</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="panel">
+            <button class="btn" id="export-btn">💾 Export Image</button>
+            <button class="btn btn-secondary" id="save-template-btn">📋 Save Template</button>
+            <button class="btn btn-danger" id="clear-btn">🗑 Clear All</button>
+        </div>
+    </div>
+
+    <!-- Canvas Area -->
+    <div class="canvas-container" style="padding-top: 60px;">
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <label style="margin: 0;">Canvas Size:</label>
+                <input type="number" id="canvas-width" class="size-input" value="1200" min="100" max="4000">
+                <span>×</span>
+                <input type="number" id="canvas-height" class="size-input" value="630" min="100" max="4000">
+                <button class="btn btn-secondary" id="resize-canvas-btn" style="width: auto; margin: 0; padding: 8px 16px;">Resize</button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+
+            <div class="toolbar-group">
+                <label style="margin: 0;">
+                    <input type="checkbox" id="grid-toggle" checked>
+                    Show Grid
+                </label>
+            </div>
+        </div>
+
+        <div class="canvas-wrapper">
+            <canvas id="canvas" width="1200" height="630"></canvas>
+            <canvas id="grid" class="grid-overlay" width="1200" height="630"></canvas>
+        </div>
+    </div>
+
+    <!-- Properties Panel -->
+    <div class="properties">
+        <div class="panel">
+            <h2>Properties</h2>
+            <div id="properties-content">
+                <div class="empty-state">
+                    <h3>No layer selected</h3>
+                    <p>Select a layer to edit</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Brand Colors
+        const BRAND_COLORS = {
+            'soulfra': {
+                primary: '#8B5CF6',
+                secondary: '#3B82F6',
+                accent: '#10B981'
+            },
+            'cringeproof': {
+                primary: '#2D3748',
+                secondary: '#E53E3E',
+                accent: '#EDF2F7'
+            },
+            'howtocookathome': {
+                primary: '#F97316',
+                secondary: '#EAB308',
+                accent: '#84CC16'
+            }
+        };
+
+        // State
+        let canvas, ctx, gridCanvas, gridCtx;
+        let layers = [];
+        let selectedLayer = null;
+        let currentTool = 'select';
+        let currentBrand = 'soulfra';
+
+        // Initialize
+        function init() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            gridCanvas = document.getElementById('grid');
+            gridCtx = gridCanvas.getContext('2d');
+
+            drawGrid();
+            render();
+
+            // Event listeners
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTool = btn.dataset.tool;
+                });
+            });
+
+            document.getElementById('add-layer-btn').addEventListener('click', addLayer);
+            document.getElementById('export-btn').addEventListener('click', exportImage);
+            document.getElementById('clear-btn').addEventListener('click', clearAll);
+            document.getElementById('resize-canvas-btn').addEventListener('click', resizeCanvas);
+            document.getElementById('grid-toggle').addEventListener('change', (e) => {
+                gridCanvas.style.display = e.target.checked ? 'block' : 'none';
+            });
+            document.getElementById('brand-select').addEventListener('change', (e) => {
+                currentBrand = e.target.value;
+            });
+
+            // Add demo layers
+            addDemoLayers();
+        }
+
+        function drawGrid() {
+            const gridSize = 20;
+            gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+            gridCtx.strokeStyle = '#000';
+            gridCtx.lineWidth = 0.5;
+
+            for (let x = 0; x <= gridCanvas.width; x += gridSize) {
+                gridCtx.beginPath();
+                gridCtx.moveTo(x, 0);
+                gridCtx.lineTo(x, gridCanvas.height);
+                gridCtx.stroke();
+            }
+
+            for (let y = 0; y <= gridCanvas.height; y += gridSize) {
+                gridCtx.beginPath();
+                gridCtx.moveTo(0, y);
+                gridCtx.lineTo(gridCanvas.width, y);
+                gridCtx.stroke();
+            }
+        }
+
+        function addLayer() {
+            const layer = {
+                id: Date.now(),
+                type: currentTool === 'select' ? 'gradient' : currentTool,
+                visible: true,
+                opacity: 1,
+                ...getDefaultLayerProps(currentTool)
+            };
+
+            layers.push(layer);
+            updateLayersList();
+            selectLayer(layer);
+            render();
+        }
+
+        function getDefaultLayerProps(type) {
+            const colors = BRAND_COLORS[currentBrand];
+
+            switch (type) {
+                case 'gradient':
+                    return {
+                        colors: [colors.primary, colors.secondary],
+                        angle: 45
+                    };
+                case 'text':
+                    return {
+                        content: 'Enter Text',
+                        font: 'Arial',
+                        fontSize: 48,
+                        color: '#FFFFFF',
+                        x: 100,
+                        y: 100
+                    };
+                case 'shape':
+                    return {
+                        shape: 'rectangle',
+                        x: 100,
+                        y: 100,
+                        width: 200,
+                        height: 150,
+                        fillColor: colors.primary,
+                        cornerRadius: 0
+                    };
+                case 'qr':
+                    return {
+                        url: 'https://soulfra.com',
+                        x: canvas.width - 170,
+                        y: canvas.height - 170,
+                        size: 150
+                    };
+                default:
+                    return {};
+            }
+        }
+
+        function selectLayer(layer) {
+            selectedLayer = layer;
+            updateLayersList();
+            updateProperties();
+        }
+
+        function updateLayersList() {
+            const list = document.getElementById('layers-list');
+
+            if (layers.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No layers yet</h3>
+                        <p>Add your first layer above</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = layers.map(layer => `
+                <div class="layer-item ${selectedLayer?.id === layer.id ? 'active' : ''}"
+                     onclick="selectLayerById(${layer.id})">
+                    <div class="layer-info">
+                        <div class="layer-type">${layer.type}</div>
+                        <div class="layer-content">${getLayerLabel(layer)}</div>
+                    </div>
+                    <button onclick="deleteLayer(event, ${layer.id})" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 18px;">×</button>
+                </div>
+            `).reverse().join('');
+        }
+
+        function selectLayerById(id) {
+            const layer = layers.find(l => l.id === id);
+            if (layer) selectLayer(layer);
+        }
+
+        function deleteLayer(event, id) {
+            event.stopPropagation();
+            layers = layers.filter(l => l.id !== id);
+            if (selectedLayer?.id === id) selectedLayer = null;
+            updateLayersList();
+            updateProperties();
+            render();
+        }
+
+        function getLayerLabel(layer) {
+            switch (layer.type) {
+                case 'text':
+                    return layer.content;
+                case 'shape':
+                    return `${layer.shape} (${layer.width}×${layer.height})`;
+                case 'gradient':
+                    return `${layer.angle}°`;
+                case 'qr':
+                    return layer.url;
+                default:
+                    return 'Layer';
+            }
+        }
+
+        function updateProperties() {
+            const content = document.getElementById('properties-content');
+
+            if (!selectedLayer) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No layer selected</h3>
+                        <p>Select a layer to edit</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const props = [];
+
+            // Common properties
+            props.push(`
+                <label>Opacity</label>
+                <input type="range" min="0" max="1" step="0.1" value="${selectedLayer.opacity}"
+                       oninput="updateLayerProp('opacity', parseFloat(this.value))">
+            `);
+
+            // Type-specific properties
+            switch (selectedLayer.type) {
+                case 'text':
+                    props.push(`
+                        <label>Text Content</label>
+                        <input type="text" value="${selectedLayer.content}"
+                               oninput="updateLayerProp('content', this.value)">
+
+                        <label>Font Size</label>
+                        <input type="number" value="${selectedLayer.fontSize}"
+                               oninput="updateLayerProp('fontSize', parseInt(this.value))">
+
+                        <label>Color</label>
+                        <div class="color-picker">
+                            <div class="color-preview" style="background: ${selectedLayer.color}"
+                                 onclick="document.getElementById('text-color-input').click()"></div>
+                            <input type="text" value="${selectedLayer.color}" id="text-color-display"
+                                   oninput="updateLayerProp('color', this.value)">
+                            <input type="color" id="text-color-input" value="${selectedLayer.color}"
+                                   oninput="updateLayerProp('color', this.value); document.getElementById('text-color-display').value = this.value">
+                        </div>
+
+                        <label>X Position</label>
+                        <input type="number" value="${selectedLayer.x}"
+                               oninput="updateLayerProp('x', parseInt(this.value))">
+
+                        <label>Y Position</label>
+                        <input type="number" value="${selectedLayer.y}"
+                               oninput="updateLayerProp('y', parseInt(this.value))">
+                    `);
+                    break;
+
+                case 'shape':
+                    props.push(`
+                        <label>Shape Type</label>
+                        <select onchange="updateLayerProp('shape', this.value)">
+                            <option value="rectangle" ${selectedLayer.shape === 'rectangle' ? 'selected' : ''}>Rectangle</option>
+                            <option value="circle" ${selectedLayer.shape === 'circle' ? 'selected' : ''}>Circle</option>
+                        </select>
+
+                        <label>Fill Color</label>
+                        <div class="color-picker">
+                            <div class="color-preview" style="background: ${selectedLayer.fillColor}"
+                                 onclick="document.getElementById('shape-color-input').click()"></div>
+                            <input type="text" value="${selectedLayer.fillColor}" id="shape-color-display"
+                                   oninput="updateLayerProp('fillColor', this.value)">
+                            <input type="color" id="shape-color-input" value="${selectedLayer.fillColor}"
+                                   oninput="updateLayerProp('fillColor', this.value); document.getElementById('shape-color-display').value = this.value">
+                        </div>
+
+                        <label>X Position</label>
+                        <input type="number" value="${selectedLayer.x}"
+                               oninput="updateLayerProp('x', parseInt(this.value))">
+
+                        <label>Y Position</label>
+                        <input type="number" value="${selectedLayer.y}"
+                               oninput="updateLayerProp('y', parseInt(this.value))">
+
+                        <label>Width</label>
+                        <input type="number" value="${selectedLayer.width}"
+                               oninput="updateLayerProp('width', parseInt(this.value))">
+
+                        <label>Height</label>
+                        <input type="number" value="${selectedLayer.height}"
+                               oninput="updateLayerProp('height', parseInt(this.value))">
+                    `);
+                    break;
+
+                case 'gradient':
+                    props.push(`
+                        <label>Angle</label>
+                        <input type="number" value="${selectedLayer.angle}"
+                               oninput="updateLayerProp('angle', parseInt(this.value))">
+
+                        <label>Color 1</label>
+                        <div class="color-picker">
+                            <div class="color-preview" style="background: ${selectedLayer.colors[0]}"
+                                 onclick="document.getElementById('grad-color1-input').click()"></div>
+                            <input type="text" value="${selectedLayer.colors[0]}" id="grad-color1-display">
+                            <input type="color" id="grad-color1-input" value="${selectedLayer.colors[0]}"
+                                   oninput="updateGradientColor(0, this.value); document.getElementById('grad-color1-display').value = this.value">
+                        </div>
+
+                        <label>Color 2</label>
+                        <div class="color-picker">
+                            <div class="color-preview" style="background: ${selectedLayer.colors[1]}"
+                                 onclick="document.getElementById('grad-color2-input').click()"></div>
+                            <input type="text" value="${selectedLayer.colors[1]}" id="grad-color2-display">
+                            <input type="color" id="grad-color2-input" value="${selectedLayer.colors[1]}"
+                                   oninput="updateGradientColor(1, this.value); document.getElementById('grad-color2-display').value = this.value">
+                        </div>
+                    `);
+                    break;
+
+                case 'qr':
+                    props.push(`
+                        <label>URL</label>
+                        <input type="text" value="${selectedLayer.url}"
+                               oninput="updateLayerProp('url', this.value)">
+
+                        <label>Size</label>
+                        <input type="number" value="${selectedLayer.size}"
+                               oninput="updateLayerProp('size', parseInt(this.value))">
+
+                        <label>X Position</label>
+                        <input type="number" value="${selectedLayer.x}"
+                               oninput="updateLayerProp('x', parseInt(this.value))">
+
+                        <label>Y Position</label>
+                        <input type="number" value="${selectedLayer.y}"
+                               oninput="updateLayerProp('y', parseInt(this.value))">
+                    `);
+                    break;
+            }
+
+            content.innerHTML = props.join('');
+        }
+
+        function updateLayerProp(prop, value) {
+            if (selectedLayer) {
+                selectedLayer[prop] = value;
+                updateLayersList();
+                render();
+            }
+        }
+
+        function updateGradientColor(index, value) {
+            if (selectedLayer && selectedLayer.colors) {
+                selectedLayer.colors[index] = value;
+                render();
+            }
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            layers.forEach(layer => {
+                if (!layer.visible) return;
+
+                ctx.save();
+                ctx.globalAlpha = layer.opacity;
+
+                switch (layer.type) {
+                    case 'gradient':
+                        renderGradient(layer);
+                        break;
+                    case 'text':
+                        renderText(layer);
+                        break;
+                    case 'shape':
+                        renderShape(layer);
+                        break;
+                    case 'qr':
+                        renderQR(layer);
+                        break;
+                }
+
+                ctx.restore();
+            });
+        }
+
+        function renderGradient(layer) {
+            const angle = (layer.angle || 0) * Math.PI / 180;
+            const x1 = canvas.width / 2 - Math.cos(angle) * canvas.width / 2;
+            const y1 = canvas.height / 2 - Math.sin(angle) * canvas.height / 2;
+            const x2 = canvas.width / 2 + Math.cos(angle) * canvas.width / 2;
+            const y2 = canvas.height / 2 + Math.sin(angle) * canvas.height / 2;
+
+            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+            layer.colors.forEach((color, i) => {
+                gradient.addColorStop(i / (layer.colors.length - 1), color);
+            });
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function renderText(layer) {
+            ctx.font = `${layer.fontSize}px ${layer.font}`;
+            ctx.fillStyle = layer.color;
+            ctx.fillText(layer.content, layer.x, layer.y);
+        }
+
+        function renderShape(layer) {
+            ctx.fillStyle = layer.fillColor;
+
+            if (layer.shape === 'circle') {
+                const radius = Math.min(layer.width, layer.height) / 2;
+                ctx.beginPath();
+                ctx.arc(layer.x + radius, layer.y + radius, radius, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                if (layer.cornerRadius) {
+                    // Rounded rectangle
+                    ctx.beginPath();
+                    ctx.roundRect(layer.x, layer.y, layer.width, layer.height, layer.cornerRadius);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(layer.x, layer.y, layer.width, layer.height);
+                }
+            }
+        }
+
+        function renderQR(layer) {
+            // Placeholder - actual QR would be generated server-side
+            ctx.fillStyle = '#000';
+            ctx.fillRect(layer.x, layer.y, layer.size, layer.size);
+            ctx.fillStyle = '#FFF';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('QR', layer.x + layer.size/2, layer.y + layer.size/2);
+        }
+
+        function resizeCanvas() {
+            const width = parseInt(document.getElementById('canvas-width').value);
+            const height = parseInt(document.getElementById('canvas-height').value);
+
+            canvas.width = width;
+            canvas.height = height;
+            gridCanvas.width = width;
+            gridCanvas.height = height;
+
+            drawGrid();
+            render();
+        }
+
+        async function exportImage() {
+            // Convert to JSON for backend
+            const composition = {
+                brand: currentBrand,
+                size: [canvas.width, canvas.height],
+                layers: layers.map(layer => ({
+                    type: layer.type,
+                    ...layer
+                }))
+            };
+
+            console.log('Exporting composition:', composition);
+
+            try {
+                // Show loading state
+                const exportBtn = document.getElementById('export-btn');
+                const originalText = exportBtn.textContent;
+                exportBtn.textContent = '⏳ Generating...';
+                exportBtn.disabled = true;
+
+                // Send to backend for professional rendering
+                const response = await fetch('/api/generate/custom', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(composition)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                // Download the generated image
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = `${currentBrand}-image-${Date.now()}.jpg`;
+                link.href = url;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                console.log('✅ Image exported successfully!');
+                alert('Image exported successfully!');
+
+                // Restore button
+                exportBtn.textContent = originalText;
+                exportBtn.disabled = false;
+
+            } catch (error) {
+                console.error('Export failed:', error);
+                alert(`Export failed: ${error.message}\n\nCheck console for details.`);
+
+                // Restore button
+                const exportBtn = document.getElementById('export-btn');
+                exportBtn.textContent = '💾 Export Image';
+                exportBtn.disabled = false;
+            }
+        }
+
+        function clearAll() {
+            if (confirm('Clear all layers?')) {
+                layers = [];
+                selectedLayer = null;
+                updateLayersList();
+                updateProperties();
+                render();
+            }
+        }
+
+        function addDemoLayers() {
+            // Add demo gradient
+            layers.push({
+                id: Date.now(),
+                type: 'gradient',
+                visible: true,
+                opacity: 1,
+                colors: [BRAND_COLORS.soulfra.primary, BRAND_COLORS.soulfra.secondary],
+                angle: 45
+            });
+
+            // Add demo text
+            setTimeout(() => {
+                layers.push({
+                    id: Date.now() + 1,
+                    type: 'text',
+                    visible: true,
+                    opacity: 1,
+                    content: 'Canvas Editor',
+                    font: 'Arial',
+                    fontSize: 72,
+                    color: '#FFFFFF',
+                    x: 50,
+                    y: 200
+                });
+
+                updateLayersList();
+                render();
+            }, 10);
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

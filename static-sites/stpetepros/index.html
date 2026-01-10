@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StPetePros - Tampa Bay Professional Directory</title>
+    <meta name="description" content="Find verified professionals in St. Petersburg and Tampa Bay. Plumbing, electrical, HVAC, and more.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="auth-demo.js"></script>
+</head>
+<body class="bg-slate-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">StPetePros</h1>
+                    <p class="text-sky-100">Tampa Bay's Professional Directory</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="showAuthDemo()" class="px-4 py-2 bg-white text-sky-600 rounded-lg font-semibold hover:bg-sky-50 transition-colors">
+                        Demo Login
+                    </button>
+                    <a href="signup-demo.html" class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors">
+                        Join as Pro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search professionals, categories, or services..."
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                onkeyup="searchProfessionals()"
+            >
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Browse by Category</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
+
+        </div>
+
+        <!-- Professionals Grid -->
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">All Professionals (0)</h2>
+        <div id="professionalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white mt-16 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">StPetePros</h3>
+                    <p class="text-slate-400">Tampa Bay's most trusted professional directory. Find verified service providers in your area.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="about.html" class="hover:text-white">About Us</a></li>
+                        <li><a href="signup-demo.html" class="hover:text-white">Join as Professional</a></li>
+                        <li><a href="#" onclick="showAuthDemo()" class="hover:text-white">Demo Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Demo Mode</h3>
+                    <p class="text-slate-400 mb-2">This is a static demo hosted on GitHub Pages.</p>
+                    <a href="https://github.com/Soulfra/stpetepros-demo" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.91 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.59-2.805 5.61-5.475 5.91.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
+                <p>© 2026 StPetePros Demo • Built with ❤️ for Tampa Bay</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    function searchProfessionals() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.professional-card');
+
+        cards.forEach(card => {
+            const name = card.dataset.name;
+            const category = card.dataset.category;
+            const text = card.textContent.toLowerCase();
+
+            if (name.includes(input) || category.includes(input) || text.includes(input)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    </script>
+</body>
+</html>
