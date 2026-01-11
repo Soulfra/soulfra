@@ -1,0 +1,90 @@
+[
+  {
+    "front": "What is Star Topology?",
+    "back": "All nodes connect to central hub",
+    "tags": [
+      "topology"
+    ],
+    "created_at": "2026-01-11T16:48:13.435449"
+  },
+  {
+    "front": "What is Mesh Topology?",
+    "back": "Every node connects to every other node",
+    "tags": [
+      "topology"
+    ],
+    "created_at": "2026-01-11T16:48:13.435453"
+  },
+  {
+    "front": "What is TCP?",
+    "back": "Reliable, connection-oriented protocol",
+    "tags": [
+      "protocol"
+    ],
+    "created_at": "2026-01-11T16:48:13.435455"
+  },
+  {
+    "front": "What is UDP?",
+    "back": "Unreliable, connectionless protocol for speed",
+    "tags": [
+      "protocol"
+    ],
+    "created_at": "2026-01-11T16:48:13.435456"
+  },
+  {
+    "front": "What is IP?",
+    "back": "Internet Protocol for addressing and routing",
+    "tags": [
+      "protocol"
+    ],
+    "created_at": "2026-01-11T16:48:13.435457"
+  },
+  {
+    "front": "What is Subnetting?",
+    "back": "Dividing network into smaller subnetworks",
+    "tags": [
+      "concept"
+    ],
+    "created_at": "2026-01-11T16:48:13.435458"
+  },
+  {
+    "front": "What is CIDR?",
+    "back": "Classless Inter-Domain Routing notation",
+    "tags": [
+      "concept"
+    ],
+    "created_at": "2026-01-11T16:48:13.435459"
+  },
+  {
+    "front": "What is NAT?",
+    "back": "Network Address Translation - private to public IP mapping",
+    "tags": [
+      "protocol"
+    ],
+    "created_at": "2026-01-11T16:48:13.435460"
+  },
+  {
+    "front": "What is OSPF?",
+    "back": "Open Shortest Path First - link-state routing protocol",
+    "tags": [
+      "protocol"
+    ],
+    "created_at": "2026-01-11T16:48:13.435461"
+  },
+  {
+    "front": "What is ACL?",
+    "back": "Access Control List - firewall rules",
+    "tags": [
+      "security"
+    ],
+    "created_at": "2026-01-11T16:48:13.435462"
+  },
+  {
+    "front": "What is VLAN?",
+    "back": "Virtual LAN - logical network segmentation",
+    "tags": [
+      "security"
+    ],
+    "created_at": "2026-01-11T16:48:13.435463"
+  }
+]

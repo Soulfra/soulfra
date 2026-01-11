@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StPetePros - Tampa Bay Professional Directory</title>
+    <meta name="description" content="Find verified professionals in St. Petersburg and Tampa Bay. Plumbing, electrical, HVAC, and more.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="auth-demo.js"></script>
+</head>
+<body class="bg-slate-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">StPetePros</h1>
+                    <p class="text-sky-100">Tampa Bay's Professional Directory</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="showAuthDemo()" class="px-4 py-2 bg-white text-sky-600 rounded-lg font-semibold hover:bg-sky-50 transition-colors">
+                        Demo Login
+                    </button>
+                    <a href="signup-demo.html" class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors">
+                        Join as Pro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search professionals, categories, or services..."
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                onkeyup="searchProfessionals()"
+            >
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Browse by Category</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
+
+            <a href="category-carpentry.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Carpentry</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-cleaning.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Cleaning</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-electrical.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Electrical</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-flooring.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Flooring</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-hvac.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Hvac</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-landscaping.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Landscaping</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-painting.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Painting</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-plumbing.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Plumbing</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-roofing.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Roofing</div>
+                <div class="text-2xl font-bold text-slate-900">2</div>
+            </a>
+
+            <a href="category-auto_repair.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Auto Repair</div>
+                <div class="text-2xl font-bold text-slate-900">1</div>
+            </a>
+
+            <a href="category-handyman.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Handyman</div>
+                <div class="text-2xl font-bold text-slate-900">1</div>
+            </a>
+
+            <a href="category-legal.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Legal</div>
+                <div class="text-2xl font-bold text-slate-900">1</div>
+            </a>
+
+            <a href="category-pest_control.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Pest Control</div>
+                <div class="text-2xl font-bold text-slate-900">1</div>
+            </a>
+
+            <a href="category-photography.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Photography</div>
+                <div class="text-2xl font-bold text-slate-900">1</div>
+            </a>
+
+            <a href="category-pool_service.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Pool Service</div>
+                <div class="text-2xl font-bold text-slate-900">1</div>
+            </a>
+
+            <a href="category-real_estate.html" class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+                <div class="text-sm text-slate-600">Real Estate</div>
+                <div class="text-2xl font-bold text-slate-900">1</div>
+            </a>
+
+        </div>
+
+        <!-- Professionals Grid -->
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">All Professionals (25)</h2>
+        <div id="professionalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="hvac" data-name="clearwater hvac experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            C
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACmUlEQVR4nO1bQY7bMAwc0gL2aAP7AD/F+VnRJ+0P7KfkAQWiYwAbLEhKTnLZuofGQiUehI01hwGIIUeUlgQHY+GjSKBBuUHRoIiU4oKN6BIDsAwqpgHIW6EQrkeD/19oJxZA/BD5Od4JwEaYbgAm27oVw7VBgaQe0xY6oR83wFVmyruUxPVQcAXQfoUrahk68XL4XgLfB/9hvzJo1Eo4bCSzymqS9d0Evg9G7dBga7bxG8l0/RBCf1OBqcx63YtFcG1Q9m6lYX7De9R0DWlZbGsohmvd0JDUYxE3kmXoVFF3wjKuu+j+HYEG5b+CRqJ0thpF7eBG3sHkGtwsNm0VBO1XWI5k9k+dyOxeXg9dcifLG4rgWjk0APFTyJd+06xojr66VSthEMQBZNYep3Pl6qEQuXXenWTu09zCvom4g9dd3ZhP58rVQ5GGTn4wTjmymuiFUQ9dMlt15LO5cvVQuI48Pb2IzTJSykxqe8ync+XqoXhkyye4/lcuhz6IcufBZ3PlBsU+b0+e0ByF+kQa1Mv3prLmMorIVq56eNFRshrZefjCZ3Pl6qFwl+EGI2fLfqaprmrLiyWfzZUbFLBrLBsWjpa353OyL353wgVwrRwaXD3LaKP2oGrSg/EFJAt1K6Yv+1YE1wZFOh3ni0gvhw936IWxOfiS+laK/ai1d7A86Wh9q4hsvb55SpEuuexxhh+bm4MvIlvqMDrvTKQ3XYT+FwRRv0W9VI566II2r9O5coPi9c1TfkVjOVKfOOzWnsvgWjMUj870NCJ8TKMsmssoEdqLmJjoYhYxO490JOOiuFYJDbam5xfxU7sV6U+7l+xWyveSKIArNyie3zzZaFe1FcNu499A4GAwaodS+48gNOjh4AbF4fgNONCeapE2/tMAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Clearwater Hvac Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Hvac
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional hvac services in Clearwater and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and op...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Clearwater, FL 33703</div>
+                        <div>📞 (727) 555-3515</div>
+                    </div>
+
+                    <a href="professional-3.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="hvac" data-name="clearwater hvac experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            C
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACf0lEQVR4nO1bQY7rIAx9dpBmmd6gR0luNmeaG5Cj5AZhOVIij2xg2m7mZ9VYH7xANLzFk55sHoaS4GQsfBYJdCh3KDoUiUrMOIjopnlUh7oUnHA9G/z/QgexAFKAxEQE4CBMG4DJljY3XDsUKNmDQWgeRehzA2hO+k0zb/bE9VRwA9Dxm3IeLbdBcjl8L4G/g/+x3hg0BRXqIIk6m2R/N4G/g9E6NNhYbfyw07RBCOOmummajbqWXHDtUDZHYVG+WFqtdVhs6eaGa9tQyFNsgybSIKUIjs9rEi/nyh0KdX3lbHXfIXH8JiB9iMgaslnsueUQKrISYVo/RKJWRz0sYxL1iVoT4Ylr05UQegh+OglP2yASxx3lYKw1MV7OlZuH4rFlFaHENLL+hjl43cu6Wn7U2svZSjMqf4t1yOJFbU7Fy7ly81C85FZJMFNQYveE3qDI8qgyub+bM8ok01Sz1m5e4Ku5cofCYlpJW4QHWUMXGHf17QfZzPwG3HBtGIqHCayNwd9yWJOuDHw1V24eirotVSdoNfFJvGzjeyV0oZb2MkK+yyrH4U178HmxNqLy3Qk74No4NFj26BBkuQu0/S5YZpAsNOyYvsLuhSs3D0Xp5apk5Wrfjl+6UWWA1cS+b3lR66UHX3ewItSjLy/dZcDfm6dZn2nYQwxNNZt1B+8FGuzG2KZkm5fOBEm/JZup81h187qcKzcPDTbSr2Q5zGXYM7W80G/6HUJT1q4clsubJ62OvRI6hI4iRDd7VFiNYfYbJiO74tokNDy/eUqaTYn055E3NJq+hh3LveeWC7Ve3zxZD15zS99YFxv/BgIng9E6lPo/gtChp4M7FKfjB1XouEVbjaRYAAAAAElFTkSuQmCC" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Clearwater Hvac Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Hvac
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional hvac services in Clearwater and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and op...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Clearwater, FL 33774</div>
+                        <div>📞 (727) 555-3515</div>
+                    </div>
+
+                    <a href="professional-19.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="pool_service" data-name="clearwater pool service experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            C
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACaUlEQVR4nO1bQYrkMAwsOYY9pmEfsE9JfrZfc57SP4iPAwlaJDkzmVmYzakj1tLBuO06CArJJUVNjIu2pKtIIKApoAgoKjWbsRPRQ+LoWI6r7MTXq5b+X+jAakDN4FKJAOyEaQUw6dXqxteAAi16MDDNIzP9XgGaq5xJ5M2efL1kqQPo+EYWR8tjYEuHr3Xge0v/uO8MWrMQtRMX2U28vdqB7y2hd2jW9ZDxw0bTCiaMq/AmYTbKXXXha0CTKgq1dqJh9TyWRa8ebnztGwo+2TpIIA3ckuB4vuNyu68poBDV12qrXxu4jG8E1B/M/MwmFiO2vEBhIlDLqmI/pfzSM7vY2lm53dfUPRTKDBfNfyeihJ5RiULLieV2X1P30KxKULe8PECYypZZReC07iDViU58Td1DwSy5rows2kLaT3JWjsUyoUQeR2zBzbu1nlPfB4OhCV1BYcyYeB+P5oUIDDtTqaGN33K7rymgELVOJP0mfopuN1mxiW7fSXcadHDha+dQtI8lwkeT8U0YNrGocjA0oQ8o2huluU4X1RvrR0Mj6i0/ULRyWJixSvj9GTOJqGEV75avTIjPqQ+fKuZgywk0A/WnZDwtgrVO3jMm42+XBuIAsp/pbl9T91B87cG3xqDeDae+PEdswd3ME8RsEENKLd2FgnfYJyT5Tqx0MaqcVd3J9NMzbw58Td1Ds66nJ0ttmUGs75ZdxJd+h9DayLJ6q8087URzZEKH0HGz4TSj5zT4qTQmV772XR3ze23V+httQsOa89F5csHW3zNPOrArM9ZNxr/AgYuW0DuU4h9BCOhlSwHFZfsDgpLK/ZQVQUYAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Clearwater Pool Service Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Pool Service
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional pool service services in Clearwater and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owne...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Clearwater, FL 33755</div>
+                        <div>📞 (727) 555-8318</div>
+                    </div>
+
+                    <a href="professional-11.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="legal" data-name="dunedin legal experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            D
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACeElEQVR4nO1bQYrkMAwsyYE9pmEfME9JfjZvmh84T+kHLMTHgQQNku3tbB9mc+qYsXQwabsOBaLksq0mwclY+CwScCg7FA5FohIzdiK6qY7qUJeGRrieDf650CAWQBogMREB2AnTCmCypbUZrg4FinoQhOZRhN5XgOakc6q8uSWup4I7gI6flHW03ILkcvhaAt8H/2e9M2gaNFE7SdSvSbZXE/g+GL1DBxurjQ8bTSuEMK6aN5XZqGupCa4OZXMUFmXGZHWvw2JLt2a49g2FHGINKqQgpQiOxzWJl3Nlh0JdXzlbvW2QOH4SkH6JyH3IZtG11QoUD0VJrD+zMSznra3Mxcu5cvdQ1Mxoyqz01Z8SR0uUgnQhXs6Vu4dCJO9RVgS3o5jygm5jnq3GtCUiRWA6F+uQkxetTvLVXLl7KExC/xjDOhfdE7apLbEiqAUvT6rByPbDrEb2IHw1V3Yo7C733WwF9nJPqNsY0W2nw4aGJrj2DcXD9RUzYQ8o60N0Oucuow0oytOWSQg1b+Y3yoWGn7fagQ5A+r0JsIMmAWj6IEi+xtUSaQ5+mUMLXLl7KJ60Vdx6/SrnZHcZjWkL+k7yZ9CBoCrLz/3LLWTR4Xqu3D0UT0etepdha+Y3/t4i8tVc2aE49jyVu4zciKFHLftyB9/S23HIL/qkm5eFIOlcsi/tfroPWwNcuXvoYKNaP83Unn9imUHqE/U9ueQN13Nlh+IQ1pKmYeet0vO0E81eCRuEjltuTsvpOTR+Whq5Ka5dQgcby2VuUjUlPR3nmqgtUB9hw/Lm2moiW889T3YStjbdauNfQOBkMHqHkv8jCA49HexQnI4vZNyxtt67IGYAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Dunedin Legal Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Legal
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional legal services in Dunedin and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and oper...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Dunedin, FL 33760</div>
+                        <div>📞 (727) 555-2410</div>
+                    </div>
+
+                    <a href="professional-14.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="painting" data-name="dunedin painting experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            D
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACh0lEQVR4nO1bQarjMAx9cgxdJtADzFHSG8yRPnOkuUFylB6gUC8LKRok2Uk/A0Nm4DdmLC1MHb/Fg4dkSVaJsdPmsBcJODQ4FA5FomwX/ZIi6JIiMFNEOYqVcN1r4f+FdqyWhcKT+McA0AcvwKhH92q4tg2NuhLQLUC/gAGWrVg6L0AagPFnFVwdGl83ooxZfyNGegeB4FD8G7RfwFPPjPF6YqLh7QT+bAGtQ6OuOY3XqHd/Rp6/SUxMZ1FQzlIVXB0aADwt79N8gy7pxPRx1XxDqiw9Gqrh2jY0Zu8xe5CGQ7XsYF9NIDgU+40tPUdnwvC03mBywFO5y3g6nGtoHgrme8c8IS9FKN2qSTWm23A019A8FCoFxlIJY1zFU41sEZsO5xqah2LzIwt4XCTL5x4JK4KCWdxqvbeKlxWNeG0/TYdzDc1DYxYqnSX/k1JruGmpxYTeWlJ6ulTANTQPRQ5926IporqV5oSyc9+qBBq35m25qbqFxpwP5nbvPIiEh3MNzUOhN5N1B9fC2A4st5Bv7lsV+dYgLhQXnr/Ll/4WOfubvpycmPzeqq86xtrB0HtLb7Dcknffqq46ZmtoWPyTwPhpy64WqvGtXq6nrSbeOoZWiHnn6esk+OsMPpup9bnpVHq+7L6F+maeRpFnHuTNS0Zp7Ju2O0IFXBuHRi2w9CdpliGvWjTez4smhIwk9RYJ5HCuoXlofJ15khJZXvqB/iFTNIO+J4uMXh1XodZvUJn51ARDIyEzPwjj1ac/3yjBzgk1SNOJ1dV0suYZbbJQoiOO5xocitdnk6epowkikE65Yp5q4toyFCVHz+lgfpe0PqHWYN6DrwdK/o8gOHS3BYdit/0CNWOvSiPtt7MAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Dunedin Painting Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Painting
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional painting services in Dunedin and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and o...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Dunedin, FL 33801</div>
+                        <div>📞 (727) 555-0614</div>
+                    </div>
+
+                    <a href="professional-6.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="painting" data-name="dunedin painting experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            D
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACeElEQVR4nO1bwY3cMAwcygLy1HZwpdgdpKTgSkoHdinbgfU8wAYDklLWl8fFr13iTD4EWZoHAWKoISUT46Qt6SwSCGgKKAKKSs0m7ER0Ex71oW9lJ76etfR9oQOrATWD50oEYCeMK4BRt1Y3vgYUaOzBwDQVZvq1AjRVWRPmTZ58PWXpAtDyQcaj5TawpcPnOvC1pf/sXwxaswRqJ55lNvL2bAe+toSrQ7OOXcYPG40rmFBWiZvQrMhedeFrQJMqCrW2orS692HRrZsbX68NBR9sHYRIA7ckWI57PL/c1xRQiOprtdXbBp7LBwH1BzPfs4nF4JYnbm1QJcizfq5SfmmpZfWW7g7BLTiAoue/T5XwqOEpLYyWE+eX+5ouD4W1MZRCwq0DmYR0doxFtFxlQmjWk6DYmubER/BmaU7NL/c1BRSiKHTKM/bWy3hoQglU+0wOfL04FD3rCa1Kb14I1exAM9IFt9xAywdpEWzCsMmKTXT7TjpTvQEXvl4cikf525SgXqD0uPGs6TBUhitNeNDypcWtH15Rb7mC1mwhs9Q33olMDpp4x9+7k+TA17OWvi20bHarrwnPuKXXJu/UW7t+fL04FMdehmVCKb+0jWurmhPj3PISrUMP/tg2bA82el+e49yCszdPYjXDZlJq6SwUvBdo1htjnRLKlrH83DKjylqVS+WqyiNvDnxNl4dmHamFbGAa1x1YJhDrMzXbiJt+h9Da9Z/qjfbmaSeaIhM6faH2ftNHhV0Ymt7QMCZXvl4SmnVsEr7eJCeSfO52oNH4e9iwvAW3XETr3zdP2ifUZ7pdxj/BgZOWcHUoxR9BCOhpSwHFafsDpF2s1U5suvgAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Dunedin Painting Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Painting
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional painting services in Dunedin and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and o...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Dunedin, FL 33702</div>
+                        <div>📞 (727) 555-0614</div>
+                    </div>
+
+                    <a href="professional-22.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="carpentry" data-name="gulfport carpentry experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            G
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAAChElEQVR4nO1bW2rsMAw9cgzzmcAsoEvx7Kx0SbODZCldQCH+LCSoSLbnQeESCq3NtfRhiH0+Dhz0sOQQ46At7igSMKgzKAyKSNkuuhM96BI9sJBHOfKNcD1q7v+FDqyWhcJO/DYB9MobEPRobYZr31CvKwHDBowbGGD5FIvnDYgTEK5NcDWof/wQZZKNH8SIf0HAGRQ/g44beB6ZEd5PTDT9OYF/m0PvUK9rLuM16q275+VFYmI8i4JyFpvgalAHYE91n9YbdIknptd3rTfklqVHUzNc+4b67D3JPknDoVp2sN8m4AyK48apPMeQhOH5lsHkgOeSy3iuztV1DwXzOjDPeulaRbIklO6p5QM2tVAdiqRRKDdhhCfx8iI2V+fquoeiiKJBsHQ1RLJ8bpGwISiKUJDiXZbkZUUjvrWf5upcXfdQryuFdZL6b/O8TB961WLCmFpSnHtQrjZX1z0U6j0aBKWWlyAou+pWd6cz32pJLYhGSZ5cdNw675LLLG81eN8K99pCb16qkVyWzbfa6sGH60SSt7T97jkPS3RycmKyvNVeBY+H+FcyWG7Jm2+12cvgHP9klHxPWZa32qrgedcePEr8I/By0T2/kSyoz9V1D0XuKz0XgQ9Np3th6GpzdQbF85unJM8yycxLntLokEv7G2iBa+dQL46TJlokky6SFzMU1rPEPxkqx2HDQgKpztV1D/WPb55k0r+86EjyU17RTCmXEUZxuOpcXfdQ/20n+jQxzr6FnRCuVmX8ngQ/hg7pbqWPc7UllZ7pyswfrXHtF8raLFQ/yp/6dPeUR8lzS1x7hqLU6DrfyvP9vGiL8NbkmKtzdd1Dyf4IgkEPmzMoDtsXBIu41bg1CSwAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Gulfport Carpentry Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Carpentry
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional carpentry services in Gulfport and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Gulfport, FL 33803</div>
+                        <div>📞 (727) 555-1456</div>
+                    </div>
+
+                    <a href="professional-8.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="carpentry" data-name="gulfport carpentry experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            G
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACaUlEQVR4nO1bQY7kIAwsE6Q5Jj/opyQ/W+2T9gfkKf2DcByJyCsbSKcvszl10GIfEIE6lFQylGk3MS7G6q4iAYM6g8KgiFRiwU5Ek+RRHeqWb4Tr1XD/L3RgDSB6cIhEAHbCvAGYdWtrhqtBgZI9GJiWkZl+bQAtUdYk85aWuF4K1wF0/KacR+s0cD4OP0vg53D/2O8MGr0ItRMHmc2cPk3g53DoHep1rDZ+SDRvYMK4iW6SZqPsxSa4GtSpo9AoK5pWzzqsujU1w7VvKPgU2yCJNHA5BMfzHofbuTqDQlxfqa0eCRzGbwLiFzM/fTaLllutQFGKKS26Nv0ss1pvpbIWbufquoeCWU69+U0yzCrPqEKhnInhdq6ueyjKM4YIFfCWTCqjXmOmViNQnJSRjMprottJvKBauru5uu6hON1WQU2gfqpG5gmbdfDpyKNiMLKhf11o4XauzqCQoEX1iF9VnjGJb99JZ+o30ArXnqFeRwZ2jzlIqYUhAXEC67BOG7fC1XUPRT0E5Waq/i/7jfKgYfVWO1DU96bXbXVcWWrt1bzbvdVUvTUfBuOovHKq5TrZ1GoDimrey29ZeVYORo2SZWxqob03+Dm/Zbweosq7PJtaaK7nCfL7Vm7EkGtMZ+bgW3LwQz4FCWPyvD6SZ0S18WLto3Q/PX1qgKvrHup1pCLZwDRvO7AuIKnBjvKrCa4GdecPbUmT0Hqr9DztRIudhI12qP2etKmwGsPsN1RG1xTXLqFex1IeR8mmSOUhKrdA/RkS1oflVhNqvfc8FbeubbrVxn+AwMVw6B1K9o8gGPRyOIPicvwFLlDBp7nXBWwAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Gulfport Carpentry Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Carpentry
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional carpentry services in Gulfport and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Gulfport, FL 33704</div>
+                        <div>📞 (727) 555-1456</div>
+                    </div>
+
+                    <a href="professional-24.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="photography" data-name="gulfport photography experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            G
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACfUlEQVR4nO1bQarcMAx9sg1dJtAD/KMkN+iRSo/0b5AcZW4QLz84qEhWpoHCNKuJqaWF8dhv8UBIflI0xLhoa7iKBBwaHAqHIpPZjJ2IRomjYzmuUiNcr1r4f6GR1YCcwEsmArATpg3ApFdbM1wdClj0IDLNAzP93ACas5xJ5M0tcb1koQPo8EU1jtYxck2H7yXw2sI/7juD5iSO2okX2U1c3k3gtQX0Dk26HjI+Fpo2MGHYxG8SZoPc5Sa4OjSoolCzEw2rx7GsejU2w7VvKPhkW5RAimxJcDjf8XI71+BQiOqz2uqjgJfhi4D8jZkfqYpFj61WoLBiSouuTX/a7qi3ip0tt3MN3UNhrpD8V1NfdZScDeooAcnFcjvX4FCYiW4XvTGLjxZYbBFJ5dUaV/QeW4N0njTA5Ey8ZS6TTCiRxx5baKTeAjKBkUeSRXy0J2jRZRKxCa4OxR+JfmpeSBKsgn56apDldq7BoZByWDU6/5LWbnXPUORsJ92p3kATXDuHJl15/QGQJrx1jAWSDjUn8jpurjIay4R4pr6qN0TBHw0Nr7carLdgVdazRNYPkVZq+bvVBjTVN0pEINdWO2LBOoN4pVgwfabSCtfQPRRH/iv2Vf+0qwCLMvbYQmM9eDwbg3oXT315dm+hsZmnWCOqDmJo50l2ruBbUvCxvkxUX7BFPiVnlfG6k+mnhzxet3MN3UOTrmQuk36TmKoMHVOrF/6lv0FoPrqGWm/ZzJP15dEY19cWOoAOpQ6nVfecBj/VjaEprl1Ck67WXMrfmWo3vuZEGYH6lPLrw2OrCW/9PfOkA7syY20y/g0ELlpA71DyfwTBoZctOBSX7TewjpVErQZpnwAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Gulfport Photography Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Photography
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional photography services in Gulfport and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned a...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Gulfport, FL 33770</div>
+                        <div>📞 (727) 555-8347</div>
+                    </div>
+
+                    <a href="professional-16.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="handyman" data-name="largo handyman experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            L
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACYklEQVR4nO1bMY7cMAwcygZSyj/IU+yfBfmZ9in7gAB2eYANBiSlW19zcbUmIrIQtNYUAxCkhhSXGBftka4igYCmgCKg2KjagoOIJomjtrSj0QnXq5b+X+jAasA2gstGBOAgzCuAWY9WN1wDCtTowcC0ZGb6tQK0bPJNIm/xxPWSpQ6g+YMsjh7TwJYO30vge0v/OO8Muo3iqIO4yG7m/d0EvreE3qGjrk3GDzvNK5iQV/GbhFmWs80F14AmVRRq9YuG1bMtDz2a3HDtGwo+2TpIIA1ck2A+n3G5nWsKKET11drq5w4u+YOA7QczP0cTixFb3mJrlZ0tUn5pqWX11l6/ldu5pu6hqIWx5r+To8Q9WR2FmhPL7VxT91Awyx316Z5TMOmBujG85S0TDuYU+1baYs4r0pwqt3NN3UNhmdAiysKqxhuX0ITeoHh5xjq4FlFNb5jU0MZvuZ1rCii0HBYZz7+ltWvuybvo9oN0ZxcaPHDtHDrqSsh/RtJ3Emk/AdsE1uUxreyFa+oeipMm/FTr+rM1NKLe8gPFqd9krabXlaWFmIr3uLfcQHOTgyowNLb02cSuMWnt+uHaORRN+tVgaiVyU4e1yRsK3ou3vvTgX0VXHdhoeZIjE8LZzFM124mW110oeC/QsUp2k/E7aC7ylLypjNedTD89x90B19Q9dNSVqsuOKikeC4jP5ZcLrgFN5x/a1RBT0VFnng6iJTKhQ2jebTjN3HMa/FQ3Jldcu4SiKUHtYLTHktfTVn34CgXvwltfZ56qWtcx3Sbj30DgoiX0DqX4RxACetlSQHHZ/gLhKMwh6XVkHQAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Largo Handyman Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Handyman
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional handyman services in Largo and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and ope...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Largo, FL 33756</div>
+                        <div>📞 (727) 555-0618</div>
+                    </div>
+
+                    <a href="professional-12.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="roofing" data-name="largo roofing experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            L
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAAChklEQVR4nO1bbWrjQAx9kgfy04YcIEdxbrBHCnuk3sA+Sg8QyPwsOGiRNE7asiym0HrYkX5MM57348FDHyNNSbDRZt6KBALKAUVAkanY2b7kBDrnBMyUsB6lSrhuNf5/oZ2YFaFwJ/k9AHSRBRjt6FYN17ahyVYCugXoFwggulXLxwXIAzC+VME1oOn9RpVx668kyD9BgAOKr0H7BTL1IhhfD0I0/DiBfxujdWiytZTxFvVu9yTzSWNiPqqCepar4BpQBnD3us/qDTrng9Dl1eoNvWXZ0VAN17ahqXiP2xtZODQrDvbdBDig2G7i5Tk6F0amRwbTA5nWXCbT7ly5eSj8qjWqMn7pcqE6KbrZbcy2vDdXbh6K4kLqW+OtLLZ1jXxRm3bnys1D4ZFwlDXgFVcrgfFZ1Uuohbp8S6zVtHwUb20/Tbtz5eahMD3WRKXLmre0WFQHi7xVm1pQ7yluZSWiuZU7ncXJ8K1a1DLHeZTs5lbvOu/ub6FWLWo9spUr8zhwjfSyHL5VCTTpYERsRCLagxL01yRlWGKfD0K+5b25ckDh5oNInUFqi5BOC+iy9jJKN4pr4douND1/inV155MA8y9t6A46obSO4aApbHeu3Dw0lb+9Toz7a1rjH0Hm811/poV0wf5cuXkoSvvCi8C/NJ2ehSHvzZWbh2LVQ69V1oP60NAt36ImrCcSdp6eqEy6FtB4O2r801yWuwUzKWR3rhxQqJUXg+sLNaB/I5GbDpX1rdo5asIK3zzhTpipPNN43sEwvkSV8X0SfFktfBIq+ctCnfljf64cUDzbT/6K5jFPRj6UUfJUE9eWofhUE5oyZbEWYdSEFUEp/iMIAd1sHFBstj+pZ6/5S1jDTAAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Largo Roofing Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Roofing
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional roofing services in Largo and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and oper...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Largo, FL 33704</div>
+                        <div>📞 (727) 555-7129</div>
+                    </div>
+
+                    <a href="professional-4.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="roofing" data-name="largo roofing experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            L
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACfUlEQVR4nO1bQYrkMAwsOYY9JrAP6KckP1v2SfsD5ynzg/g44KBFkrOTYaAnp45ZSwfjtutQIMopyW5iXIw1XEUCDg0OhUORqcaCnYgm0dExHFuxEa5XI/y/0IE1gBzBKRMB2AnzBmDWra0Zrg4FqnowMC0jM/3aAFqyrInylpa4XorQAXR8J9PROg1sx+FrCTyP8M1+Z9AcJVE7cZLZzOXVBJ5HQO/QqONh44dC8wYmjJvkTWQ2yl5ugqtDgzoKjbqisno7hlW3pma49g0Fn2IbREgD10NwPO9xup1rcCjE9dXa6lHAaXwnIP9g5rdoZtG11Zq2NpnZIOWXllpWb5W6lm7nGrqH4iNRp0p41vSMmijUMzHdzjV0D8VJVgmfxMTm4OVb5tlq6iRMqNqyNfl5Sl6S5lS6nWvoHooqIVWPdgxVapoj94StQXFkppy0pQbDDL1aDW38ptu5BodCQypha79besYivn0nnVku0QpX9N55ojkxSDpP0tAtQJ7AOqzTxq1wDQ6FuT5IL1dutVRWi92d6ExuuqQHhSa49g1FLX3NqNcCq36y9DP2z36k27mG7qH45Ps+3KE6eHUZNZfs2cLtUBzWT49DnNyh1Vu1yesOvpVsnXrwh6G3fpOVX7Uvz64tNPbmCfYawx5iiJfXmTv4VqBRb4x1ShhL5PVRIiOrjZdL5WyesDTANXQPjTpaqaVvnuZtB9YFxPpMzTb8pr9BaLbc2Y3J8eZpJ6280BjX5xE6eaH2e6qF8fnhp6YxNMW1S2jUsTaX8k8mORblELQPGs1/pBv1cG01ka2vb5606SRvrKuNfwGBixHQO5T8H0Fw6OUIDsXl+Avqx7zaeDBrqwAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Largo Roofing Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Roofing
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional roofing services in Largo and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and oper...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Largo, FL 33777</div>
+                        <div>📞 (727) 555-7129</div>
+                    </div>
+
+                    <a href="professional-20.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="auto_repair" data-name="pinellas park auto repair experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            P
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACe0lEQVR4nO1bS27dMAwc0gKytIEeIEexb1b0ZvZR3gEKWMsANljwo+Sli9SrWKjEhaBnzmIAguKI1CPBRdv4KhLoUO5QdCgyhS04iWjSPCpLcaVKuF41/n+hg5gBOUHWTATgJMw7gNlcezVcOxSI7MEgtIwi9HMHaMn6TTNvqYnrJeMGoOMbeR5t0yB+HH4vga+N/+FvDJqTBuokWXU3y/HdBL42RuvQZGuR8cNB8w4hjLvGTdNsVF+ugmuHsikKs/hiafUoy2auqRqubUMhT7YPmkiDxCE4PvtkvZ0rdyhU9cXd6vWArOMbAflFRB7JxWLPrVqg8Ix6v1bZTxeGcd864tt6O1fuULjlBFr0ELQypjv5ZammDk061MO17bp1RI1a8SmZ3GERNC/fzZWbh8KbTnoSWlD8m8btKXirptp6O1duHopoEY4lKF68LEZdE9YGRUgI3XqC2a7oDZca1vhdb+fKHQo1a+NGyCw846G6/aRIurGrjCqilbyXu70eyfpNsk3DAeQJYss27VILV24eCq9R0cvQDyo1Zr+DmVjs962qoPlFvB1oY6x51x68O0sjymcnXAHXxqEIBe91K6bIRcGbyjAN0nOrimglIP/wORbN+6Sy4nfC7LXq1AbiAPKffDdXbh6Kv3vw0cswn12/4jiUXrdQ3Zsn0UOwVLDYdQVf0+x4iJNQ58Q0rzpKzibjbaevnx7pqIArNw9NtlKE7PSf2BaQWN1yR5/0VwjNESy/b8WbJx2g9JOwQuh4+OM0D8/Tw08LI1fFtUkoyizr49L1PvP6uG/1+Vadb55Ix8b2TLfI+G8gcNEYrUOp/yMIHXrZuENx2f4AERGuOtgAbi4AAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Pinellas Park Auto Repair Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Auto Repair
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional auto repair services in Pinellas Park and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-ow...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Pinellas Park, FL 33759</div>
+                        <div>📞 (727) 555-7407</div>
+                    </div>
+
+                    <a href="professional-13.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="landscaping" data-name="pinellas park landscaping experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            P
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACmUlEQVR4nO1bQY7bMAwcygJytH6Qpzg/K/qk/sB+Sh5QwD4GsMFiSDlJL1v30FioxEOQLOcwgDDUkNSK4mBM4SgSaNDQoGhQLJLjhk3ktkRgShRTAvZULITr0Qj/L7RTC2C5qH6/PgTAJhhmAIOl5mK4NiiQ1WPaQqfybQZcZaa8W0lcD0WoANqvcEVNqVMvh58l8HWEP+Qrgy6shGkTHSmrQddPE/g6AmqHRvvcbfwmOtwvKuhnCowy65lbiuDaoMFvK4b5Db+jhnvMH5OlUjFc64bGrB6LZROdUkdFPQTTdX2K7t8RaNDwV9BFJPdWV6Ud3MRvML1HN4tNWwVBe2u1JHsLa79G9/JsuvQhdm4ogmvl0Mh7KypthaD/uTfGP7qVlTAqlsQE3eHpXEP10OjeAr0bQ6qMnzSBw7xBgG6VQriGBoXFMNMY2vVEHU1pE0ycb1gl9BIZCuFaMRQ+I+QkUMd9lqGqK3/qe4yncw3VQ+EjW5s3ud9g+JHNneaEOY9wNtfQoMjBQfydLbI5in6lb6eX701lzWUUcVp58jT5noTfbhdajUSrkaBTmrUUrqF6KPyO0mfpo8owWBG0qS61xYS2SogSoMuF25FORa7shGfO4D25H57vTkIBXCuHIq+NfYLBy8t0xMS4q8wT4+lcQ/VQvI7HS99rv/8SmP8MZ3MN1UPx3lL5QeVrLPvE/S7Tdloo7M1T5/4vL7nscYbVxObgC5oTrvZVbKuVzTv/5hNDNl2IawFcQ4Pi/c3Tb3NCXyonK4cFcW3QHPTyFtZv5TdP3HS1SlggtOd+n52XHc/bw882gy/KwTN8ljvu843XVMOn8ePpXEOD4v3NkwW1tcSnjf8AgYMRUDtU2n8EoUEPR2hQHI5fNbGAMcwGINUAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Pinellas Park Landscaping Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Landscaping
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional landscaping services in Pinellas Park and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-ow...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Pinellas Park, FL 33705</div>
+                        <div>📞 (727) 555-4281</div>
+                    </div>
+
+                    <a href="professional-5.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="landscaping" data-name="pinellas park landscaping experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            P
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACgUlEQVR4nO1bQa6jMAx9TiLNEqQeoEeBm43mSHMDOEpvAMtKII9sh/528z+r1prYiwiSt7BkPfvFGGKctDmdRQIBTQFFQLFStRE7EfXCo2M5jooTX89a+n+hmdWAtYCnlQjAThgWAIMeLW58DShQ2YPMNHbM9HsBaFxlT5g3evL1lKUGoN2djEdzn9nS4Xsd+N7SD+eNQdcigdqJJ3kaeHu3A99bQuvQoush4/NGwwImdIvETWjWydnqwteAJlUUanVHaXU7llmPeje+tg0FP9mShUiZaxLsns94+rivKaAQ1VfvVtcNPHV3AtZfzHwrJhaDW16gMEY9rlX6asKw3re2ujd93NfUPBTMEo8JLzfhQcPTaaBQc+L0cV9T81AYozQysjyRScJoZSyi5UplABYoeZI9odrBN2VeZEI30aqBspxoxUtjFJrQGxRVQphul6CgCowqP7RuBbd8ZUIcxctUxqPpZJkw6pYPaAHW3jpPhE4W5K3uyTL3C3vxNTUPxdHGeGiLjiX/fTU04r7li1uXTXuENCwX6eruha2NK5+7VMHPY/bga2oeCqtbVVbIhtYoU/CqMqoG4eAWnHALYiRfRwjYCwarVbs0EDPIXtOnfU3NQ/HSg/9qDOpZfurLc3ALzmaeso3S2CCGZEd9spYUPPjaOLToF2N9JJ3LmK+bqAyV8fJReZXpp1vZHPiamocWXestS0TgsOzAPIJY61a9frnwNaDp+UVH0sT0vlVnnnaiMTKhQ2h3J/7T61Dho9O7PMKYXPnaJLToWptL60WuwySvuxU0Gv7mDfM1uOUiWq8zTzJKqAO7MmNdZfwbHDhpCa1DKf4IQkBPWwooTts/lrG6h73bHBoAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Pinellas Park Landscaping Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Landscaping
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional landscaping services in Pinellas Park and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-ow...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Pinellas Park, FL 33701</div>
+                        <div>📞 (727) 555-4281</div>
+                    </div>
+
+                    <a href="professional-21.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="flooring" data-name="safety harbor flooring experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            S
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACeklEQVR4nO1bS2rjQBB91WrwUgIfIEeRbzBHMnOk3EA6Sg5gkJYGiRrqI9vZBBFI1ExXLZrI/RYPHvXvEGOnjWkvEghoCigCipncLvrLnEGXOQMjZWxXuRCuey39v9CG1VworMR/O4CuvAC9Xk3FcK0bmvUkoFmAdgEDLJ9i83kB5g7o34vgGtD8+iHKmLU3Ysy/QSAFFN+Dtgt4aJnRf5yYqPt1Al9bQu3QrKeX8Rr1pjXz+CYxcT6LgnI3F8E1oAnAanWf1ht0mU9M1w+tN6TL0quuGK51Q7N7j9mdNByquYP9NIEUUOw3tvIcjQnDwyODyQUPWy7j4XCuqXoomLWtMmWk6TKhGnbdtBvTz3Q011Q9FKqWKSOdMHoTatPIDrHhcK6peihUj1eNNsn8PiJheWqp9TZq8sM0sjgZvlVOv7XS1m+dGWN301aLCa2NpNhnUOlorql6KNy3rMB4THC3v54JjcO3UESVwfxSqFsae07eJZdF3ioECi/PdTo4fbowjaRZDt8qKm9BcpQuSzD+uWX2ZYluTk5MkbdK861FWmRtsOTXzdXc6cK3iqvg2TOYH68pK/JWWdvI9pY17rHHPwKPFwmRyAvJgeO5poDiORh8FoHP+QZPKlkpXCuHYtNI2qpH8f4Y6FqdGHmroEjY2EaL0N4JYzeB+um8bIGxWTCSQA7nmgIKMX8xKK8Iew197Z00COramC66oUxlcK0Zmj99NQuN5M803LekG+vfo8r4OQm+DV1Jc5S6mo7fzelk54/SuNYLZV2MWIO1dV7AfPJV8lAS19qh6+PNkz9y8uPtTujl9dM1XlaXAaX4jyAEdLelgGK3/QMfKrXU/41QRwAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Safety Harbor Flooring Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Flooring
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional flooring services in Safety Harbor and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Safety Harbor, FL 33802</div>
+                        <div>📞 (727) 555-0836</div>
+                    </div>
+
+                    <a href="professional-7.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="flooring" data-name="safety harbor flooring experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            S
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACgElEQVR4nO1bwY3cMAwcSgLytIEUcKXYHaSkICVdB3IpW0AA63mADQak5F3nc/HrTETkQ1hL8xhgQHFEaYlxMZZwFQk4NDgUDkWhFjN2Iholj47hWEpGuF6N8P9CI2sAJYFzIQKwE6YVwKRLqxmuDgVa9iAyzQMz/VwBmovMSebNlrheitABdPigmkfLGLluh19L4PMI/1jvDFqSCLUTZ/k18fbVBD6PgN6hScfDxseNphVMGFbRTdJskLVigqtDgzoKjTajafU4hkWXRjNc+4aCT7FGSaTIbRMczmucb+caHApxfe1s9baB8/BBQPnGzI9UzaLnlhUoqgnUY1Wun3L80rm6sLW5fDvX0D00qY8glFGU0Sk5GL/HDcvbllgWCINsjLdzDd1D0doY8iuLKK9k4urgpZZJBcu3cw3dQ6GiNGWGp27HUMXL0pzKt3MN3UNxOMFzyaoKZveEVnNrld+D5lEzGFVGtRra+M23cw0ORe3l6tZXErShq7oRjTs1Bd1l2IAmoHzfqjGceE/S0N0gTlDtIC/jyla4hu6haEVJUqhWMLEak26C1Xn4ecsOFK08iTL15vFw8PrZzLvXLYPnLTSNDgevLkOEcrVs1S3IZQnvxMv4O526GssYpaCZ4OpQ/NWDfzUGdS2e+vLsuQVjb54iVxuvDzHkqNWsvTt4O3fHsd7ok77LWH5oL1dtvFwqF2nyPtJmgGvoHpp0pCZZZJrWHVhmEGvdqgt+028QWqp2sgm+3jztRLPvhAahwwfxr1EfFT6PX+tTxmCKa5fQpGNrLunNI0g+91rQ6LiXhAGuwaE4v3lqbl2f6R423hbXvqHk/wiCQy9HcCguxx9cZbQ/IILg6AAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Safety Harbor Flooring Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Flooring
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional flooring services in Safety Harbor and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Safety Harbor, FL 33703</div>
+                        <div>📞 (727) 555-0836</div>
+                    </div>
+
+                    <a href="professional-23.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="real_estate" data-name="safety harbor real estate experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            S
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACfElEQVR4nO1bQYrkMAwsyYY5JrAPmKckP9s37Q+cp/QDFuLjQIIWSc50Zg+zOXXM2jqYxK5DgShTUhQSXIyFryKBDuUORYciU4kZOxGNqqNjOY5iJVyvBv+/0CAWQI6QlIkA7IRpBTDZ0VoN1w4FinoQhOZBhH6uAM1Z91R5c01cLwU3AB0+yHW0jEH8Onwtge+D/3HeGDRHTdROkvRpku3VBL4PRuvQaOth48NG0wohDKvmTWU26FmugmuHsjkKi7Jjsnocy2JHYzVc24ZCTrEGFVKQcgkO5zNJt3PlDoW6vlJbvW+QNHwQkN9E5BHdLHZtVaatNGii7HXV8stKLa+3trKXbufKzUMh4tZPL0G7+jxRoWTQC2M9SLdz5eah8GypjkxbJzH9lcZ0O1duHgpTjxsMVZTv2Z34TF7S5lS6nSs3D4VJSJKp55m8z73uCWt0Gfi88HRzOunNUF1bVWSrOHiYo3gQWUPXXonGvRyo30AVXBuHRs2Ht5+8mbGMYQPyCLFlGVephSs3D8VxEx62Qq9D9xulodHrrXqgEcg/NpqkaEuAPYq3cfVzlzn4ZQ41cOXmoXi6jKOhET6lVlx9d/B1aQuTqKPAmxrD3wSVmn/uX8YAUx7u58rNQ/GlB3+UWt5vsoGNoy8vXVuobOYJeC5WatlTd/C1QKN9MbZH0u/ExWpks/H2pNNPj7hVwJWbh0ZbqaRs91csM0jdoeau5A33c+UOxSlsJE3D6q0y87QTzf0mrBA6bD6c5uk5DX5aGrkqrk1Co62luZRVTZm8RC4jUL/ChuW9a6uKbH2deSpu3cZ0Dxv/AgIXg9E6lPofQejQy8EdisvxB/tPpHE0tx0rAAAAAElFTkSuQmCC" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Safety Harbor Real Estate Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Real Estate
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional real estate services in Safety Harbor and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-ow...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Safety Harbor, FL 33761</div>
+                        <div>📞 (727) 555-1653</div>
+                    </div>
+
+                    <a href="professional-15.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="cleaning" data-name="st. petersburg cleaning experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            S
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACbElEQVR4nO1bXYrcMAz+pBj2cQI9QI/iuUHP2hskR9kDFDKPAxlUJDme7LaUUBhi1tKDie3v4QOhf4cEB2Xmo0ggoBxQBBQ3KnK9JdgHgIcu8C0RpUa4HhX+utBBTFxHWVYAt7fiIbNdLc1wDShQrOcignnUGPX9TkT6ZZZ3bYlrz9D0t0PKywPIP9P6egIcUPwf9EaEvAAy2fayNsy1Y9uSshtW4GYOcBDC7duq3lHV2ATXgLLlFlsmCNBVFaXZoctsV2MzXPuGQnayDIKsi9qWJR07mU7nygFFyfoevtihxS2Z3OiSGljUW01oq3i8mSx4rUkzeLIwRsCbEC5LM1y5eyhKYaylltXJNR2Uyc+0RF704nSu3D0Uri3Xh+rIglfRm31toW06nSt3D4WItZq0tvJSy3ILVZ7rrW6n07lyQFF7gsUJaolc208Osi1a4HpU+EtD86LNwlFLLfd/JTtEfk9+i2a4ondPKLZYoMo16fDKqxZd0+lcuXsoiqI8bpVo9Qxe28Qk4lZD2nqm7FthvG9olBSRz+bK3UPho0aLTD6I/FB02VnYVitQlKBkZmUGto2Sn1YWcas52xrU61U78ri1QVyXfDZX7h6KDz34qhnLDj3piM5Tc7Zl4nHLJsY1g9/liYzDwgHFq3rwg0/0dVhsXQ0dG6dV5nGA+Ni4Da4cUOzfPN39fdNmbzrfGh+lEYVGuPYMTZ/2Mo+/ksw/7jrkKs80qBGuHFDspL7GwK5ZWMsvfj2Bfwujd2iydffrQn4vLXnKi5sVSZYmuAaU/3zzVJZ9D8qMjlvg2jeU4o8gBPSwcEBxWH4DV66mF7kGLxgAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">St. Petersburg Cleaning Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Cleaning
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional cleaning services in St. Petersburg and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owne...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 St. Petersburg, FL 33805</div>
+                        <div>📞 (727) 555-1723</div>
+                    </div>
+
+                    <a href="professional-9.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="cleaning" data-name="st. petersburg cleaning experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            S
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACbklEQVR4nO1bQardMAwc2YYuE+gB/lGSm5UeqTdIjvJuEC8/OKhIcvpSCr/Z9D/RSAuTF89CMIw1VvSIcTHWdBUJBDQFFAFFpR4zdiIaRUfHcmwVJ7lejfT/QjNrALWAl0oEYCdMG4BJtzY3uQYU6OpBZpoHZvq2ATRXeSfKmz3leinSDaDDO5mO1jGzHYefm8DHkf6yfzNoLULUTrzI08TtsxP4OBLuDi26HjY+N5o2MGHYhDeR2SB71UWuAU3qKDT6G5XV41hW3Rrd5HpvKPgUWxYhZe6H4HDe4+XluaaAQlxfv1u9NfAyvBNQvzDzo5hZDG150lYTjhrUDqrAzBj2+5Zu5NAWHEDRr74WT6KEnoNBOxOXl+eabg+FtTG0ZSH0nMQkorMyFmw5gcK8hZ165jIAXo7FyFtEdMvLc023h8KqlfLR69azloUndAbF01ucmhcitZPotKAtL881BRSQarWKef8+/qJnaOLbd9InK2jwkOvNoQWoX5mmbS/SvGi8jrkBdQTrso4be8k13R4Kq1F2ozr8n/mN3tCI+5YfKP4g6iBPXX0371G3fPUJt34d7o7CHLyWsc4lB1two62h68hMh12WDdBVxsEW3PXguZcx3cunvjwHW3A28wSbxrBBDPHy+hQO3tO342yXYtK5jPWtFUZVGy8flatMPz1Kc5Bruj206Eqdsqw3L2CdQaxjarYRX/odQqtx1/u7feZpJ5rjJHQIHd5J209Gz2nwU2lMrnK9JbTo2ptLVdRUSX7uVtBo+pGbdhHx+lxTQPH7zBPNOrArM9bnj8r/NoGAXgyKfwQhoJcjBRSX4ye1CMlvScl86gAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">St. Petersburg Cleaning Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Cleaning
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional cleaning services in St. Petersburg and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owne...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 St. Petersburg, FL 33705</div>
+                        <div>📞 (727) 555-1723</div>
+                    </div>
+
+                    <a href="professional-25.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="plumbing" data-name="st. petersburg plumbing experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            S
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACmklEQVR4nO1bQYrkMAwsKYY5JtAP2Ke4f7BPavZJ/YPkKfOAhc6xwUGLZCedncMSBmZi1tIhtOM6FBS2pFKaBAdj4qNIwKHsUDgUM5W42ps5gK5zACYKWLdCJVyPBv+/0E4silBYSH4NAN0kAdG2HtVwbRsa7ElAl4A+QQDRpcZ8ScA8APFeBVeHhv1ClcnR/ybB/B0E2KH4HLRPkLEXQXx/E6Lh2wn8OxitQ4M9Sxlvt95jCTL90DtxvqiCujdXwdWhDGDJdZ/VG3Sd34Ru71ZvaJdlW0M1XNuGhnJ6cjzJrkOLcsC+mgA7FMdDcnmOLgsj45bBdEPGNZfJeDpXbh6K3GtlUUyyLFQnRTfrxmzJZ3Pl5qEwKRDXThgxC7VqlB8mKJ/NlZuHhl2i0nZYgASKj4u1yJrGniTTT70tT+fKDoX6Tdl0omFRs3ApGlm20uRFN3ee6slbqdQRr7LCbkdon+x5qyYoskbm6pa8pW9f4unKrN3xdK7cPDRYv0XoH5Apu7ldoljqwWL3ToPnrSrUWiv4bbn7ZV2W1iB+tiqrMnrNVlrGb/1WHlOqEVUgXAHXxqFY+601ZW15y34VS97PVh1QlIJvG5ZYgTFu5WC5Dl2tKtRap5Hab6Ffgt5/uibIdNXOCyGRPnA+V24eiuIrvT6/+GA6be/G07myQ/H3N0+51JjU1dCpVh5ymYuIGrg2Dg3WYNlPss4r3i9JfUK9/8w71H6LFHI6V24eGvbfPNlXNL2NJJ/6Fc1g8+TcO+N8rtw8NHxYm6Fhg8lyttTkjXevMr5Ogk+r1SWKshMqZC9KZ/44nys7FBrFxrBhyVonAmZj5KFyRVxbhmKt0YuNYcqUh1mE5m+4l1EHlPwfQXDo4WCH4nD8ASkYoUuRq0GhAAAAAElFTkSuQmCC" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">St. Petersburg Plumbing Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Plumbing
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional plumbing services in St. Petersburg and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owne...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 St. Petersburg, FL 33701</div>
+                        <div>📞 (727) 555-2342</div>
+                    </div>
+
+                    <a href="professional-1.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="plumbing" data-name="st. petersburg plumbing experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            S
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACZklEQVR4nO1bwW3kMAwcygLu6QVSQEqxO0tN14FdynZgPQPYYEBSziqfnF+7xIl8CLI4DwLEUCOJJsZFW9NVJBDQFFAEFIWqzTiI6CY8OofTlZ3EetXS/wsdWA0oGbwUIgAHYdoATOra3MQaUKCyBwPTPDLTxwbQXGRNmDd7ivWSpQ6g4ycZj9bbwFYOnxvA75b+4e8MWrIk6iBeZDbx/uwAfreE3qFZx1PGDztNG5gwbpI3odkovuIi1oAmVRRqdUVpdT+HVV03N7H2DQU3tg1CpIFrERxbHy8vjzUFFKL66tnqfQcv4ycB5Q8z37OJxeCWJ27tkqMdKgeVYCYM63lLHUNwC44q4SZFUEufJUrSc2bQHMvLY03dQ1HJpATDDzLJmm1jkS0nUDTaog6wvDXJW+Ryanl5rKl7KB4bFS9nJTz3stCEzqA4tcWDR1VgGOlUaujF7/LyWFNAYaY7k0wsPeMuuv0gnanegJ9Ye9eEkGw1PPrmm5VDG9KrY03dQ3FuS9/HKsvb40Ijzlt+oBkobzvp05a8mGDajsx2jatrohPXefAQa+oeisfpuJlVBa8qQz+DW16y1dQ/WRBFoe/7KjrqJW/sW16y1dzBn0ctbvRGPTZz7Ftw1vNUzWZCNZ2Fgvf0djzYiz7JOzFNizwlF1krOpPup3veHcSauodmHamm7LBPrDOItU3NHPHS7xBaarLsvFV7ng6iOSqhQ+i4W3Oapadp/NQ0JlexdgnNbc9TeWNCIfnUmigtUH+HHet7cMtFtn72PEkroTbsSo91lfFPCOCiJfQOpfgjCAG9bCmguGxfr1rOqezPPTUAAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">St. Petersburg Plumbing Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Plumbing
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional plumbing services in St. Petersburg and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owne...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 St. Petersburg, FL 33771</div>
+                        <div>📞 (727) 555-2342</div>
+                    </div>
+
+                    <a href="professional-17.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="electrical" data-name="tampa electrical experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            T
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACuUlEQVR4nO1bQY7bMAwc0gJytIA+IE9xfrBPKvqk/YH1lH1AAesYwAYLkvIm6GHrHhoLlXgwEGsOAxAjj4YKCQ5W4qNIoEO5Q9GhyFTqho3olgOQooopAvtSqITr0eL/FzqIFZAvIj+udwKwEaYFwGRLSzVcOxQo6jFtYRD6vgCuMlPerSauh4obgI4rXFEpDuLb4WsJfF38h/XGoFl3wriRzCqrSdZXE/i6GK1Dgz13G7+RTB8XIYyLCkxlNuparoJrh7J/rbTMb/g3avoI5ZFsKVbDtW1oKOqxyhtJioMq6k5I1/VTdP+OQIfyX0EzUTlbXUXt4Eb+BZOP4Gaxa6sm6OAKcm9hx6/ZvbweuuRO1jfUwbVtaLBdz9pFGH/uB+P3YdWdMAhy1AV1h6dz5eahEFk0y9DHbKnG8vnOHbwqbxSR+XSu3DwUJVYapTRFeySzbYz6Xg9d3sb5dK7cPBSlPWPpkWUZ+zt5rvl0rtw8FKUXD4E9WrYM4kGUOw8+myt3KPx0fN215Y5iXNW3q5c30XWXUQc0APmbIN0sb9r050VnJxFmByXFRWrhys1D4aMtG2O5mVATONkmaJ5QteWOkc/mys1Dg2rLs3aalqgzyEjiMa7Ghubg003TqNO5cvPQ4OrRlkm6CrQ9K9INJImGFdN7WGvhys1Dg2srvdl83zpjeZMtbhogDiD/yWdz5eaheD5S7V+rYug92rAUsX+3qujW73eeLNotQy67nGGpRnfwdUCDCqe4DIxrQHqzLFffZR0q523fIvlsrtyheL7zVBSFZAdjOzbHkvSiFq6HihuA5ss+6V8ed5500tV3wgqho873o17OsLtqjwDRxpRcFdcmodhnWRpoaJZrw5LHaEtV5mn8fDpX7lA833myUm3l8GnjX0DgYDFah1L/RxA69HBxh+Jw/QJJ04q+5xmGTAAAAABJRU5ErkJggg==" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Tampa Electrical Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Electrical
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional electrical services in Tampa and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and o...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Tampa, FL 33702</div>
+                        <div>📞 (727) 555-4611</div>
+                    </div>
+
+                    <a href="professional-2.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="electrical" data-name="tampa electrical experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            T
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACeUlEQVR4nO1bwY3cMAwcUgLy9AIp4EqxO0tN6UAuZTuwngfIYECKvvgS4OLXWojEhyCs5jEAMfSI4pLgYqx8FQkMKA8oBhSZPBbsRPRQHR3LcRQb4Xo1+P+FBrEAcoSkTARgJ8wbgNmOtma4Dijg6kEQWiYR+rEBtGT9TZW3tMT1UnAH0Omdqo7WR5BaDl9L4Ovgf5x3Bs1RE7WTJN3NUl5N4Otg9A6Nth42PhSaNwhh2jRvKrNJz3ITXAeUzVFY+C8mq+exrHb0aIZr31DIKbagQgriRXA6n0m6nSsPKNT1+d3qrUDS9E5A/iYiz1jN4tBWS9oqx26zRa9fdtWq963iv6XbuXL3UHj9m0RON+HZ0jNZouA1Md3OlbuHwj9K9RtVzmJy0XkuZWQLjVRC+VBU/S0dS01e0uZUup0rdw+Fawvn0lcz6HobnrDBbFm4tsxg1A+aWQ1r/KbbufKAQq/D1rc1837YiqK+fSfbmejQBNfOoTi+W6YjlZA9oFRtWQYPD5Ju58rdQ1Gftj5Kn2Wm+g1vaIz7VjvQCOTvRZBDIat/85MgtY2rz132LVuX0AJX7h6K3y1CK4J+t6oO/lN1TLdz5e6h0bTlshJ7O9kjdFef+9dHqAe4nyt3D8WfPXjvZdhZOPXlZWgLjc08edSdOo/D2g8Hr9HE23GoTXiyuQzdmemwF2NB1umnZywNcOXuodFWtX7nIYx1geZNb8d2MF76G4Tmmjvv7/rM0060jErYIHQSIXrYUGH5NPhpaeSmuHYJjbZ6MzermjK5ja8jUD9Dwfo2tNVEtv6eebKBXZ2xdhv/AgIXg9E7lMY/gjCgl4MHFJfjFy6NvhqTcPu8AAAAAElFTkSuQmCC" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Tampa Electrical Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Electrical
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional electrical services in Tampa and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and o...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Tampa, FL 33773</div>
+                        <div>📞 (727) 555-4611</div>
+                    </div>
+
+                    <a href="professional-18.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow professional-card" data-category="pest_control" data-name="tampa pest control experts">
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl text-white font-bold">
+                            T
+                        </div>
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACY0lEQVR4nO1bS27jMAx9lA3MUgF6gB7FvtlczTlKDjCAtSxggwU/QtwuOl7FQkUuFNt8iwc8kCIphRgn7Z7OIoGApoAioCjkNmMnopvEUV2qa2yE61lLvxc6sBpQRvBSiADshGkFMKlrbYZrQAGPHgxMc2amvytAc5FvEnlzS1xPWeoAmj/I4uh+G9jS4WsJ/GzpP/7OoGUUoXbiRZ4m3l5N4GdL6B066lrL+GGjaQUT8iq6SZhl8ZUmuAY0aUWh5l80rB51uavr1gzXvqHgg62DBNLAngTz0cfL5VxTQCFVn/dW7xt4yR8ElD/M/BitWIzYaim2NmglyIu+rtJ+aatl/ZZ6h4gttKTWwJgOQok82WW0nLhczjV1D4UHk+5MeTsGk8ho21io1VRswWsLGT+h5kRZTLxFhlPL5VxT91B4rtNhYc2Elh2XqAlbg+KY9WSjsohSyWwvU1TEVhNqWXfs43eZ6spAV3UjuolDFZQNDU1w7RsKL8+1wDjkRE+Rlg5tSVdzTd1DUZOg6KEJL7PV8nWgEf1WO1D49mTloG9Ux29PGdPVXFP3UNRWS39qJegVfO2YQ61GoCNQ3jYCZASf/4GQ9xGT9V27DBAHkL2mq7mm7qH4NoN/jg2fPVhU8G3eeQKei+5g+hQVfEtnx4Od6JPUf2qMIt+KPsntp8e4NcA1dQ8ddSWXbLdX3GcQW9usjjjpbxBaXCzrt/zO0040RyZsEJo3u5xm8hwufqqMqSmuvZ9vwXurr6coNpeKyVMTan298yRZTy/sypDXy/gXEDhpCb1DKf4RhICethRQnLZPL37XeHEgho8AAAAASUVORK5CYII=" alt="QR Code" class="w-16 h-16 rounded">
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Tampa Pest Control Experts</h3>
+                    <span class="inline-block px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-semibold mb-3">
+                        Pest Control
+                    </span>
+
+                    <p class="text-slate-600 text-sm mb-4 line-clamp-3">Professional pest control services in Tampa and surrounding Tampa Bay areas. Licensed, insured, and committed to quality workmanship. Family-owned and...</p>
+
+                    <div class="space-y-1 text-sm text-slate-500 mb-4">
+                        <div>📍 Tampa, FL 33806</div>
+                        <div>📞 (727) 555-0606</div>
+                    </div>
+
+                    <a href="professional-10.html" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-lg font-semibold hover:from-sky-600 hover:to-emerald-600 transition-colors">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white mt-16 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">StPetePros</h3>
+                    <p class="text-slate-400">Tampa Bay's most trusted professional directory. Find verified service providers in your area.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="about.html" class="hover:text-white">About Us</a></li>
+                        <li><a href="signup-demo.html" class="hover:text-white">Join as Professional</a></li>
+                        <li><a href="#" onclick="showAuthDemo()" class="hover:text-white">Demo Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact</h3>
+                    <p class="text-slate-400 mb-2">Questions? Want to be listed?</p>
+                    <a href="/signup/professional" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors">
+                        Join StPetePros →
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
+                <p>© 2026 StPetePros • Tampa Bay Professional Directory</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    function searchProfessionals() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.professional-card');
+
+        cards.forEach(card => {
+            const name = card.dataset.name;
+            const category = card.dataset.category;
+            const text = card.textContent.toLowerCase();
+
+            if (name.includes(input) || category.includes(input) || text.includes(input)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    </script>
+</body>
+</html>

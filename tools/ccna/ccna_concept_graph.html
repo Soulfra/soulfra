@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Words to Canvas - Knowledge Graph</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            margin: 0 0 20px 0;
+        }
+        #canvas {
+            background: white;
+            border: 1px solid #ddd;
+            cursor: grab;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        #canvas:active {
+            cursor: grabbing;
+        }
+        #info {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .stat {
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        .stat strong {
+            color: #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Words to Canvas - Knowledge Graph</h1>
+
+    <canvas id="canvas" width="1200" height="900"></canvas>
+
+    <div id="info">
+        <div class="stats">
+            <div class="stat"><strong>51</strong> nodes</div>
+            <div class="stat"><strong>34</strong> edges</div>
+            <div class="stat"><strong id="selected-node">Click a node to see details</strong></div>
+        </div>
+        <div id="details"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const selectedNode = document.getElementById('selected-node');
+        const details = document.getElementById('details');
+
+        // Data
+        const nodes = [{"id": "layer", "label": "layer", "type": "word", "x": 1046.8150608410813, "y": 218.65779140464184, "definition": "", "usage_count": 0}, {"id": "network", "label": "network", "type": "word", "x": 902.2117222031711, "y": 30, "definition": "", "usage_count": 0}, {"id": "uses", "label": "uses", "type": "word", "x": 934.752023545292, "y": 179.62371211183526, "definition": "", "usage_count": 0}, {"id": "protocol", "label": "protocol", "type": "word", "x": 849.3132286695707, "y": 366.97878227170503, "definition": "", "usage_count": 0}, {"id": "tcp", "label": "tcp", "type": "word", "x": 546.0938875615211, "y": 681.7724231535376, "definition": "", "usage_count": 0}, {"id": "topology", "label": "topology", "type": "word", "x": 129.3046806111027, "y": 870, "definition": "", "usage_count": 0}, {"id": "connects", "label": "connects", "type": "word", "x": 318.35686048662694, "y": 870, "definition": "", "usage_count": 0}, {"id": "every", "label": "every", "type": "word", "x": 1170, "y": 870, "definition": "", "usage_count": 0}, {"id": "device", "label": "device", "type": "word", "x": 1170, "y": 730.4584035087336, "definition": "", "usage_count": 0}, {"id": "ips", "label": "ips", "type": "word", "x": 957.9074955499366, "y": 870, "definition": "", "usage_count": 0}, {"id": "osi", "label": "osi", "type": "word", "x": 69.18143197152082, "y": 30, "definition": "", "usage_count": 0}, {"id": "model", "label": "model", "type": "word", "x": 190.2504656720282, "y": 30, "definition": "", "usage_count": 0}, {"id": "layers", "label": "layers", "type": "word", "x": 1170, "y": 186.13952839962454, "definition": "", "usage_count": 0}, {"id": "which", "label": "which", "type": "word", "x": 1043.3054690400577, "y": 30, "definition": "", "usage_count": 0}, {"id": "transport", "label": "transport", "type": "word", "x": 1151.4377905753383, "y": 401.15554350059773, "definition": "", "usage_count": 0}, {"id": "implements", "label": "implements", "type": "word", "x": 666.829431620183, "y": 108.04341744288415, "definition": "", "usage_count": 0}, {"id": "reliable", "label": "reliable", "type": "word", "x": 464.23270197388865, "y": 30, "definition": "", "usage_count": 0}, {"id": "delivery", "label": "delivery", "type": "word", "x": 495.4977667686896, "y": 111.2290909953367, "definition": "", "usage_count": 0}, {"id": "udp", "label": "udp", "type": "word", "x": 417.05204502190475, "y": 285.2431625710877, "definition": "", "usage_count": 0}, {"id": "faster", "label": "faster", "type": "word", "x": 423.38965525484724, "y": 606.0917687290616, "definition": "", "usage_count": 0}, {"id": "than", "label": "than", "type": "word", "x": 469.4155460202364, "y": 870, "definition": "", "usage_count": 0}, {"id": "unreliable", "label": "unreliable", "type": "word", "x": 276.4723697118532, "y": 870, "definition": "", "usage_count": 0}, {"id": "star", "label": "star", "type": "word", "x": 187.5213718284348, "y": 870, "definition": "", "usage_count": 0}, {"id": "all", "label": "all", "type": "word", "x": 30, "y": 111.18786100620773, "definition": "", "usage_count": 0}, {"id": "devices", "label": "devices", "type": "word", "x": 1170, "y": 318.8653933553406, "definition": "", "usage_count": 0}, {"id": "central", "label": "central", "type": "word", "x": 121.55548739239376, "y": 30, "definition": "", "usage_count": 0}, {"id": "hub", "label": "hub", "type": "word", "x": 1170, "y": 870, "definition": "", "usage_count": 0}, {"id": "mesh", "label": "mesh", "type": "word", "x": 1170, "y": 30, "definition": "", "usage_count": 0}, {"id": "other", "label": "other", "type": "word", "x": 30, "y": 870, "definition": "", "usage_count": 0}, {"id": "subnetting", "label": "subnetting", "type": "word", "x": 30, "y": 314.5054724491182, "definition": "", "usage_count": 0}, {"id": "divides", "label": "divides", "type": "word", "x": 30, "y": 448.25918808412536, "definition": "", "usage_count": 0}, {"id": "using", "label": "using", "type": "word", "x": 30, "y": 30, "definition": "", "usage_count": 0}, {"id": "cidr", "label": "cidr", "type": "word", "x": 572.4768057007672, "y": 30, "definition": "", "usage_count": 0}, {"id": "notation", "label": "notation", "type": "word", "x": 1126.0194418493681, "y": 30, "definition": "", "usage_count": 0}, {"id": "like", "label": "like", "type": "word", "x": 879.0522034586711, "y": 870, "definition": "", "usage_count": 0}, {"id": "nat", "label": "nat", "type": "word", "x": 30, "y": 598.0177256023599, "definition": "", "usage_count": 0}, {"id": "translates", "label": "translates", "type": "word", "x": 606.102441407099, "y": 870, "definition": "", "usage_count": 0}, {"id": "private", "label": "private", "type": "word", "x": 305.8803758765539, "y": 30, "definition": "", "usage_count": 0}, {"id": "public", "label": "public", "type": "word", "x": 793.1268280721887, "y": 870, "definition": "", "usage_count": 0}, {"id": "concept_osi_model", "label": "OSI Model", "type": "framework", "x": 1170, "y": 92.80513854691291, "definition": "7-layer model for network communication", "usage_count": 0}, {"id": "concept_star_topology", "label": "Star Topology", "type": "topology", "x": 1170, "y": 803.2889260431181, "definition": "All nodes connect to central hub", "usage_count": 0}, {"id": "concept_mesh_topology", "label": "Mesh Topology", "type": "topology", "x": 30, "y": 30, "definition": "Every node connects to every other node", "usage_count": 0}, {"id": "concept_tcp", "label": "TCP", "type": "protocol", "x": 1170, "y": 604.8693074642878, "definition": "Reliable, connection-oriented protocol", "usage_count": 0}, {"id": "concept_udp", "label": "UDP", "type": "protocol", "x": 63.65488188809011, "y": 870, "definition": "Unreliable, connectionless protocol for speed", "usage_count": 0}, {"id": "concept_ip", "label": "IP", "type": "protocol", "x": 1058.8882059683897, "y": 870, "definition": "Internet Protocol for addressing and routing", "usage_count": 0}, {"id": "concept_subnetting", "label": "Subnetting", "type": "concept", "x": 1170, "y": 30, "definition": "Dividing network into smaller subnetworks", "usage_count": 0}, {"id": "concept_cidr", "label": "CIDR", "type": "concept", "x": 30, "y": 870, "definition": "Classless Inter-Domain Routing notation", "usage_count": 0}, {"id": "concept_nat", "label": "NAT", "type": "protocol", "x": 1125.0077285073917, "y": 870, "definition": "Network Address Translation - private to public IP mapping", "usage_count": 0}, {"id": "concept_ospf", "label": "OSPF", "type": "protocol", "x": 30, "y": 202.48322850033367, "definition": "Open Shortest Path First - link-state routing protocol", "usage_count": 0}, {"id": "concept_acl", "label": "ACL", "type": "security", "x": 971.4056124512308, "y": 30, "definition": "Access Control List - firewall rules", "usage_count": 0}, {"id": "concept_vlan", "label": "VLAN", "type": "security", "x": 30, "y": 738.1593141450353, "definition": "Virtual LAN - logical network segmentation", "usage_count": 0}];
+        const edges = [{"source": "device", "target": "every", "type": "co-occurrence"}, {"source": "connects", "target": "topology", "type": "co-occurrence"}, {"source": "ips", "target": "public", "type": "co-occurrence"}, {"source": "model", "target": "osi", "type": "co-occurrence"}, {"source": "layer", "target": "layers", "type": "co-occurrence"}, {"source": "layer", "target": "network", "type": "co-occurrence"}, {"source": "network", "target": "which", "type": "co-occurrence"}, {"source": "layer", "target": "which", "type": "co-occurrence"}, {"source": "layer", "target": "uses", "type": "co-occurrence"}, {"source": "uses", "target": "which", "type": "co-occurrence"}, {"source": "protocol", "target": "uses", "type": "co-occurrence"}, {"source": "protocol", "target": "tcp", "type": "co-occurrence"}, {"source": "layer", "target": "transport", "type": "co-occurrence"}, {"source": "protocol", "target": "transport", "type": "co-occurrence"}, {"source": "layer", "target": "protocol", "type": "co-occurrence"}, {"source": "implements", "target": "protocol", "type": "co-occurrence"}, {"source": "implements", "target": "reliable", "type": "co-occurrence"}, {"source": "delivery", "target": "implements", "type": "co-occurrence"}, {"source": "delivery", "target": "reliable", "type": "co-occurrence"}, {"source": "reliable", "target": "udp", "type": "co-occurrence"}, {"source": "delivery", "target": "udp", "type": "co-occurrence"}, {"source": "faster", "target": "udp", "type": "co-occurrence"}, {"source": "faster", "target": "than", "type": "co-occurrence"}, {"source": "faster", "target": "tcp", "type": "co-occurrence"}, {"source": "tcp", "target": "than", "type": "co-occurrence"}, {"source": "tcp", "target": "unreliable", "type": "co-occurrence"}, {"source": "star", "target": "unreliable", "type": "co-occurrence"}, {"source": "topology", "target": "unreliable", "type": "co-occurrence"}, {"source": "star", "target": "topology", "type": "co-occurrence"}, {"source": "connects", "target": "star", "type": "co-occurrence"}];
+
+        // Colors
+        const colors = {
+            base: '#4CAF50',
+            expanded: '#2196F3',
+            edge: '#999'
+        };
+
+        // Draw graph
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw edges
+            ctx.strokeStyle = colors.edge;
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.6;
+
+            edges.forEach(edge => {
+                const source = nodes.find(n => n.id === edge.source);
+                const target = nodes.find(n => n.id === edge.target);
+
+                if (source && target) {
+                    ctx.beginPath();
+                    ctx.moveTo(source.x, source.y);
+                    ctx.lineTo(target.x, target.y);
+                    ctx.stroke();
+                }
+            });
+
+            ctx.globalAlpha = 1.0;
+
+            // Draw nodes
+            nodes.forEach(node => {
+                const radius = node.type === 'base' ? 8 : 6;
+                const color = colors[node.type] || colors.base;
+
+                // Circle
+                ctx.fillStyle = color;
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+
+                // Label
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(node.label, node.x, node.y + 20);
+            });
+        }
+
+        // Handle clicks
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Find clicked node
+            const clickedNode = nodes.find(node => {
+                const dx = x - node.x;
+                const dy = y - node.y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                return distance < 15;
+            });
+
+            if (clickedNode) {
+                selectedNode.textContent = clickedNode.label;
+                details.innerHTML = `
+                    <h3>${clickedNode.label}</h3>
+                    <p><strong>Type:</strong> ${clickedNode.type}</p>
+                    ${clickedNode.definition ? `<p><strong>Definition:</strong> ${clickedNode.definition}</p>` : ''}
+                    ${clickedNode.usage_count > 0 ? `<p><strong>Usage count:</strong> ${clickedNode.usage_count}</p>` : ''}
+                `;
+            }
+        });
+
+        // Initial draw
+        draw();
+
+        console.log('📊 Knowledge graph loaded');
+        console.log('Nodes:', nodes.length);
+        console.log('Edges:', edges.length);
+    </script>
+</body>
+</html>

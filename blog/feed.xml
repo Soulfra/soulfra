@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Soulfra Blog</title>
+        <link>https://soulfra.com</link>
+        <description>Voice-to-graph content system</description>
+        <lastBuildDate>Sun, 11 Jan 2026 16:48:13 </lastBuildDate>
+
+        <item>
+            <title>Test Post</title>
+            <link>https://soulfra.com/test-post.html</link>
+            <pubDate>Sun, 11 Jan 2026 16:27:44 </pubDate>
+        </item>
+
+    </channel>
+</rss>

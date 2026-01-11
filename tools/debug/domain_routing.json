@@ -1,0 +1,75 @@
+{
+  "nodes": [
+    {
+      "id": "domain_soulfra.com",
+      "label": "soulfra.com",
+      "type": "domain",
+      "frequency": 1,
+      "source": "domain_config",
+      "x": 1170,
+      "y": 870
+    },
+    {
+      "id": "domain_howtocookathome.com",
+      "label": "howtocookathome.com",
+      "type": "domain",
+      "frequency": 1,
+      "source": "domain_config",
+      "x": 761.7486552705709,
+      "y": 30
+    },
+    {
+      "id": "domain_deathtodata.com",
+      "label": "deathtodata.com",
+      "type": "domain",
+      "frequency": 1,
+      "source": "domain_config",
+      "x": 30,
+      "y": 870
+    },
+    {
+      "id": "domain_calriven.com",
+      "label": "calriven.com",
+      "type": "domain",
+      "frequency": 1,
+      "source": "domain_config",
+      "x": 778.474326780098,
+      "y": 870
+    },
+    {
+      "id": "domain_hollowtown.com",
+      "label": "hollowtown.com",
+      "type": "domain",
+      "frequency": 1,
+      "source": "domain_config",
+      "x": 30,
+      "y": 30
+    },
+    {
+      "id": "domain_oofbox.com",
+      "label": "oofbox.com",
+      "type": "domain",
+      "frequency": 1,
+      "source": "domain_config",
+      "x": 1170,
+      "y": 30
+    },
+    {
+      "id": "domain_niceleak.com",
+      "label": "niceleak.com",
+      "type": "domain",
+      "frequency": 1,
+      "source": "domain_config",
+      "x": 30,
+      "y": 454.95224618207214
+    }
+  ],
+  "edges": [],
+  "metadata": {
+    "generated_at": "2026-01-11T15:57:03.858457",
+    "canvas_width": 1200,
+    "canvas_height": 900,
+    "node_count": 7,
+    "edge_count": 0
+  }
+}

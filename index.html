@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soulfra - Privacy-First AI Platform</title>
+    <meta name="description" content="Voice-to-graph pipeline. Debug your systems. Analyze your brands. Study networking concepts.">
     <style>
         * {
             margin: 0;
@@ -23,61 +24,92 @@
 
         .container {
             background: white;
-            padding: 60px 40px;
-            border-radius: 20px;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 800px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 600px;
         }
 
         h1 {
-            font-size: 4em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
 
         p {
-            font-size: 1.3em;
             color: #666;
-            margin-bottom: 40px;
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
 
-        .nav {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
 
-        .nav a {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .link-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
             text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
+            color: #333;
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
         }
 
-        .nav a:hover {
+        .link-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .link-card h3 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .link-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Soulfra</h1>
-        <p>Privacy-First AI Platform</p>
+        <h1>🎤 Soulfra</h1>
+        <p>Voice-to-graph debugging pipeline. Your keys. Your identity. Your data.</p>
 
-        <div class="nav">
-            <a href="customer-discovery-chat.html">🎯 Customer Discovery</a>
-            <a href="email-ollama-chat.html">💬 AI Chat</a>
-            <a href="blog/">Blog</a>
-            <a href="about.html">About</a>
+        <div class="links">
+            <a href="/about.html" class="link-card">
+                <h3>About</h3>
+                <p>What is Soulfra?</p>
+            </a>
+
+            <a href="/tools" class="link-card">
+                <h3>Developer Tools</h3>
+                <p>Voice-to-graph debugger</p>
+            </a>
+
+            <a href="/debug.html" class="link-card">
+                <h3>System Debug</h3>
+                <p>View reports (static)</p>
+            </a>
+
+            <a href="/stpetepros" class="link-card">
+                <h3>StPetePros</h3>
+                <p>Tampa Bay directory</p>
+            </a>
+
+            <a href="/blog/index.html" class="link-card">
+                <h3>Blog</h3>
+                <p>Read posts</p>
+            </a>
+
+            <a href="https://github.com/matthewmauer/soulfra-simple" class="link-card">
+                <h3>GitHub</h3>
+                <p>Source code</p>
+            </a>
         </div>
     </div>
 </body>
