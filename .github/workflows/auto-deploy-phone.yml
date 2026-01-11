@@ -1,0 +1,51 @@
+name: Auto-Deploy from Phone
+
+# Watches /deploy/ folder
+# Any file added → auto-commit → auto-deploy to GitHub Pages
+
+on:
+  push:
+    paths:
+      - 'deploy/**'
+      - 'output/soulfra/**'
+  workflow_dispatch:
+
+jobs:
+  auto-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy deploy folder to output
+        run: |
+          if [ -d "deploy" ]; then
+            echo "📦 Copying files from deploy/ to output/soulfra/"
+            cp -r deploy/* output/soulfra/
+            echo "✅ Files copied"
+          else
+            echo "   ℹ️  No deploy/ folder found"
+          fi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output/soulfra
+          publish_branch: gh-pages
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Auto-deploy from phone'
+
+      - name: Clean up deploy folder
+        run: |
+          if [ -d "deploy" ] && [ "$(ls -A deploy)" ]; then
+            echo "🧹 Cleaning deploy folder..."
+            rm -rf deploy/*
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add deploy/
+            git commit -m "Clean deploy folder after deployment" || echo "Nothing to clean"
+            git push || echo "Nothing to push"
+          fi

@@ -1,0 +1,247 @@
+{
+  "DataVersion": 3218,
+  "playerGameType": 0,
+  "Dimension": "minecraft:overworld",
+  "Pos": [
+    0.0,
+    64.0,
+    0.0
+  ],
+  "Rotation": [
+    0.0,
+    0.0
+  ],
+  "Motion": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Health": 20.0,
+  "HurtTime": 0,
+  "DeathTime": 0,
+  "Air": 300,
+  "Fire": -20,
+  "FallDistance": 0.0,
+  "foodLevel": 20,
+  "foodSaturationLevel": 5.0,
+  "foodExhaustionLevel": 0.0,
+  "XpLevel": 1,
+  "XpTotal": 100,
+  "XpP": 0.0,
+  "Inventory": [
+    {
+      "Slot": 0,
+      "id": "minecraft:enchanted_book",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Soul Interest: game\",\"italic\":false}",
+          "Lore": [
+            "{\"text\":\"This soul values game\",\"color\":\"gray\",\"italic\":false}"
+          ]
+        },
+        "SoulData": {
+          "Type": "Interest",
+          "Value": "game"
+        }
+      }
+    },
+    {
+      "Slot": 1,
+      "id": "minecraft:enchanted_book",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Soul Interest: player\",\"italic\":false}",
+          "Lore": [
+            "{\"text\":\"This soul values player\",\"color\":\"gray\",\"italic\":false}"
+          ]
+        },
+        "SoulData": {
+          "Type": "Interest",
+          "Value": "player"
+        }
+      }
+    },
+    {
+      "Slot": 2,
+      "id": "minecraft:enchanted_book",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Soul Interest: your\",\"italic\":false}",
+          "Lore": [
+            "{\"text\":\"This soul values your\",\"color\":\"gray\",\"italic\":false}"
+          ]
+        },
+        "SoulData": {
+          "Type": "Interest",
+          "Value": "your"
+        }
+      }
+    },
+    {
+      "Slot": 3,
+      "id": "minecraft:enchanted_book",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Soul Interest: data\",\"italic\":false}",
+          "Lore": [
+            "{\"text\":\"This soul values data\",\"color\":\"gray\",\"italic\":false}"
+          ]
+        },
+        "SoulData": {
+          "Type": "Interest",
+          "Value": "data"
+        }
+      }
+    },
+    {
+      "Slot": 4,
+      "id": "minecraft:enchanted_book",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Soul Interest: what\",\"italic\":false}",
+          "Lore": [
+            "{\"text\":\"This soul values what\",\"color\":\"gray\",\"italic\":false}"
+          ]
+        },
+        "SoulData": {
+          "Type": "Interest",
+          "Value": "what"
+        }
+      }
+    },
+    {
+      "Slot": 10,
+      "id": "minecraft:diamond_sword",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Expertise: player\",\"italic\":false,\"color\":\"gold\"}",
+          "Lore": [
+            "{\"text\":\"Master of player\",\"color\":\"yellow\",\"italic\":false}"
+          ]
+        },
+        "Enchantments": [
+          {
+            "id": "minecraft:unbreaking",
+            "lvl": 3
+          }
+        ],
+        "SoulData": {
+          "Type": "Expertise",
+          "Value": "player"
+        }
+      }
+    },
+    {
+      "Slot": 11,
+      "id": "minecraft:diamond_sword",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Expertise: game\",\"italic\":false,\"color\":\"gold\"}",
+          "Lore": [
+            "{\"text\":\"Master of game\",\"color\":\"yellow\",\"italic\":false}"
+          ]
+        },
+        "Enchantments": [
+          {
+            "id": "minecraft:unbreaking",
+            "lvl": 3
+          }
+        ],
+        "SoulData": {
+          "Type": "Expertise",
+          "Value": "game"
+        }
+      }
+    },
+    {
+      "Slot": 12,
+      "id": "minecraft:diamond_sword",
+      "Count": 1,
+      "tag": {
+        "display": {
+          "Name": "{\"text\":\"Expertise: your\",\"italic\":false,\"color\":\"gold\"}",
+          "Lore": [
+            "{\"text\":\"Master of your\",\"color\":\"yellow\",\"italic\":false}"
+          ]
+        },
+        "Enchantments": [
+          {
+            "id": "minecraft:unbreaking",
+            "lvl": 3
+          }
+        ],
+        "SoulData": {
+          "Type": "Expertise",
+          "Value": "your"
+        }
+      }
+    }
+  ],
+  "abilities": {
+    "walkSpeed": 0.1,
+    "flySpeed": 0.05,
+    "mayfly": false,
+    "flying": false,
+    "invulnerable": false,
+    "mayBuild": true,
+    "instabuild": false
+  },
+  "SoulfraNBT": {
+    "UserID": 20,
+    "Username": "soul_tester",
+    "Version": "1.0.0",
+    "LastSync": "Never",
+    "Identity": {
+      "UserID": 20,
+      "Username": "soul_tester",
+      "CreatedAt": "2025-12-25 18:21:45"
+    },
+    "Essence": {
+      "Values": [
+        "community"
+      ],
+      "Interests": [
+        "game",
+        "player",
+        "your",
+        "data",
+        "what"
+      ],
+      "Expertise": [
+        "player",
+        "game",
+        "your"
+      ]
+    },
+    "Expression": {
+      "PostCount": 5,
+      "Karma": 100,
+      "LastActive": "Never"
+    },
+    "ChatRules": {
+      "Enabled": true,
+      "BlockedWords": [
+        "password",
+        "credit card",
+        "ssn",
+        "hack"
+      ],
+      "RateLimitSeconds": 2,
+      "MaxMessageLength": 256
+    },
+    "Sync": {
+      "Endpoint": "http://localhost:5000/api/soul/sync",
+      "IntervalSeconds": 60
+    },
+    "Appearance": {
+      "SkinURL": "http://localhost:5000/static/avatars/generated/soul_tester.png"
+    }
+  }
+}

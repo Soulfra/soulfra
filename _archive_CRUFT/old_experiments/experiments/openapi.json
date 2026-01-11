@@ -1,0 +1,745 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Soulfra API",
+    "version": "1.0.0",
+    "description": "\nSoulfra Platform API\n\nGenerated from:\n- Database migrations (migrations/*.sql)\n- Flask routes (app.py)\n\nThis spec is auto-generated from code, proving \"Schema is Code\".\n\nDistribution:\n- Email newsletters (SMTP)\n- RSS feeds (/feed.xml)\n- Git repository (fork = copy platform)\n- Static HTML (GitHub Pages)\n\nThe platform is distributed via email + git, not centralized hosting.\n            ",
+    "contact": {
+      "name": "Soulfra",
+      "url": "https://github.com/soulfra/soulfra-simple"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001",
+      "description": "Local development"
+    },
+    {
+      "url": "{BASE_URL}",
+      "description": "Configurable deployment",
+      "variables": {
+        "BASE_URL": {
+          "default": "http://localhost:5001",
+          "description": "Set via BASE_URL environment variable"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "GET /api/health",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts": {
+      "get": {
+        "summary": "GET /api/posts",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/<int:post_id>": {
+      "get": {
+        "summary": "GET /api/posts/<int:post_id>",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reasoning/threads": {
+      "get": {
+        "summary": "GET /api/reasoning/threads",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reasoning/threads/<int:thread_id>": {
+      "get": {
+        "summary": "GET /api/reasoning/threads/<int:thread_id>",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feedback": {
+      "post": {
+        "summary": "POST /api/feedback",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "users": {
+        "type": "object",
+        "properties": {
+          "password_hash": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "profile_pic": {
+            "type": "string"
+          },
+          "is_admin": {
+            "type": "boolean"
+          },
+          "is_ai_persona": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "password_hash"
+        ]
+      },
+      "posts": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "emailed": {
+            "type": "boolean"
+          },
+          "emailed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ai_processed": {
+            "type": "boolean"
+          },
+          "source_post_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "user_id",
+          "title",
+          "content",
+          "published_at"
+        ]
+      },
+      "comments": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "parent_comment_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "post_id",
+          "user_id",
+          "content"
+        ]
+      },
+      "messages": {
+        "type": "object",
+        "properties": {
+          "from_user_id": {
+            "type": "integer"
+          },
+          "to_user_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          },
+          "read": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "from_user_id",
+          "to_user_id",
+          "content"
+        ]
+      },
+      "notifications": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "read": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "user_id",
+          "type",
+          "content"
+        ]
+      },
+      "subscribers": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "confirmed": {
+            "type": "boolean"
+          },
+          "confirmation_token": {
+            "type": "string"
+          },
+          "subscribed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unsubscribed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": null
+      },
+      "reasoning_threads": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer"
+          },
+          "initiator_user_id": {
+            "type": "integer"
+          },
+          "topic": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "post_id",
+          "initiator_user_id",
+          "topic"
+        ]
+      },
+      "reasoning_steps": {
+        "type": "object",
+        "properties": {
+          "thread_id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "step_number": {
+            "type": "integer"
+          },
+          "step_type": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "format": "float"
+          },
+          "parent_step_id": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "thread_id",
+          "user_id",
+          "step_number",
+          "step_type",
+          "content"
+        ]
+      },
+      "categories": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": null
+      },
+      "tags": {
+        "type": "object",
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": null
+      },
+      "post_categories": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer"
+          },
+          "category_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "post_id",
+          "category_id"
+        ]
+      },
+      "post_tags": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer"
+          },
+          "tag_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "post_id",
+          "tag_id"
+        ]
+      },
+      "qr_codes": {
+        "type": "object",
+        "properties": {
+          "code_type": {
+            "type": "string"
+          },
+          "code_data": {
+            "type": "string"
+          },
+          "target_url": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "total_scans": {
+            "type": "integer"
+          },
+          "last_scanned_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "code_type",
+          "code_data",
+          "target_url"
+        ]
+      },
+      "qr_scans": {
+        "type": "object",
+        "properties": {
+          "qr_code_id": {
+            "type": "integer"
+          },
+          "scanned_by_name": {
+            "type": "string"
+          },
+          "scanned_by_email": {
+            "type": "string"
+          },
+          "scanned_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ip_address": {
+            "type": "string"
+          },
+          "location_city": {
+            "type": "string"
+          },
+          "location_country": {
+            "type": "string"
+          },
+          "device_type": {
+            "type": "string"
+          },
+          "user_agent": {
+            "type": "string"
+          },
+          "referrer": {
+            "type": "string"
+          },
+          "previous_scan_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "qr_code_id"
+        ]
+      },
+      "images": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "format": "byte"
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "metadata": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "data",
+          "mime_type"
+        ]
+      },
+      "soul_history": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "committed_at": {
+            "type": "string"
+          },
+          "commit_message": {
+            "type": "string"
+          },
+          "soul_pack": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "committed_at",
+          "soul_pack"
+        ]
+      },
+      "url_shortcuts": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "clicks": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "username",
+          "created_at"
+        ]
+      },
+      "reputation": {
+        "type": "object",
+        "properties": {
+          "bits_earned": {
+            "type": "integer"
+          },
+          "bits_spent": {
+            "type": "integer"
+          },
+          "contribution_count": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": null
+      },
+      "contribution_logs": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "post_id": {
+            "type": "integer"
+          },
+          "comment_id": {
+            "type": "integer"
+          },
+          "contribution_type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "bits_awarded": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewed_by": {
+            "type": "integer"
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "user_id",
+          "contribution_type"
+        ]
+      },
+      "ml_models": {
+        "type": "object",
+        "properties": {
+          "model_type": {
+            "type": "string"
+          },
+          "model_data": {
+            "type": "string"
+          },
+          "trained_on": {
+            "type": "integer"
+          },
+          "accuracy": {
+            "type": "number",
+            "format": "float"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "model_type",
+          "model_data"
+        ]
+      },
+      "predictions": {
+        "type": "object",
+        "properties": {
+          "model_id": {
+            "type": "integer"
+          },
+          "input_data": {
+            "type": "string"
+          },
+          "prediction": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "format": "float"
+          },
+          "actual_result": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "model_id",
+          "input_data",
+          "prediction"
+        ]
+      },
+      "feedback": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "component": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "user_agent": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "admin_notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "posts",
+      "description": "Blog posts and content"
+    },
+    {
+      "name": "reasoning",
+      "description": "AI reasoning threads and steps"
+    },
+    {
+      "name": "feedback",
+      "description": "User feedback and bug reports"
+    },
+    {
+      "name": "health",
+      "description": "System health and status"
+    }
+  ]
+}

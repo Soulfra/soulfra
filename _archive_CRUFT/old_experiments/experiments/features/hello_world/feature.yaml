@@ -1,0 +1,9 @@
+name: Hello World Demo
+description: Example plugin showing how the auto-load system works
+icon: wave
+category: Examples
+url_prefix: /hello
+visible_in_hub: true
+visible_in_nav: true
+author: Auto-generated
+version: 1.0.0

@@ -1,0 +1,27 @@
+/* Ocean Dreams - Dinghy Class ⛵🌊 */
+/* Minimal: emoji + colors + animation */
+
+/* Layer 1: Emoji brand */
+.logo::before { content: "🌊 "; }
+
+/* Layer 2: Background */
+body { background: #e6f3ff; }
+
+/* Layer 3: Text colors */
+body { color: #003366; }
+h1, h2, h3 { color: #002244; }
+
+/* Layer 4: Links */
+a { color: #0066cc; }
+a:hover { opacity: 0.7; }
+
+/* Optional Layer 5: Screensaver animation (subtle) */
+@keyframes ocean {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+body {
+  background: linear-gradient(120deg, #e6f3ff 0%, #cce7ff 50%, #e6f3ff 100%);
+  background-size: 200% 200%;
+  animation: ocean 60s ease-in-out infinite;
+}

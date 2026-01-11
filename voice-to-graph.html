@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice to Graph - Universal Debugger</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 0;
+            height: calc(100vh - 200px);
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #495057;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .input-group select,
+        .input-group textarea,
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .input-group select:focus,
+        .input-group textarea:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .graph-area {
+            padding: 30px;
+            overflow: auto;
+            position: relative;
+        }
+
+        .graph-area h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #495057;
+        }
+
+        #canvas {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            cursor: grab;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        #canvas:active {
+            cursor: grabbing;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 1.8rem;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat span {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .examples h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #856404;
+        }
+
+        .examples ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .examples li {
+            padding: 5px 0;
+            color: #856404;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .examples li:hover {
+            color: #533f03;
+            text-decoration: underline;
+        }
+
+        .node-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .node-details h3 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        #recordBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin-bottom: 15px;
+        }
+
+        #recordBtn.recording {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎤 Voice to Graph</h1>
+            <p>Universal debugger for voice memos, code, brand strategy, and CCNA study</p>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2>Input</h2>
+
+                <div class="input-group">
+                    <label for="contentType">Content Type</label>
+                    <select id="contentType">
+                        <option value="voice_transcript">Voice Memo</option>
+                        <option value="code_python">Python Code</option>
+                        <option value="markdown">Markdown/Docs</option>
+                        <option value="brand_analysis">Brand Strategy</option>
+                        <option value="ccna_study">CCNA Study Notes</option>
+                        <option value="debug_routes">Debug Flask Routes</option>
+                    </select>
+                </div>
+
+                <button id="recordBtn" class="btn">🎤 Record Voice Memo</button>
+
+                <div class="input-group">
+                    <label for="contentInput">Or paste text/code:</label>
+                    <textarea id="contentInput" placeholder="Paste your content here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="fileInput">Or upload file:</label>
+                    <input type="file" id="fileInput" accept=".txt,.md,.py,.json,.csv">
+                </div>
+
+                <button id="generateBtn" class="btn">Generate Graph</button>
+
+                <div class="examples">
+                    <h3>💡 Examples</h3>
+                    <ul>
+                        <li data-example="voice">Voice: "OSI model has 7 layers..."</li>
+                        <li data-example="brand">Brand: Compare soulfra vs calriven</li>
+                        <li data-example="code">Code: Analyze app.py routes</li>
+                        <li data-example="debug">Debug: Show all Flask dependencies</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="graph-area">
+                <h2>Knowledge Graph</h2>
+
+                <div class="stats">
+                    <div class="stat">
+                        <strong id="nodeCount">0</strong>
+                        <span>Nodes</span>
+                    </div>
+                    <div class="stat">
+                        <strong id="edgeCount">0</strong>
+                        <span>Edges</span>
+                    </div>
+                    <div class="stat">
+                        <strong id="selectedNode">None</strong>
+                        <span>Selected</span>
+                    </div>
+                </div>
+
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Generating knowledge graph...</p>
+                </div>
+
+                <canvas id="canvas" width="900" height="600"></canvas>
+
+                <div id="nodeDetails" class="node-details" style="display: none;">
+                    <h3>Node Details</h3>
+                    <div id="detailsContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentGraph = { nodes: [], edges: [] };
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+
+        // DOM elements
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const contentTypeSelect = document.getElementById('contentType');
+        const contentInput = document.getElementById('contentInput');
+        const fileInput = document.getElementById('fileInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const loading = document.querySelector('.loading');
+        const nodeCountEl = document.getElementById('nodeCount');
+        const edgeCountEl = document.getElementById('edgeCount');
+        const selectedNodeEl = document.getElementById('selectedNode');
+        const nodeDetailsEl = document.getElementById('nodeDetails');
+        const detailsContentEl = document.getElementById('detailsContent');
+
+        // Colors
+        const colors = {
+            node: '#667eea',
+            edge: '#999',
+            selected: '#f5576c',
+            text: '#333'
+        };
+
+        // Generate graph
+        async function generateGraph() {
+            const contentType = contentTypeSelect.value;
+            const content = contentInput.value;
+
+            if (!content.trim()) {
+                alert('Please enter some content or record a voice memo');
+                return;
+            }
+
+            loading.classList.add('active');
+            canvas.style.display = 'none';
+
+            try {
+                // Call backend API
+                const response = await fetch('/api/voice-to-graph', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        content_type: contentType
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate graph');
+                }
+
+                const result = await response.json();
+                currentGraph = result.graph;
+
+                // Update stats
+                nodeCountEl.textContent = currentGraph.nodes.length;
+                edgeCountEl.textContent = currentGraph.edges.length;
+
+                // Render graph
+                renderGraph();
+
+            } catch (error) {
+                alert('Error generating graph: ' + error.message);
+                console.error(error);
+            } finally {
+                loading.classList.remove('active');
+                canvas.style.display = 'block';
+            }
+        }
+
+        // Render graph on canvas
+        function renderGraph() {
+            if (!currentGraph.nodes.length) {
+                return;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Simple force-directed layout (basic version)
+            const positions = computeLayout(currentGraph.nodes, currentGraph.edges);
+
+            // Draw edges
+            ctx.strokeStyle = colors.edge;
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.6;
+
+            currentGraph.edges.forEach(edge => {
+                const sourcePos = positions[edge.source];
+                const targetPos = positions[edge.target];
+
+                if (sourcePos && targetPos) {
+                    ctx.beginPath();
+                    ctx.moveTo(sourcePos.x, sourcePos.y);
+                    ctx.lineTo(targetPos.x, targetPos.y);
+                    ctx.stroke();
+                }
+            });
+
+            ctx.globalAlpha = 1.0;
+
+            // Draw nodes
+            currentGraph.nodes.forEach(node => {
+                const pos = positions[node.id];
+                if (!pos) return;
+
+                // Circle
+                ctx.fillStyle = colors.node;
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 8, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+
+                // Label
+                ctx.fillStyle = colors.text;
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(node.label || node.id, pos.x, pos.y + 20);
+            });
+        }
+
+        // Simple layout algorithm
+        function computeLayout(nodes, edges) {
+            const positions = {};
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(canvas.width, canvas.height) / 3;
+
+            nodes.forEach((node, i) => {
+                const angle = (2 * Math.PI * i) / nodes.length;
+                positions[node.id] = {
+                    x: centerX + radius * Math.cos(angle),
+                    y: centerY + radius * Math.sin(angle)
+                };
+            });
+
+            return positions;
+        }
+
+        // Voice recording
+        async function toggleRecording() {
+            if (!isRecording) {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
+                        // Send to backend for transcription
+                        const formData = new FormData();
+                        formData.append('audio', audioBlob);
+
+                        try {
+                            const response = await fetch('/api/transcribe', {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            if (response.ok) {
+                                const result = await response.json();
+                                contentInput.value = result.transcript;
+                            }
+                        } catch (error) {
+                            alert('Error transcribing audio: ' + error.message);
+                        }
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordBtn.textContent = '⏹️ Stop Recording';
+                    recordBtn.classList.add('recording');
+
+                } catch (error) {
+                    alert('Error accessing microphone: ' + error.message);
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                isRecording = false;
+                recordBtn.textContent = '🎤 Record Voice Memo';
+                recordBtn.classList.remove('recording');
+            }
+        }
+
+        // File upload
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const text = await file.text();
+                contentInput.value = text;
+            }
+        });
+
+        // Canvas click detection
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Find clicked node
+            const positions = computeLayout(currentGraph.nodes, currentGraph.edges);
+            let clickedNode = null;
+
+            currentGraph.nodes.forEach(node => {
+                const pos = positions[node.id];
+                if (!pos) return;
+
+                const distance = Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2);
+                if (distance < 15) {
+                    clickedNode = node;
+                }
+            });
+
+            if (clickedNode) {
+                selectedNodeEl.textContent = clickedNode.label || clickedNode.id;
+                detailsContentEl.innerHTML = `
+                    <p><strong>ID:</strong> ${clickedNode.id}</p>
+                    <p><strong>Type:</strong> ${clickedNode.type || 'unknown'}</p>
+                    ${clickedNode.definition ? `<p><strong>Definition:</strong> ${clickedNode.definition}</p>` : ''}
+                    ${clickedNode.frequency ? `<p><strong>Frequency:</strong> ${clickedNode.frequency}</p>` : ''}
+                `;
+                nodeDetailsEl.style.display = 'block';
+            }
+        });
+
+        // Example clicks
+        document.querySelectorAll('.examples li').forEach(item => {
+            item.addEventListener('click', () => {
+                const example = item.dataset.example;
+
+                switch (example) {
+                    case 'voice':
+                        contentTypeSelect.value = 'ccna_study';
+                        contentInput.value = 'OSI model has 7 layers. TCP uses IP protocol. Star topology connects all devices to a central hub.';
+                        break;
+                    case 'brand':
+                        contentTypeSelect.value = 'brand_analysis';
+                        contentInput.value = 'Compare soulfra.com and calriven.com wordmaps';
+                        break;
+                    case 'code':
+                        contentTypeSelect.value = 'code_python';
+                        contentInput.value = 'def hello():\n    return "world"\n\nclass User:\n    def __init__(self, name):\n        self.name = name';
+                        break;
+                    case 'debug':
+                        contentTypeSelect.value = 'debug_routes';
+                        contentInput.value = 'Show all Flask routes and database dependencies';
+                        break;
+                }
+            });
+        });
+
+        // Event listeners
+        generateBtn.addEventListener('click', generateGraph);
+        recordBtn.addEventListener('click', toggleRecording);
+
+        console.log('🎨 Voice to Graph initialized');
+    </script>
+</body>
+</html>

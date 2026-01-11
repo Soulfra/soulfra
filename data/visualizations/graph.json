@@ -1,0 +1,81 @@
+{
+  "nodes": [
+    {
+      "id": "tampa",
+      "label": "Tampa",
+      "type": "base",
+      "x": 30,
+      "y": 570
+    },
+    {
+      "id": "plumber",
+      "label": "Plumber",
+      "type": "base",
+      "x": 325.35610417376404,
+      "y": 570
+    },
+    {
+      "id": "repair",
+      "label": "Repair",
+      "type": "base",
+      "x": 657.3488722659365,
+      "y": 570
+    },
+    {
+      "id": "service",
+      "label": "Service",
+      "type": "base",
+      "x": 498.2934354883254,
+      "y": 338.8553263827787
+    },
+    {
+      "id": "database",
+      "label": "Database",
+      "type": "expanded",
+      "definition": "Organized collection of data",
+      "x": 513.028112501783,
+      "y": 30
+    },
+    {
+      "id": "blockchain",
+      "label": "Blockchain",
+      "type": "expanded",
+      "definition": "Distributed ledger technology",
+      "x": 770,
+      "y": 30
+    }
+  ],
+  "edges": [
+    {
+      "source": "tampa",
+      "target": "plumber"
+    },
+    {
+      "source": "plumber",
+      "target": "repair"
+    },
+    {
+      "source": "plumber",
+      "target": "service"
+    },
+    {
+      "source": "repair",
+      "target": "service"
+    },
+    {
+      "source": "service",
+      "target": "database"
+    },
+    {
+      "source": "database",
+      "target": "blockchain"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-01-11T14:23:29.195361",
+    "canvas_width": 800,
+    "canvas_height": 600,
+    "node_count": 6,
+    "edge_count": 6
+  }
+}

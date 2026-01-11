@@ -1,0 +1,12 @@
+{
+  "name": "even_odd_classifier",
+  "architecture": {
+    "input": 8,
+    "hidden": [
+      16
+    ],
+    "output": 1
+  },
+  "weights_count": 2,
+  "trained_at": "2025-12-22T08:32:53.406052"
+}

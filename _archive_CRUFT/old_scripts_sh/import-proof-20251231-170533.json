@@ -1,0 +1,42 @@
+{
+  "type": "pre-import-check",
+  "timestamp": "2025-12-31T17:05:33.296610",
+  "csv_file": "test-domains-50.csv",
+  "file_checksum_sha256": "71648697bf233d92d6aac3fda7ea199b74f6b5e9ccc62dc52a65eb823196b94f",
+  "expected": {
+    "total_domains": 50,
+    "categories": {
+      "cooking": 5,
+      "tech": 5,
+      "privacy": 5,
+      "business": 5,
+      "health": 5,
+      "finance": 5,
+      "education": 5,
+      "gaming": 5,
+      "local": 5,
+      "art": 5
+    },
+    "tiers": {
+      "creative": 25,
+      "business": 20,
+      "foundation": 5
+    },
+    "types": {
+      "blog": 25,
+      "platform": 15,
+      "community": 5,
+      "directory": 5
+    },
+    "sample_domains": [
+      "simpledinner.org",
+      "websolutions.io",
+      "secureprivacy.org",
+      "startupmarketing.net",
+      "fithealth.net"
+    ]
+  },
+  "database_before": {
+    "total_domains": 8
+  }
+}

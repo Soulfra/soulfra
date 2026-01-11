@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay ${{ amount }} - {{ label }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Matrix Rain Canvas */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #0f0;
+            border-radius: 0;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5),
+                        inset 0 0 20px rgba(0, 255, 0, 0.1);
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.98; }
+        }
+
+        h1 {
+            color: #0f0;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #0f0;
+            letter-spacing: 3px;
+        }
+
+        .label {
+            color: #0f0;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* QR Code Display */
+        .qr-display {
+            background: #000;
+            border: 1px solid #0f0;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: #0f0;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #000;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .qr-code::before {
+            content: "{{ code }}";
+            position: absolute;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #0f0;
+            box-shadow: 0 0 10px #0f0;
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        /* Price Display */
+        .price {
+            color: #0f0;
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 20px #0f0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Input Styling */
+        input {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 15px #0f0, inset 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        input::placeholder {
+            color: #0f0;
+            opacity: 0.5;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            padding: 20px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            box-shadow: 0 0 30px #0f0;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Info Text */
+        .note {
+            color: #0f0;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #f0f;
+            animation: glitch-1 2s infinite;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: 2px 0 #0ff;
+            animation: glitch-2 2s infinite;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip: rect(0, 9999px, 0, 0); }
+            20% { clip: rect(10px, 9999px, 30px, 0); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip: rect(0, 9999px, 0, 0); }
+            40% { clip: rect(20px, 9999px, 40px, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Payment Container -->
+    <div class="container">
+        <div class="payment-box">
+            <h1 class="glitch" data-text="ENTER THE MATRIX">ENTER THE MATRIX</h1>
+            <div class="label">{{ label }}</div>
+
+            <!-- QR Code Display -->
+            <div class="qr-display">
+                <div class="qr-code">
+                    QR:{{ code }}
+                </div>
+                <div class="scan-line"></div>
+            </div>
+
+            <!-- Price -->
+            <div class="price">${{ amount }}</div>
+
+            <!-- Amount Input -->
+            <input
+                type="number"
+                id="amount"
+                value="{{ amount }}"
+                step="0.01"
+                min="0.01"
+                placeholder="AMOUNT"
+            >
+
+            <!-- Payment Button -->
+            <button onclick="initPayment()">
+                TRANSMIT PAYMENT
+            </button>
+
+            <div class="note">
+                CODE: {{ code }} | ENCRYPTED
+            </div>
+        </div>
+    </div>
+
+    <!-- Matrix Rain Script -->
+    <script>
+        // Matrix Rain Animation
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const charArray = chars.split('');
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height / fontSize;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = charArray[Math.floor(Math.random() * charArray.length)];
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Payment Logic
+        function initPayment() {
+            const amount = document.getElementById('amount').value;
+
+            // Glitch effect on button
+            const btn = document.querySelector('button');
+            btn.style.animation = 'glitch-1 0.3s';
+
+            setTimeout(() => {
+                alert(`TRANSMISSION INITIATED\n\nAMOUNT: $${amount}\nCODE: {{ code }}\nSTATUS: ENCRYPTED\n\n[Stripe integration pending...]`);
+                btn.style.animation = '';
+            }, 300);
+
+            // TODO: Integrate with Stripe Payment Element
+            // window.location.href = '/payment/success?code={{ code }}&amount=' + amount;
+        }
+    </script>
+</body>
+</html>

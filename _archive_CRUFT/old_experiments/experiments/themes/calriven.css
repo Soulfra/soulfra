@@ -1,0 +1,27 @@
+/* CalRiven - Dinghy Class ⛵💻 */
+/* Minimal: emoji + colors + animation */
+
+/* Layer 1: Emoji brand */
+.logo::before { content: "💻 "; }
+
+/* Layer 2: Background */
+body { background: #f5f9ff; }
+
+/* Layer 3: Text colors */
+body { color: #0d47a1; }
+h1, h2, h3 { color: #1976d2; }
+
+/* Layer 4: Links */
+a { color: #2196f3; }
+a:hover { opacity: 0.7; }
+
+/* Optional Layer 5: Screensaver animation (subtle) */
+@keyframes tech {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+body {
+  background: linear-gradient(120deg, #f5f9ff 0%, #e3f2fd 50%, #f5f9ff 100%);
+  background-size: 200% 200%;
+  animation: tech 45s ease-in-out infinite;
+}

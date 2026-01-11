@@ -1,0 +1,27 @@
+<svg width="1200" height="900" xmlns="http://www.w3.org/2000/svg">
+<style>
+.node { stroke: #333; stroke-width: 2; cursor: pointer; }
+.node-base { fill: #4CAF50; }
+.node-expanded { fill: #2196F3; }
+.edge { stroke: #999; stroke-width: 1; opacity: 0.6; }
+.label { font-family: Arial; font-size: 12px; fill: #333; text-anchor: middle; }
+</style>
+<g id="edges">
+</g>
+<g id="nodes">
+<circle class="node node-domain" cx="1170.0" cy="870.0" r="6" />
+<text class="label" x="1170.0" y="890.0">soulfra.com</text>
+<circle class="node node-domain" cx="761.7" cy="30.0" r="6" />
+<text class="label" x="761.7" y="50.0">howtocookathome.com</text>
+<circle class="node node-domain" cx="30.0" cy="870.0" r="6" />
+<text class="label" x="30.0" y="890.0">deathtodata.com</text>
+<circle class="node node-domain" cx="778.5" cy="870.0" r="6" />
+<text class="label" x="778.5" y="890.0">calriven.com</text>
+<circle class="node node-domain" cx="30.0" cy="30.0" r="6" />
+<text class="label" x="30.0" y="50.0">hollowtown.com</text>
+<circle class="node node-domain" cx="1170.0" cy="30.0" r="6" />
+<text class="label" x="1170.0" y="50.0">oofbox.com</text>
+<circle class="node node-domain" cx="30.0" cy="455.0" r="6" />
+<text class="label" x="30.0" y="475.0">niceleak.com</text>
+</g>
+</svg>

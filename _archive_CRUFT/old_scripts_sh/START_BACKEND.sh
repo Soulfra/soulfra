@@ -1,0 +1,45 @@
+#!/bin/bash
+# CringeProof Backend Startup Script
+# Starts Flask server and provides access URLs
+
+cd "$(dirname "$0")"
+
+echo "============================================"
+echo "🚀 Starting CringeProof Backend"
+echo "============================================"
+echo ""
+echo "📍 Directory: $(pwd)"
+echo "🗄️  Database: soulfra.db"
+echo ""
+echo "🌐 Local Access:"
+echo "   http://localhost:5001"
+echo "   http://127.0.0.1:5001"
+echo ""
+echo "📊 Admin Dashboards:"
+echo "   Database Admin: http://localhost:5001/admin/database"
+echo "   Customer Export: http://localhost:5001/customers/dashboard"
+echo ""
+echo "📧 Customer Export:"
+echo "   Mailchimp CSV: http://localhost:5001/api/customers/export/mailchimp"
+echo "   SendGrid CSV: http://localhost:5001/api/customers/export/sendgrid"
+echo "   Stats API: http://localhost:5001/api/customers/stats"
+echo ""
+echo "⚙️  Batch Workflows:"
+echo "   Daily Sync: http://localhost:5001/api/batch/sync-daily"
+echo "   Weekly Report: http://localhost:5001/api/batch/weekly-report"
+echo "   Run All: http://localhost:5001/api/batch/run-all"
+echo ""
+echo "📦 Product Tracking:"
+echo "   List Products: http://localhost:5001/api/products/list"
+echo "   Top Scanned: http://localhost:5001/api/products/top-scanned"
+echo ""
+echo "🎤 Voice Recorder API:"
+echo "   http://localhost:5001/api/simple-voice/save"
+echo ""
+echo "============================================"
+echo ""
+echo "Press Ctrl+C to stop the server"
+echo ""
+
+# Start Flask
+python3 app.py

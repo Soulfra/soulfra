@@ -1,0 +1,35 @@
+/*
+ * Default Soulfra Theme
+ * Clean, minimal, black & white
+ */
+
+:root {
+  --brand-color: #000;
+  --brand-accent: #333;
+  --brand-light: #666;
+  --brand-bg: #fff;
+  --brand-text: #333;
+}
+
+/* Override logo color */
+.logo {
+  color: var(--brand-color) !important;
+}
+
+/* Override CTA button */
+.cta-button {
+  background: var(--brand-color) !important;
+}
+
+.cta-button:hover {
+  background: var(--brand-accent) !important;
+}
+
+/* Links */
+a {
+  color: var(--brand-color);
+}
+
+a:hover {
+  color: var(--brand-accent);
+}

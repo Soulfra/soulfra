@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛠️ Developer Tools - Soulfra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .tool-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-disabled {
+            background: #dee2e6;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .cli-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .cli-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .cli-command {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .cli-command:before {
+            content: '$ ';
+            color: #50fa7b;
+        }
+
+        .cli-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            padding-left: 15px;
+        }
+
+        .docs-link {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .docs-link h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .docs-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .docs-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛠️ Developer Tools</h1>
+            <p>Voice-to-Graph Pipeline & System Debuggers</p>
+        </header>
+
+        <div class="tools-grid">
+            <!-- Voice to Graph -->
+            <div class="tool-card">
+                <h2>
+                    🎤 Voice to Graph
+                    <span class="status-badge status-ready">Ready</span>
+                </h2>
+                <p>
+                    Universal debugger that converts voice memos, code, and docs into interactive knowledge graphs.
+                    Record voice → transcribe → visualize concepts.
+                </p>
+                <div class="tool-actions">
+                    <a href="/voice-to-graph" class="btn btn-primary">Open Debugger</a>
+                    <a href="/api/voice-to-graph" class="btn btn-secondary">API Docs</a>
+                </div>
+            </div>
+
+            <!-- System Debug -->
+            <div class="tool-card">
+                <h2>
+                    🔍 System Debug
+                    {% if system_debug_exists %}
+                    <span class="status-badge status-ready">Report Ready</span>
+                    {% else %}
+                    <span class="status-badge status-pending">Run CLI</span>
+                    {% endif %}
+                </h2>
+                <p>
+                    Analyzes Flask routes, database schema, and domain routing. Shows dependency graphs and hub nodes
+                    (like get_db called 187 times).
+                </p>
+                <div class="tool-actions">
+                    {% if system_debug_exists %}
+                    <a href="/static/../data/system_debug/routes.html" target="_blank" class="btn btn-success">View Report</a>
+                    {% else %}
+                    <span class="btn btn-disabled">Report Not Generated</span>
+                    {% endif %}
+                    <button class="btn btn-secondary" onclick="showCLI('debug')">Show CLI</button>
+                </div>
+            </div>
+
+            <!-- Brand Analysis -->
+            <div class="tool-card">
+                <h2>
+                    📊 Brand Strategy
+                    {% if brand_analysis_exists %}
+                    <span class="status-badge status-ready">Report Ready</span>
+                    {% else %}
+                    <span class="status-badge status-pending">Run CLI</span>
+                    {% endif %}
+                </h2>
+                <p>
+                    Compares wordmaps across all 7 domains. Shows brand overlap (soulfra 95% similar to howtocookathome),
+                    unique positioning, and strategic insights.
+                </p>
+                <div class="tool-actions">
+                    {% if brand_analysis_exists %}
+                    <a href="/static/../data/brand_analysis/brand_comparison.html" target="_blank" class="btn btn-success">View Report</a>
+                    <a href="/static/../data/brand_analysis/brand_analysis_REPORT.md" target="_blank" class="btn btn-secondary">Read Analysis</a>
+                    {% else %}
+                    <span class="btn btn-disabled">Report Not Generated</span>
+                    {% endif %}
+                    <button class="btn btn-secondary" onclick="showCLI('brand')">Show CLI</button>
+                </div>
+            </div>
+
+            <!-- CCNA Study -->
+            <div class="tool-card">
+                <h2>
+                    🌐 CCNA Study
+                    {% if ccna_study_exists %}
+                    <span class="status-badge status-ready">Report Ready</span>
+                    {% else %}
+                    <span class="status-badge status-pending">Run CLI</span>
+                    {% endif %}
+                </h2>
+                <p>
+                    Converts networking study notes into concept graphs. Maps CCNA concepts to your system
+                    (Star topology = soulfra.com hub, VLANs = brand segmentation).
+                </p>
+                <div class="tool-actions">
+                    {% if ccna_study_exists %}
+                    <a href="/static/../data/ccna_study/ccna_concept_graph.html" target="_blank" class="btn btn-success">View Graph</a>
+                    {% else %}
+                    <span class="btn btn-disabled">Report Not Generated</span>
+                    {% endif %}
+                    <button class="btn btn-secondary" onclick="showCLI('ccna')">Show CLI</button>
+                </div>
+            </div>
+
+            <!-- Build Content -->
+            <div class="tool-card">
+                <h2>
+                    🏗️ Build Content
+                    {% if dist_count > 0 %}
+                    <span class="status-badge status-ready">{{ dist_count }} Files</span>
+                    {% else %}
+                    <span class="status-badge status-pending">No Files</span>
+                    {% endif %}
+                </h2>
+                <p>
+                    Static site generator with Merkle caching. Converts markdown/ipynb → HTML.
+                    Only rebuilds changed files (10x faster). Generates RSS feed and sitemap.
+                </p>
+                <div class="tool-actions">
+                    {% if dist_count > 0 %}
+                    <a href="/static/../dist/index.html" target="_blank" class="btn btn-success">View Index</a>
+                    <a href="/static/../dist/feed.xml" target="_blank" class="btn btn-secondary">RSS Feed</a>
+                    {% else %}
+                    <span class="btn btn-disabled">No Content Built</span>
+                    {% endif %}
+                    <button class="btn btn-secondary" onclick="showCLI('build')">Show CLI</button>
+                </div>
+            </div>
+
+            <!-- Email System -->
+            <div class="tool-card">
+                <h2>
+                    📧 Email System
+                    <span class="status-badge status-ready">3-Tier</span>
+                </h2>
+                <p>
+                    BIP-39 recovery codes via email. 3-tier system: Resend API → macOS sendmail → file fallback.
+                    Sends QR code business cards to professionals.
+                </p>
+                <div class="tool-actions">
+                    <a href="/signup/professional" class="btn btn-primary">Test Signup</a>
+                    <a href="/verify-professional" class="btn btn-secondary">Verify Code</a>
+                    <button class="btn btn-secondary" onclick="showCLI('email')">Show CLI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLI Commands -->
+        <div class="cli-section" id="cli-commands" style="display: none;">
+            <h2>📟 Terminal Commands</h2>
+            <div id="cli-content"></div>
+        </div>
+
+        <!-- Documentation -->
+        <div class="docs-link">
+            <h3>📚 Complete Guide</h3>
+            <p>
+                <a href="/static/../START_HERE.md" target="_blank">Read START_HERE.md</a> for full documentation
+                including email systems (SMTP vs SPAM), caching (Merkle trees), and regeneration guide.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const cliCommands = {
+            debug: [
+                { cmd: 'python3 debug_system.py --routes', desc: 'Analyze Flask routes (407 routes, 1,548 nodes)' },
+                { cmd: 'python3 debug_system.py --domains', desc: 'Analyze domain routing (7 domains)' },
+                { cmd: 'open data/system_debug/routes.html', desc: 'View interactive graph' }
+            ],
+            brand: [
+                { cmd: 'python3 brand_mapper.py', desc: 'Compare all domains wordmaps' },
+                { cmd: 'open data/brand_analysis/brand_comparison.html', desc: 'View brand overlap graph' },
+                { cmd: 'cat data/brand_analysis/brand_analysis_REPORT.md', desc: 'Read strategic insights' }
+            ],
+            ccna: [
+                { cmd: 'python3 ccna_study.py', desc: 'Generate CCNA concept graph (demo content)' },
+                { cmd: 'python3 ccna_study.py --file notes.md', desc: 'Build graph from your notes' },
+                { cmd: 'python3 ccna_study.py --compare', desc: 'Map CCNA concepts to your system' },
+                { cmd: 'open data/ccna_study/ccna_concept_graph.html', desc: 'View knowledge graph' }
+            ],
+            build: [
+                { cmd: 'python3 build-content.py', desc: 'Build all content (smart caching)' },
+                { cmd: 'python3 build-content.py --force', desc: 'Force rebuild (ignore cache)' },
+                { cmd: 'python3 build-content.py --deploy', desc: 'Deploy to GitHub Pages' },
+                { cmd: 'open dist/index.html', desc: 'View generated site' }
+            ],
+            email: [
+                { cmd: 'python3 test_email.py YOUR_EMAIL@gmail.com', desc: 'Send test recovery code' },
+                { cmd: 'python3 email-batch-processor.py', desc: 'Import email signups to database' },
+                { cmd: 'cat EMAIL_SETUP_GUIDE.md', desc: 'Read email system docs' }
+            ]
+        };
+
+        function showCLI(tool) {
+            const cliSection = document.getElementById('cli-commands');
+            const cliContent = document.getElementById('cli-content');
+
+            const commands = cliCommands[tool];
+            if (!commands) return;
+
+            let html = '';
+            commands.forEach(cmd => {
+                html += `
+                    <div class="cli-command">${cmd.cmd}</div>
+                    <div class="cli-description">${cmd.desc}</div>
+                `;
+            });
+
+            cliContent.innerHTML = html;
+            cliSection.style.display = 'block';
+            cliSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

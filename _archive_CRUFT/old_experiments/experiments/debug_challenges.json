@@ -1,0 +1,230 @@
+[
+  {
+    "id": 1,
+    "title": "🔍 Find the Redirect",
+    "description": "You visited /admin/studio but got redirected to /admin/login. Learn why HTTP redirects happen and how to debug them.",
+    "level": "beginner",
+    "estimated_time": "5 minutes",
+    "tasks": [
+      "Look at server logs for '302' status code",
+      "Find which function caused the redirect (hint: require_admin)",
+      "Understand how session cookies maintain login state",
+      "Learn how to use curl with cookies: curl -c cookies.txt"
+    ],
+    "hints": [
+      "💡 Use grep to search logs: grep '302' in the log viewer",
+      "💡 Check app.py for the require_admin() function",
+      "💡 Sessions need cookies to persist across requests",
+      "💡 Try: curl -c cookies.txt -d 'password=...' /admin/login"
+    ],
+    "solution_commands": [
+      "grep '302' # Find redirect in logs",
+      "grep -A 5 'require_admin' app.py # See auth check",
+      "curl -c cookies.txt -d 'password=soulfra2025' http://localhost:5001/admin/login"
+    ],
+    "reward": "🏆 Redirect Debugger Badge",
+    "learn": "HTTP redirects (302), session management, grep basics, curl with cookies",
+    "next_concepts": ["HTTP status codes", "Flask sessions", "Authentication flow"]
+  },
+
+  {
+    "id": 2,
+    "title": "🔎 Search Error Logs",
+    "description": "Find all error messages in the last 100 log lines using grep patterns.",
+    "level": "beginner",
+    "estimated_time": "10 minutes",
+    "tasks": [
+      "Use the log viewer to see recent logs",
+      "Search for lines containing 'error' (case-insensitive)",
+      "Count how many errors occurred",
+      "Filter to show only HTTP 500 errors"
+    ],
+    "hints": [
+      "💡 grep -i makes search case-insensitive",
+      "💡 Pipe to wc -l to count lines: grep 'error' | wc -l",
+      "💡 Use grep '500' to find server errors",
+      "💡 Combine patterns: grep -E '(error|500)'"
+    ],
+    "solution_commands": [
+      "grep -i 'error' # Case-insensitive error search",
+      "grep 'error' | wc -l # Count errors",
+      "grep '500' # Find server errors",
+      "grep -E '(error|500|traceback)' # Multiple patterns"
+    ],
+    "reward": "🏆 Grep Master Badge",
+    "learn": "grep command, regex patterns, piping, wc command",
+    "next_concepts": ["Regular expressions", "Unix pipes", "Log analysis"]
+  },
+
+  {
+    "id": 3,
+    "title": "🧪 Debug Test Failure",
+    "description": "One test is failing. Find it, read the error, and use Ollama to understand why.",
+    "level": "intermediate",
+    "estimated_time": "15 minutes",
+    "tasks": [
+      "Run all tests using the Test Runner",
+      "Identify which test failed (look for ❌)",
+      "Read the full error message and stack trace",
+      "Click 'Explain This Error' to get AI help",
+      "Apply the suggested fix"
+    ],
+    "hints": [
+      "💡 Test Runner shows ✅ for pass, ❌ for fail",
+      "💡 Stack traces show the error location: file.py:line",
+      "💡 Ollama can explain Python tracebacks in plain English",
+      "💡 Common issues: missing imports, wrong assertions, outdated code"
+    ],
+    "solution_commands": [
+      "python3 test_file.py # Run single test",
+      "pytest -v # Verbose test output",
+      "python3 -m pdb test_file.py # Debug with pdb"
+    ],
+    "reward": "🏆 Test Detective Badge",
+    "learn": "Test debugging, stack trace reading, AI-assisted debugging, pytest",
+    "next_concepts": ["Unit testing", "Test-driven development", "Python debugger (pdb)"]
+  },
+
+  {
+    "id": 4,
+    "title": "📊 Parse JSON Logs",
+    "description": "Extract specific fields from JSON-formatted log files using jq.",
+    "level": "intermediate",
+    "estimated_time": "20 minutes",
+    "tasks": [
+      "Create a sample JSON log file",
+      "Use jq to extract the 'level' field",
+      "Filter logs where level == 'error'",
+      "Count error vs warning vs info logs"
+    ],
+    "hints": [
+      "💡 jq '.field' extracts a field",
+      "💡 jq 'select(.level == \"error\")' filters rows",
+      "💡 jq '.level' | sort | uniq -c counts occurrences",
+      "💡 Combine with grep: jq '.message' | grep 'pattern'"
+    ],
+    "solution_commands": [
+      "jq '.level' logs.json # Extract level field",
+      "jq 'select(.level == \"error\")' logs.json # Filter errors",
+      "jq '.level' logs.json | sort | uniq -c # Count by level",
+      "jq '.message' logs.json | grep 'failed' # Search messages"
+    ],
+    "reward": "🏆 JSON Parser Badge",
+    "learn": "jq command, JSON parsing, data filtering, aggregation",
+    "next_concepts": ["JSON structure", "jq advanced queries", "Log aggregation"]
+  },
+
+  {
+    "id": 5,
+    "title": "🌐 Debug API Request",
+    "description": "Make HTTP requests with curl and debug response issues.",
+    "level": "intermediate",
+    "estimated_time": "15 minutes",
+    "tasks": [
+      "Use curl to GET /api/studio/list-tests",
+      "Make a POST request with JSON data",
+      "Inspect response headers with curl -v",
+      "Debug a 404 error by checking the route"
+    ],
+    "hints": [
+      "💡 curl -X GET http://localhost:5001/api/... for GET requests",
+      "💡 curl -X POST -H 'Content-Type: application/json' -d '{...}' for POST",
+      "💡 curl -v shows verbose output including headers",
+      "💡 curl -i shows response headers with body"
+    ],
+    "solution_commands": [
+      "curl http://localhost:5001/api/studio/list-tests",
+      "curl -X POST -H 'Content-Type: application/json' -d '{\"test\":\"data\"}' /api/endpoint",
+      "curl -v http://localhost:5001/api/debug/challenges # Verbose",
+      "curl -i http://localhost:5001/nonexistent # See 404 headers"
+    ],
+    "reward": "🏆 API Debugger Badge",
+    "learn": "curl command, HTTP methods, JSON APIs, response headers",
+    "next_concepts": ["REST APIs", "HTTP headers", "Request/response cycle"]
+  },
+
+  {
+    "id": 6,
+    "title": "⚡ Watch Logs in Real-Time",
+    "description": "Monitor log files as they update using tail -f and filters.",
+    "level": "advanced",
+    "estimated_time": "10 minutes",
+    "tasks": [
+      "Use tail -f to watch logs live",
+      "Pipe through grep to filter for errors only",
+      "Highlight matches with --color",
+      "Stop the watcher with Ctrl+C"
+    ],
+    "hints": [
+      "💡 tail -f filename follows file as it grows",
+      "💡 tail -f log | grep 'ERROR' shows only errors",
+      "💡 tail -f log | grep --color 'pattern' highlights matches",
+      "💡 Ctrl+C stops the tail command"
+    ],
+    "solution_commands": [
+      "tail -f flask.log # Watch log file",
+      "tail -f flask.log | grep 'ERROR' # Filter errors",
+      "tail -f flask.log | grep --color 'failed' # Highlight",
+      "tail -100 flask.log # Last 100 lines only"
+    ],
+    "reward": "🏆 Log Watcher Badge",
+    "learn": "tail -f command, live monitoring, piping with grep",
+    "next_concepts": ["Real-time monitoring", "Log streaming", "Process management"]
+  },
+
+  {
+    "id": 7,
+    "title": "🐛 Debug Race Condition",
+    "description": "Advanced: Find and fix a timing issue in concurrent code.",
+    "level": "advanced",
+    "estimated_time": "30 minutes",
+    "tasks": [
+      "Run concurrent tests multiple times",
+      "Notice different results on each run (race condition)",
+      "Use logging to trace execution order",
+      "Add proper locking or synchronization"
+    ],
+    "hints": [
+      "💡 Race conditions happen when timing matters",
+      "💡 Add print() statements to see execution order",
+      "💡 Use threading.Lock() to synchronize access",
+      "💡 Run test 10 times: for i in {1..10}; do python test.py; done"
+    ],
+    "solution_commands": [
+      "for i in {1..10}; do python3 test_concurrent.py; done",
+      "grep -A 5 'threading' app.py # Find concurrent code",
+      "python3 -m trace --trace script.py # Trace execution"
+    ],
+    "reward": "🏆 Concurrency Master Badge",
+    "learn": "Race conditions, threading, locks, debugging concurrent code",
+    "next_concepts": ["Multithreading", "Locks and semaphores", "Concurrent debugging"]
+  },
+
+  {
+    "id": 8,
+    "title": "🔬 Performance Profiling",
+    "description": "Use profiling tools to find slow code and optimize it.",
+    "level": "advanced",
+    "estimated_time": "25 minutes",
+    "tasks": [
+      "Profile a slow endpoint with cProfile",
+      "Identify the bottleneck function",
+      "Use timeit to measure improvements",
+      "Optimize and verify speedup"
+    ],
+    "hints": [
+      "💡 python -m cProfile script.py shows performance data",
+      "💡 Sort by cumtime to find slowest functions",
+      "💡 Use @profile decorator for line-by-line profiling",
+      "💡 Compare before/after with timeit"
+    ],
+    "solution_commands": [
+      "python3 -m cProfile -s cumtime app.py",
+      "python3 -m timeit -n 100 'function_call()'",
+      "time python3 script.py # Simple timing"
+    ],
+    "reward": "🏆 Performance Engineer Badge",
+    "learn": "cProfile, performance analysis, optimization techniques",
+    "next_concepts": ["Profiling", "Time complexity", "Algorithm optimization"]
+  }
+]

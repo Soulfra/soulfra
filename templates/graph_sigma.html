@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Interactive Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/graphology@0.25.4/dist/graphology.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@3.0.0-beta.20/build/sigma.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        #header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .stats {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        #controls {
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            max-width: 300px;
+            z-index: 100;
+        }
+
+        #controls h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        #search {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .filter-group {
+            margin-bottom: 10px;
+        }
+
+        .filter-group label {
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .filter-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        #container {
+            position: absolute;
+            top: 90px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        #info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            max-width: 400px;
+            display: none;
+            z-index: 100;
+        }
+
+        #info-panel h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+
+        #info-panel .detail {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        #info-panel .detail strong {
+            color: #333;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            #controls {
+                top: 80px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+
+            #info-panel {
+                left: 10px;
+                right: 10px;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>🎨 {{ title }}</h1>
+        <div class="stats">
+            <span id="node-count">{{ node_count }} nodes</span> ·
+            <span id="edge-count">{{ edge_count }} edges</span> ·
+            <span id="visible-count"></span>
+        </div>
+    </div>
+
+    <div id="controls">
+        <h3>🔍 Search & Filter</h3>
+
+        {% if node_count > 500 %}
+        <div class="warning">
+            ⚠️ Large graph! Use filters to improve performance.
+        </div>
+        {% endif %}
+
+        <input type="text" id="search" placeholder="Search nodes...">
+
+        <div class="filter-group">
+            <strong style="font-size: 0.9rem;">Node Types:</strong>
+            <div id="type-filters"></div>
+        </div>
+
+        <div style="margin-top: 10px;">
+            <button class="btn" onclick="resetView()">Reset View</button>
+            <button class="btn btn-secondary" onclick="toggleControls()">Hide Controls</button>
+        </div>
+    </div>
+
+    <div id="container"></div>
+
+    <div id="info-panel">
+        <h3 id="node-label"></h3>
+        <div id="node-details"></div>
+    </div>
+
+    <script>
+        // Data from Python
+        const graphData = {
+            nodes: {{ nodes_json|safe }},
+            edges: {{ edges_json|safe }}
+        };
+
+        // Create graph
+        const graph = new graphology.Graph();
+
+        // Get unique node types
+        const nodeTypes = new Set();
+        graphData.nodes.forEach(node => {
+            nodeTypes.add(node.type || 'default');
+        });
+
+        // Color palette
+        const typeColors = {
+            'import': '#4CAF50',
+            'function': '#2196F3',
+            'route': '#FF9800',
+            'class': '#9C27B0',
+            'variable': '#607D8B',
+            'brand': '#E91E63',
+            'default': '#666'
+        };
+
+        // Add nodes
+        graphData.nodes.forEach(node => {
+            const nodeType = node.type || 'default';
+            graph.addNode(node.id, {
+                label: node.label,
+                type: nodeType,
+                x: node.x || Math.random() * 1000,
+                y: node.y || Math.random() * 1000,
+                size: 5,
+                color: typeColors[nodeType] || typeColors.default,
+                originalColor: typeColors[nodeType] || typeColors.default,
+                definition: node.definition || '',
+                usage_count: node.usage_count || 0,
+                visible: true
+            });
+        });
+
+        // Add edges
+        graphData.edges.forEach(edge => {
+            try {
+                if (graph.hasNode(edge.source) && graph.hasNode(edge.target)) {
+                    graph.addEdge(edge.source, edge.target, {
+                        type: edge.type || 'default',
+                        size: 1,
+                        color: '#999'
+                    });
+                }
+            } catch (e) {
+                console.warn('Skipping duplicate edge:', edge);
+            }
+        });
+
+        // Create sigma instance
+        const container = document.getElementById('container');
+        const renderer = new Sigma(graph, container, {
+            renderEdgeLabels: false,
+            defaultNodeColor: '#666',
+            defaultEdgeColor: '#ccc',
+            labelSize: 12,
+            labelWeight: 'normal'
+        });
+
+        // Create type filters
+        const typeFiltersDiv = document.getElementById('type-filters');
+        const activeTypes = new Set(nodeTypes);
+
+        nodeTypes.forEach(type => {
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = true;
+            checkbox.value = type;
+            checkbox.onchange = () => {
+                if (checkbox.checked) {
+                    activeTypes.add(type);
+                } else {
+                    activeTypes.delete(type);
+                }
+                filterGraph();
+            };
+
+            const dot = document.createElement('span');
+            dot.style.display = 'inline-block';
+            dot.style.width = '10px';
+            dot.style.height = '10px';
+            dot.style.borderRadius = '50%';
+            dot.style.backgroundColor = typeColors[type] || typeColors.default;
+            dot.style.marginRight = '5px';
+
+            label.appendChild(checkbox);
+            label.appendChild(dot);
+            label.appendChild(document.createTextNode(type));
+            typeFiltersDiv.appendChild(label);
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('search');
+        let searchQuery = '';
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            filterGraph();
+        });
+
+        // Filter graph
+        function filterGraph() {
+            let visibleCount = 0;
+
+            graph.forEachNode((nodeId, attrs) => {
+                const matchesType = activeTypes.has(attrs.type);
+                const matchesSearch = searchQuery === '' ||
+                    attrs.label.toLowerCase().includes(searchQuery) ||
+                    nodeId.toLowerCase().includes(searchQuery);
+
+                const visible = matchesType && matchesSearch;
+
+                if (visible) {
+                    visibleCount++;
+                    graph.setNodeAttribute(nodeId, 'hidden', false);
+                    graph.setNodeAttribute(nodeId, 'color', attrs.originalColor);
+                } else {
+                    graph.setNodeAttribute(nodeId, 'hidden', true);
+                }
+            });
+
+            document.getElementById('visible-count').textContent =
+                `${visibleCount} visible`;
+
+            renderer.refresh();
+        }
+
+        // Node click handler
+        renderer.on('clickNode', ({ node }) => {
+            const attrs = graph.getNodeAttributes(node);
+            const infoPanel = document.getElementById('info-panel');
+            const nodeLabel = document.getElementById('node-label');
+            const nodeDetails = document.getElementById('node-details');
+
+            nodeLabel.textContent = attrs.label;
+
+            let details = `<div class="detail"><strong>Type:</strong> ${attrs.type}</div>`;
+            if (attrs.definition) {
+                details += `<div class="detail"><strong>Definition:</strong> ${attrs.definition}</div>`;
+            }
+            if (attrs.usage_count > 0) {
+                details += `<div class="detail"><strong>Usage:</strong> ${attrs.usage_count} times</div>`;
+            }
+
+            // Find connected nodes
+            const neighbors = graph.neighbors(node);
+            if (neighbors.length > 0) {
+                details += `<div class="detail"><strong>Connections:</strong> ${neighbors.length} nodes</div>`;
+            }
+
+            nodeDetails.innerHTML = details;
+            infoPanel.style.display = 'block';
+
+            // Highlight node and neighbors
+            graph.forEachNode((n) => {
+                if (n === node) {
+                    graph.setNodeAttribute(n, 'size', 10);
+                    graph.setNodeAttribute(n, 'color', '#FF0000');
+                } else if (neighbors.includes(n)) {
+                    graph.setNodeAttribute(n, 'size', 7);
+                } else {
+                    const attrs = graph.getNodeAttributes(n);
+                    graph.setNodeAttribute(n, 'size', 5);
+                }
+            });
+
+            renderer.refresh();
+        });
+
+        // Click background to deselect
+        renderer.on('clickStage', () => {
+            document.getElementById('info-panel').style.display = 'none';
+
+            graph.forEachNode((node) => {
+                const attrs = graph.getNodeAttributes(node);
+                graph.setNodeAttribute(node, 'size', 5);
+                graph.setNodeAttribute(node, 'color', attrs.originalColor);
+            });
+
+            renderer.refresh();
+        });
+
+        // Reset view
+        function resetView() {
+            renderer.getCamera().animatedReset();
+            searchInput.value = '';
+            searchQuery = '';
+
+            // Reset all checkboxes
+            document.querySelectorAll('#type-filters input').forEach(cb => {
+                cb.checked = true;
+            });
+
+            activeTypes.clear();
+            nodeTypes.forEach(type => activeTypes.add(type));
+
+            filterGraph();
+            document.getElementById('info-panel').style.display = 'none';
+        }
+
+        // Toggle controls
+        let controlsVisible = true;
+        function toggleControls() {
+            const controls = document.getElementById('controls');
+            controlsVisible = !controlsVisible;
+            controls.style.display = controlsVisible ? 'block' : 'none';
+        }
+
+        // Initial update
+        document.getElementById('visible-count').textContent =
+            `${graph.order} visible`;
+
+        console.log('📊 Graph loaded with Sigma.js');
+        console.log('Nodes:', graph.order);
+        console.log('Edges:', graph.size);
+    </script>
+</body>
+</html>

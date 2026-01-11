@@ -1,0 +1,27 @@
+/* TheAuditor - Dinghy Class ⛵✓ */
+/* Minimal: emoji + colors + animation */
+
+/* Layer 1: Emoji brand */
+.logo::before { content: "✓ "; }
+
+/* Layer 2: Background */
+body { background: #fff8f0; }
+
+/* Layer 3: Text colors */
+body { color: #e65100; }
+h1, h2, h3 { color: #f57c00; }
+
+/* Layer 4: Links */
+a { color: #ff9800; }
+a:hover { opacity: 0.7; }
+
+/* Optional Layer 5: Screensaver animation (subtle) */
+@keyframes validate {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+body {
+  background: linear-gradient(120deg, #fff8f0 0%, #fff3e0 50%, #fff8f0 100%);
+  background-size: 200% 200%;
+  animation: validate 40s ease-in-out infinite;
+}

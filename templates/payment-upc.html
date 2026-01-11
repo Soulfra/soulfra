@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay ${{ amount }} - {{ label }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'OCR A Extended', monospace;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .receipt {
+            background: white;
+            max-width: 400px;
+            width: 100%;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+
+        /* Receipt Header */
+        .receipt-header {
+            padding: 30px 30px 20px;
+            border-bottom: 2px dashed #000;
+            text-align: center;
+        }
+
+        .store-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .store-tagline {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .receipt-date {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* Item Section */
+        .item-section {
+            padding: 20px 30px;
+            border-bottom: 2px dashed #000;
+        }
+
+        .item-label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .item-description {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Barcode Display */
+        .barcode-section {
+            padding: 20px 30px;
+            background: #fff;
+            text-align: center;
+            border-bottom: 2px dashed #000;
+        }
+
+        .barcode-label {
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .barcode {
+            width: 100%;
+            height: 80px;
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .bar {
+            background: #000;
+            height: 100%;
+            width: 3px;
+        }
+
+        .bar.thick {
+            width: 5px;
+        }
+
+        .bar.thin {
+            width: 2px;
+        }
+
+        .bar.medium {
+            width: 4px;
+        }
+
+        .bar.space {
+            background: transparent;
+        }
+
+        .barcode-number {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* QR Code Section */
+        .qr-section {
+            padding: 20px 30px;
+            text-align: center;
+            border-bottom: 2px dashed #000;
+        }
+
+        .qr-label {
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .qr-code {
+            width: 120px;
+            height: 120px;
+            margin: 15px auto;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            border: 3px solid #000;
+        }
+
+        /* Price Section */
+        .price-section {
+            padding: 20px 30px;
+            border-bottom: 2px dashed #000;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .price-row.total {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #000;
+        }
+
+        .label-text {
+            color: #666;
+        }
+
+        /* Amount Input */
+        .input-section {
+            padding: 20px 30px;
+            border-bottom: 2px dashed #000;
+        }
+
+        .input-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #000;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            background: #fff;
+            font-weight: bold;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #000;
+            background: #f9f9f9;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #333;
+        }
+
+        button:active {
+            background: #000;
+            transform: scale(0.98);
+        }
+
+        /* Footer */
+        .receipt-footer {
+            padding: 20px 30px 30px;
+            text-align: center;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .transaction-id {
+            font-size: 0.7rem;
+            color: #999;
+            letter-spacing: 1px;
+            margin-top: 15px;
+        }
+
+        /* Scan Effect */
+        @keyframes scan {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .scanning {
+            animation: scan 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <!-- Header -->
+        <div class="receipt-header">
+            <div class="store-name">SOULFRA PAY</div>
+            <div class="store-tagline">Quick Payment System</div>
+            <div class="receipt-date" id="receipt-date"></div>
+        </div>
+
+        <!-- Item Description -->
+        <div class="item-section">
+            <div class="item-label">ITEM</div>
+            <div class="item-description">{{ label }}</div>
+        </div>
+
+        <!-- Barcode -->
+        <div class="barcode-section">
+            <div class="barcode-label">SCAN BARCODE</div>
+            <div class="barcode scanning" id="barcode">
+                <!-- Generated dynamically -->
+            </div>
+            <div class="barcode-number" id="barcode-number"></div>
+        </div>
+
+        <!-- QR Code -->
+        <div class="qr-section">
+            <div class="qr-label">OR SCAN QR CODE</div>
+            <div class="qr-code">{{ code }}</div>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div class="price-section">
+            <div class="price-row">
+                <span class="label-text">Item:</span>
+                <span>${{ amount }}</span>
+            </div>
+            <div class="price-row">
+                <span class="label-text">Tax:</span>
+                <span>$0.00</span>
+            </div>
+            <div class="price-row total">
+                <span>TOTAL:</span>
+                <span id="total-display">${{ amount }}</span>
+            </div>
+        </div>
+
+        <!-- Amount Input -->
+        <div class="input-section">
+            <div class="input-label">Adjust Amount (if needed)</div>
+            <input
+                type="number"
+                id="amount"
+                value="{{ amount }}"
+                step="0.01"
+                min="0.01"
+            >
+        </div>
+
+        <!-- Payment Button -->
+        <button onclick="processPayment()">
+            PROCESS PAYMENT
+        </button>
+
+        <!-- Footer -->
+        <div class="receipt-footer">
+            <div class="footer-note">THANK YOU FOR YOUR PURCHASE</div>
+            <div class="footer-note">NO REFUNDS · NO EXCHANGES</div>
+            <div class="transaction-id">TXN: {{ code }}-<span id="txn-suffix"></span></div>
+        </div>
+    </div>
+
+    <script>
+        // Generate barcode pattern from code
+        function generateBarcode(code) {
+            const barcodeEl = document.getElementById('barcode');
+            barcodeEl.innerHTML = '';
+
+            // Create barcode pattern (simplified UPC-like)
+            const patterns = ['thin', 'medium', 'thick', 'thin', 'thick', 'medium', 'thin', 'thick', 'thin', 'medium'];
+
+            // Start guard
+            barcodeEl.innerHTML += '<div class="bar thin"></div><div class="bar space"></div><div class="bar thin"></div><div class="bar space"></div>';
+
+            // Generate bars based on code
+            const codeStr = '{{ code }}';
+            for (let i = 0; i < codeStr.length; i++) {
+                const charCode = codeStr.charCodeAt(i);
+                const patternIndex = charCode % patterns.length;
+                barcodeEl.innerHTML += `<div class="bar ${patterns[patternIndex]}"></div><div class="bar space"></div>`;
+            }
+
+            // End guard
+            barcodeEl.innerHTML += '<div class="bar thin"></div><div class="bar space"></div><div class="bar thin"></div>';
+
+            // Show barcode number
+            document.getElementById('barcode-number').textContent = codeStr;
+        }
+
+        // Update total when amount changes
+        document.getElementById('amount').addEventListener('input', function() {
+            const amount = parseFloat(this.value) || 0;
+            document.getElementById('total-display').textContent = '$' + amount.toFixed(2);
+        });
+
+        // Process payment
+        function processPayment() {
+            const amount = document.getElementById('amount').value;
+
+            alert(`PAYMENT PROCESSING\n\nAMOUNT: $${amount}\nITEM: {{ label }}\nTRANSACTION: {{ code }}\n\n[Stripe integration pending...]\n\nThank you for your purchase!`);
+
+            // TODO: Integrate with Stripe Payment Element
+            // window.location.href = '/payment/success?code={{ code }}&amount=' + amount;
+        }
+
+        // Initialize
+        function init() {
+            // Set current date/time
+            const now = new Date();
+            document.getElementById('receipt-date').textContent = now.toLocaleString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Generate transaction suffix
+            document.getElementById('txn-suffix').textContent = Math.random().toString(36).substr(2, 6).toUpperCase();
+
+            // Generate barcode
+            generateBarcode('{{ code }}');
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+<style>
+.node { stroke: #333; stroke-width: 2; cursor: pointer; }
+.node-base { fill: #4CAF50; }
+.node-expanded { fill: #2196F3; }
+.edge { stroke: #999; stroke-width: 1; opacity: 0.6; }
+.label { font-family: Arial; font-size: 12px; fill: #333; text-anchor: middle; }
+</style>
+<g id="edges">
+<line class="edge" x1="30.0" y1="570.0" x2="325.4" y2="570.0" />
+<line class="edge" x1="325.4" y1="570.0" x2="657.3" y2="570.0" />
+<line class="edge" x1="325.4" y1="570.0" x2="498.3" y2="338.9" />
+<line class="edge" x1="657.3" y1="570.0" x2="498.3" y2="338.9" />
+<line class="edge" x1="498.3" y1="338.9" x2="513.0" y2="30.0" />
+<line class="edge" x1="513.0" y1="30.0" x2="770.0" y2="30.0" />
+</g>
+<g id="nodes">
+<circle class="node node-base" cx="30.0" cy="570.0" r="8" />
+<text class="label" x="30.0" y="590.0">Tampa</text>
+<circle class="node node-base" cx="325.4" cy="570.0" r="8" />
+<text class="label" x="325.4" y="590.0">Plumber</text>
+<circle class="node node-base" cx="657.3" cy="570.0" r="8" />
+<text class="label" x="657.3" y="590.0">Repair</text>
+<circle class="node node-base" cx="498.3" cy="338.9" r="8" />
+<text class="label" x="498.3" y="358.9">Service</text>
+<circle class="node node-expanded" cx="513.0" cy="30.0" r="6" />
+<text class="label" x="513.0" y="50.0">Database</text>
+<circle class="node node-expanded" cx="770.0" cy="30.0" r="6" />
+<text class="label" x="770.0" y="50.0">Blockchain</text>
+</g>
+</svg>

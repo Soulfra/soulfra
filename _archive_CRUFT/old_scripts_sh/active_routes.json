@@ -1,0 +1,1470 @@
+[
+  {
+    "path": "/test",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug/system",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug/test-ai-comment",
+    "methods": "POST"
+  },
+  {
+    "path": "/generator",
+    "methods": "GET"
+  },
+  {
+    "path": "/dashboard",
+    "methods": "GET"
+  },
+  {
+    "path": "/",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr-search-gate",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr-search-gate/<brand_slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/verify-search/<token>",
+    "methods": "GET"
+  },
+  {
+    "path": "/gated-search",
+    "methods": "GET"
+  },
+  {
+    "path": "/gated-search/<brand>",
+    "methods": "GET"
+  },
+  {
+    "path": "/search",
+    "methods": "GET"
+  },
+  {
+    "path": "/live",
+    "methods": "GET"
+  },
+  {
+    "path": "/train",
+    "methods": "GET"
+  },
+  {
+    "path": "/train/predict",
+    "methods": "POST"
+  },
+  {
+    "path": "/train/feedback",
+    "methods": "POST"
+  },
+  {
+    "path": "/dashboard",
+    "methods": "GET"
+  },
+  {
+    "path": "/me",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug",
+    "methods": "GET"
+  },
+  {
+    "path": "/domains",
+    "methods": "GET"
+  },
+  {
+    "path": "/my-domains",
+    "methods": "GET"
+  },
+  {
+    "path": "/<domain_slug>/blog",
+    "methods": "GET"
+  },
+  {
+    "path": "/<domain_slug>/<topic_slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/<domain_slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/me/quizzes",
+    "methods": "GET"
+  },
+  {
+    "path": "/me/settings",
+    "methods": "GET"
+  },
+  {
+    "path": "/me/settings/update",
+    "methods": "POST"
+  },
+  {
+    "path": "/me/export",
+    "methods": "GET"
+  },
+  {
+    "path": "/me/export-jsonld",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/economy/network",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/economy/propagate",
+    "methods": "POST"
+  },
+  {
+    "path": "/me/delete",
+    "methods": "POST"
+  },
+  {
+    "path": "/post/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/post/<slug>/comment",
+    "methods": "POST"
+  },
+  {
+    "path": "/post/<slug>/discuss",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/discussion/message",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/discussion/finalize",
+    "methods": "POST"
+  },
+  {
+    "path": "/brand/discuss/<brand_name>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/assistant/message",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/assistant/quick-actions",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/assistant/history",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/assistant/post-comment",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/narrative/start",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/narrative/answer",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/narrative/advance",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/narrative/complete/<int:session_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ollama/status",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ollama/search-github",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/nudge/<username>",
+    "methods": "POST"
+  },
+  {
+    "path": "/quiz-complete/<int:session_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/choose",
+    "methods": "GET"
+  },
+  {
+    "path": "/simple-test",
+    "methods": "GET"
+  },
+  {
+    "path": "/cringeproof/narrative/<brand_slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/wiki",
+    "methods": "GET"
+  },
+  {
+    "path": "/wiki/concept/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/wiki/category/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/category/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/tag/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/brand/<slug>/export",
+    "methods": "GET"
+  },
+  {
+    "path": "/brands/overview",
+    "methods": "GET"
+  },
+  {
+    "path": "/brands/overview/update-domain",
+    "methods": "POST"
+  },
+  {
+    "path": "/brands",
+    "methods": "GET"
+  },
+  {
+    "path": "/brand/submit",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/brand/submission/<int:submission_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/brand/<slug>/rate",
+    "methods": "POST"
+  },
+  {
+    "path": "/brand/<slug>/review/<int:review_id>/helpful",
+    "methods": "POST"
+  },
+  {
+    "path": "/brand/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/brand/<slug>/preview",
+    "methods": "GET"
+  },
+  {
+    "path": "/brand/<slug>/debug",
+    "methods": "GET"
+  },
+  {
+    "path": "/ai-network/debug",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ai/test-relevance/<int:post_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ai/training-data/<username>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ai/regenerate-all",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/ai/retrain-networks",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/ai/clear-comments",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/ai/export-debug-data",
+    "methods": "GET"
+  },
+  {
+    "path": "/ai-network/visualize/<model_name>",
+    "methods": "GET"
+  },
+  {
+    "path": "/ai-network/persona/<username>",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr/brand/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr/brand/<slug>/stats",
+    "methods": "GET"
+  },
+  {
+    "path": "/shipyard",
+    "methods": "GET"
+  },
+  {
+    "path": "/sitemap",
+    "methods": "GET"
+  },
+  {
+    "path": "/sitemap/game",
+    "methods": "GET"
+  },
+  {
+    "path": "/sitemap.xml",
+    "methods": "GET"
+  },
+  {
+    "path": "/robots.txt",
+    "methods": "GET"
+  },
+  {
+    "path": "/feed.xml",
+    "methods": "GET"
+  },
+  {
+    "path": "/user/<username>",
+    "methods": "GET"
+  },
+  {
+    "path": "/souls",
+    "methods": "GET"
+  },
+  {
+    "path": "/soul/<username>",
+    "methods": "GET"
+  },
+  {
+    "path": "/ownership/<username>",
+    "methods": "GET"
+  },
+  {
+    "path": "/soul/<username>/similar",
+    "methods": "GET"
+  },
+  {
+    "path": "/soul/<username>/platforms",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/soul/transform",
+    "methods": "GET"
+  },
+  {
+    "path": "/s/<short_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr/faucet/<path:encoded_payload>",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr/question/submit",
+    "methods": "POST"
+  },
+  {
+    "path": "/qr/<qr_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/subscribe",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/unsubscribe",
+    "methods": "GET"
+  },
+  {
+    "path": "/about",
+    "methods": "GET"
+  },
+  {
+    "path": "/@docs/<path:filename>",
+    "methods": "GET"
+  },
+  {
+    "path": "/onboard",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/rankings",
+    "methods": "GET"
+  },
+  {
+    "path": "/news",
+    "methods": "GET"
+  },
+  {
+    "path": "/profile/<username>",
+    "methods": "GET"
+  },
+  {
+    "path": "/plot/<int:plot_id>/action",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/plot/react",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/plot/reactions",
+    "methods": "GET"
+  },
+  {
+    "path": "/challenge/daily",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/challenge/submit",
+    "methods": "POST"
+  },
+  {
+    "path": "/feeds/challenges.xml",
+    "methods": "GET"
+  },
+  {
+    "path": "/feeds/challenges.json",
+    "methods": "GET"
+  },
+  {
+    "path": "/feeds/catchphrases.xml",
+    "methods": "GET"
+  },
+  {
+    "path": "/catchphrase/test",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/catchphrase/results",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug/rotation",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug/map",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug/neural",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/predict-personality",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug/theme",
+    "methods": "GET"
+  },
+  {
+    "path": "/ghost",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/sessions",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/ollama",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/network",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/questions",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/system",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/activity",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/tables",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/pipeline",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/logs",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/routes",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/themes",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/challenges",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ghost/server",
+    "methods": "GET"
+  },
+  {
+    "path": "/signup",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/login",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/login-qr",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/qr/generate",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/qr/verify/<token>",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/api/qr/check/<token>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/qr/dashboard",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/qr/search-gate/<token>",
+    "methods": "GET"
+  },
+  {
+    "path": "/signup/professional",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/logout",
+    "methods": "GET"
+  },
+  {
+    "path": "/feedback",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/api/health",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/economy/my-wordmap",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/economy/domain-wordmap/<domain>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/economy/claim-reward",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/economy/calculate-reward",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/package-info",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/package-info/<package_name>",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/domains",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/domains/add",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/quick-add",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/confirm-add",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/edit/<int:brand_id>",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/delete/<int:brand_id>",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/import",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/domains/analyze-batch",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/domains/import-batch",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/csv",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/domains/import-csv",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/import-csv",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/verify/<int:brand_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/domains/check-verification/<int:brand_id>",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/domains/analyze/<int:brand_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/domains/relationships",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/domains/chat/<int:brand_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/domains/suggestions/<int:suggestion_id>/approve",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/domains/suggestions/<int:suggestion_id>/reject",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/ollama/comment",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/gallery/chat",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/dm/chat",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/dm/generate-qr",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/posts",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/posts/<int:post_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/reasoning/threads",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/reasoning/threads/<int:thread_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/feedback",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/website/predict/type",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/website/predict/method",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/website/predict/parameters",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/website/missing-routes",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/website/structure",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/brand/predict",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/brand/consistency",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/brand/generate",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/brand/emoji/suggest",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/brand/wordmap/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/brand/voice/compare",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/login",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/admin",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/dashboard",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/admin/docs",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/join",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/join",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/automation/run-builder",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation/generate-digest",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation/send-digest",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation/train-website-model",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation/train-brand-models",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation/bootstrap",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation/run-syndication",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/automation/publish-all",
+    "methods": "POST"
+  },
+  {
+    "path": "/admin/token-usage",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/brand-status",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/brand/status",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/studio",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/form-builder",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/api/form-builder/parse-description",
+    "methods": "POST"
+  },
+  {
+    "path": "{route}",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "{route_path}",
+    "methods": "GET"
+  },
+  {
+    "path": "{route_path}",
+    "methods": "GET"
+  },
+  {
+    "path": "{route_path}",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/subscribers",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/subscribers/export",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/subscribers/import",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/admin/logout",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/post/new",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/admin/import-url",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/admin/brand/new",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/reasoning",
+    "methods": "GET"
+  },
+  {
+    "path": "/status",
+    "methods": "GET"
+  },
+  {
+    "path": "/code",
+    "methods": "GET"
+  },
+  {
+    "path": "/code/<path:filepath>",
+    "methods": "GET"
+  },
+  {
+    "path": "/ml",
+    "methods": "GET"
+  },
+  {
+    "path": "/ml/train",
+    "methods": "POST"
+  },
+  {
+    "path": "/ml/predict",
+    "methods": "POST"
+  },
+  {
+    "path": "/i/<hash>",
+    "methods": "GET"
+  },
+  {
+    "path": "/showcase",
+    "methods": "GET"
+  },
+  {
+    "path": "/tiers",
+    "methods": "GET"
+  },
+  {
+    "path": "/proof",
+    "methods": "GET"
+  },
+  {
+    "path": "/legitimacy",
+    "methods": "GET"
+  },
+  {
+    "path": "/playground",
+    "methods": "GET"
+  },
+  {
+    "path": "/docs",
+    "methods": "GET"
+  },
+  {
+    "path": "/ai-frontend",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ai-query",
+    "methods": "POST"
+  },
+  {
+    "path": "/trace/<trace_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/traces",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/ai-stats",
+    "methods": "GET"
+  },
+  {
+    "path": "/analytics",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/docs",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/validate-contribution",
+    "methods": "POST"
+  },
+  {
+    "path": "/brand-arena",
+    "methods": "GET"
+  },
+  {
+    "path": "/submit-idea",
+    "methods": "GET"
+  },
+  {
+    "path": "/submit-idea",
+    "methods": "POST"
+  },
+  {
+    "path": "/track/<tracking_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr/idea/<theme>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/generate-key",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/v1/<brand_slug>/comment",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/api/v1/<brand_slug>/classify",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/subscribe/freelancer",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/admin/freelancers",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/ollama",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin",
+    "methods": "GET"
+  },
+  {
+    "path": "/admin/set-session",
+    "methods": "GET"
+  },
+  {
+    "path": "/games/share",
+    "methods": "POST"
+  },
+  {
+    "path": "/review/<share_code>",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/share/<share_code>/analysis",
+    "methods": "GET"
+  },
+  {
+    "path": "/cringeproof",
+    "methods": "GET"
+  },
+  {
+    "path": "/cringeproof/article/<slug>",
+    "methods": "GET"
+  },
+  {
+    "path": "/cringeproof/submit",
+    "methods": "POST"
+  },
+  {
+    "path": "/cringeproof/results/<int:result_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/cringeproof/leaderboard",
+    "methods": "GET"
+  },
+  {
+    "path": "/cringeproof/create-room",
+    "methods": "POST"
+  },
+  {
+    "path": "/cringeproof/room/<room_code>",
+    "methods": "GET"
+  },
+  {
+    "path": "/hub",
+    "methods": "GET"
+  },
+  {
+    "path": "/features",
+    "methods": "GET"
+  },
+  {
+    "path": "/factory",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/factory/pin",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/factory/unpin",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/factory/preview/<item_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/factory/generate",
+    "methods": "POST"
+  },
+  {
+    "path": "/brand-builder/start",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/brand-builder/chat",
+    "methods": "POST"
+  },
+  {
+    "path": "/games",
+    "methods": "GET"
+  },
+  {
+    "path": "/games/<int:game_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/games/play/2plus2",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/games/create/2plus2",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/games/submit-answer",
+    "methods": "POST"
+  },
+  {
+    "path": "/games/play/dnd",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/games/dnd/character",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/games/dnd/quests",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/games/create/dnd",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/games/dnd/action",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/games/dnd/complete",
+    "methods": "POST"
+  },
+  {
+    "path": "/trading",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/trading/limits",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/trading/inventory",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/trading/incoming",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/trading/outgoing",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/trading/offer",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/trading/accept",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/trading/reject",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/users/list",
+    "methods": "GET"
+  },
+  {
+    "path": "/membership",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/membership/current",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/membership/upgrade",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/games/flag-action",
+    "methods": "POST"
+  },
+  {
+    "path": "/api-tester",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/keys/list",
+    "methods": "GET"
+  },
+  {
+    "path": "/practice",
+    "methods": "GET"
+  },
+  {
+    "path": "/practice/create",
+    "methods": "GET, POST"
+  },
+  {
+    "path": "/practice/room/<room_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/practice/room/<room_id>/join",
+    "methods": "POST"
+  },
+  {
+    "path": "/practice/room/<room_id>/record",
+    "methods": "POST"
+  },
+  {
+    "path": "/practice/room/<room_id>/message",
+    "methods": "POST"
+  },
+  {
+    "path": "/practice/room/<room_id>/qr.png",
+    "methods": "GET"
+  },
+  {
+    "path": "/user/<username>/qr-card",
+    "methods": "GET"
+  },
+  {
+    "path": "/qr/display/<qr_id>",
+    "methods": "GET"
+  },
+  {
+    "path": "/widgets/embed/preview",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/widget/embed",
+    "methods": "GET"
+  },
+  {
+    "path": "/learn",
+    "methods": "GET"
+  },
+  {
+    "path": "/learn/review",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/learn/answer",
+    "methods": "POST"
+  },
+  {
+    "path": "/start",
+    "methods": "GET"
+  },
+  {
+    "path": "/start/chapter/<int:chapter_num>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/start/chat",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/start/complete-chapter",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/start/tutorial-demo",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/start/submit-quiz",
+    "methods": "POST"
+  },
+  {
+    "path": "/system/health",
+    "methods": "GET"
+  },
+  {
+    "path": "/system/architecture",
+    "methods": "GET"
+  },
+  {
+    "path": "/theme-<domain>.css",
+    "methods": "GET"
+  },
+  {
+    "path": "/blog/<domain>/<path:filename>",
+    "methods": "GET"
+  },
+  {
+    "path": "/templates/browse",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/templates/list",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/templates/read",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/templates/render",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/templates/generate-with-ollama",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/templates/deploy",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/deploy/github",
+    "methods": "POST"
+  },
+  {
+    "path": "/output/<path:filepath>",
+    "methods": "GET"
+  },
+  {
+    "path": "/studio",
+    "methods": "GET"
+  },
+  {
+    "path": "/preview",
+    "methods": "GET"
+  },
+  {
+    "path": "/master",
+    "methods": "GET"
+  },
+  {
+    "path": "/tier-0/<path:filename>",
+    "methods": "GET"
+  },
+  {
+    "path": "/tier-1/<path:filename>",
+    "methods": "GET"
+  },
+  {
+    "path": "/tier-2/<path:filename>",
+    "methods": "GET"
+  },
+  {
+    "path": "/tier-3/<path:filename>",
+    "methods": "GET"
+  },
+  {
+    "path": "/tier-4/<path:filename>",
+    "methods": "GET"
+  },
+  {
+    "path": "/status",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/studio/save-draft",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/studio/publish",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/studio/magic-publish",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/posts/recent",
+    "methods": "GET"
+  },
+  {
+    "path": "/content/manager",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/content/list",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/content/read",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/content/delete",
+    "methods": "POST"
+  },
+  {
+    "path": "/master-control",
+    "methods": "GET"
+  },
+  {
+    "path": "/homebrew-lab",
+    "methods": "GET"
+  },
+  {
+    "path": "/debug/sync-live",
+    "methods": "POST"
+  },
+  {
+    "path": "/debug/mirror/<brand>",
+    "methods": "GET"
+  },
+  {
+    "path": "/local-site/<brand>/",
+    "methods": "GET"
+  },
+  {
+    "path": "/local-site/<brand>/<path:filepath>",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/master-control/stats",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/logs/recent",
+    "methods": "GET"
+  },
+  {
+    "path": "/api/voice-to-post",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/voice-to-debate",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/auto-deploy",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/deploy-brand",
+    "methods": "POST"
+  },
+  {
+    "path": "/api/scrape",
+    "methods": "POST"
+  },
+  {
+    "path": "/customer-discovery-chat.html",
+    "methods": "GET"
+  },
+  {
+    "path": "/email-ollama-chat.html",
+    "methods": "GET"
+  }
+]

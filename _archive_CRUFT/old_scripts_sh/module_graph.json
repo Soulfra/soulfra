@@ -1,0 +1,3002 @@
+{
+  "json": [
+    "api-debug-helper.py",
+    "membership_system.py",
+    "creative_onboarding.py",
+    "docs_routes.py",
+    "canvas_routes.py",
+    "build.py",
+    "interactive_onboarding.py",
+    "bidirectional_review_engine.py",
+    "automation_workflows.py",
+    "inspect-live-site.py",
+    "ollama_domain_analyzer.py",
+    "template_components.py",
+    "formula_engine.py",
+    "auto_content_generator.py",
+    "audit_pii_exposure.py",
+    "test_complete_flow.py",
+    "test_full_pipeline.py",
+    "SIMPLE_DEMO.py",
+    "generator_routes.py",
+    "voice_idea_board_routes.py",
+    "api_image_generator.py",
+    "domain_researcher.py",
+    "context_manager.py",
+    "chapter_version_control.py",
+    "token_purchase_system.py",
+    "voice_podcast_chapters.py",
+    "brand_ai_orchestrator.py",
+    "comment_voice_chain.py",
+    "test_encryption_tiers.py",
+    "ollama_client.py",
+    "ollama_auto_commenter.py",
+    "avatar_generator.py",
+    "transcript_aggregator.py",
+    "tribunal_token_test.py",
+    "economy_mesh_network.py",
+    "business_schemas.py",
+    "test_domain_diversity.py",
+    "lore_extraction_engine.py",
+    "export_brand_filesystem.py",
+    "test_integration_flow.py",
+    "voice_content_generator.py",
+    "llm_router.py",
+    "soulfra_assistant.py",
+    "progression_system.py",
+    "theme_compiler.py",
+    "debug_lab.py",
+    "user_wordmap_engine.py",
+    "voice_captcha.py",
+    "seed_domain_wordmaps.py",
+    "publisher_routes.py",
+    "profile_builder.py",
+    "qr_unified.py",
+    "affiliate_link_tracker.py",
+    "auto_fix_routes.py",
+    "business_qr.py",
+    "automation_routes.py",
+    "cringeproof_content_judge.py",
+    "audio_quality.py",
+    "domain_partnership.py",
+    "model_trainer.py",
+    "deployment_diagnostic.py",
+    "dm_via_qr.py",
+    "kangaroo_court_routes.py",
+    "voice_bank_routes.py",
+    "prove_voice_pipeline.py",
+    "post_to_quiz.py",
+    "generate_manifest.py",
+    "multi_part_qr.py",
+    "content_pipeline.py",
+    "voice_domain_creator_routes.py",
+    "voice_ollama_processor.py",
+    "voice_input.py",
+    "websocket_server.py",
+    "qr_faucet.py",
+    "wordmap_pitch_integrator.py",
+    "verify_image.py",
+    "PROOF_IT_ALL_WORKS.py",
+    "api_routes.py",
+    "user_pairing.py",
+    "inspect-local-system.py",
+    "template_orchestrator.py",
+    "shortcuts_integration.py",
+    "content_transformer.py",
+    "test_comment_voice_chain.py",
+    "image_metadata.py",
+    "qr_image_overlay.py",
+    "business_routes.py",
+    "qr_user_profile.py",
+    "practice_room.py",
+    "deploy_tribunal_to_github.py",
+    "text_encoder.py",
+    "voice_health_checker.py",
+    "ollama_email_node.py",
+    "ownership_rewards.py",
+    "test_mesh_flow.py",
+    "status_routes.py",
+    "wiki_concepts.py",
+    "extract_snippets.py",
+    "test_qr_flow.py",
+    "soulfra_types.py",
+    "image_workflow.py",
+    "neural_network.py",
+    "cringeproof_personas.py",
+    "widget_qr_bridge.py",
+    "user_economy.py",
+    "user_workspace.py",
+    "ollama_discussion.py",
+    "ollama_github_search.py",
+    "test_system.py",
+    "tier_progression_engine.py",
+    "whisper_transcriber.py",
+    "local_domain_tester.py",
+    "project_launcher.py",
+    "neural_soul_scorer.py",
+    "domain_chatroom.py",
+    "deploy_github.py",
+    "build_cringeproof.py",
+    "brand_builder.py",
+    "seed_domains.py",
+    "procedural_media.py",
+    "unified_logger.py",
+    "test_voice_integration.py",
+    "test_everything.py",
+    "app.py",
+    "analyze_dependencies.py",
+    "qr_analytics.py",
+    "blog_syndication.py",
+    "unified_generator.py",
+    "api_health_scanner.py",
+    "theme_builder.py",
+    "tribunal_blamechain.py",
+    "voice_seo_pattern_detector.py",
+    "canvas_integration.py",
+    "narrative_cringeproof.py",
+    "anki_learning_system.py",
+    "qr_gallery_system.py",
+    "pseo_generator.py",
+    "voice_health.py",
+    "navigation.py",
+    "device_auth.py",
+    "customer_discovery_backend.py",
+    "gallery_routes.py",
+    "github_watcher.py",
+    "vanity_qr.py",
+    "scrape_live_domains.py",
+    "test_idea_board.py",
+    "content_tumbler.py",
+    "chat_routes.py",
+    "image_admin_routes.py",
+    "payment_integrations.py",
+    "qr_auth.py",
+    "domain_context.py",
+    "brand_ai_persona_generator.py",
+    "battle_routes.py",
+    "tutorial_builder.py",
+    "pre_deploy_check.py",
+    "voice_federation_routes.py",
+    "ollama_docs_qa.py",
+    "content_generator.py",
+    "query_by_tier.py",
+    "verify_import.py",
+    "domain_wordmap_aggregator.py",
+    "qr_voice_integration.py",
+    "publish_ipfs.py",
+    "import_domains_simple.py",
+    "subdomain_router.py",
+    "scrape_godaddy_landers.py",
+    "ai_host.py",
+    "file_importer.py",
+    "studio_api.py",
+    "qr_events.py",
+    "comment_github_integration.py",
+    "test_network_stack.py",
+    "user_data_export.py",
+    "multi_port_ollama.py",
+    "knowledge_extractor.py",
+    "license_manager.py",
+    "test_image_system.py",
+    "Soulfra/Soulfra.com/app.py",
+    "Soulfra/Soulfra.ai/app.py",
+    "Soulfra/Soulfraapi.com/app.py",
+    "simple_games/dnd_campaign.py",
+    "simple_games/two_plus_two.py",
+    "integrations/twitter_integration.py"
+  ],
+  "datetime": [
+    "api-debug-helper.py",
+    "membership_system.py",
+    "creative_onboarding.py",
+    "question_routes.py",
+    "db_helpers.py",
+    "canvas_routes.py",
+    "build.py",
+    "bidirectional_review_engine.py",
+    "automation_workflows.py",
+    "inspect-live-site.py",
+    "voice_pipeline.py",
+    "comment_to_post.py",
+    "auto_content_generator.py",
+    "audit_pii_exposure.py",
+    "SIMPLE_DEMO.py",
+    "voice_idea_board_routes.py",
+    "context_manager.py",
+    "chapter_version_control.py",
+    "draw_routes.py",
+    "token_purchase_system.py",
+    "dev_config.py",
+    "voice_podcast_chapters.py",
+    "comment_voice_chain.py",
+    "ollama_auto_commenter.py",
+    "transcript_aggregator.py",
+    "blamechain.py",
+    "tribunal_token_test.py",
+    "economy_mesh_network.py",
+    "business_schemas.py",
+    "url_shortener.py",
+    "lore_extraction_engine.py",
+    "export_brand_filesystem.py",
+    "nudge_system.py",
+    "test_integration_flow.py",
+    "publish_everywhere.py",
+    "soulfra_assistant.py",
+    "progression_system.py",
+    "batch_import_posts.py",
+    "debug_lab.py",
+    "user_wordmap_engine.py",
+    "voice_captcha.py",
+    "seed_domain_wordmaps.py",
+    "publisher_routes.py",
+    "github_faucet.py",
+    "publish_to_github.py",
+    "keyring_unlocks.py",
+    "github_star_validator.py",
+    "affiliate_link_tracker.py",
+    "soulfra_dark_story.py",
+    "workflow_routes.py",
+    "automation_routes.py",
+    "database.py",
+    "query_templates.py",
+    "cringeproof_content_judge.py",
+    "url_to_blog.py",
+    "domain_partnership.py",
+    "model_trainer.py",
+    "tribunal_email_notifier.py",
+    "dm_via_qr.py",
+    "kangaroo_court_routes.py",
+    "migrate_onboarding_system.py",
+    "demo_user_journey.py",
+    "prove_voice_pipeline.py",
+    "rate_limiter.py",
+    "post_to_quiz.py",
+    "publish_all_brands.py",
+    "generate_manifest.py",
+    "domain_unlock_engine.py",
+    "content_pipeline.py",
+    "create_blog_post_offline.py",
+    "domain_health.py",
+    "voice_input.py",
+    "init_mesh_economy.py",
+    "websocket_server.py",
+    "qr_faucet.py",
+    "verify_image.py",
+    "PROOF_IT_ALL_WORKS.py",
+    "logger.py",
+    "user_pairing.py",
+    "inspect-local-system.py",
+    "template_orchestrator.py",
+    "init_voice_memos_federation.py",
+    "audio_enhancer.py",
+    "shortcuts_integration.py",
+    "image_metadata.py",
+    "qr_image_overlay.py",
+    "init_learning_cards_for_user.py",
+    "test_soulfra_deployment.py",
+    "folder_router.py",
+    "practice_room.py",
+    "deploy_tribunal_to_github.py",
+    "text_encoder.py",
+    "voice_health_checker.py",
+    "ollama_email_node.py",
+    "ownership_rewards.py",
+    "test_mesh_flow.py",
+    "status_routes.py",
+    "wiki_concepts.py",
+    "test_qr_flow.py",
+    "soulfra_types.py",
+    "image_workflow.py",
+    "neural_network.py",
+    "cringeproof_personas.py",
+    "start_demo.py",
+    "url_to_content.py",
+    "user_economy.py",
+    "user_workspace.py",
+    "ollama_discussion.py",
+    "tier_progression_engine.py",
+    "whisper_transcriber.py",
+    "voice_capsule_engine.py",
+    "project_launcher.py",
+    "neural_soul_scorer.py",
+    "init_knowledge_graph.py",
+    "build_cringeproof.py",
+    "brand_builder.py",
+    "seed_domains.py",
+    "unified_logger.py",
+    "test_voice_integration.py",
+    "test_everything.py",
+    "manage_subscribers.py",
+    "app.py",
+    "qr_analytics.py",
+    "blog_syndication.py",
+    "unified_generator.py",
+    "api_health_scanner.py",
+    "theme_builder.py",
+    "notifications.py",
+    "tribunal_blamechain.py",
+    "canvas_integration.py",
+    "narrative_cringeproof.py",
+    "anki_learning_system.py",
+    "qr_gallery_system.py",
+    "pseo_generator.py",
+    "navigation.py",
+    "force_claude_write.py",
+    "device_auth.py",
+    "install.py",
+    "customer_discovery_backend.py",
+    "gallery_routes.py",
+    "github_watcher.py",
+    "vanity_qr.py",
+    "train_topic_networks.py",
+    "scrape_live_domains.py",
+    "test_idea_board.py",
+    "voice_capsule_routes.py",
+    "content_tumbler.py",
+    "chat_routes.py",
+    "whisper_processor.py",
+    "payment_integrations.py",
+    "admin_system.py",
+    "qr_auth.py",
+    "brand_ai_persona_generator.py",
+    "battle_routes.py",
+    "tutorial_builder.py",
+    "init_voice_capsules.py",
+    "contributor_rewards.py",
+    "pre_deploy_check.py",
+    "voice_federation_routes.py",
+    "content_generator.py",
+    "verify_import.py",
+    "domain_wordmap_aggregator.py",
+    "qr_voice_integration.py",
+    "publish_ipfs.py",
+    "migrate_chat_transcripts.py",
+    "scrape_godaddy_landers.py",
+    "init_kangaroo_court.py",
+    "file_importer.py",
+    "simple_voice_routes.py",
+    "qr_events.py",
+    "user_data_export.py",
+    "rotation_helpers.py",
+    "knowledge_extractor.py",
+    "license_manager.py",
+    "make_it_automatic.py",
+    "Soulfra/Soulfra.com/app.py",
+    "Soulfra/Soulfraapi.com/app.py",
+    "integrations/twitter_integration.py"
+  ],
+  "sys": [
+    "api-debug-helper.py",
+    "build.py",
+    "interactive_onboarding.py",
+    "automation_workflows.py",
+    "inspect-live-site.py",
+    "ollama_domain_analyzer.py",
+    "comment_to_post.py",
+    "github_repo_creator.py",
+    "widget_router.py",
+    "qr_auto_generate.py",
+    "audit_pii_exposure.py",
+    "test_full_pipeline.py",
+    "plugin_loader.py",
+    "SIMPLE_DEMO.py",
+    "api_image_generator.py",
+    "domain_researcher.py",
+    "chapter_version_control.py",
+    "deployment_ladder.py",
+    "hello_world.py",
+    "proof_of_concept.py",
+    "brand_ai_orchestrator.py",
+    "test_encryption_tiers.py",
+    "build_from_scratch.py",
+    "ollama_auto_commenter.py",
+    "transcript_aggregator.py",
+    "economy_mesh_network.py",
+    "debug_affiliate_system.py",
+    "dns_setup_guide.py",
+    "lore_extraction_engine.py",
+    "test_integration_flow.py",
+    "publish_everywhere.py",
+    "voice_content_generator.py",
+    "progression_system.py",
+    "batch_import_posts.py",
+    "user_wordmap_engine.py",
+    "voice_captcha.py",
+    "auto_fix_routes.py",
+    "one_command_live.py",
+    "ascii_player.py",
+    "url_to_blog.py",
+    "domain_partnership.py",
+    "deployment_diagnostic.py",
+    "dm_via_qr.py",
+    "prove_voice_pipeline.py",
+    "test_hello_world.py",
+    "post_to_quiz.py",
+    "publish_all_brands.py",
+    "generate_manifest.py",
+    "domain_unlock_engine.py",
+    "create_blog_post_offline.py",
+    "domain_health.py",
+    "voice_ollama_processor.py",
+    "full_flow_demo.py",
+    "import_domains_csv.py",
+    "voice_input.py",
+    "install_ai.py",
+    "websocket_server.py",
+    "wordmap_pitch_integrator.py",
+    "verify_image.py",
+    "PROOF_IT_ALL_WORKS.py",
+    "template_orchestrator.py",
+    "shortcuts_integration.py",
+    "content_transformer.py",
+    "start.py",
+    "qr_image_overlay.py",
+    "init_learning_cards_for_user.py",
+    "avatar_auto_attach.py",
+    "content_brand_detector.py",
+    "test_soulfra_deployment.py",
+    "qr_user_profile.py",
+    "practice_room.py",
+    "deploy_tribunal_to_github.py",
+    "voice_health_checker.py",
+    "domain_onboarding.py",
+    "ollama_email_node.py",
+    "ownership_rewards.py",
+    "fix_ip_storage.py",
+    "extract_snippets.py",
+    "test_qr_flow.py",
+    "install_cross_platform.py",
+    "api_server.py",
+    "widget_qr_bridge.py",
+    "user_economy.py",
+    "user_workspace.py",
+    "ollama_github_search.py",
+    "test_system.py",
+    "build_all.py",
+    "auto_deploy_domain.py",
+    "local_domain_tester.py",
+    "project_launcher.py",
+    "neural_soul_scorer.py",
+    "domain_chatroom.py",
+    "deploy_github.py",
+    "build_cringeproof.py",
+    "gps_encryption.py",
+    "test_everything.py",
+    "manage_subscribers.py",
+    "app.py",
+    "test_practice_room.py",
+    "qr_analytics.py",
+    "qr_to_ascii.py",
+    "url_to_email.py",
+    "api_health_scanner.py",
+    "theme_builder.py",
+    "notifications.py",
+    "voice_seo_pattern_detector.py",
+    "canvas_integration.py",
+    "launcher.py",
+    "qr_gallery_system.py",
+    "pseo_generator.py",
+    "voice_health.py",
+    "send_post_email.py",
+    "force_claude_write.py",
+    "install.py",
+    "customer_discovery_backend.py",
+    "ad_injector.py",
+    "github_watcher.py",
+    "image_to_ascii.py",
+    "ssh_tunnel.py",
+    "export_voice_recordings.py",
+    "test_all_scripts.py",
+    "content_tumbler.py",
+    "image_admin_routes.py",
+    "test_handle_system.py",
+    "qr_auth.py",
+    "brand_ai_persona_generator.py",
+    "tutorial_builder.py",
+    "contributor_rewards.py",
+    "export_static.py",
+    "pre_deploy_check.py",
+    "ollama_docs_qa.py",
+    "backfill_mesh_network.py",
+    "domain_wordmap_aggregator.py",
+    "qr_voice_integration.py",
+    "publish_ipfs.py",
+    "network_diagram.py",
+    "brand_creator.py",
+    "import_domains_simple.py",
+    "demo_complete_system.py",
+    "studio_api.py",
+    "test_network_stack.py",
+    "user_data_export.py",
+    "multi_port_ollama.py",
+    "license_manager.py",
+    "make_it_automatic.py",
+    "Soulfra/generate-qr.py",
+    "simple_games/dnd_campaign.py",
+    "simple_games/two_plus_two.py",
+    "integrations/twitter_integration.py"
+  ],
+  "requests": [
+    "api-debug-helper.py",
+    "creative_onboarding.py",
+    "inspect-live-site.py",
+    "ollama_domain_analyzer.py",
+    "github_repo_creator.py",
+    "auto_content_generator.py",
+    "test_complete_flow.py",
+    "SIMPLE_DEMO.py",
+    "api_image_generator.py",
+    "deployment_ladder.py",
+    "proof_of_concept.py",
+    "ollama_proxy.py",
+    "test_encryption_tiers.py",
+    "ollama_client.py",
+    "tribunal_token_test.py",
+    "publish_everywhere.py",
+    "debug_lab.py",
+    "publisher_routes.py",
+    "github_faucet.py",
+    "github_star_validator.py",
+    "auto_fix_routes.py",
+    "automation_routes.py",
+    "test_flow.py",
+    "deployment_diagnostic.py",
+    "web_domain_manager_routes.py",
+    "demo_user_journey.py",
+    "test_hello_world.py",
+    "build_routes.py",
+    "content_pipeline.py",
+    "domain_health.py",
+    "websocket_server.py",
+    "shortcuts_integration.py",
+    "content_transformer.py",
+    "test_comment_voice_chain.py",
+    "test_soulfra_deployment.py",
+    "ollama_email_node.py",
+    "url_to_content.py",
+    "auto_deploy_domain.py",
+    "local_domain_tester.py",
+    "brand_builder.py",
+    "app.py",
+    "api_health_scanner.py",
+    "scrape_live_domains.py",
+    "contributor_rewards.py",
+    "pre_deploy_check.py",
+    "network_diagram.py",
+    "scrape_godaddy_landers.py",
+    "studio_api.py",
+    "test_network_stack.py",
+    "multi_port_ollama.py",
+    "soulfra_client.py",
+    "Soulfra/Soulfra.ai/app.py",
+    "integrations/twitter_integration.py"
+  ],
+  "stripe": [
+    "membership_system.py",
+    "token_purchase_system.py",
+    "token_routes.py",
+    "payment_integrations.py"
+  ],
+  "os": [
+    "membership_system.py",
+    "creative_onboarding.py",
+    "question_routes.py",
+    "docs_routes.py",
+    "build.py",
+    "automation_workflows.py",
+    "inspect-live-site.py",
+    "voice_pipeline.py",
+    "github_repo_creator.py",
+    "widget_router.py",
+    "qr_auto_generate.py",
+    "cleanup_fake_domains.py",
+    "test_full_pipeline.py",
+    "plugin_loader.py",
+    "image_composer.py",
+    "voice_idea_board_routes.py",
+    "api_image_generator.py",
+    "deployment_ladder.py",
+    "hello_world.py",
+    "token_purchase_system.py",
+    "dev_config.py",
+    "ai_image_generator.py",
+    "proof_of_concept.py",
+    "config.py",
+    "build_from_scratch.py",
+    "avatar_generator.py",
+    "transcript_aggregator.py",
+    "debug_affiliate_system.py",
+    "url_shortener.py",
+    "image_dataset.py",
+    "export_brand_filesystem.py",
+    "audit_database.py",
+    "test_integration_flow.py",
+    "publish_everywhere.py",
+    "soulfra_assistant.py",
+    "debug_lab.py",
+    "voice_captcha.py",
+    "publisher_routes.py",
+    "github_faucet.py",
+    "github_star_validator.py",
+    "migrate_blog_network.py",
+    "watch_folder.py",
+    "automation_routes.py",
+    "database.py",
+    "ascii_player.py",
+    "audio_quality.py",
+    "model_trainer.py",
+    "deployment_diagnostic.py",
+    "tribunal_email_notifier.py",
+    "web_domain_manager_routes.py",
+    "dm_via_qr.py",
+    "build_routes.py",
+    "generate_manifest.py",
+    "multi_part_qr.py",
+    "content_pipeline.py",
+    "create_blog_post_offline.py",
+    "ocr_extractor.py",
+    "voice_input.py",
+    "install_ai.py",
+    "generate_pwa_icons.py",
+    "verify_image.py",
+    "logger.py",
+    "inspect-local-system.py",
+    "template_orchestrator.py",
+    "voice_routes.py",
+    "audio_enhancer.py",
+    "shortcuts_integration.py",
+    "start.py",
+    "token_routes.py",
+    "business_routes.py",
+    "folder_router.py",
+    "deploy_tribunal_to_github.py",
+    "ollama_email_node.py",
+    "status_routes.py",
+    "extract_snippets.py",
+    "install_cross_platform.py",
+    "image_workflow.py",
+    "merge_test_to_main.py",
+    "api_server.py",
+    "test_system.py",
+    "test_advanced_qr.py",
+    "build_all.py",
+    "whisper_transcriber.py",
+    "local_domain_tester.py",
+    "domain_manager.py",
+    "test_butter_image.py",
+    "neural_soul_scorer.py",
+    "deploy_github.py",
+    "test_voice_integration.py",
+    "app.py",
+    "analyze_dependencies.py",
+    "blog_syndication.py",
+    "verify_mvp_integration.py",
+    "theme_builder.py",
+    "launcher.py",
+    "qr_gallery_system.py",
+    "pseo_generator.py",
+    "navigation.py",
+    "install.py",
+    "customer_discovery_backend.py",
+    "ad_injector.py",
+    "github_watcher.py",
+    "image_to_ascii.py",
+    "voice_encryption.py",
+    "train_topic_networks.py",
+    "ssh_tunnel.py",
+    "export_voice_recordings.py",
+    "image_admin_routes.py",
+    "whisper_processor.py",
+    "payment_integrations.py",
+    "admin_system.py",
+    "advanced_qr.py",
+    "contributor_rewards.py",
+    "export_static.py",
+    "pre_deploy_check.py",
+    "ollama_docs_qa.py",
+    "publish_ipfs.py",
+    "network_diagram.py",
+    "migrate_chat_transcripts.py",
+    "onboarding_routes.py",
+    "file_importer.py",
+    "studio_api.py",
+    "simple_voice_routes.py",
+    "setup_test_database.py",
+    "qr_events.py",
+    "test_network_stack.py",
+    "pixel_utils.py",
+    "qr_card_printer.py",
+    "test_image_system.py",
+    "Soulfra/generate-qr.py",
+    "Soulfra/Soulfra.com/app.py",
+    "Soulfra/Soulfra.ai/app.py",
+    "Soulfra/Soulfraapi.com/app.py",
+    "simple_games/dnd_campaign.py",
+    "simple_games/two_plus_two.py",
+    "integrations/twitter_integration.py"
+  ],
+  "typing": [
+    "membership_system.py",
+    "creative_onboarding.py",
+    "docs_routes.py",
+    "canvas_routes.py",
+    "bidirectional_review_engine.py",
+    "automation_workflows.py",
+    "ollama_domain_analyzer.py",
+    "voice_pipeline.py",
+    "formula_engine.py",
+    "github_repo_creator.py",
+    "plugin_loader.py",
+    "image_composer.py",
+    "voice_idea_board_routes.py",
+    "api_image_generator.py",
+    "domain_researcher.py",
+    "context_manager.py",
+    "chapter_version_control.py",
+    "token_purchase_system.py",
+    "voice_podcast_chapters.py",
+    "ai_image_generator.py",
+    "brand_ai_orchestrator.py",
+    "ollama_client.py",
+    "ollama_auto_commenter.py",
+    "transcript_aggregator.py",
+    "tribunal_token_test.py",
+    "economy_mesh_network.py",
+    "business_schemas.py",
+    "image_dataset.py",
+    "lore_extraction_engine.py",
+    "nudge_system.py",
+    "voice_content_generator.py",
+    "llm_router.py",
+    "progression_system.py",
+    "batch_import_posts.py",
+    "story_modes_system.py",
+    "theme_compiler.py",
+    "debug_lab.py",
+    "user_wordmap_engine.py",
+    "voice_captcha.py",
+    "github_faucet.py",
+    "keyring_unlocks.py",
+    "github_star_validator.py",
+    "simple_emailer.py",
+    "profile_builder.py",
+    "qr_unified.py",
+    "affiliate_link_tracker.py",
+    "soulfra_dark_story.py",
+    "business_qr.py",
+    "prompt_templates.py",
+    "audio_quality.py",
+    "url_to_blog.py",
+    "model_trainer.py",
+    "rate_limiter.py",
+    "generate_manifest.py",
+    "multi_part_qr.py",
+    "domain_unlock_engine.py",
+    "content_pipeline.py",
+    "ocr_extractor.py",
+    "voice_ollama_processor.py",
+    "qr_faucet.py",
+    "wordmap_pitch_integrator.py",
+    "verify_image.py",
+    "user_pairing.py",
+    "audio_enhancer.py",
+    "shortcuts_integration.py",
+    "content_transformer.py",
+    "image_metadata.py",
+    "qr_image_overlay.py",
+    "content_brand_detector.py",
+    "business_routes.py",
+    "folder_router.py",
+    "qr_user_profile.py",
+    "practice_room.py",
+    "session_sync.py",
+    "text_encoder.py",
+    "voice_health_checker.py",
+    "ollama_email_node.py",
+    "ownership_rewards.py",
+    "test_mesh_flow.py",
+    "wiki_concepts.py",
+    "extract_snippets.py",
+    "install_cross_platform.py",
+    "soulfra_types.py",
+    "image_workflow.py",
+    "url_to_content.py",
+    "widget_qr_bridge.py",
+    "event_hooks.py",
+    "user_economy.py",
+    "user_workspace.py",
+    "ollama_discussion.py",
+    "ollama_github_search.py",
+    "tier_progression_engine.py",
+    "whisper_transcriber.py",
+    "voice_capsule_engine.py",
+    "local_domain_tester.py",
+    "domain_manager.py",
+    "brand_builder.py",
+    "procedural_media.py",
+    "test_voice_integration.py",
+    "app.py",
+    "analyze_dependencies.py",
+    "unified_generator.py",
+    "api_health_scanner.py",
+    "theme_builder.py",
+    "notifications.py",
+    "voice_seo_pattern_detector.py",
+    "canvas_integration.py",
+    "narrative_cringeproof.py",
+    "anki_learning_system.py",
+    "voice_health.py",
+    "navigation.py",
+    "device_auth.py",
+    "install.py",
+    "customer_discovery_backend.py",
+    "github_watcher.py",
+    "vanity_qr.py",
+    "voice_encryption.py",
+    "content_tumbler.py",
+    "enrich_content.py",
+    "image_admin_routes.py",
+    "whisper_processor.py",
+    "payment_integrations.py",
+    "admin_system.py",
+    "qr_auth.py",
+    "domain_context.py",
+    "advanced_qr.py",
+    "brand_ai_persona_generator.py",
+    "tutorial_builder.py",
+    "pre_deploy_check.py",
+    "ollama_docs_qa.py",
+    "backfill_mesh_network.py",
+    "content_generator.py",
+    "domain_wordmap_aggregator.py",
+    "qr_voice_integration.py",
+    "brand_creator.py",
+    "subdomain_router.py",
+    "ai_host.py",
+    "file_importer.py",
+    "studio_api.py",
+    "qr_events.py",
+    "comment_github_integration.py",
+    "test_network_stack.py",
+    "user_data_export.py",
+    "multi_port_ollama.py",
+    "soulfra_client.py",
+    "knowledge_extractor.py",
+    "license_manager.py",
+    "qr_card_printer.py",
+    "simple_games/dnd_campaign.py"
+  ],
+  "sqlite3": [
+    "membership_system.py",
+    "creative_onboarding.py",
+    "db_helpers.py",
+    "automation_workflows.py",
+    "comment_to_post.py",
+    "cleanup_fake_domains.py",
+    "auto_content_generator.py",
+    "test_full_pipeline.py",
+    "plugin_loader.py",
+    "SIMPLE_DEMO.py",
+    "token_purchase_system.py",
+    "proof_of_concept.py",
+    "brand_ai_orchestrator.py",
+    "transcript_aggregator.py",
+    "blamechain.py",
+    "debug_affiliate_system.py",
+    "image_dataset.py",
+    "lore_extraction_engine.py",
+    "export_brand_filesystem.py",
+    "audit_database.py",
+    "test_integration_flow.py",
+    "publish_everywhere.py",
+    "batch_import_posts.py",
+    "voice_captcha.py",
+    "github_faucet.py",
+    "publish_to_github.py",
+    "migrate_blog_network.py",
+    "business_qr.py",
+    "database.py",
+    "cringeproof_content_judge.py",
+    "audio_quality.py",
+    "test_flow.py",
+    "deployment_diagnostic.py",
+    "tribunal_email_notifier.py",
+    "migrate_onboarding_system.py",
+    "demo_user_journey.py",
+    "test_hello_world.py",
+    "build_routes.py",
+    "publish_all_brands.py",
+    "generate_manifest.py",
+    "create_blog_post_offline.py",
+    "import_domains_csv.py",
+    "voice_input.py",
+    "init_mesh_economy.py",
+    "qr_faucet.py",
+    "PROOF_IT_ALL_WORKS.py",
+    "inspect-local-system.py",
+    "init_voice_memos_federation.py",
+    "shortcuts_integration.py",
+    "folder_router.py",
+    "deploy_tribunal_to_github.py",
+    "domain_onboarding.py",
+    "test_mesh_flow.py",
+    "wiki_concepts.py",
+    "cringeproof_personas.py",
+    "merge_test_to_main.py",
+    "ollama_discussion.py",
+    "test_system.py",
+    "auto_deploy_domain.py",
+    "voice_capsule_engine.py",
+    "init_knowledge_graph.py",
+    "seed_domains.py",
+    "manage_subscribers.py",
+    "app.py",
+    "init_simple_voice.py",
+    "blog_syndication.py",
+    "unified_generator.py",
+    "verify_mvp_integration.py",
+    "tribunal_blamechain.py",
+    "narrative_cringeproof.py",
+    "anki_learning_system.py",
+    "force_claude_write.py",
+    "install.py",
+    "customer_discovery_backend.py",
+    "github_watcher.py",
+    "vanity_qr.py",
+    "train_topic_networks.py",
+    "scrape_live_domains.py",
+    "export_voice_recordings.py",
+    "whisper_processor.py",
+    "admin_system.py",
+    "brand_ai_persona_generator.py",
+    "tutorial_builder.py",
+    "init_voice_capsules.py",
+    "content_generator.py",
+    "query_by_tier.py",
+    "verify_import.py",
+    "qr_voice_integration.py",
+    "brand_creator.py",
+    "migrate_chat_transcripts.py",
+    "import_domains_simple.py",
+    "scrape_godaddy_landers.py",
+    "init_kangaroo_court.py",
+    "file_importer.py",
+    "setup_test_database.py",
+    "license_manager.py",
+    "Soulfra/Soulfraapi.com/app.py",
+    "simple_games/dnd_campaign.py",
+    "simple_games/two_plus_two.py"
+  ],
+  "database": [
+    "creative_onboarding.py",
+    "question_routes.py",
+    "db_helpers.py",
+    "canvas_routes.py",
+    "build.py",
+    "bidirectional_review_engine.py",
+    "automation_workflows.py",
+    "comment_to_post.py",
+    "widget_router.py",
+    "qr_auto_generate.py",
+    "audit_pii_exposure.py",
+    "generator_routes.py",
+    "voice_idea_board_routes.py",
+    "context_manager.py",
+    "chapter_version_control.py",
+    "draw_routes.py",
+    "hello_world.py",
+    "voice_podcast_chapters.py",
+    "brand_ai_orchestrator.py",
+    "comment_voice_chain.py",
+    "ollama_proxy.py",
+    "build_from_scratch.py",
+    "ollama_auto_commenter.py",
+    "avatar_generator.py",
+    "economy_mesh_network.py",
+    "url_shortener.py",
+    "lore_extraction_engine.py",
+    "nudge_system.py",
+    "test_integration_flow.py",
+    "voice_content_generator.py",
+    "soulfra_assistant.py",
+    "progression_system.py",
+    "migrate_stpetepros.py",
+    "user_wordmap_engine.py",
+    "voice_captcha.py",
+    "seed_domain_wordmaps.py",
+    "publisher_routes.py",
+    "github_faucet.py",
+    "keyring_unlocks.py",
+    "github_star_validator.py",
+    "profile_builder.py",
+    "qr_unified.py",
+    "affiliate_link_tracker.py",
+    "soulfra_dark_story.py",
+    "one_command_live.py",
+    "business_qr.py",
+    "automation_routes.py",
+    "query_templates.py",
+    "url_to_blog.py",
+    "domain_partnership.py",
+    "deployment_diagnostic.py",
+    "web_domain_manager_routes.py",
+    "dm_via_qr.py",
+    "kangaroo_court_routes.py",
+    "voice_bank_routes.py",
+    "migrate_onboarding_system.py",
+    "demo_user_journey.py",
+    "prove_voice_pipeline.py",
+    "rate_limiter.py",
+    "post_to_quiz.py",
+    "domain_unlock_engine.py",
+    "create_blog_post_offline.py",
+    "train_context_networks.py",
+    "voice_domain_creator_routes.py",
+    "voice_ollama_processor.py",
+    "full_flow_demo.py",
+    "voice_input.py",
+    "websocket_server.py",
+    "wordmap_pitch_integrator.py",
+    "verify_image.py",
+    "PROOF_IT_ALL_WORKS.py",
+    "api_routes.py",
+    "user_pairing.py",
+    "template_orchestrator.py",
+    "audio_enhancer.py",
+    "shortcuts_integration.py",
+    "start.py",
+    "init_learning_cards_for_user.py",
+    "avatar_auto_attach.py",
+    "content_brand_detector.py",
+    "business_routes.py",
+    "folder_router.py",
+    "qr_user_profile.py",
+    "practice_room.py",
+    "session_sync.py",
+    "voice_health_checker.py",
+    "ownership_rewards.py",
+    "fix_ip_storage.py",
+    "status_routes.py",
+    "wiki_concepts.py",
+    "test_qr_flow.py",
+    "image_workflow.py",
+    "neural_network.py",
+    "api_server.py",
+    "start_demo.py",
+    "widget_qr_bridge.py",
+    "event_hooks.py",
+    "user_economy.py",
+    "user_workspace.py",
+    "ollama_discussion.py",
+    "tier_progression_engine.py",
+    "build_all.py",
+    "test_signup.py",
+    "project_launcher.py",
+    "neural_soul_scorer.py",
+    "domain_chatroom.py",
+    "build_cringeproof.py",
+    "gps_encryption.py",
+    "brand_builder.py",
+    "procedural_media.py",
+    "unified_logger.py",
+    "test_voice_integration.py",
+    "test_everything.py",
+    "app.py",
+    "qr_analytics.py",
+    "blog_syndication.py",
+    "url_to_email.py",
+    "notifications.py",
+    "voice_seo_pattern_detector.py",
+    "canvas_integration.py",
+    "narrative_cringeproof.py",
+    "anki_learning_system.py",
+    "qr_gallery_system.py",
+    "pseo_generator.py",
+    "voice_health.py",
+    "send_post_email.py",
+    "device_auth.py",
+    "install.py",
+    "gallery_routes.py",
+    "ad_injector.py",
+    "public_comments_api.py",
+    "vanity_qr.py",
+    "test_idea_board.py",
+    "voice_capsule_routes.py",
+    "content_tumbler.py",
+    "enrich_content.py",
+    "chat_routes.py",
+    "image_admin_routes.py",
+    "test_handle_system.py",
+    "qr_auth.py",
+    "brand_ai_persona_generator.py",
+    "battle_routes.py",
+    "tutorial_builder.py",
+    "contributor_rewards.py",
+    "export_static.py",
+    "pre_deploy_check.py",
+    "voice_federation_routes.py",
+    "backfill_mesh_network.py",
+    "domain_wordmap_aggregator.py",
+    "subdomain_router.py",
+    "ai_host.py",
+    "file_importer.py",
+    "simple_voice_routes.py",
+    "qr_events.py",
+    "comment_github_integration.py",
+    "user_data_export.py",
+    "rotation_helpers.py",
+    "knowledge_extractor.py",
+    "make_it_automatic.py",
+    "init_business_db.py",
+    "integrations/twitter_integration.py"
+  ],
+  "PIL": [
+    "creative_onboarding.py",
+    "image_composer.py",
+    "api_image_generator.py",
+    "draw_routes.py",
+    "ai_image_generator.py",
+    "avatar_generator.py",
+    "url_shortener.py",
+    "image_dataset.py",
+    "model_trainer.py",
+    "ocr_extractor.py",
+    "generate_pwa_icons.py",
+    "verify_image.py",
+    "image_metadata.py",
+    "qr_image_overlay.py",
+    "image_workflow.py",
+    "procedural_media.py",
+    "vanity_qr.py",
+    "image_admin_routes.py",
+    "advanced_qr.py",
+    "pixel_utils.py",
+    "qr_card_printer.py",
+    "test_image_system.py"
+  ],
+  "secrets": [
+    "creative_onboarding.py",
+    "question_routes.py",
+    "deployment_ladder.py",
+    "dns_setup_guide.py",
+    "voice_captcha.py",
+    "github_faucet.py",
+    "affiliate_link_tracker.py",
+    "dm_via_qr.py",
+    "qr_faucet.py",
+    "practice_room.py",
+    "session_sync.py",
+    "app.py",
+    "canvas_integration.py",
+    "device_auth.py",
+    "install.py",
+    "customer_discovery_backend.py",
+    "voice_encryption.py",
+    "chat_routes.py",
+    "qr_auth.py",
+    "battle_routes.py",
+    "voice_federation_routes.py",
+    "file_importer.py",
+    "simple_voice_routes.py",
+    "license_manager.py",
+    "Soulfra/Soulfraapi.com/app.py"
+  ],
+  "io": [
+    "creative_onboarding.py",
+    "image_composer.py",
+    "api_image_generator.py",
+    "draw_routes.py",
+    "ai_image_generator.py",
+    "comment_voice_chain.py",
+    "avatar_generator.py",
+    "image_dataset.py",
+    "soulfra_assistant.py",
+    "qr_unified.py",
+    "business_qr.py",
+    "web_domain_manager_routes.py",
+    "multi_part_qr.py",
+    "ocr_extractor.py",
+    "voice_domain_creator_routes.py",
+    "qr_faucet.py",
+    "image_metadata.py",
+    "qr_image_overlay.py",
+    "business_routes.py",
+    "qr_user_profile.py",
+    "session_sync.py",
+    "image_workflow.py",
+    "widget_qr_bridge.py",
+    "domain_chatroom.py",
+    "procedural_media.py",
+    "app.py",
+    "vanity_qr.py",
+    "ssh_tunnel.py",
+    "image_admin_routes.py",
+    "qr_auth.py",
+    "advanced_qr.py",
+    "pre_deploy_check.py",
+    "voice_federation_routes.py",
+    "qr_card_printer.py",
+    "test_image_system.py"
+  ],
+  "argparse": [
+    "creative_onboarding.py",
+    "voice_pipeline.py",
+    "formula_engine.py",
+    "auto_content_generator.py",
+    "api_image_generator.py",
+    "deployment_ladder.py",
+    "voice_podcast_chapters.py",
+    "test_encryption_tiers.py",
+    "transcript_aggregator.py",
+    "tribunal_token_test.py",
+    "dns_setup_guide.py",
+    "export_brand_filesystem.py",
+    "publish_everywhere.py",
+    "batch_import_posts.py",
+    "theme_compiler.py",
+    "github_faucet.py",
+    "github_star_validator.py",
+    "watch_folder.py",
+    "cringeproof_content_judge.py",
+    "audio_quality.py",
+    "url_to_blog.py",
+    "domain_partnership.py",
+    "deployment_diagnostic.py",
+    "migrate_onboarding_system.py",
+    "prove_voice_pipeline.py",
+    "generate_manifest.py",
+    "content_pipeline.py",
+    "qr_faucet.py",
+    "verify_image.py",
+    "audio_enhancer.py",
+    "shortcuts_integration.py",
+    "folder_router.py",
+    "deploy_tribunal_to_github.py",
+    "voice_health_checker.py",
+    "domain_onboarding.py",
+    "ollama_email_node.py",
+    "fix_ip_storage.py",
+    "extract_snippets.py",
+    "install_cross_platform.py",
+    "ollama_github_search.py",
+    "test_system.py",
+    "whisper_transcriber.py",
+    "project_launcher.py",
+    "build_cringeproof.py",
+    "gps_encryption.py",
+    "test_voice_integration.py",
+    "generate_test_csv.py",
+    "manage_subscribers.py",
+    "url_to_email.py",
+    "api_health_scanner.py",
+    "voice_seo_pattern_detector.py",
+    "anki_learning_system.py",
+    "send_post_email.py",
+    "force_claude_write.py",
+    "install.py",
+    "github_watcher.py",
+    "train_topic_networks.py",
+    "scrape_live_domains.py",
+    "content_tumbler.py",
+    "whisper_processor.py",
+    "contributor_rewards.py",
+    "pre_deploy_check.py",
+    "ollama_docs_qa.py",
+    "backfill_mesh_network.py",
+    "query_by_tier.py",
+    "verify_import.py",
+    "publish_ipfs.py",
+    "network_diagram.py",
+    "scrape_godaddy_landers.py",
+    "file_importer.py",
+    "test_network_stack.py",
+    "license_manager.py"
+  ],
+  "pytesseract": [
+    "creative_onboarding.py"
+  ],
+  "hashlib": [
+    "creative_onboarding.py",
+    "db_helpers.py",
+    "canvas_routes.py",
+    "context_manager.py",
+    "draw_routes.py",
+    "ai_image_generator.py",
+    "comment_voice_chain.py",
+    "test_encryption_tiers.py",
+    "avatar_generator.py",
+    "blamechain.py",
+    "tribunal_token_test.py",
+    "business_schemas.py",
+    "url_shortener.py",
+    "image_dataset.py",
+    "github_faucet.py",
+    "affiliate_link_tracker.py",
+    "dm_via_qr.py",
+    "post_to_quiz.py",
+    "multi_part_qr.py",
+    "voice_input.py",
+    "qr_faucet.py",
+    "verify_image.py",
+    "qr_image_overlay.py",
+    "avatar_auto_attach.py",
+    "text_encoder.py",
+    "ollama_email_node.py",
+    "fix_ip_storage.py",
+    "image_workflow.py",
+    "neural_soul_scorer.py",
+    "procedural_media.py",
+    "app.py",
+    "unified_generator.py",
+    "qr_gallery_system.py",
+    "device_auth.py",
+    "customer_discovery_backend.py",
+    "gallery_routes.py",
+    "github_watcher.py",
+    "vanity_qr.py",
+    "voice_encryption.py",
+    "scrape_live_domains.py",
+    "voice_capsule_routes.py",
+    "content_tumbler.py",
+    "admin_system.py",
+    "qr_auth.py",
+    "content_generator.py",
+    "verify_import.py",
+    "file_importer.py",
+    "comment_github_integration.py",
+    "pixel_utils.py",
+    "license_manager.py",
+    "Soulfra/Soulfra.com/app.py",
+    "Soulfra/Soulfra.ai/app.py",
+    "Soulfra/Soulfraapi.com/app.py",
+    "simple_games/dnd_campaign.py",
+    "simple_games/two_plus_two.py"
+  ],
+  "base64": [
+    "creative_onboarding.py",
+    "api_image_generator.py",
+    "draw_routes.py",
+    "comment_voice_chain.py",
+    "business_schemas.py",
+    "url_shortener.py",
+    "test_integration_flow.py",
+    "soulfra_assistant.py",
+    "business_qr.py",
+    "web_domain_manager_routes.py",
+    "multi_part_qr.py",
+    "voice_domain_creator_routes.py",
+    "qr_faucet.py",
+    "test_comment_voice_chain.py",
+    "qr_user_profile.py",
+    "session_sync.py",
+    "text_encoder.py",
+    "test_qr_flow.py",
+    "widget_qr_bridge.py",
+    "ollama_github_search.py",
+    "gps_encryption.py",
+    "app.py",
+    "voice_encryption.py",
+    "image_admin_routes.py",
+    "qr_auth.py",
+    "pre_deploy_check.py",
+    "voice_federation_routes.py"
+  ],
+  "whisper_transcriber": [
+    "question_routes.py",
+    "voice_pipeline.py",
+    "voice_idea_board_routes.py",
+    "voice_captcha.py",
+    "voice_routes.py",
+    "audio_enhancer.py",
+    "test_voice_integration.py",
+    "simple_voice_routes.py"
+  ],
+  "voice_ollama_processor": [
+    "question_routes.py",
+    "voice_podcast_chapters.py",
+    "test_voice_integration.py",
+    "voice_health.py",
+    "simple_voice_routes.py"
+  ],
+  "rate_limiter": [
+    "question_routes.py"
+  ],
+  "rotation_helpers": [
+    "question_routes.py",
+    "app.py",
+    "subdomain_router.py"
+  ],
+  "tempfile": [
+    "question_routes.py",
+    "voice_idea_board_routes.py",
+    "voice_captcha.py",
+    "audio_quality.py",
+    "audio_enhancer.py",
+    "app.py",
+    "whisper_processor.py",
+    "simple_voice_routes.py"
+  ],
+  "flask": [
+    "question_routes.py",
+    "docs_routes.py",
+    "canvas_routes.py",
+    "bidirectional_review_engine.py",
+    "generator_routes.py",
+    "voice_idea_board_routes.py",
+    "draw_routes.py",
+    "comment_voice_chain.py",
+    "ollama_proxy.py",
+    "blamechain.py",
+    "admin_routes.py",
+    "debug_lab.py",
+    "voice_captcha.py",
+    "publisher_routes.py",
+    "github_star_validator.py",
+    "affiliate_link_tracker.py",
+    "workflow_routes.py",
+    "automation_routes.py",
+    "web_domain_manager_routes.py",
+    "kangaroo_court_routes.py",
+    "voice_bank_routes.py",
+    "build_routes.py",
+    "voice_domain_creator_routes.py",
+    "websocket_server.py",
+    "api_routes.py",
+    "voice_routes.py",
+    "token_routes.py",
+    "business_routes.py",
+    "folder_router.py",
+    "qr_user_profile.py",
+    "session_sync.py",
+    "status_routes.py",
+    "cringeproof_personas.py",
+    "api_server.py",
+    "widget_qr_bridge.py",
+    "tier_progression_engine.py",
+    "app.py",
+    "test_gallery_integration.py",
+    "verify_mvp_integration.py",
+    "notifications.py",
+    "tribunal_blamechain.py",
+    "voice_health.py",
+    "navigation.py",
+    "gallery_routes.py",
+    "public_comments_api.py",
+    "preview_server.py",
+    "voice_capsule_routes.py",
+    "chat_routes.py",
+    "image_admin_routes.py",
+    "admin_system.py",
+    "battle_routes.py",
+    "voice_federation_routes.py",
+    "subdomain_router.py",
+    "onboarding_routes.py",
+    "studio_api.py",
+    "simple_voice_routes.py",
+    "comment_github_integration.py",
+    "test_network_stack.py",
+    "pre_deploy_routes.py",
+    "Soulfra/Soulfra.com/app.py",
+    "Soulfra/Soulfra.ai/app.py",
+    "Soulfra/Soulfraapi.com/app.py"
+  ],
+  "avatar_generator": [
+    "db_helpers.py"
+  ],
+  "werkzeug": [
+    "db_helpers.py",
+    "voice_routes.py",
+    "app.py",
+    "onboarding_routes.py"
+  ],
+  "pathlib": [
+    "docs_routes.py",
+    "build.py",
+    "interactive_onboarding.py",
+    "automation_workflows.py",
+    "voice_pipeline.py",
+    "formula_engine.py",
+    "github_repo_creator.py",
+    "widget_router.py",
+    "qr_auto_generate.py",
+    "audit_pii_exposure.py",
+    "test_full_pipeline.py",
+    "plugin_loader.py",
+    "deployment_ladder.py",
+    "proof_of_concept.py",
+    "test_encryption_tiers.py",
+    "ollama_client.py",
+    "transcript_aggregator.py",
+    "debug_affiliate_system.py",
+    "dns_setup_guide.py",
+    "export_brand_filesystem.py",
+    "test_integration_flow.py",
+    "publish_everywhere.py",
+    "batch_import_posts.py",
+    "theme_compiler.py",
+    "publisher_routes.py",
+    "publish_to_github.py",
+    "watch_folder.py",
+    "domain_partnership.py",
+    "test_flow.py",
+    "deployment_diagnostic.py",
+    "dm_via_qr.py",
+    "prove_voice_pipeline.py",
+    "test_hello_world.py",
+    "build_routes.py",
+    "publish_all_brands.py",
+    "generate_manifest.py",
+    "content_pipeline.py",
+    "import_domains_csv.py",
+    "voice_input.py",
+    "verify_image.py",
+    "logger.py",
+    "inspect-local-system.py",
+    "template_orchestrator.py",
+    "voice_routes.py",
+    "audio_enhancer.py",
+    "start.py",
+    "folder_router.py",
+    "qr_user_profile.py",
+    "deploy_tribunal_to_github.py",
+    "fix_ip_storage.py",
+    "extract_snippets.py",
+    "test_qr_flow.py",
+    "ollama_github_search.py",
+    "test_system.py",
+    "whisper_transcriber.py",
+    "auto_deploy_domain.py",
+    "local_domain_tester.py",
+    "project_launcher.py",
+    "deploy_github.py",
+    "gps_encryption.py",
+    "test_voice_integration.py",
+    "manage_subscribers.py",
+    "app.py",
+    "qr_analytics.py",
+    "unified_generator.py",
+    "verify_mvp_integration.py",
+    "theme_builder.py",
+    "launcher.py",
+    "qr_gallery_system.py",
+    "pseo_generator.py",
+    "install.py",
+    "gallery_routes.py",
+    "ad_injector.py",
+    "train_topic_networks.py",
+    "preview_server.py",
+    "export_voice_recordings.py",
+    "content_tumbler.py",
+    "whisper_processor.py",
+    "domain_context.py",
+    "export_static.py",
+    "ollama_docs_qa.py",
+    "qr_voice_integration.py",
+    "publish_ipfs.py",
+    "network_diagram.py",
+    "import_domains_simple.py",
+    "onboarding_routes.py",
+    "file_importer.py",
+    "demo_complete_system.py",
+    "simple_voice_routes.py",
+    "test_network_stack.py",
+    "integrations/twitter_integration.py"
+  ],
+  "markdown2": [
+    "docs_routes.py",
+    "build.py",
+    "content_pipeline.py",
+    "template_orchestrator.py",
+    "app.py",
+    "url_to_email.py",
+    "send_post_email.py",
+    "export_static.py",
+    "file_importer.py"
+  ],
+  "lib": [
+    "docs_routes.py",
+    "app.py"
+  ],
+  "urllib": [
+    "docs_routes.py",
+    "domain_researcher.py",
+    "context_manager.py",
+    "ollama_auto_commenter.py",
+    "dns_setup_guide.py",
+    "image_dataset.py",
+    "llm_router.py",
+    "soulfra_assistant.py",
+    "one_command_live.py",
+    "generate_manifest.py",
+    "ocr_extractor.py",
+    "url_to_content.py",
+    "ollama_discussion.py",
+    "ollama_github_search.py",
+    "test_system.py",
+    "app.py",
+    "customer_discovery_backend.py",
+    "github_watcher.py",
+    "scrape_live_domains.py",
+    "image_admin_routes.py",
+    "whisper_processor.py",
+    "domain_context.py",
+    "tutorial_builder.py",
+    "ollama_docs_qa.py",
+    "import_domains_simple.py",
+    "scrape_godaddy_landers.py",
+    "ai_host.py"
+  ],
+  "re": [
+    "docs_routes.py",
+    "build.py",
+    "comment_to_post.py",
+    "formula_engine.py",
+    "auto_content_generator.py",
+    "audit_pii_exposure.py",
+    "voice_idea_board_routes.py",
+    "domain_researcher.py",
+    "context_manager.py",
+    "voice_podcast_chapters.py",
+    "lore_extraction_engine.py",
+    "voice_content_generator.py",
+    "batch_import_posts.py",
+    "debug_lab.py",
+    "one_command_live.py",
+    "url_to_blog.py",
+    "post_to_quiz.py",
+    "generate_manifest.py",
+    "content_pipeline.py",
+    "train_context_networks.py",
+    "voice_domain_creator_routes.py",
+    "voice_ollama_processor.py",
+    "wordmap_pitch_integrator.py",
+    "content_brand_detector.py",
+    "folder_router.py",
+    "fix_ip_storage.py",
+    "extract_snippets.py",
+    "soulfra_types.py",
+    "url_to_content.py",
+    "neural_soul_scorer.py",
+    "unified_logger.py",
+    "app.py",
+    "analyze_dependencies.py",
+    "voice_seo_pattern_detector.py",
+    "canvas_integration.py",
+    "pseo_generator.py",
+    "ad_injector.py",
+    "ssh_tunnel.py",
+    "enrich_content.py",
+    "image_admin_routes.py",
+    "export_static.py",
+    "ollama_docs_qa.py",
+    "scrape_godaddy_landers.py",
+    "file_importer.py",
+    "knowledge_extractor.py"
+  ],
+  "qr_faucet": [
+    "canvas_routes.py",
+    "test_integration_flow.py",
+    "qr_user_profile.py",
+    "practice_room.py",
+    "test_qr_flow.py",
+    "widget_qr_bridge.py",
+    "app.py",
+    "canvas_integration.py",
+    "qr_voice_integration.py"
+  ],
+  "canvas_integration": [
+    "canvas_routes.py"
+  ],
+  "progression_system": [
+    "canvas_routes.py",
+    "chat_routes.py"
+  ],
+  "shutil": [
+    "build.py",
+    "export_brand_filesystem.py",
+    "content_pipeline.py",
+    "voice_input.py",
+    "install_cross_platform.py",
+    "app.py",
+    "theme_builder.py",
+    "export_static.py",
+    "setup_test_database.py"
+  ],
+  "brand_creator": [
+    "interactive_onboarding.py",
+    "domain_onboarding.py",
+    "auto_deploy_domain.py"
+  ],
+  "ollama_domain_analyzer": [
+    "interactive_onboarding.py",
+    "test_domain_diversity.py",
+    "domain_onboarding.py",
+    "auto_deploy_domain.py",
+    "brand_creator.py"
+  ],
+  "anthropic": [
+    "automation_workflows.py",
+    "force_claude_write.py"
+  ],
+  "blog_syndication": [
+    "automation_workflows.py"
+  ],
+  "glob": [
+    "inspect-live-site.py",
+    "transcript_aggregator.py",
+    "ascii_player.py",
+    "web_domain_manager_routes.py",
+    "inspect-local-system.py",
+    "test_voice_integration.py",
+    "app.py"
+  ],
+  "bs4": [
+    "inspect-live-site.py",
+    "domain_researcher.py",
+    "url_to_content.py",
+    "app.py",
+    "api_health_scanner.py",
+    "scrape_live_domains.py",
+    "scrape_godaddy_landers.py",
+    "file_importer.py"
+  ],
+  "file_importer": [
+    "voice_pipeline.py",
+    "watch_folder.py",
+    "content_pipeline.py",
+    "whisper_transcriber.py",
+    "onboarding_routes.py"
+  ],
+  "voice_input": [
+    "voice_pipeline.py",
+    "voice_routes.py",
+    "practice_room.py",
+    "test_qr_flow.py",
+    "whisper_transcriber.py",
+    "app.py"
+  ],
+  "qr_voice_integration": [
+    "voice_pipeline.py",
+    "voice_routes.py"
+  ],
+  "time": [
+    "voice_pipeline.py",
+    "test_full_pipeline.py",
+    "api_image_generator.py",
+    "proof_of_concept.py",
+    "test_encryption_tiers.py",
+    "build_from_scratch.py",
+    "tribunal_token_test.py",
+    "voice_captcha.py",
+    "watch_folder.py",
+    "one_command_live.py",
+    "ascii_player.py",
+    "test_flow.py",
+    "dm_via_qr.py",
+    "test_hello_world.py",
+    "websocket_server.py",
+    "qr_faucet.py",
+    "start.py",
+    "session_sync.py",
+    "ollama_email_node.py",
+    "test_qr_flow.py",
+    "start_demo.py",
+    "auto_deploy_domain.py",
+    "app.py",
+    "api_health_scanner.py",
+    "voice_health.py",
+    "device_auth.py",
+    "github_watcher.py",
+    "preview_server.py",
+    "scrape_live_domains.py",
+    "ssh_tunnel.py",
+    "qr_auth.py",
+    "network_diagram.py",
+    "multi_port_ollama.py",
+    "soulfra_client.py",
+    "test_image_system.py"
+  ],
+  "content_pipeline": [
+    "voice_pipeline.py",
+    "watch_folder.py",
+    "onboarding_routes.py"
+  ],
+  "watchdog": [
+    "voice_pipeline.py",
+    "watch_folder.py"
+  ],
+  "db_helpers": [
+    "comment_to_post.py",
+    "nudge_system.py",
+    "event_hooks.py",
+    "app.py",
+    "brand_ai_persona_generator.py"
+  ],
+  "ast": [
+    "formula_engine.py",
+    "session_sync.py",
+    "analyze_dependencies.py"
+  ],
+  "colorsys": [
+    "formula_engine.py",
+    "theme_compiler.py",
+    "train_color_features.py"
+  ],
+  "operator": [
+    "formula_engine.py"
+  ],
+  "yaml": [
+    "formula_engine.py",
+    "plugin_loader.py",
+    "app.py",
+    "file_importer.py"
+  ],
+  "subprocess": [
+    "github_repo_creator.py",
+    "test_full_pipeline.py",
+    "deployment_ladder.py",
+    "proof_of_concept.py",
+    "test_encryption_tiers.py",
+    "publish_everywhere.py",
+    "debug_lab.py",
+    "publisher_routes.py",
+    "publish_to_github.py",
+    "auto_fix_routes.py",
+    "one_command_live.py",
+    "automation_routes.py",
+    "audio_quality.py",
+    "url_to_blog.py",
+    "deployment_diagnostic.py",
+    "web_domain_manager_routes.py",
+    "publish_all_brands.py",
+    "generate_manifest.py",
+    "domain_health.py",
+    "voice_input.py",
+    "install_ai.py",
+    "inspect-local-system.py",
+    "audio_enhancer.py",
+    "start.py",
+    "deploy_tribunal_to_github.py",
+    "status_routes.py",
+    "install_cross_platform.py",
+    "whisper_transcriber.py",
+    "auto_deploy_domain.py",
+    "local_domain_tester.py",
+    "deploy_github.py",
+    "app.py",
+    "launcher.py",
+    "install.py",
+    "preview_server.py",
+    "ssh_tunnel.py",
+    "test_all_scripts.py",
+    "pre_deploy_check.py",
+    "qr_voice_integration.py",
+    "publish_ipfs.py",
+    "network_diagram.py",
+    "test_network_stack.py",
+    "make_it_automatic.py"
+  ],
+  "qrcode": [
+    "qr_auto_generate.py",
+    "image_composer.py",
+    "comment_voice_chain.py",
+    "url_shortener.py",
+    "qr_unified.py",
+    "business_qr.py",
+    "web_domain_manager_routes.py",
+    "dm_via_qr.py",
+    "multi_part_qr.py",
+    "content_pipeline.py",
+    "voice_domain_creator_routes.py",
+    "qr_faucet.py",
+    "qr_image_overlay.py",
+    "qr_user_profile.py",
+    "session_sync.py",
+    "start_demo.py",
+    "widget_qr_bridge.py",
+    "domain_chatroom.py",
+    "app.py",
+    "qr_gallery_system.py",
+    "vanity_qr.py",
+    "ssh_tunnel.py",
+    "qr_auth.py",
+    "advanced_qr.py",
+    "pre_deploy_check.py",
+    "voice_federation_routes.py",
+    "file_importer.py",
+    "qr_card_printer.py",
+    "Soulfra/generate-qr.py"
+  ],
+  "collections": [
+    "audit_pii_exposure.py",
+    "context_manager.py",
+    "debug_lab.py",
+    "user_wordmap_engine.py",
+    "content_pipeline.py",
+    "voice_ollama_processor.py",
+    "wordmap_pitch_integrator.py",
+    "app.py",
+    "analyze_dependencies.py",
+    "qr_analytics.py",
+    "voice_seo_pattern_detector.py",
+    "query_by_tier.py",
+    "verify_import.py",
+    "domain_wordmap_aggregator.py"
+  ],
+  "vanity_qr": [
+    "test_complete_flow.py",
+    "qr_unified.py",
+    "image_workflow.py",
+    "domain_chatroom.py",
+    "unified_generator.py",
+    "content_tumbler.py",
+    "image_admin_routes.py",
+    "init_business_db.py"
+  ],
+  "export_static": [
+    "test_full_pipeline.py",
+    "app.py"
+  ],
+  "content_transformer": [
+    "test_full_pipeline.py",
+    "app.py"
+  ],
+  "domain_manager": [
+    "test_full_pipeline.py",
+    "publisher_routes.py",
+    "content_transformer.py",
+    "domain_onboarding.py",
+    "auto_deploy_domain.py",
+    "simple_voice_routes.py"
+  ],
+  "importlib": [
+    "plugin_loader.py",
+    "test_all_scripts.py"
+  ],
+  "dataclasses": [
+    "image_composer.py",
+    "theme_builder.py",
+    "notifications.py",
+    "navigation.py"
+  ],
+  "traceback": [
+    "SIMPLE_DEMO.py",
+    "generator_routes.py",
+    "api_image_generator.py",
+    "hello_world.py",
+    "proof_of_concept.py",
+    "debug_affiliate_system.py",
+    "test_integration_flow.py",
+    "soulfra_assistant.py",
+    "seed_domain_wordmaps.py",
+    "model_trainer.py",
+    "prove_voice_pipeline.py",
+    "create_blog_post_offline.py",
+    "template_orchestrator.py",
+    "audio_enhancer.py",
+    "test_comment_voice_chain.py",
+    "qr_image_overlay.py",
+    "business_routes.py",
+    "start_demo.py",
+    "build_all.py",
+    "test_signup.py",
+    "test_butter_image.py",
+    "deploy_github.py",
+    "app.py",
+    "test_practice_room.py",
+    "qr_gallery_system.py",
+    "image_admin_routes.py",
+    "tutorial_builder.py",
+    "export_static.py",
+    "backfill_mesh_network.py",
+    "content_generator.py",
+    "test_image_system.py"
+  ],
+  "unified_generator": [
+    "generator_routes.py",
+    "content_tumbler.py",
+    "init_business_db.py"
+  ],
+  "ollama_client": [
+    "voice_idea_board_routes.py",
+    "voice_podcast_chapters.py",
+    "lore_extraction_engine.py",
+    "voice_content_generator.py",
+    "kangaroo_court_routes.py",
+    "voice_domain_creator_routes.py",
+    "voice_ollama_processor.py",
+    "app.py",
+    "voice_health.py",
+    "customer_discovery_backend.py",
+    "pre_deploy_check.py",
+    "simple_voice_routes.py"
+  ],
+  "procedural_media": [
+    "api_image_generator.py",
+    "ai_image_generator.py",
+    "qr_image_overlay.py",
+    "enrich_content.py",
+    "image_admin_routes.py"
+  ],
+  "openai": [
+    "api_image_generator.py"
+  ],
+  "BingImageCreator": [
+    "api_image_generator.py"
+  ],
+  "replicate": [
+    "api_image_generator.py"
+  ],
+  "ssl": [
+    "domain_researcher.py",
+    "test_encryption_tiers.py",
+    "whisper_processor.py"
+  ],
+  "socket": [
+    "domain_researcher.py",
+    "deployment_ladder.py",
+    "config.py",
+    "test_encryption_tiers.py",
+    "dns_setup_guide.py",
+    "inspect-local-system.py",
+    "start_demo.py",
+    "app.py",
+    "test_practice_room.py",
+    "preview_server.py",
+    "network_diagram.py",
+    "test_network_stack.py"
+  ],
+  "config": [
+    "context_manager.py",
+    "url_shortener.py",
+    "voice_domain_creator_routes.py",
+    "qr_faucet.py",
+    "qr_user_profile.py",
+    "status_routes.py",
+    "widget_qr_bridge.py",
+    "brand_builder.py",
+    "app.py",
+    "qr_auth.py",
+    "voice_federation_routes.py",
+    "integrations/twitter_integration.py"
+  ],
+  "difflib": [
+    "chapter_version_control.py",
+    "draw_routes.py"
+  ],
+  "chapter_tutorials": [
+    "chapter_version_control.py",
+    "app.py"
+  ],
+  "ocr_extractor": [
+    "draw_routes.py"
+  ],
+  "membership_system": [
+    "token_purchase_system.py"
+  ],
+  "torch": [
+    "ai_image_generator.py"
+  ],
+  "diffusers": [
+    "ai_image_generator.py"
+  ],
+  "brand_ai_persona_generator": [
+    "brand_ai_orchestrator.py",
+    "ollama_auto_commenter.py",
+    "content_brand_detector.py",
+    "build_all.py",
+    "app.py"
+  ],
+  "flask_cors": [
+    "ollama_proxy.py",
+    "api_server.py",
+    "public_comments_api.py",
+    "Soulfra/Soulfra.com/app.py",
+    "Soulfra/Soulfra.ai/app.py",
+    "Soulfra/Soulfraapi.com/app.py"
+  ],
+  "app": [
+    "test_encryption_tiers.py",
+    "build_from_scratch.py",
+    "start.py",
+    "test_everything.py"
+  ],
+  "qr_auth": [
+    "test_encryption_tiers.py",
+    "init_qr_database.py",
+    "app.py"
+  ],
+  "anki_learning_system": [
+    "build_from_scratch.py",
+    "demo_user_journey.py",
+    "test_everything.py",
+    "app.py"
+  ],
+  "init_learning_cards_for_user": [
+    "build_from_scratch.py",
+    "start.py"
+  ],
+  "init_learning_cards": [
+    "build_from_scratch.py"
+  ],
+  "brand_ai_orchestrator": [
+    "ollama_auto_commenter.py",
+    "one_command_live.py",
+    "wiki_concepts.py",
+    "app.py"
+  ],
+  "admin_system": [
+    "admin_routes.py"
+  ],
+  "token_purchase_system": [
+    "tribunal_token_test.py",
+    "token_routes.py"
+  ],
+  "text_encoder": [
+    "economy_mesh_network.py",
+    "test_mesh_flow.py",
+    "user_economy.py",
+    "app.py"
+  ],
+  "user_economy": [
+    "economy_mesh_network.py",
+    "app.py"
+  ],
+  "user_wordmap_engine": [
+    "economy_mesh_network.py",
+    "user_economy.py",
+    "build_cringeproof.py",
+    "app.py",
+    "domain_wordmap_aggregator.py",
+    "simple_voice_routes.py"
+  ],
+  "domain_unlock_engine": [
+    "economy_mesh_network.py",
+    "voice_content_generator.py",
+    "wordmap_pitch_integrator.py",
+    "session_sync.py",
+    "ownership_rewards.py",
+    "user_economy.py",
+    "build_cringeproof.py",
+    "test_handle_system.py",
+    "domain_wordmap_aggregator.py",
+    "simple_voice_routes.py"
+  ],
+  "voice_content_generator": [
+    "economy_mesh_network.py",
+    "prove_voice_pipeline.py",
+    "wordmap_pitch_integrator.py",
+    "build_cringeproof.py",
+    "simple_voice_routes.py"
+  ],
+  "domain_wordmap_aggregator": [
+    "economy_mesh_network.py",
+    "ownership_rewards.py",
+    "test_mesh_flow.py",
+    "user_economy.py",
+    "build_cringeproof.py",
+    "app.py",
+    "simple_voice_routes.py"
+  ],
+  "ownership_rewards": [
+    "economy_mesh_network.py",
+    "user_economy.py",
+    "build_cringeproof.py",
+    "app.py"
+  ],
+  "github_star_validator": [
+    "debug_affiliate_system.py",
+    "tier_progression_engine.py",
+    "app.py",
+    "comment_github_integration.py"
+  ],
+  "tier_progression_engine": [
+    "debug_affiliate_system.py",
+    "app.py",
+    "subdomain_router.py"
+  ],
+  "affiliate_link_tracker": [
+    "debug_affiliate_system.py",
+    "app.py"
+  ],
+  "hmac": [
+    "business_schemas.py",
+    "qr_faucet.py"
+  ],
+  "gzip": [
+    "business_schemas.py"
+  ],
+  "dns": [
+    "dns_setup_guide.py",
+    "app.py"
+  ],
+  "random": [
+    "generate_fake_domains.py",
+    "domain_partnership.py",
+    "domain_unlock_engine.py",
+    "procedural_media.py",
+    "generate_test_csv.py",
+    "app.py",
+    "Soulfra/Soulfraapi.com/app.py"
+  ],
+  "math": [
+    "image_dataset.py",
+    "train_color_features.py",
+    "gps_encryption.py",
+    "app.py",
+    "anki_learning_system.py",
+    "advanced_qr.py"
+  ],
+  "matplotlib": [
+    "image_dataset.py"
+  ],
+  "pickle": [
+    "export_brand_filesystem.py",
+    "train_topic_networks.py"
+  ],
+  "simple_emailer": [
+    "nudge_system.py",
+    "template_orchestrator.py",
+    "event_hooks.py",
+    "url_to_email.py",
+    "send_post_email.py"
+  ],
+  "practice_room": [
+    "test_integration_flow.py",
+    "start_demo.py",
+    "app.py",
+    "test_practice_room.py"
+  ],
+  "widget_qr_bridge": [
+    "test_integration_flow.py",
+    "app.py"
+  ],
+  "qr_user_profile": [
+    "test_integration_flow.py",
+    "app.py"
+  ],
+  "brand_voice_generator": [
+    "soulfra_assistant.py",
+    "app.py"
+  ],
+  "simple_games": [
+    "soulfra_assistant.py",
+    "app.py"
+  ],
+  "url_shortener": [
+    "soulfra_assistant.py",
+    "app.py",
+    "integrations/twitter_integration.py"
+  ],
+  "logging": [
+    "soulfra_assistant.py",
+    "logger.py",
+    "app.py"
+  ],
+  "trading_system": [
+    "soulfra_assistant.py",
+    "app.py"
+  ],
+  "aging_curves": [
+    "soulfra_assistant.py",
+    "app.py",
+    "simple_games/dnd_campaign.py"
+  ],
+  "content_generator": [
+    "soulfra_assistant.py"
+  ],
+  "qr_encoder_stdlib": [
+    "soulfra_assistant.py",
+    "qr_to_ascii.py"
+  ],
+  "pandas": [
+    "batch_import_posts.py"
+  ],
+  "csv": [
+    "batch_import_posts.py",
+    "generate_manifest.py",
+    "import_domains_csv.py",
+    "domain_manager.py",
+    "manage_subscribers.py",
+    "app.py",
+    "domain_context.py"
+  ],
+  "soulfra_dark_story": [
+    "story_modes_system.py",
+    "narrative_cringeproof.py",
+    "qr_card_printer.py"
+  ],
+  "llm_router": [
+    "story_modes_system.py",
+    "web_domain_manager_routes.py",
+    "domain_chatroom.py",
+    "app.py",
+    "canvas_integration.py"
+  ],
+  "wordmap_pitch_integrator": [
+    "user_wordmap_engine.py",
+    "ownership_rewards.py",
+    "simple_voice_routes.py"
+  ],
+  "archive": [
+    "voice_captcha.py"
+  ],
+  "smtplib": [
+    "simple_emailer.py",
+    "tribunal_email_notifier.py",
+    "ollama_email_node.py",
+    "github_watcher.py"
+  ],
+  "email": [
+    "simple_emailer.py",
+    "tribunal_email_notifier.py",
+    "ollama_email_node.py",
+    "github_watcher.py"
+  ],
+  "config_secrets": [
+    "simple_emailer.py",
+    "force_claude_write.py"
+  ],
+  "qr_gallery_system": [
+    "qr_unified.py"
+  ],
+  "dm_via_qr": [
+    "qr_unified.py",
+    "app.py",
+    "gallery_routes.py"
+  ],
+  "business_schemas": [
+    "qr_unified.py",
+    "business_qr.py",
+    "business_routes.py",
+    "payment_integrations.py",
+    "qr_events.py"
+  ],
+  "advanced_qr": [
+    "qr_unified.py",
+    "test_advanced_qr.py",
+    "image_admin_routes.py"
+  ],
+  "business_qr": [
+    "qr_unified.py",
+    "business_routes.py",
+    "payment_integrations.py"
+  ],
+  "ollama_auto_commenter": [
+    "one_command_live.py",
+    "wiki_concepts.py",
+    "event_hooks.py",
+    "app.py"
+  ],
+  "comment_to_post": [
+    "one_command_live.py"
+  ],
+  "automation_workflows": [
+    "workflow_routes.py",
+    "app.py"
+  ],
+  "functools": [
+    "workflow_routes.py",
+    "admin_system.py",
+    "onboarding_routes.py"
+  ],
+  "curses": [
+    "ascii_player.py"
+  ],
+  "image_to_ascii": [
+    "ascii_player.py"
+  ],
+  "template_orchestrator": [
+    "url_to_blog.py"
+  ],
+  "enrich_content": [
+    "url_to_blog.py"
+  ],
+  "string": [
+    "domain_partnership.py",
+    "app.py"
+  ],
+  "image_dataset": [
+    "model_trainer.py"
+  ],
+  "ai_image_generator": [
+    "model_trainer.py",
+    "test_butter_image.py",
+    "image_admin_routes.py",
+    "content_generator.py"
+  ],
+  "urllib3": [
+    "web_domain_manager_routes.py",
+    "scrape_godaddy_landers.py"
+  ],
+  "cringeproof_content_judge": [
+    "prove_voice_pipeline.py"
+  ],
+  "lore_extraction_engine": [
+    "prove_voice_pipeline.py"
+  ],
+  "economy_mesh_network": [
+    "prove_voice_pipeline.py",
+    "test_mesh_flow.py",
+    "whisper_transcriber.py",
+    "app.py",
+    "backfill_mesh_network.py"
+  ],
+  "neural_network": [
+    "test_hello_world.py",
+    "train_context_networks.py",
+    "app.py",
+    "anki_learning_system.py"
+  ],
+  "folder_router": [
+    "content_pipeline.py",
+    "onboarding_routes.py"
+  ],
+  "event_hooks": [
+    "create_blog_post_offline.py",
+    "app.py",
+    "narrative_cringeproof.py"
+  ],
+  "numpy": [
+    "train_context_networks.py",
+    "neural_network.py",
+    "app.py",
+    "anki_learning_system.py",
+    "train_topic_networks.py"
+  ],
+  "easyocr": [
+    "ocr_extractor.py"
+  ],
+  "platform": [
+    "install_ai.py",
+    "install_cross_platform.py",
+    "test_network_stack.py"
+  ],
+  "test_runner": [
+    "websocket_server.py",
+    "studio_api.py"
+  ],
+  "flask_socketio": [
+    "websocket_server.py",
+    "app.py"
+  ],
+  "threading": [
+    "websocket_server.py",
+    "launcher.py",
+    "preview_server.py",
+    "chat_routes.py",
+    "battle_routes.py"
+  ],
+  "subdomain_router": [
+    "websocket_server.py",
+    "app.py"
+  ],
+  "idea_submission_system": [
+    "qr_faucet.py",
+    "app.py"
+  ],
+  "formula_engine": [
+    "test_default_values.py",
+    "test_template_rendering.py",
+    "app.py"
+  ],
+  "pyzbar": [
+    "verify_image.py",
+    "qr_image_overlay.py"
+  ],
+  "cringeproof": [
+    "user_pairing.py",
+    "app.py"
+  ],
+  "voice_pipeline": [
+    "voice_routes.py"
+  ],
+  "noisereduce": [
+    "audio_enhancer.py"
+  ],
+  "librosa": [
+    "audio_enhancer.py"
+  ],
+  "soundfile": [
+    "audio_enhancer.py"
+  ],
+  "webbrowser": [
+    "start.py",
+    "launcher.py"
+  ],
+  "image_composer": [
+    "image_metadata.py",
+    "image_workflow.py",
+    "image_admin_routes.py",
+    "test_image_system.py"
+  ],
+  "piexif": [
+    "image_metadata.py"
+  ],
+  "payment_integrations": [
+    "business_routes.py"
+  ],
+  "qr_to_ascii": [
+    "practice_room.py"
+  ],
+  "tribunal_email_notifier": [
+    "deploy_tribunal_to_github.py"
+  ],
+  "dotenv": [
+    "deploy_tribunal_to_github.py",
+    "app.py"
+  ],
+  "imaplib": [
+    "ollama_email_node.py",
+    "github_watcher.py"
+  ],
+  "image_metadata": [
+    "image_workflow.py",
+    "image_admin_routes.py"
+  ],
+  "prompt_templates": [
+    "image_workflow.py",
+    "test_butter_image.py",
+    "content_generator.py",
+    "test_image_system.py"
+  ],
+  "profile_builder": [
+    "event_hooks.py",
+    "app.py"
+  ],
+  "sop_generator": [
+    "ollama_discussion.py"
+  ],
+  "domain_context": [
+    "test_system.py"
+  ],
+  "logger": [
+    "test_system.py",
+    "domain_context.py"
+  ],
+  "github_faucet": [
+    "tier_progression_engine.py",
+    "customer_discovery_backend.py",
+    "content_tumbler.py",
+    "onboarding_routes.py",
+    "comment_github_integration.py"
+  ],
+  "content_brand_detector": [
+    "build_all.py"
+  ],
+  "whisper": [
+    "whisper_transcriber.py",
+    "whisper_processor.py"
+  ],
+  "github_repo_creator": [
+    "auto_deploy_domain.py"
+  ],
+  "voice_encryption": [
+    "gps_encryption.py",
+    "voice_federation_routes.py"
+  ],
+  "pixel_utils": [
+    "procedural_media.py"
+  ],
+  "audio_quality": [
+    "test_voice_integration.py"
+  ],
+  "stripe_membership": [
+    "app.py"
+  ],
+  "comment_voice_chain": [
+    "app.py"
+  ],
+  "brand_sop_templates": [
+    "app.py"
+  ],
+  "voice_federation_routes": [
+    "app.py"
+  ],
+  "emoji_pattern_analyzer": [
+    "app.py"
+  ],
+  "chat_routes": [
+    "app.py"
+  ],
+  "game_sharing": [
+    "app.py"
+  ],
+  "psutil": [
+    "app.py"
+  ],
+  "pre_deploy_routes": [
+    "app.py"
+  ],
+  "api_routes": [
+    "app.py"
+  ],
+  "public_comments_api": [
+    "app.py"
+  ],
+  "generator_routes": [
+    "app.py"
+  ],
+  "cleanup_orphaned_associations": [
+    "app.py"
+  ],
+  "brand_vocabulary_trainer": [
+    "app.py"
+  ],
+  "business_routes": [
+    "app.py"
+  ],
+  "brand_quality_gate": [
+    "app.py"
+  ],
+  "init_brands_from_manifest": [
+    "app.py"
+  ],
+  "neural_proxy": [
+    "app.py"
+  ],
+  "game_orchestrator": [
+    "app.py",
+    "simple_games/dnd_campaign.py",
+    "simple_games/two_plus_two.py"
+  ],
+  "ai_host": [
+    "app.py"
+  ],
+  "blamechain": [
+    "app.py"
+  ],
+  "soul_model": [
+    "app.py"
+  ],
+  "url_to_blog": [
+    "app.py",
+    "url_to_email.py"
+  ],
+  "generate_proof": [
+    "app.py"
+  ],
+  "narrative_cringeproof": [
+    "app.py"
+  ],
+  "brand_theme_manager": [
+    "app.py"
+  ],
+  "docs_routes": [
+    "app.py"
+  ],
+  "cringeproof_personas": [
+    "app.py"
+  ],
+  "feed_generator": [
+    "app.py"
+  ],
+  "brand_config_validator": [
+    "app.py"
+  ],
+  "user_workspace": [
+    "app.py",
+    "canvas_integration.py"
+  ],
+  "publisher_routes": [
+    "app.py"
+  ],
+  "automation_routes": [
+    "app.py"
+  ],
+  "voice_routes": [
+    "app.py"
+  ],
+  "cringeproof_reasoning": [
+    "app.py"
+  ],
+  "brand_css_generator": [
+    "app.py"
+  ],
+  "simple_ml": [
+    "app.py"
+  ],
+  "uuid": [
+    "app.py",
+    "license_manager.py"
+  ],
+  "contribution_validator": [
+    "app.py"
+  ],
+  "soulfra_games": [
+    "app.py"
+  ],
+  "platform_connectors": [
+    "app.py"
+  ],
+  "query_templates": [
+    "app.py"
+  ],
+  "zipfile": [
+    "app.py"
+  ],
+  "feature_factory": [
+    "app.py"
+  ],
+  "route_discovery": [
+    "app.py"
+  ],
+  "status_routes": [
+    "app.py"
+  ],
+  "idea_backpropagation": [
+    "app.py"
+  ],
+  "soulfra_simple_builder": [
+    "app.py"
+  ],
+  "email_server": [
+    "app.py"
+  ],
+  "ownership_helper": [
+    "app.py"
+  ],
+  "brand_status_dashboard": [
+    "app.py"
+  ],
+  "nudge_system": [
+    "app.py"
+  ],
+  "check_templates": [
+    "app.py"
+  ],
+  "session_sync": [
+    "app.py"
+  ],
+  "schema_inspector": [
+    "app.py"
+  ],
+  "bidirectional_review_engine": [
+    "app.py",
+    "comment_github_integration.py"
+  ],
+  "profile_compilers": [
+    "app.py"
+  ],
+  "soul_transformer": [
+    "app.py"
+  ],
+  "tribunal_blamechain": [
+    "app.py"
+  ],
+  "kangaroo_court_routes": [
+    "app.py"
+  ],
+  "build_routes": [
+    "app.py"
+  ],
+  "gallery_routes": [
+    "app.py",
+    "test_gallery_integration.py",
+    "verify_mvp_integration.py"
+  ],
+  "voice_bank_routes": [
+    "app.py"
+  ],
+  "public_builder": [
+    "app.py"
+  ],
+  "emails": [
+    "app.py"
+  ],
+  "story_pipeline_tracer": [
+    "app.py"
+  ],
+  "token_routes": [
+    "app.py"
+  ],
+  "device_multiplier_system": [
+    "app.py"
+  ],
+  "soulfra_assistant": [
+    "app.py"
+  ],
+  "web_domain_manager_routes": [
+    "app.py"
+  ],
+  "brand_qr_generator": [
+    "app.py"
+  ],
+  "newsletter_digest": [
+    "app.py"
+  ],
+  "train_context_networks": [
+    "app.py"
+  ],
+  "train_website_model": [
+    "app.py"
+  ],
+  "brand_neural_analysis": [
+    "app.py"
+  ],
+  "user_data_export": [
+    "app.py"
+  ],
+  "html": [
+    "app.py"
+  ],
+  "voice_capsule_routes": [
+    "app.py"
+  ],
+  "canvas_routes": [
+    "app.py"
+  ],
+  "simple_voice_routes": [
+    "app.py"
+  ],
+  "freelancer_api": [
+    "app.py"
+  ],
+  "brand_builder": [
+    "app.py"
+  ],
+  "image_admin_routes": [
+    "app.py"
+  ],
+  "concurrent": [
+    "app.py",
+    "multi_port_ollama.py"
+  ],
+  "draw_routes": [
+    "app.py"
+  ],
+  "email_reply_handler": [
+    "app.py"
+  ],
+  "visual_generator": [
+    "app.py"
+  ],
+  "onboarding_routes": [
+    "app.py"
+  ],
+  "train_color_features": [
+    "app.py"
+  ],
+  "mimetypes": [
+    "app.py",
+    "file_importer.py"
+  ],
+  "voice_domain_creator_routes": [
+    "app.py"
+  ],
+  "comment_github_integration": [
+    "app.py"
+  ],
+  "ollama_discussion": [
+    "app.py"
+  ],
+  "route_generator": [
+    "app.py"
+  ],
+  "wiki_concepts": [
+    "app.py"
+  ],
+  "brand_color_neural_network": [
+    "app.py"
+  ],
+  "website_structure_parser": [
+    "app.py"
+  ],
+  "ollama_github_search": [
+    "app.py"
+  ],
+  "domain_researcher": [
+    "app.py"
+  ],
+  "struct": [
+    "qr_to_ascii.py",
+    "image_to_ascii.py"
+  ],
+  "chapter_version_control": [
+    "canvas_integration.py"
+  ],
+  "signal": [
+    "launcher.py"
+  ],
+  "tkinter": [
+    "launcher.py"
+  ],
+  "license_manager": [
+    "install.py"
+  ],
+  "http": [
+    "customer_discovery_backend.py"
+  ],
+  "cryptography": [
+    "voice_encryption.py"
+  ],
+  "sklearn": [
+    "train_topic_networks.py"
+  ],
+  "voice_idea_board_routes": [
+    "test_idea_board.py",
+    "simple_voice_routes.py"
+  ],
+  "voice_capsule_engine": [
+    "voice_capsule_routes.py"
+  ],
+  "multi_port_ollama": [
+    "content_tumbler.py"
+  ],
+  "url_to_content": [
+    "enrich_content.py"
+  ],
+  "dev_config": [
+    "chat_routes.py",
+    "simple_voice_routes.py"
+  ],
+  "knowledge_extractor": [
+    "chat_routes.py"
+  ],
+  "context_manager": [
+    "chat_routes.py",
+    "battle_routes.py"
+  ],
+  "image_workflow": [
+    "image_admin_routes.py"
+  ],
+  "square": [
+    "payment_integrations.py"
+  ],
+  "quickbooks": [
+    "payment_integrations.py"
+  ],
+  "intuitlib": [
+    "payment_integrations.py"
+  ],
+  "imageio": [
+    "advanced_qr.py"
+  ],
+  "unified_logger": [
+    "battle_routes.py",
+    "integrations/twitter_integration.py"
+  ],
+  "api_health_scanner": [
+    "pre_deploy_check.py"
+  ],
+  "content_templates": [
+    "content_generator.py"
+  ],
+  "multi_part_qr": [
+    "test_multipart_qr.py",
+    "qr_card_printer.py"
+  ],
+  "creative_onboarding": [
+    "onboarding_routes.py"
+  ],
+  "docx": [
+    "file_importer.py"
+  ],
+  "audio_enhancer": [
+    "simple_voice_routes.py"
+  ],
+  "qr_unified": [
+    "qr_events.py"
+  ],
+  "enum": [
+    "qr_events.py"
+  ],
+  "reportlab": [
+    "qr_card_printer.py"
+  ],
+  "pre_deploy_check": [
+    "pre_deploy_routes.py"
+  ],
+  "qr_image_overlay": [
+    "test_image_system.py"
+  ],
+  "theme_builder": [
+    "test_image_system.py"
+  ],
+  "binary_protocol": [
+    "simple_games/dnd_campaign.py"
+  ],
+  "dnd_ai_commenters": [
+    "simple_games/dnd_campaign.py"
+  ]
+}

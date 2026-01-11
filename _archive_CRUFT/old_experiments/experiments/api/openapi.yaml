@@ -1,0 +1,271 @@
+openapi: 3.0.3
+info:
+  title: Soulfra API
+  description: |
+    REST API for Soulfra self-documenting development platform.
+
+    ## Features
+    - Posts, comments, users
+    - AI reasoning threads
+    - Perfect Bits reputation system
+    - Compiler operations
+    - Tier routing
+
+    ## Authentication
+    - Session-based (cookies)
+    - API keys for external integrations (future)
+
+    ## Rate Limiting
+    - 100 requests/minute per IP
+    - 1000 requests/hour per user
+  version: 1.0.0
+  contact:
+    name: Soulfra Community
+    url: https://github.com/soulfra/soulfra-simple
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:5001
+    description: Development server (Tier 1)
+  - url: https://soulfra.example.com
+    description: Production server (Tier 2)
+
+tags:
+  - name: posts
+    description: Post operations
+  - name: comments
+    description: Comment operations
+  - name: users
+    description: User operations
+  - name: ai
+    description: AI reasoning operations
+  - name: compiler
+    description: Compiler operations
+  - name: admin
+    description: Admin operations
+
+paths:
+  # Posts
+  /api/posts:
+    get:
+      summary: List posts
+      tags: [posts]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+
+  /api/posts/{slug}:
+    get:
+      summary: Get post by slug
+      tags: [posts]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Post not found
+
+  # Comments
+  /api/posts/{slug}/comments:
+    get:
+      summary: Get comments for post
+      tags: [comments]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+
+    post:
+      summary: Add comment to post
+      tags: [comments]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                parent_comment_id:
+                  type: integer
+      responses:
+        '201':
+          description: Comment created
+        '401':
+          description: Authentication required
+
+  # AI Reasoning
+  /api/ai/analyze/{post_id}:
+    post:
+      summary: Trigger AI analysis on post
+      tags: [ai]
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '202':
+          description: Analysis triggered (async)
+        '403':
+          description: Not authorized
+
+  # Compiler Operations
+  /api/compiler/execute:
+    post:
+      summary: Execute compiler operation from post
+      tags: [compiler]
+      security:
+        - auditorAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  type: integer
+                  description: Post containing compiler operations
+                dry_run:
+                  type: boolean
+                  default: true
+              required:
+                - post_id
+      responses:
+        '200':
+          description: Operation executed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success, failed, requires_approval]
+                  operations_run:
+                    type: array
+                    items:
+                      type: string
+                  files_changed:
+                    type: array
+                    items:
+                      type: string
+                  git_commit_sha:
+                    type: string
+        '403':
+          description: TheAuditor approval required
+
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        content:
+          type: string
+        published_at:
+          type: string
+          format: date-time
+        ai_processed:
+          type: boolean
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        post_id:
+          type: integer
+        user_id:
+          type: integer
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        replies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        display_name:
+          type: string
+        is_ai_persona:
+          type: boolean
+
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: session
+
+    auditorAuth:
+      type: apiKey
+      in: header
+      name: X-Auditor-Token
+      description: TheAuditor validation token
+
+security:
+  - sessionAuth: []

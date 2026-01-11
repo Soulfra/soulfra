@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0",
+  "database": "soulfra.db",
+  "engine": "SQLite3",
+  "tables": {
+    "users": {
+      "description": "User accounts (humans and AI personas)",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "username": {"type": "TEXT", "unique": true, "required": true},
+        "email": {"type": "TEXT", "unique": true, "required": true},
+        "password_hash": {"type": "TEXT", "required": true},
+        "display_name": {"type": "TEXT"},
+        "bio": {"type": "TEXT"},
+        "profile_pic": {"type": "TEXT"},
+        "is_admin": {"type": "BOOLEAN", "default": false},
+        "is_ai_persona": {"type": "BOOLEAN", "default": false},
+        "created_at": {"type": "TIMESTAMP", "default": "CURRENT_TIMESTAMP"}
+      },
+      "indexes": ["username", "email"]
+    },
+
+    "posts": {
+      "description": "Content from users and AI",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "user_id": {"type": "INTEGER", "foreign_key": "users(id)", "required": true},
+        "title": {"type": "TEXT", "required": true},
+        "slug": {"type": "TEXT", "unique": true, "required": true},
+        "content": {"type": "TEXT", "required": true},
+        "published_at": {"type": "TIMESTAMP", "required": true},
+        "emailed": {"type": "BOOLEAN", "default": false},
+        "emailed_at": {"type": "TIMESTAMP"},
+        "ai_processed": {"type": "BOOLEAN", "default": false},
+        "source_post_id": {"type": "INTEGER", "foreign_key": "posts(id)"}
+      },
+      "indexes": ["user_id", "published_at", "slug"]
+    },
+
+    "comments": {
+      "description": "User and AI comments on posts",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "post_id": {"type": "INTEGER", "foreign_key": "posts(id)", "required": true, "on_delete": "CASCADE"},
+        "user_id": {"type": "INTEGER", "foreign_key": "users(id)", "required": true},
+        "parent_comment_id": {"type": "INTEGER", "foreign_key": "comments(id)", "on_delete": "CASCADE"},
+        "content": {"type": "TEXT", "required": true},
+        "created_at": {"type": "TIMESTAMP", "default": "CURRENT_TIMESTAMP"}
+      },
+      "indexes": ["post_id", "user_id"]
+    },
+
+    "reasoning_threads": {
+      "description": "AI reasoning sessions on posts",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "post_id": {"type": "INTEGER", "foreign_key": "posts(id)", "required": true, "on_delete": "CASCADE"},
+        "initiator_user_id": {"type": "INTEGER", "foreign_key": "users(id)", "required": true},
+        "topic": {"type": "TEXT", "required": true},
+        "status": {"type": "TEXT", "default": "active"},
+        "created_at": {"type": "TIMESTAMP", "default": "CURRENT_TIMESTAMP"},
+        "completed_at": {"type": "TIMESTAMP"}
+      },
+      "indexes": ["post_id"]
+    },
+
+    "reasoning_steps": {
+      "description": "Individual AI reasoning steps within threads",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "thread_id": {"type": "INTEGER", "foreign_key": "reasoning_threads(id)", "required": true, "on_delete": "CASCADE"},
+        "user_id": {"type": "INTEGER", "foreign_key": "users(id)", "required": true},
+        "step_number": {"type": "INTEGER", "required": true},
+        "step_type": {"type": "TEXT", "required": true},
+        "content": {"type": "TEXT", "required": true},
+        "confidence": {"type": "REAL"},
+        "comment_id": {"type": "INTEGER", "foreign_key": "comments(id)"},
+        "created_at": {"type": "TIMESTAMP", "default": "CURRENT_TIMESTAMP"}
+      },
+      "indexes": ["thread_id"]
+    },
+
+    "reputation": {
+      "description": "User reputation (Perfect Bits)",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "user_id": {"type": "INTEGER", "unique": true, "foreign_key": "users(id)", "required": true},
+        "bits_earned": {"type": "INTEGER", "default": 0},
+        "bits_spent": {"type": "INTEGER", "default": 0},
+        "contribution_count": {"type": "INTEGER", "default": 0},
+        "created_at": {"type": "TIMESTAMP", "default": "CURRENT_TIMESTAMP"}
+      },
+      "indexes": ["user_id"]
+    },
+
+    "contribution_logs": {
+      "description": "Log of all contributions and bit awards",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "user_id": {"type": "INTEGER", "foreign_key": "users(id)", "required": true},
+        "post_id": {"type": "INTEGER", "foreign_key": "posts(id)"},
+        "comment_id": {"type": "INTEGER", "foreign_key": "comments(id)"},
+        "contribution_type": {"type": "TEXT", "required": true},
+        "description": {"type": "TEXT", "required": true},
+        "bits_awarded": {"type": "INTEGER", "required": true},
+        "status": {"type": "TEXT", "required": true},
+        "created_at": {"type": "TIMESTAMP", "default": "CURRENT_TIMESTAMP"},
+        "reviewed_by": {"type": "INTEGER", "foreign_key": "users(id)"},
+        "reviewed_at": {"type": "TIMESTAMP"}
+      },
+      "indexes": ["user_id", "post_id", "status"]
+    },
+
+    "subscribers": {
+      "description": "Email newsletter subscribers",
+      "columns": {
+        "id": {"type": "INTEGER", "primary_key": true, "autoincrement": true},
+        "email": {"type": "TEXT", "unique": true, "required": true},
+        "subscribed_at": {"type": "TIMESTAMP", "default": "CURRENT_TIMESTAMP"},
+        "active": {"type": "BOOLEAN", "default": true}
+      },
+      "indexes": ["email", "active"]
+    }
+  },
+
+  "relationships": {
+    "posts_to_users": "posts.user_id → users.id (author)",
+    "comments_to_posts": "comments.post_id → posts.id (on post)",
+    "comments_to_users": "comments.user_id → users.id (commenter)",
+    "comments_to_comments": "comments.parent_comment_id → comments.id (reply)",
+    "reasoning_threads_to_posts": "reasoning_threads.post_id → posts.id (analyzing)",
+    "reasoning_steps_to_threads": "reasoning_steps.thread_id → reasoning_threads.id (part of)",
+    "reasoning_steps_to_users": "reasoning_steps.user_id → users.id (AI persona)",
+    "reputation_to_users": "reputation.user_id → users.id (belongs to)",
+    "contribution_logs_to_users": "contribution_logs.user_id → users.id (contributor)"
+  },
+
+  "notes": {
+    "migrations": "Use migrate_*.py scripts for schema changes",
+    "backups": "soulfra.db should be backed up before migrations",
+    "integrity": "FOREIGN KEY constraints enforced",
+    "cascades": "DELETE CASCADE on post/comment deletions",
+    "generated": "This schema is auto-generated from database.py"
+  }
+}

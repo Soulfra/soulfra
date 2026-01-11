@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Preview - {{ email.subject }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .email-metadata {
+            background: white;
+            padding: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .metadata-row {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .metadata-row strong {
+            width: 100px;
+            color: #666;
+        }
+
+        .metadata-row span {
+            color: #333;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-queued {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-draft {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-sent {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-sending {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .email-preview {
+            background: white;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            min-height: 400px;
+        }
+
+        .preview-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .email-html {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 20px;
+            background: #fafafa;
+            margin-bottom: 30px;
+        }
+
+        .attachments {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .actions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .token-info {
+            margin-left: auto;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .token-cost {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .flash-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .flash-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="header">
+            <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+            <h1>📧 Email Preview</h1>
+        </div>
+
+        <div class="email-metadata">
+            <div class="metadata-row">
+                <strong>To:</strong>
+                <span>{{ email.to_address }}</span>
+            </div>
+            <div class="metadata-row">
+                <strong>From:</strong>
+                <span>{{ email.from_address }}</span>
+            </div>
+            <div class="metadata-row">
+                <strong>Subject:</strong>
+                <span>{{ email.subject }}</span>
+            </div>
+            <div class="metadata-row">
+                <strong>Status:</strong>
+                <span class="status-badge status-{{ email.status }}">{{ email.status }}</span>
+            </div>
+            <div class="metadata-row">
+                <strong>Created:</strong>
+                <span>{{ email.created_at }}</span>
+            </div>
+            {% if email.sent_at %}
+            <div class="metadata-row">
+                <strong>Sent:</strong>
+                <span>{{ email.sent_at }}</span>
+            </div>
+            {% endif %}
+            {% if email.recovery_code %}
+            <div class="metadata-row">
+                <strong>Recovery Code:</strong>
+                <span style="font-family: monospace; color: #667eea;">{{ email.recovery_code }}</span>
+            </div>
+            {% endif %}
+            {% if email.professional_id %}
+            <div class="metadata-row">
+                <strong>Professional ID:</strong>
+                <span>{{ email.professional_id }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="email-preview">
+            <div class="preview-label">HTML Preview</div>
+            <div class="email-html">
+                {{ email.body_html | safe }}
+            </div>
+
+            {% if email.body_text %}
+            <div class="preview-label">Plain Text Version</div>
+            <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-size: 14px; overflow-x: auto;">{{ email.body_text }}</pre>
+            {% endif %}
+
+            {% if attachments %}
+            <div class="attachments">
+                <div class="preview-label">Attachments ({{ attachments | length }})</div>
+                {% for attachment in attachments %}
+                <div class="attachment-item">
+                    <div class="attachment-icon">📎</div>
+                    <div>
+                        <strong>{{ attachment.filename }}</strong><br>
+                        <span style="font-size: 12px; color: #666;">{{ attachment.mime_type }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="actions">
+            {% if email.status != 'sent' %}
+            <button class="btn btn-primary" id="send-btn" onclick="sendEmail()">
+                📤 Send Email (Costs 1 Token)
+            </button>
+            {% else %}
+            <button class="btn btn-primary" disabled>
+                ✅ Email Already Sent
+            </button>
+            {% endif %}
+
+            <button class="btn btn-danger" onclick="deleteEmail()">
+                🗑️ Delete
+            </button>
+
+            <a href="/dashboard" class="btn btn-secondary">
+                ← Back to Dashboard
+            </a>
+
+            <div class="token-info">
+                💰 Your Balance: <span class="token-cost">{{ token_balance }} tokens</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function sendEmail() {
+            if (!confirm('Send this email? This will cost 1 token.')) {
+                return;
+            }
+
+            const btn = document.getElementById('send-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Sending...';
+
+            try {
+                const response = await fetch('/api/outbox/{{ email.id }}/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('✅ Email sent successfully!');
+                    window.location.reload();
+                } else {
+                    alert('❌ Error: ' + data.error);
+                    btn.disabled = false;
+                    btn.textContent = '📤 Send Email (Costs 1 Token)';
+                }
+            } catch (error) {
+                alert('❌ Network error: ' + error.message);
+                btn.disabled = false;
+                btn.textContent = '📤 Send Email (Costs 1 Token)';
+            }
+        }
+
+        async function deleteEmail() {
+            if (!confirm('Delete this email from outbox? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/outbox/{{ email.id }}', {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('🗑️ Email deleted');
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('❌ Error deleting email');
+                }
+            } catch (error) {
+                alert('❌ Network error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

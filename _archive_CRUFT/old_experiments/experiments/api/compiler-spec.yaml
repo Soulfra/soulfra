@@ -1,0 +1,154 @@
+# Soulfra Compiler Operations Specification
+# Defines what operations the compiler can auto-execute from approved posts
+# Version: 1.0
+# Approved by: TheAuditor (Post #9, Comment #30)
+
+version: "1.0"
+last_updated: "2025-12-21"
+requires_approval: true  # All operations require TheAuditor approval
+
+# Allowed operations (whitelist only)
+allowed_operations:
+
+  # File Operations (safe, git-tracked)
+  - name: restructure_files
+    description: Move files to new directory structure
+    command: git_mv  # Use git mv, not mv
+    requires_approval: true
+    approver: theauditor
+    max_files_per_operation: 50
+    allowed_patterns:
+      - "*.py → src/soulfra/"
+      - "*.md → Documentation/"
+      - "tests/*.py → tests/"
+    forbidden_patterns:
+      - "*.db"  # Never move database files
+      - ".git/*"  # Never touch git internals
+
+  - name: generate_docs
+    description: Auto-generate documentation from code
+    command: internal  # Python function, not shell
+    requires_approval: false  # Safe, non-destructive
+    outputs:
+      - "Documentation/api/generated/*.md"
+
+  - name: generate_api_spec
+    description: Auto-generate OpenAPI spec from Flask routes
+    command: internal
+    requires_approval: false
+    outputs:
+      - "api/openapi.yaml"
+
+  - name: run_tests
+    description: Execute test suite
+    command: pytest
+    requires_approval: false  # Tests are read-only
+    allowed_args:
+      - "-v"
+      - "--cov"
+      - "--tb=short"
+    forbidden_args:
+      - "--basetemp"  # Don't allow custom temp dirs
+
+  - name: archive_content
+    description: Move posts > 5KB to .archived/
+    command: internal
+    requires_approval: true
+    approver: theauditor
+    min_content_length: 5000
+    archive_location: ".archived/"
+    creates_references: true  # Auto-creates links to archived content
+
+# Explicitly forbidden operations (will error if attempted)
+forbidden_operations:
+  - name: shell_exec
+    reason: "Arbitrary shell commands forbidden for security"
+
+  - name: file_delete
+    reason: "Use git rm only (requires approval)"
+
+  - name: db_drop
+    reason: "Never auto-drop database tables"
+
+  - name: sql_exec
+    reason: "No arbitrary SQL execution"
+
+  - name: network_request
+    reason: "No external HTTP requests without approval"
+
+# Approval requirements
+approval:
+  require_theauditor: true  # TheAuditor must approve ALL destructive ops
+  require_git_commit: true  # All changes create git commit
+  require_post_reference: true  # Must link to approving post
+
+  # Approval bypass (ONLY for these)
+  bypass_allowed:
+    - generate_docs
+    - generate_api_spec
+    - run_tests
+
+# Logging requirements
+logging:
+  log_all_operations: true
+  log_file: ".compiler_history.log"
+  include_in_log:
+    - operation_name
+    - post_id  # Which post triggered it
+    - approver_user_id
+    - files_changed
+    - git_commit_sha
+    - timestamp
+
+# Safety limits
+limits:
+  max_operations_per_post: 10
+  max_files_per_operation: 50
+  max_execution_time_seconds: 300  # 5 minutes max
+
+# Rollback configuration
+rollback:
+  enabled: true
+  method: git_revert
+  requires_approval: false  # Rollbacks don't need approval
+
+# Post parsing rules
+post_parsing:
+  # How to detect operations in post content
+  operation_markers:
+    - "## Compiler Operations"
+    - "```compiler"
+
+  # Example valid post content:
+  # ## Compiler Operations
+  # ```compiler
+  # operation: restructure_files
+  # moves:
+  #   - src: app.py
+  #     dst: src/soulfra/web/app.py
+  # ```
+
+  format: yaml  # Operations must be YAML blocks
+  require_explicit: true  # No implicit operations
+
+# Version control
+git_integration:
+  commit_message_format: |
+    Compiler execution from Post #{post_id}
+
+    Operation: {operation_name}
+    Approved by: TheAuditor
+    Files changed: {file_count}
+
+    See: /post/{post_slug}
+
+  commit_author: "Soulfra Compiler <compiler@soulfra.local>"
+
+# Security settings
+security:
+  sandbox_mode: false  # TODO: Enable sandbox for testing
+  dry_run_first: true  # Always dry-run before actual execution
+  require_human_approval_for:
+    - first_time_operations  # First use of any operation needs human OK
+    - spec_file_changes  # Changes to this file need human approval
+    - production_tier  # Tier 2 deployments need human OK

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - {{ business_name|default('StPetePros') }}</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: #667eea;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        #payment-element {
+            margin-bottom: 20px;
+        }
+
+        #submit-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #submit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #error-message {
+            color: #c33;
+            background: #fee;
+            border: 1px solid #fcc;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        #success-message {
+            color: #3c3;
+            background: #efe;
+            border: 1px solid #cfc;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .features {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .features h3 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            color: #666;
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .secure-badge {
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .secure-badge:before {
+            content: "🔒";
+            margin-right: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .price {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ title|default('Get Listed on StPetePros') }}</h1>
+        <div class="price">${{ amount|default(10) }}</div>
+        <div class="description">
+            {{ description|default('Join the Tampa Bay professional directory and get discovered by local customers.') }}
+        </div>
+
+        <div class="features">
+            <h3>What's included:</h3>
+            <ul>
+                <li>Business listing with contact info</li>
+                <li>Custom QR code for easy sharing</li>
+                <li>Mobile-friendly profile page</li>
+                <li>Email notifications for leads</li>
+                <li>One-time payment, lifetime listing</li>
+            </ul>
+        </div>
+
+        <div id="error-message"></div>
+        <div id="success-message"></div>
+
+        <form id="payment-form">
+            <div class="form-group">
+                <label for="business-name">Business Name</label>
+                <input
+                    type="text"
+                    id="business-name"
+                    name="business-name"
+                    required
+                    placeholder="Acme Corp"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="you@example.com"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    placeholder="(555) 123-4567"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Payment Details</label>
+                <div id="payment-element">
+                    <!-- Stripe Payment Element will be inserted here -->
+                </div>
+            </div>
+
+            <button type="submit" id="submit-button">
+                <span id="spinner"></span>
+                <span id="button-text">Pay ${{ amount|default(10) }}</span>
+            </button>
+        </form>
+
+        <div class="secure-badge">
+            Secure payment powered by Stripe
+        </div>
+    </div>
+
+    <script>
+        // Initialize Stripe
+        const stripe = Stripe('{{ stripe_publishable_key }}');
+
+        let elements;
+        let clientSecret;
+
+        // Create payment intent and setup elements
+        async function initialize() {
+            try {
+                // Get client secret from server
+                const response = await fetch('/api/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: {{ amount_cents|default(1000) }},
+                        currency: 'usd',
+                        business_name: document.getElementById('business-name').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value
+                    })
+                });
+
+                const { clientSecret: secret } = await response.json();
+                clientSecret = secret;
+
+                // Create Stripe Elements
+                const appearance = {
+                    theme: 'stripe',
+                    variables: {
+                        colorPrimary: '#667eea',
+                        colorBackground: '#ffffff',
+                        colorText: '#30313d',
+                        colorDanger: '#df1b41',
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        borderRadius: '8px',
+                    }
+                };
+
+                elements = stripe.elements({ clientSecret, appearance });
+
+                // Create and mount Payment Element
+                const paymentElement = elements.create('payment');
+                paymentElement.mount('#payment-element');
+
+            } catch (error) {
+                showError(error.message || 'Failed to initialize payment');
+            }
+        }
+
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('submit-button');
+        const spinner = document.getElementById('spinner');
+        const buttonText = document.getElementById('button-text');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Disable form
+            setLoading(true);
+
+            // Confirm payment
+            const { error } = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: window.location.origin + '/payment/success',
+                    receipt_email: document.getElementById('email').value,
+                },
+            });
+
+            // Handle errors
+            if (error) {
+                showError(error.message);
+                setLoading(false);
+            }
+        });
+
+        // UI helpers
+        function setLoading(isLoading) {
+            submitButton.disabled = isLoading;
+
+            if (isLoading) {
+                spinner.style.display = 'inline-block';
+                buttonText.textContent = 'Processing...';
+            } else {
+                spinner.style.display = 'none';
+                buttonText.textContent = 'Pay ${{ amount|default(10) }}';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        // Initialize payment when customer details are entered
+        const businessNameInput = document.getElementById('business-name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+
+        let initializeTriggered = false;
+
+        function checkInitialize() {
+            if (!initializeTriggered &&
+                businessNameInput.value &&
+                emailInput.value &&
+                phoneInput.value) {
+                initializeTriggered = true;
+                initialize();
+            }
+        }
+
+        businessNameInput.addEventListener('blur', checkInitialize);
+        emailInput.addEventListener('blur', checkInitialize);
+        phoneInput.addEventListener('blur', checkInitialize);
+
+        // Check URL for payment status
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentIntent = urlParams.get('payment_intent');
+        const paymentIntentClientSecret = urlParams.get('payment_intent_client_secret');
+
+        if (paymentIntent && paymentIntentClientSecret) {
+            // Check payment status
+            stripe.retrievePaymentIntent(paymentIntentClientSecret).then(({ paymentIntent }) => {
+                switch (paymentIntent.status) {
+                    case 'succeeded':
+                        showSuccess('Payment successful! Check your email for next steps.');
+                        form.style.display = 'none';
+                        break;
+                    case 'processing':
+                        showSuccess('Payment is processing. We will email you when it completes.');
+                        break;
+                    case 'requires_payment_method':
+                        showError('Payment failed. Please try again.');
+                        break;
+                    default:
+                        showError('Something went wrong. Please contact support.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<svg width="1000" height="800" xmlns="http://www.w3.org/2000/svg">
+<style>
+.node { stroke: #333; stroke-width: 2; cursor: pointer; }
+.node-base { fill: #4CAF50; }
+.node-expanded { fill: #2196F3; }
+.edge { stroke: #999; stroke-width: 1; opacity: 0.6; }
+.label { font-family: Arial; font-size: 12px; fill: #333; text-anchor: middle; }
+</style>
+<g id="edges">
+<line class="edge" x1="525.0" y1="373.6" x2="815.2" y2="95.5" />
+<line class="edge" x1="525.0" y1="373.6" x2="458.1" y2="166.3" />
+<line class="edge" x1="525.0" y1="373.6" x2="382.2" y2="69.6" />
+<line class="edge" x1="458.1" y1="166.3" x2="382.2" y2="69.6" />
+<line class="edge" x1="790.7" y1="770.0" x2="436.9" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="436.9" y2="770.0" />
+<line class="edge" x1="525.0" y1="373.6" x2="274.5" y2="688.9" />
+<line class="edge" x1="747.8" y1="630.9" x2="274.5" y2="688.9" />
+<line class="edge" x1="525.0" y1="373.6" x2="747.8" y2="630.9" />
+<line class="edge" x1="525.0" y1="373.6" x2="651.5" y2="506.0" />
+<line class="edge" x1="651.5" y1="506.0" x2="747.8" y2="630.9" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="451.2" />
+<line class="edge" x1="177.2" y1="616.8" x2="30.0" y2="451.2" />
+<line class="edge" x1="177.2" y1="616.8" x2="463.8" y2="680.8" />
+<line class="edge" x1="747.8" y1="630.9" x2="463.8" y2="680.8" />
+<line class="edge" x1="621.3" y1="659.0" x2="463.8" y2="680.8" />
+<line class="edge" x1="621.3" y1="659.0" x2="747.8" y2="630.9" />
+<line class="edge" x1="525.0" y1="373.6" x2="344.5" y2="298.0" />
+<line class="edge" x1="525.0" y1="373.6" x2="467.3" y2="487.6" />
+<line class="edge" x1="525.0" y1="373.6" x2="723.3" y2="272.4" />
+<line class="edge" x1="525.0" y1="373.6" x2="733.8" y2="344.6" />
+<line class="edge" x1="525.0" y1="373.6" x2="302.2" y2="392.3" />
+<line class="edge" x1="525.0" y1="373.6" x2="650.2" y2="242.3" />
+<line class="edge" x1="525.0" y1="373.6" x2="374.3" y2="575.0" />
+<line class="edge" x1="525.0" y1="373.6" x2="321.2" y2="535.5" />
+<line class="edge" x1="525.0" y1="373.6" x2="438.7" y2="261.9" />
+<line class="edge" x1="525.0" y1="373.6" x2="569.8" y2="210.7" />
+<line class="edge" x1="525.0" y1="373.6" x2="717.6" y2="467.2" />
+<line class="edge" x1="525.0" y1="373.6" x2="382.2" y2="403.6" />
+<line class="edge" x1="747.8" y1="630.9" x2="717.6" y2="467.2" />
+<line class="edge" x1="747.8" y1="630.9" x2="970.0" y2="770.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="970.0" y2="599.4" />
+<line class="edge" x1="747.8" y1="630.9" x2="970.0" y2="512.7" />
+<line class="edge" x1="747.8" y1="630.9" x2="970.0" y2="770.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="970.0" y2="466.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="710.4" y2="770.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="886.2" y2="770.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="770.1" y2="770.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="909.2" y2="770.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="741.7" y2="770.0" />
+<line class="edge" x1="747.8" y1="630.9" x2="970.0" y2="555.9" />
+<line class="edge" x1="815.2" y1="95.5" x2="893.5" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="595.1" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="921.3" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="942.7" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="970.0" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="970.0" y2="150.5" />
+<line class="edge" x1="815.2" y1="95.5" x2="970.0" y2="94.8" />
+<line class="edge" x1="815.2" y1="95.5" x2="708.7" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="856.2" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="970.0" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="683.6" y2="30.0" />
+<line class="edge" x1="815.2" y1="95.5" x2="958.4" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="263.4" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="720.0" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="162.1" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="65.6" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="349.0" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="195.9" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="429.5" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="228.8" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="488.0" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="609.7" y2="30.0" />
+<line class="edge" x1="382.2" y1="69.6" x2="301.7" y2="30.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="677.7" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="933.5" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="864.2" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="609.0" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="970.0" y2="695.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="644.0" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="570.6" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="970.0" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="970.0" y2="728.2" />
+<line class="edge" x1="790.7" y1="770.0" x2="951.5" y2="770.0" />
+<line class="edge" x1="790.7" y1="770.0" x2="970.0" y2="658.2" />
+<line class="edge" x1="790.7" y1="770.0" x2="836.2" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="374.3" y2="575.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="321.2" y2="535.5" />
+<line class="edge" x1="274.5" y1="688.9" x2="202.3" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="120.1" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="156.1" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="40.5" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="449.1" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="89.2" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="30.0" y2="727.2" />
+<line class="edge" x1="274.5" y1="688.9" x2="30.0" y2="677.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="30.0" y2="770.0" />
+<line class="edge" x1="274.5" y1="688.9" x2="62.1" y2="770.0" />
+<line class="edge" x1="30.0" y1="191.0" x2="99.4" y2="30.0" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="281.9" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="235.1" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="327.7" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="374.6" />
+<line class="edge" x1="30.0" y1="191.0" x2="77.1" y2="30.0" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="91.0" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="30.0" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="30.0" />
+<line class="edge" x1="30.0" y1="191.0" x2="30.0" y2="135.6" />
+</g>
+<g id="nodes">
+<circle class="node node-word" cx="525.0" cy="373.6" r="6" />
+<text class="label" x="525.0" y="393.6">about</text>
+<circle class="node node-word" cx="747.8" cy="630.9" r="6" />
+<text class="label" x="747.8" y="650.9">news</text>
+<circle class="node node-word" cx="815.2" cy="95.5" r="6" />
+<text class="label" x="815.2" y="115.5">ideas</text>
+<circle class="node node-word" cx="458.1" cy="166.3" r="6" />
+<text class="label" x="458.1" y="186.3">cringe</text>
+<circle class="node node-word" cx="382.2" cy="69.6" r="6" />
+<text class="label" x="382.2" y="89.6">proof</text>
+<circle class="node node-word" cx="790.7" cy="770.0" r="6" />
+<text class="label" x="790.7" y="790.0">game</text>
+<circle class="node node-word" cx="436.9" cy="770.0" r="6" />
+<text class="label" x="436.9" y="790.0">where</text>
+<circle class="node node-word" cx="274.5" cy="688.9" r="6" />
+<text class="label" x="274.5" y="708.9">talk</text>
+<circle class="node node-word" cx="651.5" cy="506.0" r="6" />
+<text class="label" x="651.5" y="526.0">articles</text>
+<circle class="node node-word" cx="30.0" cy="191.0" r="6" />
+<text class="label" x="30.0" y="211.0">get</text>
+<circle class="node node-word" cx="30.0" cy="451.2" r="6" />
+<text class="label" x="30.0" y="471.2">scraped</text>
+<circle class="node node-word" cx="177.2" cy="616.8" r="6" />
+<text class="label" x="177.2" y="636.8">google</text>
+<circle class="node node-word" cx="463.8" cy="680.8" r="6" />
+<text class="label" x="463.8" y="700.8">other</text>
+<circle class="node node-word" cx="621.3" cy="659.0" r="6" />
+<text class="label" x="621.3" y="679.0">feeds</text>
+<circle class="node node-word" cx="30.0" cy="30.0" r="6" />
+<text class="label" x="30.0" y="50.0">input</text>
+<circle class="node node-semantic" cx="344.5" cy="298.0" r="6" />
+<text class="label" x="344.5" y="318.0">matter</text>
+<circle class="node node-semantic" cx="467.3" cy="487.6" r="6" />
+<text class="label" x="467.3" y="507.6">topic</text>
+<circle class="node node-semantic" cx="723.3" cy="272.4" r="6" />
+<text class="label" x="723.3" y="292.4">subject</text>
+<circle class="node node-semantic" cx="733.8" cy="344.6" r="6" />
+<text class="label" x="733.8" y="364.6">explanatory</text>
+<circle class="node node-semantic" cx="302.2" cy="392.3" r="6" />
+<text class="label" x="302.2" y="412.3">descriptive</text>
+<circle class="node node-semantic" cx="650.2" cy="242.3" r="6" />
+<text class="label" x="650.2" y="262.3">informative</text>
+<circle class="node node-semantic" cx="374.3" cy="575.0" r="6" />
+<text class="label" x="374.3" y="595.0">expression</text>
+<circle class="node node-semantic" cx="321.2" cy="535.5" r="6" />
+<text class="label" x="321.2" y="555.5">communication</text>
+<circle class="node node-semantic" cx="438.7" cy="261.9" r="6" />
+<text class="label" x="438.7" y="281.9">knowledge</text>
+<circle class="node node-semantic" cx="569.8" cy="210.7" r="6" />
+<text class="label" x="569.8" y="230.7">writer</text>
+<circle class="node node-semantic" cx="717.6" cy="467.2" r="6" />
+<text class="label" x="717.6" y="487.2">information</text>
+<circle class="node node-semantic" cx="382.2" cy="403.6" r="6" />
+<text class="label" x="382.2" y="423.6">reader</text>
+<circle class="node node-semantic" cx="970.0" cy="770.0" r="6" />
+<text class="label" x="970.0" y="790.0">media</text>
+<circle class="node node-semantic" cx="970.0" cy="599.4" r="6" />
+<text class="label" x="970.0" y="619.4">event</text>
+<circle class="node node-semantic" cx="970.0" cy="512.7" r="6" />
+<text class="label" x="970.0" y="532.7">breaking</text>
+<circle class="node node-semantic" cx="970.0" cy="770.0" r="6" />
+<text class="label" x="970.0" y="790.0">current</text>
+<circle class="node node-semantic" cx="970.0" cy="466.0" r="6" />
+<text class="label" x="970.0" y="486.0">local</text>
+<circle class="node node-semantic" cx="710.4" cy="770.0" r="6" />
+<text class="label" x="710.4" y="790.0">entertain</text>
+<circle class="node node-semantic" cx="886.2" cy="770.0" r="6" />
+<text class="label" x="886.2" y="790.0">update</text>
+<circle class="node node-semantic" cx="770.1" cy="770.0" r="6" />
+<text class="label" x="770.1" y="790.0">inform</text>
+<circle class="node node-semantic" cx="909.2" cy="770.0" r="6" />
+<text class="label" x="909.2" y="790.0">coverage</text>
+<circle class="node node-semantic" cx="741.7" cy="770.0" r="6" />
+<text class="label" x="741.7" y="790.0">story</text>
+<circle class="node node-semantic" cx="970.0" cy="555.9" r="6" />
+<text class="label" x="970.0" y="575.9">report</text>
+<circle class="node node-semantic" cx="893.5" cy="30.0" r="6" />
+<text class="label" x="893.5" y="50.0">thought</text>
+<circle class="node node-semantic" cx="595.1" cy="30.0" r="6" />
+<text class="label" x="595.1" y="50.0">concept</text>
+<circle class="node node-semantic" cx="921.3" cy="30.0" r="6" />
+<text class="label" x="921.3" y="50.0">mental_image</text>
+<circle class="node node-semantic" cx="942.7" cy="30.0" r="6" />
+<text class="label" x="942.7" y="50.0">original</text>
+<circle class="node node-semantic" cx="970.0" cy="30.0" r="6" />
+<text class="label" x="970.0" y="50.0">creative</text>
+<circle class="node node-semantic" cx="970.0" cy="150.5" r="6" />
+<text class="label" x="970.0" y="170.5">innovative</text>
+<circle class="node node-semantic" cx="970.0" cy="94.8" r="6" />
+<text class="label" x="970.0" y="114.8">inspiration</text>
+<circle class="node node-semantic" cx="708.7" cy="30.0" r="6" />
+<text class="label" x="708.7" y="50.0">problem_solving</text>
+<circle class="node node-semantic" cx="856.2" cy="30.0" r="6" />
+<text class="label" x="856.2" y="50.0">planning</text>
+<circle class="node node-semantic" cx="970.0" cy="30.0" r="6" />
+<text class="label" x="970.0" y="50.0">whiteboard</text>
+<circle class="node node-semantic" cx="683.6" cy="30.0" r="6" />
+<text class="label" x="683.6" y="50.0">brainstorming</text>
+<circle class="node node-semantic" cx="958.4" cy="30.0" r="6" />
+<text class="label" x="958.4" y="50.0">mindmap</text>
+<circle class="node node-semantic" cx="263.4" cy="30.0" r="6" />
+<text class="label" x="263.4" y="50.0">argument</text>
+<circle class="node node-semantic" cx="720.0" cy="30.0" r="6" />
+<text class="label" x="720.0" y="50.0">evidence</text>
+<circle class="node node-semantic" cx="162.1" cy="30.0" r="6" />
+<text class="label" x="162.1" y="50.0">convincing</text>
+<circle class="node node-semantic" cx="65.6" cy="30.0" r="6" />
+<text class="label" x="65.6" y="50.0">credible</text>
+<circle class="node node-semantic" cx="349.0" cy="30.0" r="6" />
+<text class="label" x="349.0" y="50.0">supportive</text>
+<circle class="node node-semantic" cx="195.9" cy="30.0" r="6" />
+<text class="label" x="195.9" y="50.0">verification</text>
+<circle class="node node-semantic" cx="429.5" cy="30.0" r="6" />
+<text class="label" x="429.5" y="50.0">validation</text>
+<circle class="node node-semantic" cx="228.8" cy="30.0" r="6" />
+<text class="label" x="228.8" y="50.0">demonstration</text>
+<circle class="node node-semantic" cx="488.0" cy="30.0" r="6" />
+<text class="label" x="488.0" y="50.0">facts</text>
+<circle class="node node-semantic" cx="609.7" cy="30.0" r="6" />
+<text class="label" x="609.7" y="50.0">data</text>
+<circle class="node node-semantic" cx="301.7" cy="30.0" r="6" />
+<text class="label" x="301.7" y="50.0">research</text>
+<circle class="node node-semantic" cx="677.7" cy="770.0" r="6" />
+<text class="label" x="677.7" y="790.0">activity</text>
+<circle class="node node-semantic" cx="933.5" cy="770.0" r="6" />
+<text class="label" x="933.5" y="790.0">hobby</text>
+<circle class="node node-semantic" cx="864.2" cy="770.0" r="6" />
+<text class="label" x="864.2" y="790.0">entertainment</text>
+<circle class="node node-semantic" cx="609.0" cy="770.0" r="6" />
+<text class="label" x="609.0" y="790.0">strategic</text>
+<circle class="node node-semantic" cx="970.0" cy="695.0" r="6" />
+<text class="label" x="970.0" y="715.0">social</text>
+<circle class="node node-semantic" cx="644.0" cy="770.0" r="6" />
+<text class="label" x="644.0" y="790.0">competitive</text>
+<circle class="node node-semantic" cx="570.6" cy="770.0" r="6" />
+<text class="label" x="570.6" y="790.0">skill-building</text>
+<circle class="node node-semantic" cx="970.0" cy="770.0" r="6" />
+<text class="label" x="970.0" y="790.0">socialization</text>
+<circle class="node node-semantic" cx="970.0" cy="728.2" r="6" />
+<text class="label" x="970.0" y="748.2">relaxation</text>
+<circle class="node node-semantic" cx="951.5" cy="770.0" r="6" />
+<text class="label" x="951.5" y="790.0">board game</text>
+<circle class="node node-semantic" cx="970.0" cy="658.2" r="6" />
+<text class="label" x="970.0" y="678.2">sport</text>
+<circle class="node node-semantic" cx="836.2" cy="770.0" r="6" />
+<text class="label" x="836.2" y="790.0">video game</text>
+<circle class="node node-semantic" cx="202.3" cy="770.0" r="6" />
+<text class="label" x="202.3" y="790.0">speech</text>
+<circle class="node node-semantic" cx="120.1" cy="770.0" r="6" />
+<text class="label" x="120.1" y="790.0">interpersonal</text>
+<circle class="node node-semantic" cx="156.1" cy="770.0" r="6" />
+<text class="label" x="156.1" y="790.0">verbal</text>
+<circle class="node node-semantic" cx="40.5" cy="770.0" r="6" />
+<text class="label" x="40.5" y="790.0">auditory</text>
+<circle class="node node-semantic" cx="449.1" cy="770.0" r="6" />
+<text class="label" x="449.1" y="790.0">emotional_expression</text>
+<circle class="node node-semantic" cx="89.2" cy="770.0" r="6" />
+<text class="label" x="89.2" y="790.0">information_sharing</text>
+<circle class="node node-semantic" cx="30.0" cy="727.2" r="6" />
+<text class="label" x="30.0" y="747.2">social_interaction</text>
+<circle class="node node-semantic" cx="30.0" cy="677.0" r="6" />
+<text class="label" x="30.0" y="697.0">language</text>
+<circle class="node node-semantic" cx="30.0" cy="770.0" r="6" />
+<text class="label" x="30.0" y="790.0">vocabulary</text>
+<circle class="node node-semantic" cx="62.1" cy="770.0" r="6" />
+<text class="label" x="62.1" y="790.0">conversation</text>
+<circle class="node node-semantic" cx="99.4" cy="30.0" r="6" />
+<text class="label" x="99.4" y="50.0">action</text>
+<circle class="node node-semantic" cx="30.0" cy="281.9" r="6" />
+<text class="label" x="30.0" y="301.9">verb</text>
+<circle class="node node-semantic" cx="30.0" cy="235.1" r="6" />
+<text class="label" x="30.0" y="255.1">can_be_nonverbal</text>
+<circle class="node node-semantic" cx="30.0" cy="327.7" r="6" />
+<text class="label" x="30.0" y="347.7">requires_effort</text>
+<circle class="node node-semantic" cx="30.0" cy="374.6" r="6" />
+<text class="label" x="30.0" y="394.6">can_be_verbal</text>
+<circle class="node node-semantic" cx="77.1" cy="30.0" r="6" />
+<text class="label" x="77.1" y="50.0">acquisition</text>
+<circle class="node node-semantic" cx="30.0" cy="91.0" r="6" />
+<text class="label" x="30.0" y="111.0">obtainment</text>
+<circle class="node node-semantic" cx="30.0" cy="30.0" r="6" />
+<text class="label" x="30.0" y="50.0">goal</text>
+<circle class="node node-semantic" cx="30.0" cy="30.0" r="6" />
+<text class="label" x="30.0" y="50.0">outcome</text>
+<circle class="node node-semantic" cx="30.0" cy="135.6" r="6" />
+<text class="label" x="30.0" y="155.6">objective</text>
+</g>
+</svg>

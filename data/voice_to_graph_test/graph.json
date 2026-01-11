@@ -1,0 +1,1519 @@
+{
+  "nodes": [
+    {
+      "id": "about",
+      "label": "about",
+      "type": "word",
+      "frequency": 2,
+      "source": "voice_transcript",
+      "x": 524.9828442916059,
+      "y": 373.61411148408524
+    },
+    {
+      "id": "news",
+      "label": "news",
+      "type": "word",
+      "frequency": 2,
+      "source": "voice_transcript",
+      "x": 747.787895911214,
+      "y": 630.9137930007416
+    },
+    {
+      "id": "ideas",
+      "label": "ideas",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 815.2330220371574,
+      "y": 95.52330453030123
+    },
+    {
+      "id": "cringe",
+      "label": "cringe",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 458.10428234436006,
+      "y": 166.33425641280886
+    },
+    {
+      "id": "proof",
+      "label": "proof",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 382.2457819463379,
+      "y": 69.6131469758831
+    },
+    {
+      "id": "game",
+      "label": "game",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 790.7292591275772,
+      "y": 770
+    },
+    {
+      "id": "where",
+      "label": "where",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 436.9147225567776,
+      "y": 770
+    },
+    {
+      "id": "talk",
+      "label": "talk",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 274.5335487668022,
+      "y": 688.9403511110506
+    },
+    {
+      "id": "articles",
+      "label": "articles",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 651.5499014696053,
+      "y": 506.0285822917391
+    },
+    {
+      "id": "get",
+      "label": "get",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 30,
+      "y": 190.98979343698414
+    },
+    {
+      "id": "scraped",
+      "label": "scraped",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 30,
+      "y": 451.2328510211086
+    },
+    {
+      "id": "google",
+      "label": "google",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 177.20343524684452,
+      "y": 616.787115564653
+    },
+    {
+      "id": "other",
+      "label": "other",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 463.84004245503746,
+      "y": 680.8084231134042
+    },
+    {
+      "id": "feeds",
+      "label": "feeds",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 621.3044335350922,
+      "y": 659.0007184984006
+    },
+    {
+      "id": "input",
+      "label": "input",
+      "type": "word",
+      "frequency": 1,
+      "source": "voice_transcript",
+      "x": 30,
+      "y": 30
+    },
+    {
+      "id": "matter",
+      "label": "matter",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 344.48147166348724,
+      "y": 297.9638980638725
+    },
+    {
+      "id": "topic",
+      "label": "topic",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 467.3230150661164,
+      "y": 487.6446439083169
+    },
+    {
+      "id": "subject",
+      "label": "subject",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 723.2848056983667,
+      "y": 272.4486775459911
+    },
+    {
+      "id": "explanatory",
+      "label": "explanatory",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 733.8242801469376,
+      "y": 344.6167493577444
+    },
+    {
+      "id": "descriptive",
+      "label": "descriptive",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 302.1898945615939,
+      "y": 392.33774197619186
+    },
+    {
+      "id": "informative",
+      "label": "informative",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 650.2410443517614,
+      "y": 242.34635210367082
+    },
+    {
+      "id": "expression",
+      "label": "expression",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 374.30446650215697,
+      "y": 574.9934765360559
+    },
+    {
+      "id": "communication",
+      "label": "communication",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 321.1995935791696,
+      "y": 535.5335363581113
+    },
+    {
+      "id": "knowledge",
+      "label": "knowledge",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 438.7094818288219,
+      "y": 261.93064415295305
+    },
+    {
+      "id": "writer",
+      "label": "writer",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 569.7892381717256,
+      "y": 210.71651789522173
+    },
+    {
+      "id": "information",
+      "label": "information",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 717.6085996750643,
+      "y": 467.2025303108017
+    },
+    {
+      "id": "reader",
+      "label": "reader",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 382.15512479873485,
+      "y": 403.5867062568564
+    },
+    {
+      "id": "media",
+      "label": "media",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 770
+    },
+    {
+      "id": "event",
+      "label": "event",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 599.4216684177372
+    },
+    {
+      "id": "breaking",
+      "label": "breaking",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 512.7346024096058
+    },
+    {
+      "id": "current",
+      "label": "current",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 770
+    },
+    {
+      "id": "local",
+      "label": "local",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 466.0410046807459
+    },
+    {
+      "id": "entertain",
+      "label": "entertain",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 710.4258815005261,
+      "y": 770
+    },
+    {
+      "id": "update",
+      "label": "update",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 886.1737418993268,
+      "y": 770
+    },
+    {
+      "id": "inform",
+      "label": "inform",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 770.1366990434013,
+      "y": 770
+    },
+    {
+      "id": "coverage",
+      "label": "coverage",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 909.1948517435885,
+      "y": 770
+    },
+    {
+      "id": "story",
+      "label": "story",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 741.7254195782867,
+      "y": 770
+    },
+    {
+      "id": "report",
+      "label": "report",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 555.8832174187414
+    },
+    {
+      "id": "thought",
+      "label": "thought",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 893.536741202092,
+      "y": 30
+    },
+    {
+      "id": "concept",
+      "label": "concept",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 595.0833060227243,
+      "y": 30
+    },
+    {
+      "id": "mental_image",
+      "label": "mental_image",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 921.2669683958312,
+      "y": 30
+    },
+    {
+      "id": "original",
+      "label": "original",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 942.691682579437,
+      "y": 30
+    },
+    {
+      "id": "creative",
+      "label": "creative",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 30
+    },
+    {
+      "id": "innovative",
+      "label": "innovative",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 150.49308948975482
+    },
+    {
+      "id": "inspiration",
+      "label": "inspiration",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 94.8283572364553
+    },
+    {
+      "id": "problem_solving",
+      "label": "problem_solving",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 708.7475814017546,
+      "y": 30
+    },
+    {
+      "id": "planning",
+      "label": "planning",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 856.1948751572937,
+      "y": 30
+    },
+    {
+      "id": "whiteboard",
+      "label": "whiteboard",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 30
+    },
+    {
+      "id": "brainstorming",
+      "label": "brainstorming",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 683.5827430687685,
+      "y": 30
+    },
+    {
+      "id": "mindmap",
+      "label": "mindmap",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 958.3769125223014,
+      "y": 30
+    },
+    {
+      "id": "argument",
+      "label": "argument",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 263.3835478106559,
+      "y": 30
+    },
+    {
+      "id": "evidence",
+      "label": "evidence",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 720.0248757106488,
+      "y": 30
+    },
+    {
+      "id": "convincing",
+      "label": "convincing",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 162.12116479097853,
+      "y": 30
+    },
+    {
+      "id": "credible",
+      "label": "credible",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 65.58598189742231,
+      "y": 30
+    },
+    {
+      "id": "supportive",
+      "label": "supportive",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 348.9590869417993,
+      "y": 30
+    },
+    {
+      "id": "verification",
+      "label": "verification",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 195.85483095687533,
+      "y": 30
+    },
+    {
+      "id": "validation",
+      "label": "validation",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 429.5363051572579,
+      "y": 30
+    },
+    {
+      "id": "demonstration",
+      "label": "demonstration",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 228.83678632135073,
+      "y": 30
+    },
+    {
+      "id": "facts",
+      "label": "facts",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 488.01464946782306,
+      "y": 30
+    },
+    {
+      "id": "data",
+      "label": "data",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 609.6943952570313,
+      "y": 30
+    },
+    {
+      "id": "research",
+      "label": "research",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 301.65734534726937,
+      "y": 30
+    },
+    {
+      "id": "activity",
+      "label": "activity",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 677.67991753287,
+      "y": 770
+    },
+    {
+      "id": "hobby",
+      "label": "hobby",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 933.4704134431386,
+      "y": 770
+    },
+    {
+      "id": "entertainment",
+      "label": "entertainment",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 864.2397822953697,
+      "y": 770
+    },
+    {
+      "id": "strategic",
+      "label": "strategic",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 609.0035578171369,
+      "y": 770
+    },
+    {
+      "id": "social",
+      "label": "social",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 695.0361909235934
+    },
+    {
+      "id": "competitive",
+      "label": "competitive",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 643.9940405604822,
+      "y": 770
+    },
+    {
+      "id": "skill-building",
+      "label": "skill-building",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 570.566618688252,
+      "y": 770
+    },
+    {
+      "id": "socialization",
+      "label": "socialization",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 770
+    },
+    {
+      "id": "relaxation",
+      "label": "relaxation",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 728.1756547392695
+    },
+    {
+      "id": "board game",
+      "label": "board game",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 951.5382993591973,
+      "y": 770
+    },
+    {
+      "id": "sport",
+      "label": "sport",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 970,
+      "y": 658.2115839001035
+    },
+    {
+      "id": "video game",
+      "label": "video game",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 836.161315873949,
+      "y": 770
+    },
+    {
+      "id": "speech",
+      "label": "speech",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 202.26925476152533,
+      "y": 770
+    },
+    {
+      "id": "interpersonal",
+      "label": "interpersonal",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 120.10916319754986,
+      "y": 770
+    },
+    {
+      "id": "verbal",
+      "label": "verbal",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 156.1085274574832,
+      "y": 770
+    },
+    {
+      "id": "auditory",
+      "label": "auditory",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 40.53151369683884,
+      "y": 770
+    },
+    {
+      "id": "emotional_expression",
+      "label": "emotional_expression",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 449.1081766034623,
+      "y": 770
+    },
+    {
+      "id": "information_sharing",
+      "label": "information_sharing",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 89.23810167245935,
+      "y": 770
+    },
+    {
+      "id": "social_interaction",
+      "label": "social_interaction",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 727.217830324935
+    },
+    {
+      "id": "language",
+      "label": "language",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 676.9949550945672
+    },
+    {
+      "id": "vocabulary",
+      "label": "vocabulary",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 770
+    },
+    {
+      "id": "conversation",
+      "label": "conversation",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 62.14300752698579,
+      "y": 770
+    },
+    {
+      "id": "action",
+      "label": "action",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 99.38955840479153,
+      "y": 30
+    },
+    {
+      "id": "verb",
+      "label": "verb",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 281.9456093777257
+    },
+    {
+      "id": "can_be_nonverbal",
+      "label": "can_be_nonverbal",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 235.05689407626005
+    },
+    {
+      "id": "requires_effort",
+      "label": "requires_effort",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 327.70716782127124
+    },
+    {
+      "id": "can_be_verbal",
+      "label": "can_be_verbal",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 374.5724103218172
+    },
+    {
+      "id": "acquisition",
+      "label": "acquisition",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 77.10980199069597,
+      "y": 30
+    },
+    {
+      "id": "obtainment",
+      "label": "obtainment",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 91.00614749651577
+    },
+    {
+      "id": "goal",
+      "label": "goal",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 30
+    },
+    {
+      "id": "outcome",
+      "label": "outcome",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 30
+    },
+    {
+      "id": "objective",
+      "label": "objective",
+      "type": "semantic",
+      "frequency": 0,
+      "source": "fuzzy_semantic",
+      "x": 30,
+      "y": 135.55985910000916
+    }
+  ],
+  "edges": [
+    {
+      "source": "about",
+      "target": "ideas",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "about",
+      "target": "cringe",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "about",
+      "target": "proof",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "cringe",
+      "target": "proof",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "game",
+      "target": "where",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "talk",
+      "target": "where",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "about",
+      "target": "talk",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "news",
+      "target": "talk",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "about",
+      "target": "news",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "about",
+      "target": "articles",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "articles",
+      "target": "news",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "get",
+      "target": "scraped",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "google",
+      "target": "scraped",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "google",
+      "target": "other",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "news",
+      "target": "other",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "feeds",
+      "target": "other",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "feeds",
+      "target": "news",
+      "type": "co-occurrence",
+      "weight": 1
+    },
+    {
+      "source": "about",
+      "target": "matter",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "topic",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "subject",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "explanatory",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "descriptive",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "informative",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "expression",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "communication",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "knowledge",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "writer",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "information",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "about",
+      "target": "reader",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "information",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "media",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "event",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "breaking",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "current",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "local",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "entertain",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "update",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "inform",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "coverage",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "story",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "news",
+      "target": "report",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "thought",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "concept",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "mental_image",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "original",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "creative",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "innovative",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "inspiration",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "problem_solving",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "planning",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "whiteboard",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "brainstorming",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "ideas",
+      "target": "mindmap",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "argument",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "evidence",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "convincing",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "credible",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "supportive",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "verification",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "validation",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "demonstration",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "facts",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "data",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "proof",
+      "target": "research",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "activity",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "hobby",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "entertainment",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "strategic",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "social",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "competitive",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "skill-building",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "socialization",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "relaxation",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "board game",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "sport",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "game",
+      "target": "video game",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "expression",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "communication",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "speech",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "interpersonal",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "verbal",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "auditory",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "emotional_expression",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "information_sharing",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "social_interaction",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "language",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "vocabulary",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "talk",
+      "target": "conversation",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "action",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "verb",
+      "type": "is_a",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "can_be_nonverbal",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "requires_effort",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "can_be_verbal",
+      "type": "has_attribute",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "acquisition",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "obtainment",
+      "type": "used_for",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "goal",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "outcome",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    },
+    {
+      "source": "get",
+      "target": "objective",
+      "type": "related_to",
+      "weight": 1,
+      "semantic": true
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-01-11T15:07:02.036138",
+    "canvas_width": 1000,
+    "canvas_height": 800,
+    "node_count": 93,
+    "edge_count": 98
+  }
+}

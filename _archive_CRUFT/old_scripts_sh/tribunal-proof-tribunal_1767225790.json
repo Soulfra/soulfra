@@ -1,0 +1,58 @@
+{
+  "session_id": "tribunal_1767225790",
+  "timestamp": "2025-12-31T19:03:10.357866",
+  "package": "pro",
+  "user_id": 1,
+  "consensus": {
+    "reached": true,
+    "approvals": 2,
+    "required": 2,
+    "total_branches": 3
+  },
+  "proof_chain": [
+    {
+      "session_id": "tribunal_1767225790",
+      "timestamp": "2025-12-31T19:03:10.331446",
+      "branch": "legislative",
+      "action": "propose_token_purchase",
+      "status": "\u274c REJECTED",
+      "data": {
+        "error": "Domain not responding"
+      },
+      "hash": "1b98d26efebc902b1aa3d4c466f5c4ddf06a4a11d6106067a3aae7f03e05ae8d",
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "session_id": "tribunal_1767225790",
+      "timestamp": "2025-12-31T19:03:10.356085",
+      "branch": "executive",
+      "action": "execute_purchase",
+      "status": "\u2705 EXECUTED (Local Fallback)",
+      "data": {
+        "method": "local_simulation",
+        "package": "pro",
+        "tokens": 500
+      },
+      "hash": "6931a223e647fac8969cf2b202b93f8a486d0956e37666572aef2fa11aba8004",
+      "prev_hash": "1b98d26efebc902b1aa3d4c466f5c4ddf06a4a11d6106067a3aae7f03e05ae8d"
+    },
+    {
+      "session_id": "tribunal_1767225790",
+      "timestamp": "2025-12-31T19:03:10.357834",
+      "branch": "judicial",
+      "action": "verify_transaction",
+      "status": "\u2705 VERIFIED (Local)",
+      "data": {
+        "method": "local_verification",
+        "chain_length": 2,
+        "chain_valid": true
+      },
+      "hash": "7300261fbbc5abb41601b3e6f7d71adcb26c9af6200f1de4e63c9c0f9912717d",
+      "prev_hash": "6931a223e647fac8969cf2b202b93f8a486d0956e37666572aef2fa11aba8004"
+    }
+  ],
+  "verification": {
+    "chain_valid": true,
+    "chain_length": 3
+  }
+}
