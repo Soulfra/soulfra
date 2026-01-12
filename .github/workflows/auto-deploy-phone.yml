@@ -17,12 +17,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: false  # Skip broken submodules
 
-      - name: Copy deploy folder to output
+      - name: Copy deploy folder to dist
         run: |
           if [ -d "deploy" ]; then
-            echo "📦 Copying files from deploy/ to output/soulfra/"
-            cp -r deploy/* output/soulfra/
+            echo "📦 Copying files from deploy/ to dist/"
+            cp -r deploy/* dist/
             echo "✅ Files copied"
           else
             echo "   ℹ️  No deploy/ folder found"
@@ -32,7 +34,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output/soulfra
+          publish_dir: ./dist  # Deploy from dist/ (standard)
           publish_branch: gh-pages
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
