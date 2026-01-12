@@ -1,0 +1,62 @@
+{
+  "name": "@soulfra/bodega-payments",
+  "version": "1.0.0",
+  "description": "Bodega-styled payment system with Stripe, Venmo, Cash App. Deploy to GitHub Pages in 2 minutes.",
+  "main": "dist/llm-router.js",
+  "files": [
+    "dist/",
+    "cloudflare-worker/",
+    "docs/",
+    "examples/",
+    "README.md",
+    "LICENSE",
+    "SITEMAP.md",
+    "WORDMAP.md",
+    "ARCHITECTURE.md"
+  ],
+  "scripts": {
+    "start": "python3 -m http.server 8080 --directory dist",
+    "build": "echo 'No build needed - static files'",
+    "deploy": "gh-pages -d dist",
+    "test": "echo 'Tests coming soon'",
+    "dev": "python3 -m http.server 8080 --directory dist",
+    "preview": "open http://localhost:8080/bodega-demo.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Soulfra/soulfra.git"
+  },
+  "keywords": [
+    "payment",
+    "qr-code",
+    "stripe",
+    "venmo",
+    "cash-app",
+    "paypal",
+    "bodega",
+    "receipt",
+    "github-pages",
+    "static-site",
+    "serverless",
+    "cloudflare-workers",
+    "payment-links",
+    "deep-links",
+    "qr-payments"
+  ],
+  "author": "Soulfra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Soulfra/soulfra/issues"
+  },
+  "homepage": "https://soulfra.github.io/bodega-demo.html",
+  "devDependencies": {
+    "gh-pages": "^6.1.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

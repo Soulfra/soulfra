@@ -1,0 +1,119 @@
+{
+  "name": "Bodega Payment Template",
+  "version": "1.0.0",
+  "description": "Customizable bodega-styled payment system",
+
+  "business": {
+    "name": "Your Business Name",
+    "tagline": "Professional services with style",
+    "logo_url": "",
+    "website": "https://yourbusiness.com"
+  },
+
+  "payment": {
+    "stripe": {
+      "enabled": true,
+      "payment_link_id": "test_xxxxx",
+      "test_mode": true
+    },
+    "venmo": {
+      "enabled": true,
+      "username": "yourusername"
+    },
+    "cashapp": {
+      "enabled": true,
+      "cashtag": "yourcashtag"
+    },
+    "paypal": {
+      "enabled": true,
+      "username": "yourpaypal"
+    },
+    "zelle": {
+      "enabled": false,
+      "email": "your@email.com"
+    }
+  },
+
+  "theme": {
+    "bodega_style": {
+      "primary_font": "Courier New, monospace",
+      "secondary_font": "Arial, sans-serif",
+      "primary_color": "#000000",
+      "secondary_color": "#ffffff",
+      "accent_color": "#667eea",
+      "background_pattern": "barcode",
+      "perforated_edges": true,
+      "receipt_max_width": "500px"
+    },
+    "colors": {
+      "text": "#000000",
+      "background": "#ffffff",
+      "border": "#000000",
+      "button": "#667eea",
+      "button_hover": "#5568d3",
+      "success": "#28a745",
+      "error": "#dc3545"
+    },
+    "spacing": {
+      "padding": "30px",
+      "border_width": "2px",
+      "border_radius": "0px"
+    }
+  },
+
+  "features": {
+    "qr_generator": true,
+    "receipt_printing": true,
+    "payment_tracking": false,
+    "email_notifications": false,
+    "sms_notifications": false,
+    "analytics": false
+  },
+
+  "cloudflare_worker": {
+    "enabled": false,
+    "api_url": "https://api.yourdomain.com",
+    "kv_namespaces": {
+      "payments": "PAYMENTS",
+      "receipts": "RECEIPTS"
+    }
+  },
+
+  "deployment": {
+    "github_pages": {
+      "enabled": true,
+      "custom_domain": "",
+      "deploy_branch": "gh-pages",
+      "deploy_folder": "dist"
+    }
+  },
+
+  "defaults": {
+    "currency": "USD",
+    "currency_symbol": "$",
+    "default_amount": "25.00",
+    "default_description": "Professional Service",
+    "transaction_id_prefix": "UPC"
+  },
+
+  "contact": {
+    "email": "contact@yourbusiness.com",
+    "phone": "+1 (555) 555-5555",
+    "address": "123 Main St, City, State 12345"
+  },
+
+  "legal": {
+    "terms_url": "",
+    "privacy_url": "",
+    "refund_policy_url": ""
+  },
+
+  "advanced": {
+    "qr_error_correction": "H",
+    "qr_size": 200,
+    "receipt_auto_print": false,
+    "payment_confirmation_redirect": true,
+    "locale": "en-US",
+    "timezone": "America/New_York"
+  }
+}
