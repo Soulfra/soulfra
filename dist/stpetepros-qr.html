@@ -247,6 +247,7 @@
                     <label for="payment-method">Payment Method</label>
                     <select id="payment-method" required>
                         <option value="">Select payment method...</option>
+                        <option value="stripe-bodega">🧾 Stripe (Bodega Receipt)</option>
                         <option value="venmo">Venmo (@username)</option>
                         <option value="cashapp">Cash App ($cashtag)</option>
                         <option value="zelle">Zelle (email/phone)</option>
@@ -345,6 +346,7 @@
             const tag = document.getElementById('payment-tag');
 
             const configs = {
+                'stripe-bodega': { prefix: '', placeholder: 'test_xxxxx or full Stripe link', help: 'Enter your Stripe Payment Link ID (e.g., test_xxxxx or full URL)' },
                 venmo: { prefix: '@', placeholder: 'johndoe', help: 'Enter your Venmo username (without @)' },
                 cashapp: { prefix: '$', placeholder: 'johndoe', help: 'Enter your Cash App cashtag (without $)' },
                 zelle: { prefix: '', placeholder: 'john@email.com', help: 'Enter your Zelle email or phone number' },
@@ -426,6 +428,11 @@
             const encodedDesc = encodeURIComponent(description);
 
             switch(method) {
+                case 'stripe-bodega':
+                    // Bodega receipt payment page with Stripe embedded
+                    const encodedItem = encodeURIComponent(description || 'Service');
+                    return `${window.location.origin}/pay-bodega.html?stripe=${encodeURIComponent(tag)}&amount=${amount}&item=${encodedItem}`;
+
                 case 'venmo':
                     const venmoTag = tag.startsWith('@') ? tag : `@${tag}`;
                     return `venmo://pay?recipients=${venmoTag}&amount=${amount}&note=${encodedDesc}`;

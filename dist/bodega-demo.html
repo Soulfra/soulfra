@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bodega Payment System - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .demo-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px dashed #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .demo-card:hover {
+            border-color: #667eea;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+        }
+
+        .demo-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .demo-card p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .demo-card .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .demo-card .btn:hover {
+            background: #5568d3;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .highlight {
+            color: #4ec9b0;
+        }
+
+        .info-banner {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .info-banner h2 {
+            color: #1976d2;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-banner p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🧾 Bodega Payment System - Demo</h1>
+            <p style="color: #666; margin-bottom: 2rem;">
+                Test the "reverse receipt" payment flow - where the receipt IS the payment page
+            </p>
+
+            <div class="info-banner">
+                <h2>How It Works</h2>
+                <p>
+                    <strong>Traditional:</strong> Pay → Get Receipt<br>
+                    <strong>Bodega Reverse:</strong> Scan Receipt → Pay from Receipt → Receipt updates to "PAID"
+                </p>
+            </div>
+
+            <ul class="feature-list">
+                <li>Bodega receipt aesthetic (Courier New font, barcodes, perforated edges)</li>
+                <li>Stripe Payment Link embedded in receipt-styled page</li>
+                <li>Alternative payment methods (Venmo, Cash App, PayPal)</li>
+                <li>QR code links directly to payment receipt</li>
+                <li>Works 100% static on GitHub Pages</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 1rem;">🚀 Quick Start Demos</h2>
+
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>1. Generate QR Code</h3>
+                    <p>Create payment QR codes with bodega receipt styling</p>
+                    <a href="stpetepros-qr.html" class="btn">
+                        Open QR Generator
+                    </a>
+                </div>
+
+                <div class="demo-card">
+                    <h3>2. Test Bodega Payment</h3>
+                    <p>See the bodega receipt payment page (test mode)</p>
+                    <a href="pay-bodega.html?stripe=test_xxxxx&amount=25.00&item=Test+Service" class="btn">
+                        View Test Receipt
+                    </a>
+                </div>
+
+                <div class="demo-card">
+                    <h3>3. Paid Receipt View</h3>
+                    <p>See what receipt looks like after payment</p>
+                    <a href="pay-bodega.html?stripe=test_xxxxx&amount=25.00&item=Test+Service&paid=true" class="btn">
+                        View Paid Receipt
+                    </a>
+                </div>
+
+                <div class="demo-card">
+                    <h3>4. With Venmo Fallback</h3>
+                    <p>Bodega receipt with Venmo as alternative payment</p>
+                    <a href="pay-bodega.html?stripe=test_xxxxx&amount=25.00&item=Plumbing+Service&venmo=testuser" class="btn">
+                        View with Venmo
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 1rem;">📝 Example Usage</h2>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Generate Bodega Payment QR:</h3>
+            <ol style="line-height: 1.8; color: #555;">
+                <li>Open <strong>stpetepros-qr.html</strong></li>
+                <li>Select: <strong>🧾 Stripe (Bodega Receipt)</strong></li>
+                <li>Enter your Stripe Payment Link ID: <code>test_xxxxx</code></li>
+                <li>Amount: <code>$25.00</code></li>
+                <li>Description: <code>Plumbing Service</code></li>
+                <li>Click "Generate QR Codes"</li>
+                <li>Download QR code</li>
+            </ol>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Customer Flow:</h3>
+            <ol style="line-height: 1.8; color: #555;">
+                <li>Customer scans QR code</li>
+                <li>Opens bodega-styled payment receipt</li>
+                <li>Sees amount and service details in receipt format</li>
+                <li>Pays via Stripe (or alternative method)</li>
+                <li>Receipt updates to show "PAID" stamp</li>
+                <li>Can print or save receipt</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 1rem;">🔗 Direct URL Format</h2>
+
+            <p style="color: #666; margin-bottom: 1rem;">
+                You can create payment links directly using this URL format:
+            </p>
+
+            <div class="code-block">
+<span class="highlight">https://soulfra.github.io/</span>pay-bodega.html?<br>
+  <span class="highlight">stripe</span>=test_xxxxx&<br>
+  <span class="highlight">amount</span>=25.00&<br>
+  <span class="highlight">item</span>=Plumbing+Service&<br>
+  <span class="highlight">venmo</span>=testuser&<br>
+  <span class="highlight">cashapp</span>=testuser&<br>
+  <span class="highlight">paypal</span>=testuser
+            </div>
+
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Query Parameters:</h3>
+            <ul style="line-height: 1.8; color: #555; margin-left: 1.5rem;">
+                <li><code>stripe</code> - Stripe Payment Link ID (required for Stripe)</li>
+                <li><code>amount</code> - Payment amount (default: 25.00)</li>
+                <li><code>item</code> - Service/item description (default: Professional Service)</li>
+                <li><code>venmo</code> - Venmo username (optional fallback)</li>
+                <li><code>cashapp</code> - Cash App cashtag (optional fallback)</li>
+                <li><code>paypal</code> - PayPal username (optional fallback)</li>
+                <li><code>paid</code> - Set to 'true' to show paid receipt</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 1rem;">🎨 Features</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #667eea;">🧾 Bodega Aesthetic</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                        Courier New font, barcode patterns, perforated edges
+                    </p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #667eea;">💳 Stripe Integration</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                        Payment Links embedded in iframe
+                    </p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #667eea;">📱 Multi-Payment</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                        Venmo, Cash App, PayPal fallbacks
+                    </p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #667eea;">✅ PAID Stamp</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                        Receipt updates after payment
+                    </p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #667eea;">🖨️ Printable</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                        Print-optimized receipt layout
+                    </p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <strong style="color: #667eea;">🚀 Static Deploy</strong>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                        Works on GitHub Pages, no backend
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="background: #1e1e1e; color: white;">
+            <h2 style="margin-bottom: 1rem;">📦 Files Created</h2>
+
+            <ul style="list-style: none; padding: 0; line-height: 2;">
+                <li>✅ <code style="background: #2d2d2d; padding: 0.25rem 0.5rem; border-radius: 4px;">dist/pay-bodega.html</code> - Bodega payment page</li>
+                <li>✅ <code style="background: #2d2d2d; padding: 0.25rem 0.5rem; border-radius: 4px;">dist/stpetepros-qr.html</code> - QR generator (updated)</li>
+                <li>✅ <code style="background: #2d2d2d; padding: 0.25rem 0.5rem; border-radius: 4px;">dist/bodega-demo.html</code> - This demo page</li>
+            </ul>
+
+            <p style="margin-top: 1.5rem; opacity: 0.8;">
+                Total: 3 files, 100% deployable to GitHub Pages
+            </p>
+        </div>
+    </div>
+</body>
+</html>
