@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StPetePros - Payment QR Generator</title>
+    <meta name="description" content="Generate payment QR codes for Venmo, CashApp, Zelle, PayPal">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .prefix {
+            background: #f5f5f5;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #666;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .qr-results {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .qr-results.active {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .qr-container {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .qr-container h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .qr-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-download {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-share {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .payment-id {
+            background: #f0f0f0;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            word-break: break-all;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 640px) {
+            .qr-results.active {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .badge-live {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <span class="badge badge-live">✅ Works on GitHub Pages - No Server Needed!</span>
+            <h1>💳 Payment QR Generator</h1>
+            <p class="subtitle">Generate QR codes for Venmo, CashApp, Zelle, or PayPal</p>
+
+            <form id="qr-form">
+                <div class="form-group">
+                    <label for="payment-method">Payment Method</label>
+                    <select id="payment-method" required>
+                        <option value="">Select payment method...</option>
+                        <option value="venmo">Venmo (@username)</option>
+                        <option value="cashapp">Cash App ($cashtag)</option>
+                        <option value="zelle">Zelle (email/phone)</option>
+                        <option value="paypal">PayPal.me (username)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-tag">Your Payment TAG/Username</label>
+                    <div class="input-group">
+                        <div class="prefix" id="tag-prefix">@</div>
+                        <input type="text" id="payment-tag" placeholder="johndoe" required>
+                    </div>
+                    <p class="help-text" id="tag-help">Enter your Venmo username (without @)</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount (USD)</label>
+                    <div class="input-group">
+                        <div class="prefix">$</div>
+                        <input type="number" id="amount" placeholder="25.00" step="0.01" min="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description (Optional)</label>
+                    <input type="text" id="description" placeholder="Plumbing service" maxlength="100">
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    🔄 Generate QR Codes
+                </button>
+            </form>
+
+            <div id="qr-results" class="qr-results">
+                <div class="qr-container">
+                    <h3>💰 Payment QR Code</h3>
+                    <div class="qr-code" id="payment-qr"></div>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">
+                        Customer scans to pay
+                    </p>
+                    <div class="qr-actions">
+                        <button class="btn-small btn-download" onclick="downloadQR('payment')">
+                            📥 Download
+                        </button>
+                        <button class="btn-small btn-share" onclick="shareQR('payment')">
+                            📤 Share
+                        </button>
+                    </div>
+                </div>
+
+                <div class="qr-container">
+                    <h3>🧾 Receipt QR Code</h3>
+                    <div class="qr-code" id="receipt-qr"></div>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">
+                        Give after payment confirmed
+                    </p>
+                    <div class="qr-actions">
+                        <button class="btn-small btn-download" onclick="downloadQR('receipt')">
+                            📥 Download
+                        </button>
+                        <button class="btn-small btn-share" onclick="shareQR('receipt')">
+                            📤 Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="payment-info" style="display: none;">
+                <div class="payment-id">
+                    <strong>Payment ID:</strong> <span id="payment-id-text"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>📱 How it works</h3>
+            <p>
+                1. <strong>Customer scans Payment QR</strong> → Opens payment app (Venmo/CashApp/etc.)<br>
+                2. <strong>Customer pays</strong> → You receive notification in your app<br>
+                3. <strong>Give Receipt QR</strong> → Customer can verify payment<br><br>
+                <strong>💡 100% static</strong> - Works on GitHub Pages, no backend needed!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let paymentQRInstance, receiptQRInstance;
+        let currentPaymentData = {};
+
+        // Update prefix and help text based on payment method
+        document.getElementById('payment-method').addEventListener('change', function() {
+            const method = this.value;
+            const prefix = document.getElementById('tag-prefix');
+            const help = document.getElementById('tag-help');
+            const tag = document.getElementById('payment-tag');
+
+            const configs = {
+                venmo: { prefix: '@', placeholder: 'johndoe', help: 'Enter your Venmo username (without @)' },
+                cashapp: { prefix: '$', placeholder: 'johndoe', help: 'Enter your Cash App cashtag (without $)' },
+                zelle: { prefix: '', placeholder: 'john@email.com', help: 'Enter your Zelle email or phone number' },
+                paypal: { prefix: '', placeholder: 'johndoe', help: 'Enter your PayPal.me username' }
+            };
+
+            const config = configs[method] || { prefix: '@', placeholder: '', help: '' };
+            prefix.textContent = config.prefix;
+            tag.placeholder = config.placeholder;
+            help.textContent = config.help;
+        });
+
+        // Generate QR codes
+        document.getElementById('qr-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const method = document.getElementById('payment-method').value;
+            const tag = document.getElementById('payment-tag').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const description = document.getElementById('description').value;
+
+            // Generate payment URL
+            const paymentURL = generatePaymentURL(method, tag, amount, description);
+
+            // Generate unique payment ID
+            const paymentId = 'pay_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+            // Receipt URL (points to GitHub Pages receipt page)
+            const receiptURL = `${window.location.origin}/receipt.html?id=${paymentId}`;
+
+            // Store payment data
+            currentPaymentData = {
+                id: paymentId,
+                method,
+                tag,
+                amount,
+                description,
+                paymentURL,
+                receiptURL,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            savePayment(currentPaymentData);
+
+            // Clear previous QR codes
+            document.getElementById('payment-qr').innerHTML = '';
+            document.getElementById('receipt-qr').innerHTML = '';
+
+            // Generate new QR codes
+            paymentQRInstance = new QRCode(document.getElementById('payment-qr'), {
+                text: paymentURL,
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            receiptQRInstance = new QRCode(document.getElementById('receipt-qr'), {
+                text: receiptURL,
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Show results
+            document.getElementById('qr-results').classList.add('active');
+            document.getElementById('payment-info').style.display = 'block';
+            document.getElementById('payment-id-text').textContent = paymentId;
+
+            // Scroll to results
+            document.getElementById('qr-results').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function generatePaymentURL(method, tag, amount, description) {
+            const encodedDesc = encodeURIComponent(description);
+
+            switch(method) {
+                case 'venmo':
+                    const venmoTag = tag.startsWith('@') ? tag : `@${tag}`;
+                    return `venmo://pay?recipients=${venmoTag}&amount=${amount}&note=${encodedDesc}`;
+
+                case 'cashapp':
+                    const cashtag = tag.startsWith('$') ? tag : `$${tag}`;
+                    return `https://cash.app/${cashtag}/${amount}`;
+
+                case 'zelle':
+                    // Zelle doesn't have deep links, show instructions
+                    return `${window.location.origin}/pay-zelle.html?tag=${encodeURIComponent(tag)}&amount=${amount}`;
+
+                case 'paypal':
+                    return `https://paypal.me/${tag}/${amount}`;
+
+                default:
+                    return '';
+            }
+        }
+
+        function savePayment(payment) {
+            const payments = JSON.parse(localStorage.getItem('stpetepros_payments') || '[]');
+            payments.push(payment);
+            localStorage.setItem('stpetepros_payments', JSON.stringify(payments));
+        }
+
+        function downloadQR(type) {
+            const qrContainer = document.getElementById(`${type}-qr`);
+            const canvas = qrContainer.querySelector('canvas');
+
+            if (canvas) {
+                const url = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `${type}-qr-${currentPaymentData.id}.png`;
+                link.href = url;
+                link.click();
+            }
+        }
+
+        function shareQR(type) {
+            const url = type === 'payment' ? currentPaymentData.paymentURL : currentPaymentData.receiptURL;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Payment ${type === 'payment' ? 'Request' : 'Receipt'}`,
+                    text: `Scan to ${type === 'payment' ? 'pay' : 'view receipt'} $${currentPaymentData.amount}`,
+                    url: url
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            }
+        }
+
+        // Show payment history (optional)
+        function showPaymentHistory() {
+            const payments = JSON.parse(localStorage.getItem('stpetepros_payments') || '[]');
+            console.log('Payment History:', payments);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+# Cloudflare Workers Configuration
+#
+# Deploy: wrangler deploy
+# Logs: wrangler tail
+
+name = "stpetepros-payment-tracker"
+main = "payment-tracker.js"
+compatibility_date = "2024-01-01"
+
+# Account settings (update with your Cloudflare account)
+# account_id = "your-cloudflare-account-id"
+# workers_dev = true
+
+# Custom domain (after setup)
+# routes = [
+#     { pattern = "api.stpetepros.com/*", zone_name = "stpetepros.com" }
+# ]
+
+# KV Namespaces (for storing payments and receipts)
+kv_namespaces = [
+    { binding = "PAYMENTS", id = "PAYMENTS_NAMESPACE_ID", preview_id = "PAYMENTS_PREVIEW_ID" },
+    { binding = "RECEIPTS", id = "RECEIPTS_NAMESPACE_ID", preview_id = "RECEIPTS_PREVIEW_ID" }
+]
+
+# Environment variables (secrets)
+# Set with: wrangler secret put STRIPE_WEBHOOK_SECRET
+# [env.production]
+# vars = {}
+
+# Build configuration
+[build]
+command = ""
+cwd = ""
+watch_dirs = []
+
+# Limits (free tier)
+[usage_model]
+cpu_ms = 10  # Max CPU time per request
+
+# Development
+[env.development]
+name = "stpetepros-payment-tracker-dev"

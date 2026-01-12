@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jupyter Notebook Manager - Anki-Style Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .working { color: #28a745; }
+        .broken { color: #dc3545; }
+        .review { color: #ffc107; }
+        .total { color: #6c757d; }
+
+        .notebooks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .notebook-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .notebook-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .notebook-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .notebook-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+            flex: 1;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-working {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-broken {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-unknown {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .notebook-meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .review-info {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .review-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-date {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .btn-export {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #138496;
+        }
+
+        .filter-bar {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📓 Jupyter Notebook Manager</h1>
+            <p class="subtitle">Anki-style spaced repetition learning for your notebooks</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number total" id="stat-total">0</div>
+                <div class="stat-label">Total Notebooks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number working" id="stat-working">0</div>
+                <div class="stat-label">✅ Working</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number broken" id="stat-broken">0</div>
+                <div class="stat-label">❌ Broken</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number review" id="stat-review">0</div>
+                <div class="stat-label">📅 Due for Review</div>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterNotebooks('all')">All</button>
+            <button class="filter-btn" onclick="filterNotebooks('working')">✅ Working</button>
+            <button class="filter-btn" onclick="filterNotebooks('broken')">❌ Broken</button>
+            <button class="filter-btn" onclick="filterNotebooks('review')">📅 Due for Review</button>
+            <button class="filter-btn" onclick="filterNotebooks('unknown')">❓ Unknown</button>
+        </div>
+
+        <div id="notebooks-container" class="notebooks-grid"></div>
+
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">📓</div>
+            <h2>No Notebooks Found</h2>
+            <p>Add .ipynb files to your project to track them here</p>
+        </div>
+    </div>
+
+    <script src="llm-router.js"></script>
+    <script>
+        // Notebook data (in production, fetch from API or filesystem)
+        const notebooksData = [
+            {
+                name: 'email_proof_demo.ipynb',
+                path: '/email_proof_demo.ipynb',
+                status: 'working',
+                lastReview: '2026-01-10',
+                nextReview: '2026-01-15',
+                description: 'Email recovery code system - proves without sending',
+                cells: 15,
+                workingCells: 15,
+                tags: ['email', 'qr', 'recovery']
+            },
+            {
+                name: 'domain_matrix_builder.ipynb',
+                path: '/domain_matrix_builder.ipynb',
+                status: 'unknown',
+                lastReview: null,
+                nextReview: null,
+                description: 'Domain matrix visualization',
+                cells: 8,
+                workingCells: null,
+                tags: ['domains', 'visualization']
+            },
+            {
+                name: 'web_stack_from_scratch.ipynb',
+                path: '/web_stack_from_scratch.ipynb',
+                status: 'unknown',
+                lastReview: null,
+                nextReview: null,
+                description: 'Building web stack from first principles',
+                cells: 12,
+                workingCells: null,
+                tags: ['web', 'tutorial']
+            },
+            {
+                name: 'donor_ranks_proof.ipynb',
+                path: '/donor_ranks_proof.ipynb',
+                status: 'working',
+                lastReview: '2026-01-08',
+                nextReview: '2026-01-14',
+                description: 'Donor tier system proof',
+                cells: 10,
+                workingCells: 10,
+                tags: ['payment', 'tiers']
+            },
+            {
+                name: 'git_workflow_guide.ipynb',
+                path: '/git_workflow_guide.ipynb',
+                status: 'broken',
+                lastReview: '2026-01-05',
+                nextReview: '2026-01-13',
+                description: 'Git workflow tutorial',
+                cells: 18,
+                workingCells: 12,
+                tags: ['git', 'workflow']
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        function initNotebooks() {
+            updateStats();
+            renderNotebooks();
+        }
+
+        function updateStats() {
+            const total = notebooksData.length;
+            const working = notebooksData.filter(n => n.status === 'working').length;
+            const broken = notebooksData.filter(n => n.status === 'broken').length;
+            const dueForReview = notebooksData.filter(n => {
+                if (!n.nextReview) return false;
+                return new Date(n.nextReview) <= new Date();
+            }).length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-working').textContent = working;
+            document.getElementById('stat-broken').textContent = broken;
+            document.getElementById('stat-review').textContent = dueForReview;
+        }
+
+        function renderNotebooks() {
+            const container = document.getElementById('notebooks-container');
+            const emptyState = document.getElementById('empty-state');
+
+            let filtered = notebooksData;
+
+            if (currentFilter !== 'all') {
+                filtered = notebooksData.filter(n => {
+                    if (currentFilter === 'review') {
+                        return n.nextReview && new Date(n.nextReview) <= new Date();
+                    }
+                    return n.status === currentFilter;
+                });
+            }
+
+            if (filtered.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            container.innerHTML = filtered.map(notebook => `
+                <div class="notebook-card">
+                    <div class="notebook-header">
+                        <div class="notebook-title">${notebook.name}</div>
+                        <span class="status-badge status-${notebook.status}">
+                            ${notebook.status === 'working' ? '✅ Working' :
+                              notebook.status === 'broken' ? '❌ Broken' : '❓ Unknown'}
+                        </span>
+                    </div>
+
+                    <div class="notebook-meta">
+                        ${notebook.description}<br>
+                        ${notebook.cells} cells total
+                        ${notebook.workingCells !== null ? ` • ${notebook.workingCells}/${notebook.cells} working` : ''}
+                    </div>
+
+                    ${notebook.nextReview ? `
+                        <div class="review-info">
+                            <div class="review-label">Next Review</div>
+                            <div class="review-date">${notebook.nextReview}</div>
+                        </div>
+                    ` : ''}
+
+                    <div class="actions">
+                        <button class="btn btn-primary" onclick="openNotebook('${notebook.path}')">
+                            📓 Open
+                        </button>
+                        <button class="btn btn-success" onclick="markReviewed('${notebook.name}')">
+                            ✅ Review
+                        </button>
+                        <button class="btn btn-export" onclick="exportToPython('${notebook.path}')">
+                            📄 Export .py
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterNotebooks(filter) {
+            currentFilter = filter;
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            renderNotebooks();
+        }
+
+        function openNotebook(path) {
+            window.open(path, '_blank');
+        }
+
+        function markReviewed(name) {
+            const notebook = notebooksData.find(n => n.name === name);
+            if (!notebook) return;
+
+            // Calculate next review date (Anki-style spacing)
+            const today = new Date();
+            const nextReview = new Date(today);
+            nextReview.setDate(nextReview.getDate() + 7); // Review in 7 days
+
+            notebook.lastReview = today.toISOString().split('T')[0];
+            notebook.nextReview = nextReview.toISOString().split('T')[0];
+
+            // Save to localStorage
+            localStorage.setItem('notebook_reviews', JSON.stringify(notebooksData));
+
+            alert(`📅 Notebook reviewed! Next review: ${notebook.nextReview}`);
+            updateStats();
+            renderNotebooks();
+        }
+
+        async function exportToPython(path) {
+            try {
+                // Fetch notebook
+                const response = await fetch(path);
+                const notebook = await response.json();
+
+                // Extract code cells
+                const codeCells = notebook.cells
+                    .filter(cell => cell.cell_type === 'code')
+                    .map(cell => Array.isArray(cell.source) ? cell.source.join('') : cell.source);
+
+                const pythonCode = codeCells.join('\n\n# ---\n\n');
+
+                // Download as .py file
+                const blob = new Blob([pythonCode], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = path.replace('.ipynb', '.py');
+                link.click();
+
+                alert('✅ Exported to Python script!');
+            } catch (error) {
+                alert('❌ Error exporting: ' + error.message);
+            }
+        }
+
+        // Initialize on load
+        initNotebooks();
+
+        // Load saved review data
+        const savedReviews = localStorage.getItem('notebook_reviews');
+        if (savedReviews) {
+            try {
+                const reviews = JSON.parse(savedReviews);
+                // Merge with notebooksData
+                reviews.forEach(saved => {
+                    const notebook = notebooksData.find(n => n.name === saved.name);
+                    if (notebook) {
+                        notebook.lastReview = saved.lastReview;
+                        notebook.nextReview = saved.nextReview;
+                    }
+                });
+                updateStats();
+                renderNotebooks();
+            } catch (e) {
+                console.error('Error loading saved reviews:', e);
+            }
+        }
+    </script>
+</body>
+</html>
