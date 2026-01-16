@@ -70,7 +70,7 @@ jobs:
           echo "🌐 Live at: https://soulfra.github.io/waitlist" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: waitlist-static-site
           path: ./output/waitlist/
