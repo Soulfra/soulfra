@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Quote - Left On Read By God</title>
+    <meta name="description" content="Your daily dose of dating reality checks and ghosting wisdom">
+
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 60px 50px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        .date {
+            font-size: 0.9em;
+            margin-bottom: 40px;
+            color: white;
+            opacity: 0.7;
+        }
+
+        .quote-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quote {
+            font-size: 1.8em;
+            line-height: 1.5;
+            color: white;
+            font-weight: 300;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote::before {
+            content: '"';
+            font-size: 2em;
+            opacity: 0.5;
+            margin-right: 10px;
+        }
+
+        .quote::after {
+            content: '"';
+            font-size: 2em;
+            opacity: 0.5;
+            margin-left: 10px;
+        }
+
+        .loading {
+            opacity: 0.5;
+            font-style: italic;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: white;
+            opacity: 0.7;
+        }
+
+        .newsletter-link {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .newsletter-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 1em;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .newsletter-link a:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: rgba(255, 100, 100, 0.2);
+            border: 1px solid rgba(255, 100, 100, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .quote {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>📱 Daily Reality Check</h1>
+            <p class="date" id="currentDate">Loading...</p>
+
+            <div class="quote-box">
+                <div class="quote loading" id="quoteText">
+                    Loading your daily dose of wisdom...
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="newQuote" onclick="generateNewQuote()">✨ Generate New Quote</button>
+                <button id="shareBtn" onclick="shareQuote()">📤 Share</button>
+            </div>
+
+            <div class="stats" id="stats"></div>
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="newsletter-link">
+                <a href="signup.html">💌 Subscribe to Daily Quotes</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Environment detection - automatically use correct API endpoint
+        const isDevelopment = window.location.hostname === 'localhost' ||
+                            window.location.hostname === '127.0.0.1' ||
+                            window.location.hostname.includes('192.168');
+
+        // Use environment variable or fallback to localhost for dev
+        const API_BASE = isDevelopment
+            ? 'http://localhost:5001'
+            : (window.ENV_API_URL || 'https://soulfra-api.onrender.com'); // Change this when you deploy backend
+
+        const BRAND_SLUG = 'leftonreadbygod';
+        let currentQuote = null;
+
+        // Show error message
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Format current date
+        function formatDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return now.toLocaleDateString('en-US', options);
+        }
+
+        // Load daily quote
+        async function loadDailyQuote() {
+            try {
+                const response = await fetch(`${API_BASE}/api/quotes/daily?brand_slug=${BRAND_SLUG}`);
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentQuote = data;
+                    displayQuote(data.quote, data.views);
+                } else {
+                    throw new Error(data.error || 'Failed to load quote');
+                }
+            } catch (error) {
+                console.error('Error loading quote:', error);
+
+                // Fallback quote if API is down
+                const fallbackQuote = 'Sometimes being left on read is God\'s way of saying "they weren\'t worth the reply anyway."';
+                displayQuote(fallbackQuote, null);
+
+                if (!isDevelopment) {
+                    showError('Could not connect to server. Showing fallback quote.');
+                }
+            }
+        }
+
+        // Generate new quote
+        async function generateNewQuote() {
+            const button = document.getElementById('newQuote');
+            button.disabled = true;
+            button.textContent = '⏳ Generating...';
+
+            const quoteEl = document.getElementById('quoteText');
+            quoteEl.classList.add('loading');
+            quoteEl.textContent = 'Channeling divine wisdom...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/quotes/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        brand_slug: BRAND_SLUG
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentQuote = data;
+                    displayQuote(data.quote, 1);
+                } else {
+                    throw new Error(data.error || 'Failed to generate quote');
+                }
+            } catch (error) {
+                console.error('Error generating quote:', error);
+                showError('Failed to generate quote. The AI service might be down.');
+
+                // Reload the current quote
+                loadDailyQuote();
+            } finally {
+                button.disabled = false;
+                button.textContent = '✨ Generate New Quote';
+            }
+        }
+
+        // Display quote
+        function displayQuote(quote, views) {
+            const quoteEl = document.getElementById('quoteText');
+            quoteEl.textContent = quote;
+            quoteEl.classList.remove('loading');
+
+            document.getElementById('stats').textContent =
+                views ? `👀 Seen ${views} time${views !== 1 ? 's' : ''}` : '';
+        }
+
+        // Share quote
+        function shareQuote() {
+            if (!currentQuote) return;
+
+            const text = `${currentQuote.quote}\n\n- Left On Read By God 📱\n\nGet your daily dose: ${window.location.href}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Daily Quote - Left On Read By God',
+                    text: text,
+                })
+                .catch(err => {
+                    if (err.name !== 'AbortError') {
+                        console.log('Share failed:', err);
+                    }
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Quote copied to clipboard!');
+                }).catch(() => {
+                    alert('Could not copy quote. Try selecting and copying manually.');
+                });
+            }
+        }
+
+        // Initialize
+        document.getElementById('currentDate').textContent = formatDate();
+        loadDailyQuote();
+
+        // Log environment info (helpful for debugging)
+        console.log('Environment:', isDevelopment ? 'Development' : 'Production');
+        console.log('API Endpoint:', API_BASE);
+    </script>
+</body>
+</html>
